@@ -1,0 +1,23 @@
+オープンソースの販売管理システム SalesCube
+==========================================
+
+販売管理システムは、商材や販売形態、商習慣の違いにより業務に合う市販パッケージを見つける
+ことが難しく、「ニーズに合わない！」「カスタマイズが自由にできない！」というご不満の声を
+よく耳にします。  
+そんなお客様の声にお応えして、業務優先の発想から誕生したオープンソースの販売管理システム
+「SalesCube」。お客様の業務に合わせて自由にカスタマイズしてご利用いただけます。
+
+ライセンス
+----------
+
+SalesCube はデュアルライセンスです。
+
+1. GPLv3
+2. SalesCube 商用ライセンス  
+   (http://www.ark-info-sys.co.jp/jp/product/salescube/edition.html#partner こちら) をご覧ください。
+
+関連情報
+--------
+
+1. (http://www.ark-info-sys.co.jp/jp/product/salescube/index.html SalesCube 公式ページ)
+2. (http://www.ark-info-sys.co.jp/jp/ 株式会社アーク情報システム (開発元))
