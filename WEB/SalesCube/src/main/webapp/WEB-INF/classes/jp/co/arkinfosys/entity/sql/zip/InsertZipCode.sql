@@ -1,0 +1,26 @@
+INSERT INTO ZIP_MST_/*$domainId*/
+(
+	ZIP_ID,
+	ZIP_CODE,
+	ZIP_ADDRESS_1,
+	ZIP_ADDRESS_2,
+	CRE_FUNC,
+	CRE_DATETM,
+	CRE_USER,
+	UPD_FUNC,
+	UPD_DATETM,
+	UPD_USER
+)
+VALUES
+(
+	/*zipId*/,
+	/*zipCode*/,
+	/*zipAddress1*/,
+	/*zipAddress2*/,
+	'SETUP',
+	now(),
+	'SYSTEM',
+	'SETUP',
+	now(),
+	'SYSTEM'
+)

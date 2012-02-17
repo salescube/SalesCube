@@ -1,0 +1,25 @@
+SELECT
+	SUM(PS.STOCK_NUM) AS QUANTITY
+FROM
+	PRODUCT_STOCK_TRN_/*$domainId*/ PS
+	INNER JOIN (
+		SELECT
+			RACK_CODE
+			,PRODUCT_CODE
+			,MAX(STOCK_PDATE) AS LAST_PDATE
+		FROM
+			PRODUCT_STOCK_TRN_/*$domainId*/ PS
+		GROUP BY
+			RACK_CODE
+			,PRODUCT_CODE
+	) A ON A.RACK_CODE = PS.RACK_CODE AND A.PRODUCT_CODE = PS.PRODUCT_CODE AND A.LAST_PDATE = PS.STOCK_PDATE
+	LEFT OUTER JOIN RACK_MST_/*$domainId*/ R ON PS.RACK_CODE = R.RACK_CODE /*IF rackCategory != null */AND R.RACK_CATEGORY = /*rackCategory*/''/*END*/
+/*BEGIN*/
+WHERE
+	/*IF productCode != null */
+	PS.PRODUCT_CODE = /*productCode*/''
+	/*END*/
+	/*IF stockYm != null */
+	AND PS.STOCK_YM <= /*stockYm*/0
+	/*END*/
+/*END*/

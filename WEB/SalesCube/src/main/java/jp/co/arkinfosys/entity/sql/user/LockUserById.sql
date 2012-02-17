@@ -1,0 +1,19 @@
+SELECT
+        USER_ID
+        ,NAME_KNJ
+        ,NAME_KANA
+        ,DEPT_ID
+        ,EMAIL
+        ,PASSWORD
+        ,EXPIRE_DATE
+        ,CRE_FUNC
+        ,CRE_DATETM
+        ,CRE_USER
+        ,UPD_FUNC
+        ,UPD_DATETM
+        ,UPD_USER
+    FROM
+        USER_MST_/*$domainId*/
+	WHERE
+		USER_ID=/*userId*/''
+	FOR UPDATE

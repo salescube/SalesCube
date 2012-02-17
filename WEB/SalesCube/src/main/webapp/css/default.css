@@ -1,0 +1,205 @@
+body {
+	margin: 0px;
+	font-size: 10pt;
+}
+
+img {
+	border-style: none;
+	border-width: 0px;
+	vertical-align: bottom;
+}
+
+a {
+	text-decoration: none;
+	border-width: 0px;
+}
+
+div {
+	white-space: nowrap;
+	position: relative;
+}
+
+table, td, th {
+	font-size: 10pt;
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+textarea {
+	font-size: 10pt;
+}
+
+
+/* ヘッダエリア */
+div#header .login_user{
+	position: absolute;
+	top: 10px;
+	left: 470px;
+}
+
+div#header .header_buttons {
+	position: absolute;
+	top: 5px;
+	left: 750px;
+}
+
+div#header .header_buttons button {
+	width: 90px;
+}
+
+/*  ファンクションボタン */
+div#main_function .function_buttons{
+	position: absolute;
+	top: 0px;
+	left: 190px;
+	text-align: right;
+}
+
+/*  ファンクションボタン */
+div#main_function .function_buttons button {
+	font-size: 8pt;
+	width: 60px;
+	padding: 2px 0px 2px 0px;
+}
+
+
+/* 機能エリア */
+div#main_function .function_forms {
+	margin-top: 30px;
+}
+
+div#main_function .title {
+	color: #1533AD;
+	font-weight: bold;
+}
+
+/* 入力フォーム */
+table.forms {
+	width: 910px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: gray;
+	border-collapse: collapse;
+	margin-bottom: 5px;
+}
+
+table.forms th, table.forms td {
+	border-style: solid;
+	border-width: 1px;
+	border-color: gray;
+	text-align: left;
+}
+
+table.forms td {
+	background-color: #FFFFFF;
+}
+
+table.forms th {
+	background-color: #609ECD;
+	background-image: url(../images/headerbottom.png);
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	color:#FFFFFF;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+.information table {
+	border-style: solid;
+	border-width: 2px;
+	border-color: gray;
+	border-collapse: collapse;
+}
+
+.information th, .information td {
+	border-style: solid;
+	border-width: 1px;
+	border-color: gray;
+	text-align: right;
+}
+
+.information th {
+	background-color: #FFC84F;
+	text-align: center;
+}
+
+/* 入力フォーム無効時(ROで表現)の色 */
+input.c_disable {
+	background-color: #cccccc;
+}
+
+/* カンマ付与する入力フォームのスタイル */
+input.numeral_commas {
+	text-align: right;
+	ime-mode: disabled;
+}
+
+/* 日付入力欄のスタイル */
+input.date_input {
+	text-align: center;
+	ime-mode: disabled;
+}
+
+img.ui-datepicker-trigger {
+	cursor: pointer;
+}
+
+/* IME-OFFスタイル */
+input.c_ime_off{
+	ime-mode: disabled;
+}
+
+/* 選択フォーム無効時(ROで表現)の色 */
+select.c_disable {
+	background-color: #cccccc;
+}
+
+textarea.c_disable {
+	background-color: #cccccc;
+}
+
+/*
+ * spanタグによるカスタムハイパーリンク
+ */
+span.link {
+	text-decoration: under-line;
+	color: blue;
+	cursor: pointer;
+}
+
+/**
+ * メッセージの強調表示
+ */
+#errors {
+	color: red;
+	font-weight: bold;
+	font-size: 12pt;
+}
+#ajax_errors {
+	color: red;
+	font-weight: bold;
+	font-size: 12pt;
+}
+span.action_errors, div.action_errors {
+	color: red;
+	font-weight: bold;
+	font-size: 12pt;
+}
+span.resultThreshold {
+	color: red;
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+div#NowSearchingDiv {
+	position: absolute;
+	z-index: 9999;
+	width: 100%;
+	height: 100%;
+	cursor: wait;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url(../images/ajax_loader.gif);
+}

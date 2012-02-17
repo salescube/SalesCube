@@ -1,0 +1,26 @@
+INSERT INTO RATE_TRN_/*$domainId*/
+(
+	RATE_ID
+	,START_DATE
+	,RATE
+	,REMARKS
+	,CRE_FUNC
+	,CRE_DATETM
+	,CRE_USER
+	,UPD_FUNC
+	,UPD_DATETM
+	,UPD_USER
+)
+VALUES
+(
+	/*rateId*/
+	,/*startDate*/
+	,/*rate*/
+	,/*remarks*/
+	,/*creFunc*/
+	,now()
+	,/*creUser*/
+	,/*updFunc*/
+	,now()
+	,/*updUser*/
+)

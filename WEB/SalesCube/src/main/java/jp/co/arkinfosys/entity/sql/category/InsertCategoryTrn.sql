@@ -1,0 +1,33 @@
+INSERT
+INTO
+CATEGORY_TRN_/*$domainId*/ (
+CATEGORY_ID
+,CATEGORY_CODE
+,CATEGORY_CODE_NAME
+,CATEGORY_STR
+,CATEGORY_NUM
+,CATEGORY_FLT
+,CATEGORY_BOOL
+,CATEGORY_DSP
+,CRE_FUNC
+,CRE_DATETM
+,CRE_USER
+,UPD_FUNC
+,UPD_DATETM
+,UPD_USER
+) VALUES (
+/*categoryId*/NULL
+,/*categoryCode*/NULL
+,/*categoryCodeName*/NULL
+,/*categoryStr*/NULL
+,/*categoryNum*/NULL
+,/*categoryFlt*/NULL
+,/*categoryBool*/NULL
+,/*categoryDsp*/NULL
+,/*creFunc*/NULL
+,now()
+,/*creUser*/NULL
+,/*updFunc*/NULL
+,now()
+,/*updUser*/NULL
+)

@@ -1,0 +1,39 @@
+INSERT INTO ESTIMATE_LINE_TRN_/*$domainId*/'DEFAULT' (
+		ESTIMATE_LINE_ID
+		,ESTIMATE_SHEET_ID
+		,LINE_NO
+		,PRODUCT_CODE
+		,CUSTOMER_PCODE
+		,PRODUCT_ABSTRACT
+		,QUANTITY
+		,UNIT_COST
+		,UNIT_RETAIL_PRICE
+		,COST
+		,RETAIL_PRICE
+		,REMARKS
+		,CRE_FUNC
+		,CRE_DATETM
+		,CRE_USER
+		,UPD_FUNC
+		,UPD_DATETM
+		,UPD_USER
+)VALUES(
+        /*estimateLineId*/'default'
+        ,/*estimateSheetId*/NULL
+        ,/*lineNo*/NULL
+        ,/*productCode*/NULL
+        ,/*customerPcode*/NULL
+        ,/*productAbstract*/NULL
+        ,/*quantity*/NULL
+        ,/*unitCost*/NULL
+        ,/*unitRetailPrice*/NULL
+        ,/*cost*/NULL
+        ,/*retailPrice*/NULL
+        ,/*remarks*/NULL
+        ,/*creFunc*/NULL
+        ,now()
+        ,/*creUser*/NULL
+        ,/*updFunc*/NULL
+        ,now()
+        ,/*updUser*/NULL
+)

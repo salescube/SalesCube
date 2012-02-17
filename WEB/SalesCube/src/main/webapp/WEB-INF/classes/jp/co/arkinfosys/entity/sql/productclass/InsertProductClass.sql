@@ -1,0 +1,26 @@
+INSERT INTO PRODUCT_CLASS_MST_/*$domainId*/
+(
+	CLASS_CODE_1
+	,CLASS_CODE_2
+	,CLASS_CODE_3
+	,CLASS_NAME
+	,CRE_FUNC
+	,CRE_DATETM
+	,CRE_USER
+	,UPD_FUNC
+	,UPD_DATETM
+	,UPD_USER
+)
+VALUES
+(
+	/*classCode1*/,
+	/*classCode2*/,
+	/*classCode3*/,
+	/*className*/,
+	/*creFunc*/,
+	now(),
+	/*creUser*/,
+	/*updFunc*/,
+	now(),
+	/*updUser*/
+)

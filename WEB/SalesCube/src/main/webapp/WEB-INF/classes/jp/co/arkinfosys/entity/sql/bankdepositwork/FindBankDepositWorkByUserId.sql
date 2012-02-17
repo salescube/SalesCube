@@ -1,0 +1,10 @@
+SELECT
+	LINE_NO,
+    PAYMENT_DATE,
+    PAYMENT_TYPE,
+    PAYMENT_NAME,
+    PAYMENT_PRICE
+FROM
+    BANK_DEPOSIT_WORK_/*$domainId*/
+WHERE
+    USER_ID=/*userId*/''

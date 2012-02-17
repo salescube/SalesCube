@@ -1,0 +1,14 @@
+SELECT
+	RO_SLIP_ID,
+	RO_LINE_ID,
+	ONLINE_ORDER_ID,
+	ONLINE_ITEM_ID
+FROM ONLINE_ORDER_REL_/*$domainId*/
+WHERE
+	RO_SLIP_ID=/*roSlipId*/
+	/*IF roLineId != null */
+	AND RO_LINE_ID=/*roLineId*/
+	/*END*/
+ORDER BY
+	RO_SLIP_ID,
+	RO_LINE_ID

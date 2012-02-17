@@ -1,0 +1,6 @@
+UPDATE
+	SUPPLIER_MST_/*$domainId*/'DEFAULT'
+SET
+	LAST_CUTOFF_DATE=/*lastCutoffDate*/NULL
+WHERE
+	SUPPLIER_CODE=/*supplierCode*/

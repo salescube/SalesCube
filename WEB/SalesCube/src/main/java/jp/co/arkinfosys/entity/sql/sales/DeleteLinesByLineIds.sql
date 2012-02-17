@@ -1,0 +1,1 @@
+DELETE FROM SALES_LINE_TRN_/*$domainId*/ WHERE SALES_LINE_ID IN /*salesLineIds*/('')

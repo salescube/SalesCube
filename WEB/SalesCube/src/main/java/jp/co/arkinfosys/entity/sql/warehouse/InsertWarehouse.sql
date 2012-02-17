@@ -1,0 +1,42 @@
+INSERT INTO WAREHOUSE_MST_/*$domainId*/ (
+  WAREHOUSE_CODE
+  ,WAREHOUSE_NAME
+  ,WAREHOUSE_ZIP_CODE
+  ,WAREHOUSE_ADDRESS_1
+  ,WAREHOUSE_ADDRESS_2
+  ,WAREHOUSE_TEL
+  ,WAREHOUSE_FAX
+  ,MANAGER_NAME
+  ,MANAGER_KANA
+  ,MANAGER_TEL
+  ,MANAGER_FAX
+  ,MANAGER_EMAIL
+  ,WAREHOUSE_STATE
+  ,CRE_FUNC
+  ,CRE_DATETM
+  ,CRE_USER
+  ,UPD_FUNC
+  ,UPD_DATETM
+  ,UPD_USER
+) VALUES (
+	/*warehouseCode*/NULL
+	,/*warehouseName*/NULL
+	,/*warehouseZipCode*/NULL
+	,/*warehouseAddress1*/NULL
+	,/*warehouseAddress2*/NULL
+	,/*warehouseTel*/NULL
+	,/*warehouseFax*/NULL
+	,/*managerName*/NULL
+	,/*managerKana*/NULL
+	,/*managerTel*/NULL
+	,/*managerFax*/NULL
+	,/*managerEmail*/NULL
+	,/*warehouseState*/NULL
+	,/*creFunc*/NULL
+	,now()
+	,/*creUser*/NULL
+	,/*updFunc*/NULL
+	,now()
+	,/*updUser*/NULL
+)
+

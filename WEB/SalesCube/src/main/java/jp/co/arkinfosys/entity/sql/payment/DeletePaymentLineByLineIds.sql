@@ -1,0 +1,4 @@
+DELETE FROM
+	PAYMENT_LINE_TRN_/*$domainId*/'DEFAULT'
+WHERE
+    PAYMENT_LINE_ID IN /*paymentLineIds*/('')

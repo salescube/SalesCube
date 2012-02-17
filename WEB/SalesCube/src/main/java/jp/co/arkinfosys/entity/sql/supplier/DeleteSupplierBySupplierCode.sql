@@ -1,0 +1,1 @@
+DELETE FROM SUPPLIER_MST_/*$domainId*/ WHERE SUPPLIER_CODE=/*supplierCode*/

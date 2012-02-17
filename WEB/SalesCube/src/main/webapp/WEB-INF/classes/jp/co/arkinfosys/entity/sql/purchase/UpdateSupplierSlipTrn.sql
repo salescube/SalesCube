@@ -1,0 +1,26 @@
+UPDATE
+	SUPPLIER_SLIP_TRN_/*$domainId*/'DEFAULT' SET
+		SUPPLIER_DATE=/*supplierDate*/NULL
+		,SUPPLIER_ANNUAL=/*supplierAnnual*/NULL
+		,SUPPLIER_MONTHLY=/*supplierMonthly*/NULL
+		,SUPPLIER_YM=/*supplierYm*/NULL
+		,USER_ID=/*userId*/NULL
+		,USER_NAME=/*userName*/NULL
+		,SUPPLIER_CODE=/*supplierCode*/NULL
+		,SUPPLIER_NAME=/*supplierName*/NULL
+		,SUPPLIER_CM_CATEGORY=/*supplierCmCategory*/NULL
+		,DELIVERY_DATE=/*deliveryDate*/NULL
+		,RATE_ID=/*rateId*/NULL
+		,TAX_SHIFT_CATEGORY=/*taxShiftCategory*/NULL
+		,TAX_FRACT_CATEGORY=/*taxFractCategory*/NULL
+		,PRICE_FRACT_CATEGORY=/*priceFractCategory*/NULL
+		,CTAX_TOTAL=/*ctaxTotal*/NULL
+		,PRICE_TOTAL=/*priceTotal*/NULL
+		,FE_PRICE_TOTAL=/*fePriceTotal*/NULL
+		,PO_SLIP_ID=/*poSlipId*/NULL
+		,REMARKS=/*remarks*/NULL
+		,UPD_FUNC=/*updFunc*/NULL
+		,UPD_DATETM=now()
+		,UPD_USER=/*updUser*/NULL
+WHERE
+	SUPPLIER_SLIP_ID=/*supplierSlipId*/0

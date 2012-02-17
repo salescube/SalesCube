@@ -1,0 +1,29 @@
+UPDATE
+	SUPPLIER_LINE_TRN_/*$domainId*/'DEFAULT' SET
+		LINE_NO=/*lineNo*/NULL
+		,PRODUCT_CODE=/*productCode*/NULL
+		,SUPPLIER_PCODE=/*supplierPcode*/NULL
+		,PRODUCT_ABSTRACT=/*productAbstract*/NULL
+		,SUPPLIER_DETAIL_CATEGORY=/*supplierDetailCategory*/NULL
+		,DELIVERY_PROCESS_CATEGORY=/*deliveryProcessCategory*/NULL
+		,TEMP_UNIT_PRICE_CATEGORY=/*tempUnitPriceCategory*/NULL
+		,TAX_CATEGORY=/*taxCategory*/NULL
+		,QUANTITY=/*quantity*/NULL
+		,UNIT_PRICE=/*unitPrice*/NULL
+		,PRICE=/*price*/NULL
+		,CTAX_RATE=/*ctaxRate*/NULL
+		,CTAX_PRICE=/*ctaxPrice*/NULL
+		,DOL_UNIT_PRICE=/*dolUnitPrice*/NULL
+		,DOL_PRICE=/*dolPrice*/NULL
+		,RATE=/*rate*/NULL
+		,REMARKS=/*remarks*/NULL
+		,PRODUCT_REMARKS=/*productRemarks*/NULL
+		,RACK_CODE=/*rackCode*/NULL
+		,RACK_NAME=/*rackName*/NULL
+		,PO_LINE_ID=/*poLineId*/NULL
+		,PAYMENT_LINE_ID=/*paymentLineId*/NULL
+		,UPD_FUNC=/*updFunc*/NULL
+		,UPD_DATETM=now()
+		,UPD_USER=/*updUser*/NULL
+	WHERE
+		SUPPLIER_LINE_ID=/*supplierLineId*/0

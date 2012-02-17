@@ -1,0 +1,33 @@
+UPDATE ESTIMATE_SHEET_TRN_/*$domainId*/'DEFAULT' SET
+        ESTIMATE_ANNUAL=/*estimateAnnual*/NULL
+        ,ESTIMATE_MONTHLY=/*estimateMonthly*/NULL
+        ,ESTIMATE_YM=/*estimateYm*/NULL
+        ,ESTIMATE_DATE=/*estimateDate*/NULL
+        ,DELIVERY_INFO=/*deliveryInfo*/NULL
+        ,VALID_DATE=/*validDate*/NULL
+        ,USER_ID=/*userId*/NULL
+        ,USER_NAME=/*userName*/NULL
+        ,REMARKS=/*remarks*/NULL
+        ,TITLE=/*title*/NULL
+        ,DELIVERY_NAME=/*deliveryName*/NULL
+        ,ESTIMATE_CONDITION=/*estimateCondition*/NULL
+        ,SUBMIT_NAME=/*submitName*/NULL
+        ,SUBMIT_PRE_CATEGORY=/*submitPreCategory*/NULL
+        ,SUBMIT_PRE=/*submitPre*/NULL
+        ,CUSTOMER_CODE=/*customerCode*/NULL
+        ,CUSTOMER_NAME=/*customerName*/NULL
+        ,CUSTOMER_REMARKS=/*customerRemarks*/NULL
+        ,CUSTOMER_COMMENT_DATA=/*customerCommentData*/NULL
+        ,DELIVERY_ZIP_CODE=/*deliveryZipCode*/NULL
+        ,CTAX_PRICE_TOTAL=/*ctaxPriceTotal*/NULL
+        ,COST_TOTAL=/*costTotal*/NULL
+        ,RETAIL_PRICE_TOTAL=/*retailPriceTotal*/NULL
+        ,ESTIMATE_TOTAL=/*estimateTotal*/NULL
+        ,MEMO=/*memo*/NULL
+        ,UPD_FUNC=/*updFunc*/NULL
+        ,UPD_DATETM=now()
+        ,UPD_USER=/*updUser*/NULL
+		,TAX_FRACT_CATEGORY=/*taxFractCategory*/NULL
+		,PRICE_FRACT_CATEGORY=/*priceFractCategory*/NULL
+WHERE
+		ESTIMATE_SHEET_ID=/*estimateSheetId*/'default'

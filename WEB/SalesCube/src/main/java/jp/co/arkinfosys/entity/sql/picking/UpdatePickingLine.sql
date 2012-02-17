@@ -1,0 +1,36 @@
+UPDATE
+    PICKING_LINE_TRN_/*$domainId*/'DEFAULT' SET
+		PICKING_LIST_ID=/*pickingListId*/NULL
+		,SALES_LINE_ID=/*salesLineId*/NULL
+		,RO_LINE_ID=/*roLineId*/NULL
+		,LINE_NO=/*lineNo*/NULL
+		,SALES_DETAIL_CATEGORY=/*salesDetailCategory*/NULL
+		,PRODUCT_CODE=/*productCode*/NULL
+		,CUSTOMER_PCODE=/*customerPcode*/NULL
+		,PRODUCT_ABSTRACT=/*productAbstract*/NULL
+		,QUANTITY=/*quantity*/NULL
+		,UNIT_PRICE=/*unitPrice*/NULL
+		,UNIT_CATEGORY=/*unitCategory*/NULL
+		,UNIT_NAME=/*unitName*/NULL
+		,PACK_QUANTITY=/*packQuantity*/NULL
+		,UNIT_RETAIL_PRICE=/*unitRetailPrice*/NULL
+		,RETAIL_PRICE=/*retailPrice*/NULL
+		,UNIT_COST=/*unitCost*/NULL
+		,COST=/*cost*/NULL
+		,TAX_CATEGORY=/*taxCategory*/NULL
+		,CTAX_RATE=/*ctaxRate*/NULL
+		,CTAX_PRICE=/*ctaxPrice*/NULL
+		,GM=/*gm*/NULL
+		,RACK_CODE_SRC=/*rackCodeSrc*/NULL
+		,STOCK_NUM=/*stockNum*/NULL
+		,REMARKS=/*remarks*/NULL
+		,CRE_FUNC=/*creFunc*/NULL
+		,CRE_DATETM=/*creDatetm*/NULL
+		,CRE_USER=/*creUser*/NULL
+		,UPD_FUNC=/*updFunc*/NULL
+		,UPD_DATETM=/*updDatetm*/NULL
+		,UPD_USER=/*updUser*/NULL
+		,PICKING_REMARKS=/*pickingRemarks*/NULL
+		,SET_TYPE_CATEGORY=/*setTypeCategory*/NULL
+	WHERE
+		PICKING_LINE_ID=/*pickingLineId*/0

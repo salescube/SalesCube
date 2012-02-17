@@ -1,0 +1,5 @@
+SELECT COUNT(*) AS COUNT
+	FROM
+		PRODUCT_MST_/*$domainId*/
+	WHERE
+		PRODUCT_CODE LIKE /*productCode*/'S%'

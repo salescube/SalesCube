@@ -1,0 +1,3 @@
+DELETE FROM ESTIMATE_LINE_TRN_/*$domainId*/'DEFAULT'
+	WHERE
+		ESTIMATE_LINE_ID IN /*estimateLineIds*/('')

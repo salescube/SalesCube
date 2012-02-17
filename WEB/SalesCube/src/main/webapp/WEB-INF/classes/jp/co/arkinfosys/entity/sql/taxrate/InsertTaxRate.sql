@@ -1,0 +1,24 @@
+INSERT INTO TAX_RATE_MST_/*$domainId*/
+(
+	TAX_TYPE_CATEGORY
+	,START_DATE
+	,TAX_RATE
+	,CRE_FUNC
+	,CRE_DATETM
+	,CRE_USER
+	,UPD_FUNC
+	,UPD_DATETM
+	,UPD_USER
+)
+VALUES
+(
+	/*taxTypeCategory*/
+	,/*startDate*/
+	,/*taxRate*/
+	,/*creFunc*/
+	,now()
+	,/*creUser*/
+	,/*updFunc*/
+	,now()
+	,/*updUser*/
+)

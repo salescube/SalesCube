@@ -1,0 +1,31 @@
+UPDATE
+	RO_LINE_TRN_/*$domainId*/
+SET
+	RO_SLIP_ID=/*roSlipId*/,
+	LINE_NO=/*lineNo*/,
+	PRODUCT_CODE=/*productCode*/,
+	CUSTOMER_PCODE=/*customerPcode*/,
+	PRODUCT_ABSTRACT=/*productAbstract*/,
+	QUANTITY=/*quantity*/,
+	STATUS=/*status*/,
+	UNIT_PRICE=/*unitPrice*/,
+	UNIT_CATEGORY=/*unitCategory*/,
+	UNIT_NAME=/*unitName*/,
+	PACK_QUANTITY=/*packQuantity*/,
+	UNIT_RETAIL_PRICE=/*unitRetailPrice*/,
+	RETAIL_PRICE=/*retailPrice*/,
+	UNIT_COST=/*unitCost*/,
+	COST=/*cost*/,
+	TAX_CATEGORY=/*taxCategory*/,
+	CTAX_RATE=/*ctaxRate*/,
+	CTAX_PRICE=/*ctaxPrice*/,
+	REMARKS=/*remarks*/,
+	EAD_REMARKS=/*eadRemarks*/,
+	PRODUCT_REMARKS=/*productRemarks*/,
+	REST_QUANTITY=/*restQuantity*/,
+	RACK_CODE_SRC=/*rackCodeSrc*/,
+	UPD_FUNC=/*updFunc*/,
+	UPD_DATETM=now(),
+	UPD_USER=/*updUser*/
+WHERE
+	RO_LINE_ID=/*roLineId*/

@@ -1,0 +1,201 @@
+SELECT
+		P.PRODUCT_CODE
+		,P.PRODUCT_NAME
+		,P.PRODUCT_KANA
+		,P.ONLINE_PCODE
+		,P.SUPPLIER_PCODE
+		,P.SUPPLIER_CODE
+		,P.RACK_CODE
+		,P.SUPPLIER_PRICE_YEN
+		,P.SUPPLIER_PRICE_DOL
+		,P.RETAIL_PRICE
+		,P.SO_RATE
+		,P.UNIT_CATEGORY
+		,UNITCAT.CATEGORY_CODE_NAME			AS UNIT_CATEGORY_NAME
+		,P.PACK_QUANTITY
+		,P.JAN_PCODE
+		,P.WIDTH
+		,P.WIDTH_UNIT_SIZE_CATEGORY
+		,WUNITCAT.CATEGORY_CODE_NAME		AS WIDTH_UNIT_SIZE_CATEGORY_NAME
+		,P.DEPTH
+		,P.DEPTH_UNIT_SIZE_CATEGORY
+		,DUNITCAT.CATEGORY_CODE_NAME		AS DEPTH_UNIT_SIZE_CATEGORY_NAME
+		,P.HEIGHT
+		,P.HEIGHT_UNIT_SIZE_CATEGORY
+		,HUNITCAT.CATEGORY_CODE_NAME		AS HEIGHT_UNIT_SIZE_CATEGORY_NAME
+		,P.WEIGHT
+		,P.WEIGHT_UNIT_SIZE_CATEGORY
+		,WEIGHTUNITCAT.CATEGORY_CODE_NAME	AS WEIGHT_UNIT_SIZE_CATEGORY_NAME
+		,P.LENGTH
+		,P.LENGTH_UNIT_SIZE_CATEGORY
+		,LUNITCAT.CATEGORY_CODE_NAME		AS LENGTH_UNIT_SIZE_CATEGORY_NAME
+		,P.PO_LOT
+		,P.LOT_UPD_FLAG
+		,P.LEAD_TIME
+		,P.PO_NUM
+		,P.PO_UPD_FLAG
+		,P.MINE_SAFETY_STOCK
+		,P.MINE_SAFETY_STOCK_UPD_FLAG
+		,P.ENTRUST_SAFETY_STOCK
+		,P.SALES_STANDARD_DEVIATION
+		,P.AVG_SHIP_COUNT
+		,P.MAX_STOCK_NUM
+		,P.STOCK_UPD_FLAG
+		,P.TERM_SHIP_NUM
+		,P.MAX_PO_NUM
+		,P.MAX_PO_UPD_FLAG
+		,P.FRACT_CATEGORY
+		,P.TAX_CATEGORY
+		,P.STOCK_CTL_CATEGORY
+		,P.STOCK_ASSES_CATEGORY
+		,P.PRODUCT_CATEGORY
+		,CORE_NUM
+		,P.PRODUCT_1
+		,C.CLASS_NAME
+		,P.PRODUCT_2
+		,P.PRODUCT_3
+		,P.RO_MAX_NUM
+		,P.PRODUCT_RANK
+		,P.SET_TYPE_CATEGORY
+		,P.PRODUCT_STATUS_CATEGORY
+		,P.PRODUCT_STOCK_CATEGORY
+		,P.PRODUCT_PURVAY_CATEGORY
+		,P.PRODUCT_STANDARD_CATEGORY
+		,P.CORE_NUM
+		,P.NUM_1
+		,P.NUM_2
+		,P.NUM_3
+		,P.NUM_4
+		,P.NUM_5
+		,P.DEC_1
+		,P.DEC_2
+		,P.DEC_3
+		,P.DEC_4
+		,P.DEC_5
+		,P.DISCARD_DATE
+		,P.REMARKS
+		,P.EAD_REMARKS
+		,P.COMMENT_DATA
+		,P.LAST_RO_DATE
+		,P.CRE_FUNC
+		,P.CRE_DATETM
+		,P.CRE_USER
+		,P.UPD_FUNC
+		,P.UPD_DATETM
+		,P.UPD_USER
+		,P.CRE_FUNC
+		,P.CRE_DATETM
+		,P.CRE_USER
+		,P.UPD_FUNC
+		,P.UPD_DATETM
+		,P.UPD_USER
+		,S.SUPPLIER_NAME
+		,R.RACK_NAME
+		,C.CLASS_NAME
+		,CASE WHEN P.PRODUCT_STATUS_CATEGORY = /*productStatusSaleCancel*/ THEN '1' ELSE '0' END AS DISCARDED
+		,DISREL.UPD_DATETM AS DISCOUNT_UPD_DATETM
+		,DISREL.DISCOUNT_ID
+    FROM
+        PRODUCT_MST_/*$domainId*/ P
+        LEFT OUTER JOIN SUPPLIER_MST_/*$domainId*/ S ON P.SUPPLIER_CODE = S.SUPPLIER_CODE
+        LEFT OUTER JOIN PRODUCT_CLASS_MST_/*$domainId*/ C
+        ON P.PRODUCT_1 = C.CLASS_CODE_1 AND C.CLASS_CODE_2 = '' AND C.CLASS_CODE_3 = ''
+        LEFT OUTER JOIN RACK_MST_/*$domainId*/ R ON P.RACK_CODE = R.RACK_CODE
+		LEFT OUTER JOIN DISCOUNT_REL_/*$domainId*/ DISREL
+				ON DISREL.PRODUCT_CODE = P.PRODUCT_CODE
+
+        LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ UNITCAT
+				ON UNITCAT.CATEGORY_ID = /*unitCategoryId*/
+					AND P.UNIT_CATEGORY = UNITCAT.CATEGORY_CODE
+
+		LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ WEIGHTUNITCAT
+				ON WEIGHTUNITCAT.CATEGORY_ID = /*weightUnitSizeCategoryId*/
+					AND P.WEIGHT_UNIT_SIZE_CATEGORY = WEIGHTUNITCAT.CATEGORY_CODE
+
+		LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ LUNITCAT
+				ON LUNITCAT.CATEGORY_ID = /*lengthUnitSizeCategoryId*/
+					AND P.LENGTH_UNIT_SIZE_CATEGORY = LUNITCAT.CATEGORY_CODE
+
+		LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ WUNITCAT
+				ON WUNITCAT.CATEGORY_ID = /*lengthUnitSizeCategoryId*/
+					AND P.WIDTH_UNIT_SIZE_CATEGORY = WUNITCAT.CATEGORY_CODE
+		LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ DUNITCAT
+				ON DUNITCAT.CATEGORY_ID = /*lengthUnitSizeCategoryId*/
+					AND P.DEPTH_UNIT_SIZE_CATEGORY = DUNITCAT.CATEGORY_CODE
+		LEFT OUTER JOIN CATEGORY_TRN_/*$domainId*/ HUNITCAT
+				ON HUNITCAT.CATEGORY_ID = /*lengthUnitSizeCategoryId*/
+					AND P.HEIGHT_UNIT_SIZE_CATEGORY = HUNITCAT.CATEGORY_CODE
+    /*BEGIN*/
+	WHERE
+		/*IF productCode != null */
+		P.PRODUCT_CODE LIKE /*productCode*/'S%'
+		/*END*/
+		/*IF supplierPcode != null */
+		AND P.SUPPLIER_PCODE LIKE /*supplierPcode*/'S%'
+		/*END*/
+		/*IF janPcode != null */
+		AND P.JAN_PCODE LIKE /*janPcode*/'S%'
+		/*END*/
+		/*IF productName != null */
+		AND P.PRODUCT_NAME LIKE /*productName*/'%S%'
+		/*END*/
+		/*IF productKana != null */
+		AND P.PRODUCT_KANA LIKE /*productKana*/'%S%'
+		/*END*/
+		/*IF supplierCode != null */
+		AND S.SUPPLIER_CODE LIKE /*supplierCode*/'S%'
+		/*END*/
+		/*IF supplierName != null */
+		AND S.SUPPLIER_NAME LIKE /*supplierName*/'%S%'
+		/*END*/
+		/*IF setTypeCategory != null */
+		AND P.SET_TYPE_CATEGORY = /*setTypeCategory*/'0'
+		/*END*/
+		/*IF productStandardCategory != null */
+		AND P.PRODUCT_STANDARD_CATEGORY = /*productStandardCategory*/'00'
+		/*END*/
+		/*IF productStatusCategory != null */
+		AND P.PRODUCT_STATUS_CATEGORY = /*productStatusCategory*/'00'
+		/*END*/
+		/*IF productStockCategory != null */
+		AND P.PRODUCT_STOCK_CATEGORY = /*productStockCategory*/'00'
+		/*END*/
+		/*IF remarks != null */
+		AND P.REMARKS LIKE /*remarks*/'%S%'
+		/*END*/
+		/*IF product1 != null */
+		AND P.PRODUCT_1 = /*product1*/'0000'
+		/*END*/
+		/*IF product2 != null */
+		AND P.PRODUCT_2 = /*product2*/'0000'
+		/*END*/
+		/*IF product3 != null */
+		AND P.PRODUCT_3 = /*product3*/'0000'
+		/*END*/
+		/*IF rackMultiFlag != null*/
+		-- 重複可能棚
+		AND R.MULTI_FLAG = /*rackMultiFlag*/
+		/*END*/
+	/*END*/
+	/*BEGIN*/
+	ORDER BY
+		/*IF sortByProduct != null */
+		P./*$sortColumn*/
+		/*END*/
+
+		/*IF sortBySupplier != null */
+		S./*$sortColumn*/
+		/*END*/
+
+		/*IF sortOrder != null*/
+		/*$sortOrder*/
+		/*END*/
+	/*END*/
+	/*BEGIN*/
+	/*IF rowCount != null*/
+	LIMIT /*rowCount*/
+	/*END*/
+	/*IF offsetRow != null*/
+	OFFSET /*offsetRow*/
+	/*END*/
+	/*END*/

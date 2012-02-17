@@ -1,0 +1,33 @@
+UPDATE
+        SALES_LINE_TRN_/*$domainId*/'DEFAULT' SET
+			STATUS=/*status*/NULL
+			,SALES_SLIP_ID=/*salesSlipId*/NULL
+			,LINE_NO=/*lineNo*/NULL
+			,RO_LINE_ID=/*roLineId*/NULL
+			,SALES_DETAIL_CATEGORY=/*salesDetailCategory*/NULL
+			,PRODUCT_CODE=/*productCode*/NULL
+			,CUSTOMER_PCODE=/*customerPcode*/NULL
+			,PRODUCT_ABSTRACT=/*productAbstract*/NULL
+			,QUANTITY=/*quantity*/NULL
+			,DELIVERY_PROCESS_CATEGORY=/*deliveryProcessCategory*/NULL
+			,UNIT_PRICE=/*unitPrice*/NULL
+			,UNIT_CATEGORY=/*unitCategory*/NULL
+			,UNIT_NAME=/*unitName*/NULL
+			,PACK_QUANTITY=/*packQuantity*/NULL
+			,UNIT_RETAIL_PRICE=/*unitRetailPrice*/NULL
+			,RETAIL_PRICE=/*retailPrice*/NULL
+			,UNIT_COST=/*unitCost*/NULL
+			,COST=/*cost*/NULL
+			,TAX_CATEGORY=/*taxCategory*/NULL
+			,CTAX_RATE=/*ctaxRate*/NULL
+			,CTAX_PRICE=/*ctaxPrice*/NULL
+			,GM=/*gm*/NULL
+			,REMARKS=/*remarks*/NULL
+			,EAD_REMARKS=/*eadRemarks*/NULL
+			,PRODUCT_REMARKS=/*productRemarks*/NULL
+			,RACK_CODE_SRC=/*rackCodeSrc*/NULL
+			,UPD_FUNC=/*updFunc*/NULL
+			,UPD_DATETM=now()
+			,UPD_USER=/*updUser*/NULL
+	WHERE
+		SALES_LINE_ID=/*salesLineId*/0

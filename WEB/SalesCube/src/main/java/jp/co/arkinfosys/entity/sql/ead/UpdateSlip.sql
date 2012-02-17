@@ -1,0 +1,21 @@
+UPDATE EAD_SLIP_TRN_/*$domainId*/ SET
+	EAD_SLIP_ID=/*eadSlipId*/,
+	EAD_DATE=/*eadDate*/,
+	EAD_ANNUAL=/*eadAnnual*/,
+	EAD_MONTHLY=/*eadMonthly*/,
+	EAD_YM=/*eadYm*/,
+	USER_ID=/*userId*/,
+	USER_NAME=/*userName*/,
+	EAD_SLIP_CATEGORY=/*eadSlipCategory*/,
+	EAD_CATEGORY=/*eadCategory*/,
+	REMARKS=/*remarks*/,
+	SRC_FUNC=/*srcFunc*/,
+	SALES_SLIP_ID=/*salesSlipId*/,
+	SUPPLIER_SLIP_ID=/*supplierSlipId*/,
+	MOVE_DEPOSIT_SLIP_ID=/*moveDepositSlipId*/,
+	STOCK_PDATE=/*stockPdate*/,
+	UPD_FUNC=/*updFunc*/NULL,
+	UPD_DATETM=now(),
+	UPD_USER=/*updUser*/NULL
+WHERE
+	EAD_SLIP_ID=/*eadSlipId*/

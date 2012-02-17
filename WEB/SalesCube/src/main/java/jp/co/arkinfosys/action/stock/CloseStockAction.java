@@ -1,0 +1,168 @@
+/*
+ *  Copyright 2009-2010 Ark Information Systems.
+ */
+
+package jp.co.arkinfosys.action.stock;
+
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import javax.annotation.Resource;
+
+import jp.co.arkinfosys.action.CommonResources;
+import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.dto.YmDto;
+import jp.co.arkinfosys.form.stock.CloseStockForm;
+import jp.co.arkinfosys.service.exception.ServiceException;
+import jp.co.arkinfosys.service.stock.CloseStockService;
+
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.seasar.struts.annotation.ActionForm;
+import org.seasar.struts.annotation.Execute;
+import org.seasar.struts.util.ActionMessagesUtil;
+
+/**
+ * 在庫締処理画面のアクションです.
+ * @author Ark Information Systems
+ *
+ */
+public class CloseStockAction extends CommonResources {
+
+	/**
+	 * 画面遷移用のマッピングクラスです.
+	 */
+	public static class Mapping {
+		public static final String INDEX = "/stock/closeStock/";
+		public static final String INPUT = "closeStock.jsp";
+	}
+
+	@ActionForm
+	@Resource
+	private CloseStockForm closeStockForm;
+
+	@Resource
+	private CloseStockService closeStockService;
+
+	/**
+	 * 初期表示処理を行います.
+	 * @throws Exception
+	 */
+	@Execute(validator = false)
+	public String index() throws Exception {
+		
+		Date lastCutoffDate = closeStockService.findMaxStockPDateDate();
+		closeStockForm.lastCutoffDate = StringUtil.getDateString(Constants.FORMAT.DATE, lastCutoffDate);
+
+		return Mapping.INPUT;
+	}
+
+	/**
+	 * 締処理を実行します.
+	 * @throws Exception
+	 */
+	@Execute(validator = true, stopOnValidationError = true, validate = "validate", input = Mapping.INDEX)
+	public String close() throws Exception {
+		try {
+			
+			Integer resultCount = closeStockService.close(closeStockForm.cutoffDate);
+
+			if(resultCount == 0) {
+				
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+									new ActionMessage("infos.stock.close.noData"));
+				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
+			} else {
+				
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+									new ActionMessage("infos.stock.close"));
+				ActionMessagesUtil.addMessages(super.httpSession, super.messages);
+			}
+		} catch (ServiceException e) {
+			super.errorLog(e);
+
+			
+			if(e.isStopOnError()) {
+				
+				throw e;
+			}
+		}
+
+		return Mapping.INDEX + "?redirect=true";
+	}
+
+	/**
+	 * 締解除処理を実行します.
+	 * @return 遷移先URI
+	 * @throws Exception
+	 */
+	@Execute(validator = false, input = Mapping.INPUT)
+	public String reopen() throws Exception {
+		try {
+			
+			closeStockService.reopen();
+
+			
+			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("infos.stock.reopen"));
+			ActionMessagesUtil.addMessages(super.httpSession, super.messages);
+		} catch (ServiceException e) {
+			super.errorLog(e);
+
+			
+			if(e.isStopOnError()) {
+				
+				throw e;
+			}
+		}
+
+		return Mapping.INDEX + "?redirect=true";
+	}
+
+	/**
+	 * 締処理日のチェックを行います.
+	 * @return アクションメッセージ
+	 * @throws ServiceException
+	 */
+    public ActionMessages validate() throws ServiceException {
+		ActionMessages errors = new ActionMessages();
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
+
+		
+		Date lastCutoffDate = closeStockService.findMaxStockPDateDate();
+
+		
+
+		
+		if(StringUtil.hasLength(closeStockForm.cutoffDate) && lastCutoffDate != null) {
+			try {
+				boolean err = false;
+				Date cutoffDate = sdf.parse(closeStockForm.cutoffDate);
+				if(lastCutoffDate.compareTo(cutoffDate) >= 0) {
+					
+					err = true;
+					errors.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage("errors.cutoffDate.eq.less"));
+				}
+
+				if(!err) {
+					YmDto cutoffDto = closeStockService.getYm(cutoffDate);
+					YmDto lastCutoffDto = closeStockService.getYm(lastCutoffDate);
+					if(cutoffDto.ym.equals(lastCutoffDto.ym)) {
+						
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("errors.cutoffDate.eq"));
+					}
+				}
+			} catch (ParseException e) {
+				
+				
+			}
+		}
+
+		return errors;
+    }
+
+}

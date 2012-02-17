@@ -1,0 +1,1 @@
+SELECT * FROM RACK_MST_/*$domainId*/ WHERE RACK_CODE=/*rackCode*/ FOR UPDATE

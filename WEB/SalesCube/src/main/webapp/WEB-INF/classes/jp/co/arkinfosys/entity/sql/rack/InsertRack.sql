@@ -1,0 +1,39 @@
+INSERT INTO RACK_MST_/*$domainId*/ (
+	WAREHOUSE_CODE
+	,RACK_CODE
+	,RACK_NAME
+	,RACK_CATEGORY
+	,MULTI_FLAG
+	,ZIP_CODE
+	,ADDRESS_1
+	,ADDRESS_2
+	,RACK_PC_NAME
+	,RACK_TEL
+	,RACK_FAX
+	,RACK_EMAIL
+	,CRE_FUNC
+	,CRE_DATETM
+	,CRE_USER
+	,UPD_FUNC
+	,UPD_DATETM
+	,UPD_USER
+) VALUES (
+	/*warehouseCode*/NULL
+	,/*rackCode*/NULL
+	,/*rackName*/NULL
+	,'1'				-- 棚分類という考え方が無くなったので、「自社棚」固定とする
+	,/*multiFlag*/'0'
+	,/*zipCode*/NULL
+	,/*address1*/NULL
+	,/*address2*/NULL
+	,/*rackPcName*/NULL
+	,/*rackTel*/NULL
+	,/*rackFax*/NULL
+	,/*rackEmail*/NULL
+	,/*creFunc*/NULL
+	,now()
+	,/*creUser*/NULL
+	,/*updFunc*/NULL
+	,now()
+	,/*updUser*/NULL
+)

@@ -1,0 +1,8 @@
+SELECT
+    PAYMENT_SLIP_ID
+FROM
+    PAYMENT_SLIP_TRN_/*$domainId*/
+WHERE
+	SUPPLIER_CODE = /*supplierCode*/ AND
+	PAYMENT_CUTOFF_DATE IS NULL AND
+	PAYMENT_DATE <= /*paymentCutoffDate*/

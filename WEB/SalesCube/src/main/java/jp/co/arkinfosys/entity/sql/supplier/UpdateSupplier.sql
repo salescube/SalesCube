@@ -1,0 +1,39 @@
+UPDATE
+	SUPPLIER_MST_/*$domainId*/'DEFAULT'
+SET
+	SUPPLIER_NAME=/*supplierName*/NULL
+	,SUPPLIER_KANA=/*supplierKana*/NULL
+	,SUPPLIER_ABBR=/*supplierAbbr*/NULL
+	,SUPPLIER_ZIP_CODE=/*supplierZipCode*/NULL
+	,SUPPLIER_ADDRESS_1=/*supplierAddress1*/NULL
+	,SUPPLIER_ADDRESS_2=/*supplierAddress2*/NULL
+	,SUPPLIER_DEPT_NAME=/*supplierDeptName*/NULL
+	,SUPPLIER_PC_NAME=/*supplierPcName*/NULL
+	,SUPPLIER_PC_KANA=/*supplierPcKana*/NULL
+	,SUPPLIER_PC_PRE_CATEGORY=/*supplierPcPreCategory*/NULL
+	,SUPPLIER_PC_POST=/*supplierPcPost*/NULL
+	,SUPPLIER_TEL=/*supplierTel*/NULL
+	,SUPPLIER_FAX=/*supplierFax*/NULL
+	,SUPPLIER_EMAIL=/*supplierEmail*/NULL
+	,SUPPLIER_URL=/*supplierUrl*/NULL
+	,SUPPLIER_CM_CATEGORY=/*supplierCmCategory*/NULL
+	,TAX_SHIFT_CATEGORY=/*taxShiftCategory*/NULL
+	,PAYMENT_TYPE_CATEGORY=/*paymentTypeCategory*/NULL
+	,PAYMENT_CYCLE_CATEGORY=/*paymentCycleCategory*/NULL
+	,LAST_CUTOFF_DATE=/*lastCutoffDate*/NULL
+	,PAYMENT_DATE=/*paymentDate*/NULL
+	,TAX_FRACT_CATEGORY=/*taxFractCategory*/NULL
+	,PRICE_FRACT_CATEGORY=/*priceFractCategory*/NULL
+	,PO_SLIP_COMEOUT_CATEGORY=/*poSlipComeoutCategory*/NULL
+	,SERVICE_CHARGE_CATEGORY=/*serviceChargeCategory*/NULL
+	,TRANSFER_TYPE_CATEGORY=/*transferTypeCategory*/NULL
+	,NATIONAL_CATEGORY=/*nationalCategory*/NULL
+	,RATE_ID=/*rateId*/NULL
+	,FOB_NAME=/*fobName*/NULL
+	,REMARKS=/*remarks*/NULL
+	,COMMENT_DATA=/*commentData*/NULL
+	,UPD_FUNC=/*updFunc*/NULL
+	,UPD_DATETM=now()
+	,UPD_USER=/*updUser*/NULL
+WHERE
+	SUPPLIER_CODE=/*supplierCode*/

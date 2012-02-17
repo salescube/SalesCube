@@ -1,0 +1,26 @@
+INSERT INTO RATE_MST_/*$domainId*/
+(
+	RATE_ID
+	,NAME
+	,SIGN
+	,REMARKS
+	,CRE_FUNC
+	,CRE_DATETM
+	,CRE_USER
+	,UPD_FUNC
+	,UPD_DATETM
+	,UPD_USER
+)
+VALUES
+(
+	/*rateId*/
+	,/*name*/
+	,/*sign*/
+	,/*remarks*/
+	,/*creFunc*/
+	,now()
+	,/*creUser*/
+	,/*updFunc*/
+	,now()
+	,/*updUser*/
+)

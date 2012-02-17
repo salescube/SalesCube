@@ -1,0 +1,14 @@
+SELECT A.DEPOSIT_SLIP_ID
+FROM BANK_DEPOSIT_REL_/*$domainId*/ A
+      LEFT JOIN DEPOSIT_SLIP_TRN_/*$domainId*/ D
+      	ON A.DEPOSIT_SLIP_ID = D.DEPOSIT_SLIP_ID
+WHERE
+	PAYMENT_DATE = /*paymentDate*/
+	AND
+	PAYMENT_NAME = /*paymentName*/
+	AND
+	DEPOSIT_TOTAL = /*paymentPrice*/
+	AND
+	(LINE_NO = /*lineNo*/ OR LINE_NO = -1)
+ORDER BY
+	A.CRE_DATETM

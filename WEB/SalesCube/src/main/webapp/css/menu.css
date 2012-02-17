@@ -1,0 +1,87 @@
+textarea.news {
+	background-color: #FFFFFF;
+}
+
+/* サイトマップ 角丸四角形 */
+div.titleLeftTop {
+	background-image: url(../images/corner1.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	background-color: #E1E1E1;
+	margin-bottom: 5px;
+}
+
+div.titleRightTop {
+	background-image: url(../images/corner2.png);
+	background-repeat: no-repeat;
+	background-position: 100% 0px;
+
+}
+
+div.titleRightBottom {
+	background-image: url(../images/corner3.png);
+	background-repeat: no-repeat;
+	background-position: 100% 100%;
+
+}
+
+div.titleLeftBottom {
+	background-image: url(../images/corner4.png);
+	background-repeat: no-repeat;
+	background-position: 0px 100%;
+
+	color: #222288;
+	font-size: 10pt;
+}
+
+table.sitemap {
+	width: 850px;
+	margin: 0px 0px 0px 30px;
+}
+
+table.sitemap td {
+	vertical-align: top;
+}
+
+div#menu {
+	margin-bottom: 5px;
+}
+
+div#menu table {
+	border-collapse: collapse;
+	background-color:#f8f8ff;
+}
+
+div#menu tr.menu1
+{
+    background-color:#f8f8ff;
+    height:28px;
+    vertical-align:bottom;
+    padding-top:6px;
+}
+
+div#menu tr.menu2
+{
+    background-color:#f8f8ff;
+    height:28px;
+    vertical-align:bottom;
+    padding-top:5px;
+}
+
+div#menu td.menu1
+{
+    width:10px;
+    background-repeat:no-repeat;
+    background-position:left bottom;
+    cursor:pointer;
+}
+
+div#menu td.menu2
+{
+    background-repeat:repeat-x;
+    background-position:left bottom;
+    font-size:10pt;
+    font-weight:bold;
+    padding-bottom:2px;
+    cursor:pointer;
+}

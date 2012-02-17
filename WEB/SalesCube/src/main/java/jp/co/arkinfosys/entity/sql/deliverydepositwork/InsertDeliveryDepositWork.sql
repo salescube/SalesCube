@@ -1,0 +1,37 @@
+INSERT
+INTO
+DELIVERY_DEPOSIT_WORK_/*$domainId*/ (
+	USER_ID
+	,PAYMENT_CATEGORY
+	,CUSTOMER_CODE
+	,DELIVERY_SLIP_ID
+	,DATA_CATEGORY
+	,CHANGE_COUNT
+	,SERVICE_CATEGORY
+	,SETTLE_CATEGORY
+	,DELIVERY_DATE
+	,PRODUCT_PRICE
+	,COD_PRICE
+	,SERVICE_PRICE
+	,SPLIT_PRICE
+	,STAMP_PRICE
+	,RG_DATE
+	,RG_SLIP_ID
+) VALUES (
+	/*userId*/NULL
+	,/*paymentCategory*/NULL
+	,/*customerCode*/NULL
+	,/*deliverySlipId*/NULL
+	,/*dataCategory*/NULL
+	,/*changeCount*/NULL
+	,/*serviceCategory*/NULL
+	,/*settleCategory*/NULL
+	,/*deliveryDate*/NULL
+	,/*productPrice*/NULL
+	,/*codPrice*/NULL
+	,/*servicePrice*/NULL
+	,/*splitPrice*/NULL
+	,/*stampPrice*/NULL
+	,/*rgDate*/NULL
+	,/*rgSlipId*/NULL
+)

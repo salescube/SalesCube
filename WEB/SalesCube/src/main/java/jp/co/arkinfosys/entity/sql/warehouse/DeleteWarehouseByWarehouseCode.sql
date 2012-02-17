@@ -1,0 +1,1 @@
+DELETE FROM WAREHOUSE_MST_/*$domainId*/ WHERE WAREHOUSE_CODE=/*warehouseCode*/

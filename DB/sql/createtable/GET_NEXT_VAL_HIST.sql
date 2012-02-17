@@ -1,0 +1,64 @@
+DELIMITER //
+
+-- シーケンス処理関数
+CREATE FUNCTION GET_NEXT_VAL_HIST(tableName VARCHAR(40)) RETURNS INT UNSIGNED
+BEGIN
+	DECLARE histId INT UNSIGNED DEFAULT 0;
+	DECLARE sqlStatus INT DEFAULT 0;
+	DECLARE CONTINUE HANDLER FOR 1022 SET sqlStatus = 1022;  -- SQLSTATE: 23000 (ER_DUP_KEY);
+
+	UPDATE SEQ_MAKER_HIST_SALES SET 
+		ID = ID + 1, 
+		UPD_FUNC='GET_NEXT_VAL', 
+		UPD_DATETM=now(), 
+		UPD_USER='ARK' 
+	WHERE 
+		TABLE_NAME=tableName;
+
+	IF ROW_COUNT() = 0 THEN
+		INSERT INTO SEQ_MAKER_HIST_SALES (
+			TABLE_NAME, 
+			ID, 
+			WARNING_ID, 
+			CRE_FUNC, 
+			CRE_DATETM, 
+			CRE_USER, 
+			UPD_FUNC, 
+			UPD_DATETM, 
+			UPD_USER
+		) VALUES ( 
+			tableName, 
+			1, 
+			0, 
+			'GET_NEXT_VAL', 
+			now(), 
+			'ARK', 
+			NULL, 
+			NULL, 
+			NULL
+		);
+
+		IF sqlStatus = 1022 THEN
+			-- in case when already inserted by another session.
+			UPDATE SEQ_MAKER_HIST_SALES SET 
+				ID = ID + 1, 
+				UPD_FUNC='GET_NEXT_VAL', 
+				UPD_DATETM=now(), 
+				UPD_USER='ARK' 
+			WHERE 
+				TABLE_NAME=tableName;
+		END IF;
+	END IF;
+
+	SELECT 
+		ID INTO histId 
+	FROM 
+		SEQ_MAKER_HIST_SALES 
+	WHERE 
+		TABLE_NAME=tableName;
+
+	RETURN histId;
+  END;
+//
+
+DELIMITER ;

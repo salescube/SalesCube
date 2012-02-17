@@ -1,0 +1,2 @@
+DELETE FROM STDDEV_YM_WORK_/*$domainId*/ WHERE SESSION_ID=/*sessionId*/
+

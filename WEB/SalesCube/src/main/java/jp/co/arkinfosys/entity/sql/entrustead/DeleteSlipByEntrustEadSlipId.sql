@@ -1,0 +1,2 @@
+DELETE FROM ENTRUST_EAD_SLIP_TRN_/*$domainId*/'DEFAULT'
+WHERE ENTRUST_EAD_SLIP_ID=/*entrustEadSlipId*/'default'

@@ -1,0 +1,1 @@
+SELECT * FROM RACK_MST_/*$domainId*/ WHERE WAREHOUSE_CODE=/*warehouseCode*/ FOR UPDATE

@@ -1,0 +1,31 @@
+INSERT
+    INTO
+        FILE_INFO_/*$domainId*/ (
+	        FILE_ID
+	        ,TITLE
+	        ,FILE_NAME
+	        ,REAL_FILE_NAME
+	        ,FILE_SIZE
+	        ,OPEN_LEVEL
+	        ,CRE_FUNC
+	        ,CRE_DATETM
+	        ,CRE_USER
+	        ,UPD_FUNC
+	        ,UPD_DATETM
+	        ,UPD_USER
+        )
+        VALUES
+        (
+        	/*fileId*/
+        	,/*title*/
+        	,/*fileName*/
+        	,/*realFileName*/
+        	,/*fileSize*/
+        	,/*openLevel*/
+        	,/*creFunc*/
+        	,now()
+        	,/*creUser*/
+        	,/*updFunc*/
+        	,now()
+        	,/*updUser*/
+        )

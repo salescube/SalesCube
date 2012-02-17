@@ -1,0 +1,19 @@
+UPDATE WAREHOUSE_MST_/*$domainId*/'DEFAULT' SET
+  WAREHOUSE_CODE=/*warehouseCode*/
+  ,WAREHOUSE_NAME=/*warehouseName*/
+  ,WAREHOUSE_ZIP_CODE=/*warehouseZipCode*/
+  ,WAREHOUSE_ADDRESS_1=/*warehouseAddress1*/
+  ,WAREHOUSE_ADDRESS_2=/*warehouseAddress2*/
+  ,WAREHOUSE_TEL=/*warehouseTel*/
+  ,WAREHOUSE_FAX=/*warehouseFax*/
+  ,MANAGER_NAME=/*managerName*/
+  ,MANAGER_KANA=/*managerKana*/
+  ,MANAGER_TEL=/*managerTel*/
+  ,MANAGER_FAX=/*managerFax*/
+  ,MANAGER_EMAIL=/*managerEmail*/
+  ,WAREHOUSE_STATE=/*warehouseState*/
+  ,UPD_FUNC=/*updFunc*/NULL
+  ,UPD_DATETM=now()
+  ,UPD_USER=/*updUser*/NULL
+WHERE
+WAREHOUSE_CODE=/*warehouseCode*/NULL

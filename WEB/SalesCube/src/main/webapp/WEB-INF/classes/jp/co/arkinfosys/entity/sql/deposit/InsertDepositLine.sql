@@ -1,0 +1,41 @@
+INSERT
+    INTO
+        DEPOSIT_LINE_TRN_/*$domainId*/ (
+			DEPOSIT_LINE_ID
+			,STATUS
+			,DEPOSIT_SLIP_ID
+			,LINE_NO
+			,DEPOSIT_CATEGORY
+			,PRICE
+			,INST_DATE
+			,INST_NO
+			,BANK_ID
+			,BANK_INFO
+			,REMARKS
+			,SALES_LINE_ID
+			,CRE_FUNC
+			,CRE_DATETM
+			,CRE_USER
+			,UPD_FUNC
+			,UPD_DATETM
+			,UPD_USER
+) VALUES (
+			/*depositLineId*/0
+			,/*status*/NULL
+			,/*depositSlipId*/NULL
+			,/*lineNo*/NULL
+			,/*depositCategory*/NULL
+			,/*price*/NULL
+			,/*instDate*/NULL
+			,/*instNo*/NULL
+			,/*bankId*/NULL
+			,/*bankInfo*/NULL
+			,/*remarks*/NULL
+			,/*salesLineId*/NULL
+			,/*creFunc*/NULL
+			,now()
+			,/*creUser*/NULL
+			,/*updFunc*/NULL
+			,now()
+			,/*updUser*/NULL
+)

@@ -1,0 +1,1 @@
+DELETE FROM ZIP_MST_/*$domainId*/

@@ -1,0 +1,2 @@
+-- データベースドロップ
+DROP DATABASE salescube;

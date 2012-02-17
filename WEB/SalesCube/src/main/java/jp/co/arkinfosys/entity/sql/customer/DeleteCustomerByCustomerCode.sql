@@ -1,0 +1,1 @@
+DELETE FROM CUSTOMER_MST_/*$domainId*/ WHERE CUSTOMER_CODE=/*customerCode*/

@@ -1,0 +1,11 @@
+UPDATE
+	RO_LINE_TRN_/*$domainId*/
+SET
+	STATUS=/*status*/,
+	REST_QUANTITY=/*restQuantity*/,
+	LAST_SHIP_DATE=/*lastShipDate*/,
+	UPD_FUNC=/*updFunc*/,
+	UPD_DATETM=now(),
+	UPD_USER=/*updUser*/
+WHERE
+	RO_LINE_ID=/*roLineId*/
