@@ -780,7 +780,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESSALES'
+	'XXXXXXXXXX'
 	, '反省値引き'
 	, 'ハンセイネビキ'
 	, ''
