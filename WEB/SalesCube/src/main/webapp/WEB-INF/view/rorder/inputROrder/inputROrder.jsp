@@ -185,7 +185,7 @@
 		// 検索実行
 		$("#errors").empty();
 		var data = {"zipCode" : val};
-		asyncRequest(contextRoot + "/ajax/searchZipCodeAjax/search", data,
+		asyncRequest(contextRoot + "/ajax/master/searchZipCodeAjax/search", data,
 			function(data) {
 				var results = eval(data);
 				if (results.length!=1) {

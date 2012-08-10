@@ -147,12 +147,21 @@ function onF3(){
 				(typeof paramDataTmp[key].length != undefined && paramDataTmp[key].length == 0)) {
 			continue;
 		}
-
+		if (paramDataTmp[key] instanceof Array) {
+		   for (i=0; i<paramDataTmp[key].length; i++) {
+				var hidden = $(document.createElement("input"));
+				hidden.attr("type", "hidden");
+				hidden.attr("name", key);
+				hidden.val(paramDataTmp[key][i]);
+				form.append(hidden);
+			}
+		}else{
 		var hidden = $(document.createElement("input"));
 		hidden.attr("type", "hidden");
 		hidden.attr("name", key);
 		hidden.val(paramDataTmp[key]);
 		form.append(hidden);
+	}
 	}
 
 	form.submit();
