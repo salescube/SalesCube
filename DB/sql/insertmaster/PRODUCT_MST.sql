@@ -78,7 +78,7 @@ INTO PRODUCT_MST_SALES(
 	, UPD_USER
 ) 
 VALUES ( 
-	'SALESXXXXA'
+	'XXXXXXXXXA'
 	, '通販サイト1配送料'
 	, 'Amazon配送料'
 	, ''
@@ -156,7 +156,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXC'
+	'XXXXXXXXXC'
 	, '配送料'
 	, '配送料'
 	, ''
@@ -234,7 +234,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXD'
+	'XXXXXXXXXD'
 	, '通販サイト1手数料'
 	, 'Amazon手数料'
 	, ''
@@ -312,7 +312,7 @@ VALUES (
 	, 'adm'
 ) 
 , ( 
-	'SALESXXXXE'
+	'XXXXXXXXXE'
 	, '海外チャーター費用'
 	, '海外チャーター費用'
 	, ''
@@ -390,7 +390,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXH'
+	'XXXXXXXXXH'
 	, 'システム送料手数料相殺値引き'
 	, 'システム送料手数料相殺値引き'
 	, ''
@@ -468,7 +468,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXK'
+	'XXXXXXXXXK'
 	, '手数料'
 	, '手数料'
 	, ''
@@ -546,7 +546,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXM'
+	'XXXXXXXXXM'
 	, '返品分値引き'
 	, '返品分値引き'
 	, ''
@@ -624,7 +624,7 @@ VALUES (
 	, 'adm'
 ) 
 , ( 
-	'SALESXXXXV'
+	'XXXXXXXXXV'
 	, 'パートナー値引き'
 	, 'パートナー値引き'
 	, ''
@@ -702,7 +702,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXW'
+	'XXXXXXXXXW'
 	, 'クレジットカードシステム利用料'
 	, 'クレジットカードシステム利用料'
 	, ''
@@ -858,7 +858,7 @@ VALUES (
 	, 'uka'
 ) 
 , ( 
-	'SALESXXXXZ'
+	'XXXXXXXXXZ'
 	, 'アイテム総数値引き'
 	, 'アイテム総数値引き'
 	, ''
