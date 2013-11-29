@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -133,41 +132,41 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	public void insertSlipAndLine(EntrustEadSlipTrnDto entrustEadSlipTrnDto)
 			throws ServiceException {
 		try {
-			
+			// 入出庫伝票の処理
 			EntrustEadSlipTrn entrustEadSlipTrn = Beans.createAndCopy(EntrustEadSlipTrn.class,
 					entrustEadSlipTrnDto).execute();
 
-			
+			// Insert
 			insertSlip(entrustEadSlipTrn);
 
-			
+			// 入出庫伝票明細の処理
 			for (EntrustEadLineTrnDto entrustEadLineTrnDto : entrustEadSlipTrnDto.getLineDtoList()) {
-				
+				// チェックされていない行は処理しない
 				if ( entrustEadLineTrnDto.checkEadLine == null ) {
 					continue;
 				}
 				EntrustEadLineTrn entrustEadLineTrn = Beans.createAndCopy(EntrustEadLineTrn.class,
 						entrustEadLineTrnDto).execute();
 
-				
+				// Insert
 				insertLine(entrustEadLineTrn);
 
-				
+				// 委託出庫入力の場合、委託入出庫明細の「関連委託入出庫伝票行ID」を設定する(入庫明細・出庫明細両方)
 				if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(entrustEadLineTrnDto.entrustEadCategory) ) {
 					updateRelEentrustEadLineIdByPoLineId(entrustEadLineTrn.poLineId );
 				}
 
-				
+				// 発注伝票明細の状態を変更する
 				if(CategoryTrns.ENTRUST_EAD_CATEGORY_ENTER.equals(entrustEadLineTrnDto.entrustEadCategory)) {
-					
+					// 選択されている委託入出庫区分が入庫の場合、明細ステータスを委託在庫生産完了にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_MAKED , entrustEadLineTrnDto.quantity);
 				} else {
-					
+					// 選択されている委託入出庫区分が出庫の場合、明細ステータスを委託在庫出庫完了にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED , entrustEadLineTrnDto.quantity);
 				}
 			}
 
-			
+			// 発注伝票の状態を変更する(更新済みの明細状態を再集計してメソッド内で自動的に伝票状態を判別し、設定される)
 			poSlipService.updatePOrderTrnStatusByPoSlipId(entrustEadSlipTrnDto.poSlipId);
 
 		} catch (Exception e) {
@@ -184,7 +183,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	 */
 	public void updateRelEentrustEadLineIdByPoLineId( Integer poLineId ) throws ServiceException  {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.PO_LINE_ID, poLineId );
 			this.updateBySqlFile("entrustead/UpdateRelEentrustEadLineIdByPoLineId.sql", param).execute();
@@ -203,7 +202,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	 */
 	public int insertSlip(EntrustEadSlipTrn entrustEadSlipTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(entrustEadSlipTrn);
 			return this.updateBySqlFile("entrustead/InsertSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -221,7 +220,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	 */
 	public int insertLine(EntrustEadLineTrn entrustEadLineTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(entrustEadLineTrn);
 			return this.updateBySqlFile("entrustead/InsertLine.sql", param).execute();
 		} catch (Exception e) {
@@ -241,7 +240,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			EntrustEadSlipTrn entrustEadSlipTrn ) throws ServiceException {
 
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(entrustEadSlipTrn);
 			return this.updateBySqlFile("entrustead/UpdateSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -261,7 +260,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			EntrustEadLineTrn entrustEadLineTrn) throws ServiceException {
 
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(entrustEadLineTrn);
 			return this.updateBySqlFile("entrustead/UpdateLine.sql", param).execute();
 		} catch (Exception e) {
@@ -321,7 +320,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	public EntrustEadSlipTrn findSlipByEntrustEadSlipId(Integer entrustEadSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipId);
 
@@ -343,7 +342,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	public List<EntrustEadLineTrn> findLineByEntrustEadSlipId(Integer entrustEadSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipId);
 
@@ -365,7 +364,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	public int deleteLineByEntrustEadLineId(Integer entrustEadLineId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EntrustEadService.Param.ENTRUST_EAD_LINE_ID,
 					entrustEadLineId);
@@ -392,7 +391,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	 */
 	public int incrementDispatchOrderPrintCount(String entrustEadSlipId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipId);
 
@@ -470,14 +469,14 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param, sortColumn, sortOrderAsc);
 
-			
+			// 特定のカラムがsortキーに指定された場合は伝票、行番をキーにする
 			if (Column.ENTRUST_EAD_SLIP_ID.equals(sortColumn)) {
-				
+				// 委託入出庫番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_ENTRUST_EAD_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_ENTRUST_EAD_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
 			}else if(Column.PO_LINE_ID_NO.equals(sortColumn)){
-				
+				// 発注伝票番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_PO_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_PO_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
@@ -522,7 +521,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param,
 			String sortColumn, boolean sortOrderAsc) {
-		
+		// 委託入出庫伝票番号
 		if (conditions.containsKey(Param.ENTRUST_EAD_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.ENTRUST_EAD_SLIP_ID))) {
@@ -531,10 +530,10 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 委託入出庫区分
 		this.setEntrustEadCategoryCondition(conditions, param);
 
-		
+		// 入力担当者名
 		if (conditions.containsKey(Param.USER_NAME)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_NAME))) {
 				param.put(Param.USER_NAME, super
@@ -543,7 +542,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 委託入出庫日（開始）
 		if (conditions.containsKey(Param.ENTRUST_EAD_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.ENTRUST_EAD_DATE_FROM))) {
@@ -552,7 +551,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 委託入出庫日（終了）
 		if (conditions.containsKey(Param.ENTRUST_EAD_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.ENTRUST_EAD_DATE_TO))) {
@@ -561,7 +560,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(Param.REMARKS)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.REMARKS))) {
 				param.put(Param.REMARKS, super
@@ -570,7 +569,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_CODE))) {
@@ -580,7 +579,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_NAME))) {
@@ -590,7 +589,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(Param.PRODUCT_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_CODE))) {
@@ -600,7 +599,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(Param.PRODUCT_ABSTRACT)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_ABSTRACT))) {
@@ -610,7 +609,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（大）
 		if (conditions.containsKey(Param.PRODUCT1)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT1))) {
 				param.put(Param.PRODUCT1, (String) conditions
@@ -618,7 +617,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（中）
 		if (conditions.containsKey(Param.PRODUCT2)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT2))) {
 				param.put(Param.PRODUCT2, (String) conditions
@@ -626,7 +625,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（小）
 		if (conditions.containsKey(Param.PRODUCT3)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT3))) {
 				param.put(Param.PRODUCT3, (String) conditions
@@ -634,7 +633,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
-		
+		// 発注伝票番号
 		if (conditions.containsKey(Param.PO_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_SLIP_ID))) {
 				param.put(Param.PO_SLIP_ID, new Integer((String)conditions.get(Param.PO_SLIP_ID)));
@@ -646,20 +645,20 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 					.convertColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
 			param.put(Param.SORT_ORDER, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
@@ -673,7 +672,7 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 	 */
 	private void setEntrustEadCategoryCondition(Map<String, Object> conditions,
 			Map<String, Object> param) {
-		
+		// 委託入出庫区分
 		List<String> categoryList = new ArrayList<String>();
 
 		Boolean check = (Boolean) conditions

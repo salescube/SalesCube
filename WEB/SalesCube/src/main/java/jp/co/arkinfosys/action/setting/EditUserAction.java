@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.util.List;
@@ -118,7 +117,7 @@ public class EditUserAction extends CommonResources {
 			UserDto dto = Beans.createAndCopy(UserDto.class, this.editUserForm)
 					.execute();
 
-			
+			// ユーザー情報登録
 			this.userService.insertRecord(dto);
 
 			this.init(this.editUserForm.userId);
@@ -146,7 +145,7 @@ public class EditUserAction extends CommonResources {
 			UserDto dto = Beans.createAndCopy(UserDto.class, this.editUserForm)
 					.execute();
 
-			
+			// ユーザー情報更新
 			this.userService.updateRecord(dto);
 
 			this.init(this.editUserForm.userId);
@@ -180,7 +179,7 @@ public class EditUserAction extends CommonResources {
 			UserDto dto = Beans.createAndCopy(UserDto.class, this.editUserForm)
 					.execute();
 
-			
+			// ユーザー情報更新
 			this.userService.deleteRecord(dto);
 
 			this.init(null);
@@ -237,7 +236,7 @@ public class EditUserAction extends CommonResources {
 		}
 		this.editUserForm.deptList.add(0, new LabelValueBean());
 
-		
+		// 全サブメニューの情報を権限フラグ付きで取得する
 		List<MenuJoin> menuJoinList = this.menuService
 				.findAllMenuValidFlagForUser(userId);
 		for (MenuJoin menuJoin : menuJoinList) {
@@ -250,7 +249,7 @@ public class EditUserAction extends CommonResources {
 		this.editUserForm.menuCount = menuJoinList.size();
 
 		if (!StringUtil.hasLength(userId)) {
-			
+			// 新規追加時の初期値は「無効」または「参照」
 			for (MenuDto menuDto : this.editUserForm.menuDtoList) {
 				if (Constants.MENU_VALID_TYPE.INVALID_VALID_REFERENCE
 						.equals(menuDto.validType)) {
@@ -262,7 +261,7 @@ public class EditUserAction extends CommonResources {
 			return;
 		}
 
-		
+		// ユーザー情報を取得してフォームにセットする
 		User user = this.userService.findById(userId);
 		if (user == null) {
 			return;
@@ -271,7 +270,7 @@ public class EditUserAction extends CommonResources {
 				Constants.FORMAT.TIMESTAMP)
 				.dateConverter(Constants.FORMAT.DATE).execute();
 
-		
+		// 画面表示用の更新
 		this.editUserForm.creDatetmShow = StringUtil.getDateString(
 				Constants.FORMAT.DATE, user.creDatetm);
 		this.editUserForm.updDatetmShow = StringUtil.getDateString(

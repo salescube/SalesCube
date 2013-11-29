@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.util.Iterator;
@@ -108,7 +107,7 @@ public class EditDeptAction extends CommonResources {
 			DeptDto dto = Beans.createAndCopy(DeptDto.class, this.editDeptForm)
 					.execute();
 
-			
+			// ユーザー情報登録
 			this.deptService.insertRecord(dto);
 
 			this.init(this.editDeptForm.deptId);
@@ -136,7 +135,7 @@ public class EditDeptAction extends CommonResources {
 			DeptDto dto = Beans.createAndCopy(DeptDto.class, this.editDeptForm)
 					.execute();
 
-			
+			// ユーザー情報更新
 			this.deptService.updateRecord(dto);
 
 			this.init(this.editDeptForm.deptId);
@@ -176,7 +175,7 @@ public class EditDeptAction extends CommonResources {
 				return EditDeptAction.Mapping.INPUT;
 			}
 
-			
+			// ユーザー情報更新
 			this.deptService.deleteRecord(Beans.createAndCopy(DeptDto.class, this.editDeptForm).execute());
 			this.init(null);
 
@@ -220,11 +219,11 @@ public class EditDeptAction extends CommonResources {
 	private void init(String deptId) throws ServiceException {
 		this.editDeptForm.reset();
 
-		
+		// 更新権限
 		this.editDeptForm.isUpdate = super.userDto
 				.isMenuUpdate(Constants.MENU_ID.SETTING_DEPT);
 
-		
+		// 親部門リスト
 		List<Dept> deptList = this.deptService.findAllDept();
 		for (Dept dept : deptList) {
 			this.editDeptForm.parentList.add(new LabelValueBean(dept.name,
@@ -236,7 +235,7 @@ public class EditDeptAction extends CommonResources {
 			return;
 		}
 
-		
+		// 編集の場合、親部門プルダウンリストから自身とその子孫部門を削除する
 		List<DeptDto> deptDtoList = this.deptService
 				.convertEntityToDto(deptList);
 		for (DeptDto dto : deptDtoList) {
@@ -244,7 +243,7 @@ public class EditDeptAction extends CommonResources {
 				continue;
 			}
 
-			
+			// 子孫部門を取得
 			List<DeptDto> descDeptList = dto.getDescDetp();
 
 			Iterator<LabelValueBean> ite = this.editDeptForm.parentList
@@ -252,19 +251,19 @@ public class EditDeptAction extends CommonResources {
 			while (ite.hasNext()) {
 				LabelValueBean bean = ite.next();
 				if (bean.getValue() == null) {
-					
+					// 先頭項目(空白)
 					continue;
 				}
 
 				if (bean.getValue().equals(deptId)) {
-					
+					// 自身なら削除
 					ite.remove();
 					continue;
 				}
 
 				for (DeptDto desc : descDeptList) {
 					if (bean.getValue().equals(desc.deptId)) {
-						
+						// 子孫部門なら削除
 						ite.remove();
 						break;
 					}
@@ -272,7 +271,7 @@ public class EditDeptAction extends CommonResources {
 			}
 		}
 
-		
+		// ユーザー情報を取得してフォームにセットする
 		Dept dept = this.deptService.findById(deptId);
 		if (dept == null) {
 			return;
@@ -281,7 +280,7 @@ public class EditDeptAction extends CommonResources {
 				Constants.FORMAT.TIMESTAMP)
 				.dateConverter(Constants.FORMAT.DATE).execute();
 
-		
+		// 画面表示用の更新
 		this.editDeptForm.creDatetmShow = StringUtil.getDateString(
 				Constants.FORMAT.DATE, dept.creDatetm);
 		this.editDeptForm.updDatetmShow = StringUtil.getDateString(

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -104,40 +103,40 @@ public class SearchCustomerRankResultOutputAction extends
 	 */
 	@Override
 	protected void doAfterSearch() throws Exception {
-		
+		// システム日付
 		Calendar c = Calendar.getInstance();
 
-		
+		// １ヶ月前
 		c.add(Calendar.MONTH, -1);
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		this.searchCustomerRankForm.labelSales1 = year + "年" + month + "月";
 
-		
+		// ２ヶ月前
 		c.add(Calendar.MONTH, -1);
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH) + 1;
 		this.searchCustomerRankForm.labelSales2 = year + "年" + month + "月";
 
-		
+		// ３ヶ月前
 		c.add(Calendar.MONTH, -1);
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH) + 1;
 		this.searchCustomerRankForm.labelSales3 = year + "年" + month + "月";
 
-		
+		// ４ヶ月前
 		c.add(Calendar.MONTH, -1);
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH) + 1;
 		this.searchCustomerRankForm.labelSales4 = year + "年" + month + "月";
 
-		
+		// ５ヶ月前
 		c.add(Calendar.MONTH, -1);
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH) + 1;
 		this.searchCustomerRankForm.labelSales5 = year + "年" + month + "月";
 
-		
+		// ６ヶ月前
 		c.add(Calendar.MONTH, -1);
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH) + 1;

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.payment;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class InputPaymentForm extends AbstractSlipEditForm<InputPaymentLineDto> 
 	/** 明細行リスト */
 	public List<InputPaymentLineDto> lineDtoList = new ArrayList<InputPaymentLineDto>();
 
-	
+	// その他画面で使用する項目
 	/** 伝票複写で選択された発注伝票番号 */
 	public String selPoSlipId;
 
@@ -182,7 +181,7 @@ public class InputPaymentForm extends AbstractSlipEditForm<InputPaymentLineDto> 
 
 	@Override
 	public void initCopy() throws ServiceException {
-		
+		// 伝票複写時はNo列に連番を設定(行番号が未発番のため)
 		for(int i = 0; i < lineDtoList.size(); i++) {
 			InputPaymentLineDto dto = lineDtoList.get(i);
 			dto.paymentLineNo = String.valueOf(i + 1);
@@ -202,7 +201,7 @@ public class InputPaymentForm extends AbstractSlipEditForm<InputPaymentLineDto> 
 	 */
 	@Override
 	public void initializeScreenInfo() {
-		
+		// 担当者を設定する
 		userName = this.userDto.nameKnj;
 	}
 
@@ -212,7 +211,7 @@ public class InputPaymentForm extends AbstractSlipEditForm<InputPaymentLineDto> 
 	 */
 	@Override
 	public void setDefaultSelected(AbstractSlipDto<InputPaymentLineDto> dto) {
-		
+		// 処理なし
 	}
 
 	/**

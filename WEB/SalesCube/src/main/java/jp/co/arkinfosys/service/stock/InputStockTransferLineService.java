@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.List;
@@ -42,88 +41,88 @@ public class InputStockTransferLineService extends CommonInputStockLineService {
 			, AbstractService<?>... abstractServices)
 			throws ServiceException {
 		if (lineList != null && lineList.size() > 0) {
-			
+			// 入出庫伝票明細の処理
 			Integer lineNo = 0;
 			for (EadLineTrnDto deliveryLineDto : lineList) {
-				
+				// 商品コードに入力のない行は処理しない
 				if (!StringUtil.hasLength(deliveryLineDto.productCode)) {
 					continue;
 				}
 
-				
+				// 出庫側の処理
 
-				
+				// 入出庫伝票行IDを採番
 				deliveryLineDto.eadLineId = Long.toString(seqMakerService
 						.nextval(EadService.Table.EAD_LINE_TRN));
-				
+				// 入出庫伝票番号を設定
 				deliveryLineDto.eadSlipId = slipDto.eadSlipId;
 
-				
+				// 商品情報を取得する
 				Product product = productService
 						.findById(deliveryLineDto.productCode);
 
-				
+				// 棚情報を取得する
 				Rack deliveryRack = rackService.findById(deliveryLineDto.rackCode);
 
-				
+				// 行番号
 				lineNo++;
-				
+				//deliveryLineDto.eadLineNo = (lineNo).toString();
 				deliveryLineDto.lineNo = (lineNo).toString();
 
-				
+				// 商品名
 				deliveryLineDto.productAbstract = product.productName;
 
-				
+				// 数量
 				Converter conv = createProductNumConverter();
 				Number num = (Number) conv.getAsObject(deliveryLineDto.quantity);
 				deliveryLineDto.quantity = num.toString();
 
-				
+				// 棚番名
 				deliveryLineDto.rackName = deliveryRack.rackName;
 
-				
+				// 売上伝票行ID
 				deliveryLineDto.salesLineId = null;
 
-				
+				// 仕入伝票行ID
 				deliveryLineDto.supplierLineId = null;
 
-				
+				// Entityに設定
 				EadLineTrn deliveryLineTrn = Beans.createAndCopy(EadLineTrn.class,
 						deliveryLineDto).execute();
 
-				
+				// Insert(出庫)
 				eadService.insertLine(deliveryLineTrn);
 
 
 
-				
+				// 入庫側の処理(出庫側との差分を設定する)
 
-				
+				// 出庫のDTOから入庫のDTOを作成する
 				EadSlipTrnDto stockDto = slipDto.createStockDto();
 
-				
+				// 入出庫伝票行IDを採番
 				EadLineTrnDto stockLineDto = deliveryLineDto.createStockDto();
 
-				
+				// 入出庫伝票行IDを採番
 				stockLineDto.eadLineId = Long.toString(seqMakerService
 						.nextval(EadService.Table.EAD_LINE_TRN));
-				
+				// 入出庫伝票番号を設定
 				stockLineDto.eadSlipId = stockDto.eadSlipId;
 
-				
+				// 棚情報を取得する
 				Rack stockRack = rackService.findById(stockLineDto.rackCodeDest);
 
-				
+				// 棚番コード
 				stockLineDto.rackCode = stockLineDto.rackCodeDest;
 
-				
+				// 棚番名
 				stockLineDto.rackName = stockRack.rackName;
 
-				
+				// Entityに設定
 				EadLineTrn stockLineTrn = Beans.createAndCopy(EadLineTrn.class,
 						stockLineDto).execute();
 
-				
+				// Insert(出庫)
 				eadService.insertLine(stockLineTrn);
 			}
 		}

@@ -156,35 +156,36 @@ function resetListEtc(){
 </script>
 </head>
 <body onload="init()" onhelp="return false;">
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0006"/>
 		<jsp:param name="MENU_ID" value="0603"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<!-- タイトル -->
 		<span class="title"><bean:message key='titles.importDeliveryDeposit'/></span>
 
 		<div class="function_buttons">
-			<button id="btnF1" type="button" onclick="onF1();" tabindex="2000">F1<br><bean:message key='words.action.initialize'/>
-			</button><button id="btnF2" type="button" onclick="onF2();" tabindex="2001">F2<br><bean:message key='words.action.uptake'/>
-			</button><button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/>
-			</button><button type="button" disabled="disabled">F4<br>&nbsp;
-			</button><button type="button" disabled="disabled">F5<br>&nbsp;
-			</button><button type="button" disabled="disabled">F6<br>&nbsp;
-			</button><button type="button" disabled="disabled">F7<br>&nbsp;
-			</button><button type="button" disabled="disabled">F8<br>&nbsp;
-			</button><button type="button" disabled="disabled">F9<br>&nbsp;
-			</button><button type="button" disabled="disabled">F10<br>&nbsp;
-			</button><button type="button" disabled="disabled">F11<br>&nbsp;
-			</button><button type="button" disabled="disabled">F12<br>&nbsp;</button>
+			<button id="btnF1" type="button" onclick="onF1();" tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button>
+			<button id="btnF2" type="button" onclick="onF2();" tabindex="2001">F2<br><bean:message key='words.action.uptake'/></button>
+			<button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/></button>
+			<button type="button" disabled="disabled">F4<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F5<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F8<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form enctype="multipart/form-data">
 
@@ -197,23 +198,38 @@ function resetListEtc(){
 					<bean:write name="msg" ignore="true"/><br>
 				</html:messages>
 			</div>
-			<table id="search_info1" class="forms" style="width: 600px" summary="取込ファイル">
-				<colgroup>
-					<col span="1" style="width: 40%">
-					<col span="1" style="width: 60%">
-				</colgroup>
-				<tr>
-					<th><bean:message key='labels.delivery.deposit.csv'/></th>
-					<td style="padding-left: 5px;"><html:file property="infoBoxFile" styleId="infoBoxFile" style="width: 300px;" tabindex="100" onchange="$('#importBtn').focus();"/></td>
-				</tr>
-				<tr>
-					<th><bean:message key='labels.delivery.invoice.data'/></th>
-					<td style="padding-left: 5px;"><html:file property="invoiceFile" styleId="invoiceFile" style="width: 300px;" tabindex="101"  onchange="$('#importBtn').focus();"/></td>
-				</tr>
-			</table>
-			<div style="width: 600px; text-align :right;">
-				<button type="button" id="initBtn" onclick="onF1();" tabindex="150"><bean:message key='words.action.initialize'/></button>
-				<button type="button" id="importBtn" onclick="onF2();" tabindex="151"><bean:message key='words.action.uptake'/></button>
+			
+			<div class="form_section_wrap">
+			<div class="form_section">
+				<div class="section_title">
+					<span>取込ファイル</span>
+					<button class="btn_toggle">
+					    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+					</button>
+				</div><!-- /.section_title -->
+			
+				<div id="search_info" class="section_body">
+				<table id="search_info1" class="forms" style="width: 600px" summary="取込ファイル">
+					<colgroup>
+						<col span="1" style="width: 40%">
+						<col span="1" style="width: 60%">
+					</colgroup>
+					<tr>
+						<th><div class="col_title_right"><bean:message key='labels.delivery.deposit.csv'/></div></th>
+						<td style="padding-left: 5px;"><html:file property="infoBoxFile" styleId="infoBoxFile" style="width: 300px;" tabindex="100" onchange="$('#importBtn').focus();"/></td>
+					</tr>
+					<tr>
+						<th><div class="col_title_right"><bean:message key='labels.delivery.invoice.data'/></div></th>
+						<td style="padding-left: 5px;"><html:file property="invoiceFile" styleId="invoiceFile" style="width: 300px;" tabindex="101"  onchange="$('#importBtn').focus();"/></td>
+					</tr>
+				</table>
+				</div>
+			</div><!-- /.form_section -->
+	    	</div><!-- /.form_section_wrap -->
+	    	
+			<div style="width: 1160px; text-align :right;">
+				<button type="button" id="initBtn" onclick="onF1();" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/></button>
+				<button type="button" id="importBtn" onclick="onF2();" tabindex="151" class="btn_medium"><bean:message key='words.action.uptake'/></button>
 				<input type="submit" name="upload" tabindex="-1" value="取込" style="display:none;">
 			</div>
 		</div>
@@ -225,7 +241,7 @@ function resetListEtc(){
 		</s:form>
 
 		<span id="listContainer">
-			
+			<%-- 検索結果領域 --%>
 			<%@ include file="/WEB-INF/view/ajax/deposit/importDeliveryDepositAjax/searchResultList.jsp" %>
 		</span>
 	</div>

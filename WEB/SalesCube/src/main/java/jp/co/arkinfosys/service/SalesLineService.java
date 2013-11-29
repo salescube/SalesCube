@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.sql.Date;
@@ -66,29 +65,29 @@ public class SalesLineService extends
 	 * SQLファイルのパラメータ名定義
 	 */
 	public static class Param {
-		private static final String SORT_ORDER = "sortOrder"; 
-		private static final String ROW_COUNT = "rowCount"; 
-		private static final String OFFSET_ROW = "offsetRow"; 
+		private static final String SORT_ORDER = "sortOrder"; // ソート方向
+		private static final String ROW_COUNT = "rowCount"; // 取得件数
+		private static final String OFFSET_ROW = "offsetRow"; // 取得件数
 		public static final String SALES_LINE_ID = "salesLineId";
 		public static final String SALES_LINE_IDS = "salesLineIds";
 		public static final String SALES_SLIP_ID = "salesSlipId";
 		public static final String LINE_NO = "lineNo";
-		private static final String SORT_COLUMN_LINE_NO = "sortColumnLineNo"; 
-		private static final String STATUS = "status"; 
-		private static final String SLIP_STATUS = "slipStatus"; 
-		private static final String CUSTOMER_CODE = "customerCode"; 
-		public static final String SALES_DATE = "salesDate"; 
-		public static final String SALES_DATE_FROM = "salesDateFrom"; 
-		public static final String SALES_DATE_TO = "salesDateTo"; 
-		private static final String SORT_COLUMN_SLIP_ID = "sortColumnSlipId"; 
-		public static final String BILL_CUTOFF_DATE = "billCutoffDate"; 
-		public static final String BILL_ID = "billId"; 
+		private static final String SORT_COLUMN_LINE_NO = "sortColumnLineNo"; // 行番号のソート条件
+		private static final String STATUS = "status"; // 状態
+		private static final String SLIP_STATUS = "slipStatus"; // 伝票状態
+		private static final String CUSTOMER_CODE = "customerCode"; // 顧客番号
+		public static final String SALES_DATE = "salesDate"; // 売上日
+		public static final String SALES_DATE_FROM = "salesDateFrom"; // 売上日(範囲指定FROM)
+		public static final String SALES_DATE_TO = "salesDateTo"; // 売上日(範囲指定TO)
+		private static final String SORT_COLUMN_SLIP_ID = "sortColumnSlipId"; // 伝票番号のソート条件
+		public static final String BILL_CUTOFF_DATE = "billCutoffDate"; // 請求締日
+		public static final String BILL_ID = "billId"; // 請求書番号
 		public static final String RO_LINE_ID = "roLineId";
-		public static final String QUANTITY = "quantity"; 
+		public static final String QUANTITY = "quantity"; // 数量
 		public static final String IS_CONTAIN_CLOSE_LEAK = "isContainCloseLeak";
 		public static final String LEAK_CHECK_CUTOFF_DATE = "leakCheckCutoffDate";
 		public static final String SALES_CM_CATEGORY = "salesCmCategory";
-		public static final String SALES_CUTOFF_DATE = "salesCutoffDate"; 
+		public static final String SALES_CUTOFF_DATE = "salesCutoffDate"; // 売掛締日
 	}
 
 	/**
@@ -118,14 +117,14 @@ public class SalesLineService extends
 	 */
 	private Map<String, Object> createParamMap(SalesLineTrn sl) {
 
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, sl).execute();
 		param.putAll(AFparam);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -253,8 +252,8 @@ public class SalesLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesSlipId);
 		conditions.put(Param.SORT_COLUMN_LINE_NO, SORT_COLUMN_SALES_LINE_NO);
 		conditions.put(Param.SORT_ORDER, "ASC");
@@ -275,8 +274,8 @@ public class SalesLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_LINE_ID, salesLineId);
 
 		List<SalesLineTrn> list = findByCondition(conditions, params, "sales/FindSalesLine.sql");
@@ -297,8 +296,8 @@ public class SalesLineService extends
 	public List<BeanMap> findSalesLinesBySalesSlipIdSimple(String salesSlipId)
 			throws ServiceException {
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		try {
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.SALES_SLIP_ID, salesSlipId);
@@ -323,8 +322,8 @@ public class SalesLineService extends
 	public List<BeanMap> findSalesLinesByBillIdSimple(String billId)
 			throws ServiceException {
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		try {
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.BILL_ID, billId);
@@ -351,8 +350,8 @@ public class SalesLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, SalesLineTrn.STATUS_INIT);
 		conditions.put(Param.SLIP_STATUS, SalesSlipTrn.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -380,8 +379,8 @@ public class SalesLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SALES_DATE, closeDate);
 		conditions.put(Param.SALES_CUTOFF_DATE, null);
@@ -408,8 +407,8 @@ public class SalesLineService extends
 			String salesCutoffDate) throws ServiceException {
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, SalesLineTrn.STATUS_INIT);
 		conditions.put(Param.SLIP_STATUS, SalesSlipTrn.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -437,8 +436,8 @@ public class SalesLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, SalesLineTrn.STATUS_FINISH);
 		conditions.put(Param.SLIP_STATUS, SalesSlipTrn.STATUS_FINISH);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -467,8 +466,8 @@ public class SalesLineService extends
 		try {
 			Map<String, Object> conditions = createSqlParam();
 
-			
-			
+			// 条件設定
+			// 受注伝票明細行ID
 			conditions.put(Param.SALES_SLIP_ID, salesSlipId);
 			conditions.put(Param.RO_LINE_ID, roLineId);
 			Date lastDate = this.selectBySqlFile(Date.class,
@@ -481,7 +480,7 @@ public class SalesLineService extends
 				return null;
 			}
 		} catch (Exception e) {
-			
+			// 対象データが存在しない
 			return null;
 		}
 	}
@@ -555,18 +554,18 @@ public class SalesLineService extends
 		short lineNo = 0;
 		for (SalesLineDto lineDto : lineList) {
 
-			
+			// 入力内容が存在する行だけを登録対象とする
 			if (lineDto.isBlank()) {
 				continue;
 			}
 			lineNo++;
 			lineDto.lineNo = String.valueOf(lineNo);
 
-			
+			// 売上明細の登録 --------------------------------
 
 			if (lineDto.salesLineId == null
 					|| lineDto.salesLineId.length() == 0) {
-				
+				// 伝票番号の発番
 				Long newLineId = seqMakerService
 						.nextval(SalesLineTrn.TABLE_NAME);
 
@@ -581,7 +580,7 @@ public class SalesLineService extends
 			if (count == 0) {
 				count = insertRecord(sl);
 				try {
-					
+					// 受注伝票明細行を更新する
 					if( StringUtil.hasLength(lineDto.roLineId) ){
 						roSlipSalesService.insertSlipLine(slipDto, lineDto);
 					}
@@ -591,7 +590,7 @@ public class SalesLineService extends
 				}
 			}else{
 				try {
-					
+					// 受注伝票明細行を更新する
 					if( StringUtil.hasLength(lineDto.roLineId) ){
 						roSlipSalesService.updateSlipLine(slipDto, lineDto);
 					}
@@ -604,7 +603,7 @@ public class SalesLineService extends
 		if (deletedLineIds != null && deletedLineIds.length() > 0) {
 			String[] ids = deletedLineIds.split(",");
 			try {
-				
+				// 削除する前に、削除対象データを取得して受注伝票明細行を更新する
 				for( int i=0 ; i<ids.length ; i++ ){
 					if( !StringUtil.hasLength(ids[i])){
 						continue;
@@ -704,16 +703,16 @@ public class SalesLineService extends
 					.getMessage("labels.productCode");
 			throw new ServiceException(strLabel + lineDto.productCode);
 		}
-		
+		// 得意先商品コード
 		lineDto.customerPcode = product.onlinePcode;
 
-		
+		// 単位コード
 		lineDto.unitCategory = product.unitCategory;
 
-		
+		// 単位名
 		lineDto.unitName = product.unitCategoryName;
 
-		
+		// 入り数
 		if (product.packQuantity == null) {
 			lineDto.packQuantity = "";
 		} else {
@@ -758,7 +757,7 @@ public class SalesLineService extends
 	 */
 	protected void setStockInfo(SalesLineDto lineDto) throws ServiceException {
 
-		
+		// 各商品ごとに引当可能数を計算する
 		StockInfoDto stockInfo = productStockService
 				.calcStockQuantityByProductCode(lineDto.productCode);
 		if (stockInfo != null) {
@@ -777,10 +776,10 @@ public class SalesLineService extends
 	 */
 	public void setStockInfoForm(SalesLineDto lineDto) throws ServiceException {
 
-		
+		// 商品マスタを参照して在庫数等を設定
 		setProductInfo(lineDto);
 
-		
+		// 引当可能数設定
 		setStockInfo(lineDto);
 	}
 

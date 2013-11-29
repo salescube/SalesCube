@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.math.BigDecimal;
@@ -68,7 +67,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToYenNotation(String l_string) {
 		String temp = "";
-		
+		// 円金額な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				super.mineDto.priceFractCategory, 0, true);
 		try {
@@ -93,7 +92,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToDolNotation(String l_string, String l_cunit) {
 		String temp = "";
-		
+		// 外貨金額な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				super.mineDto.priceFractCategory,
 				super.mineDto.unitPriceDecAlignment, true);
@@ -116,7 +115,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToQuaNotation(String l_string) {
 		String temp = "";
-		
+		// 数量な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				super.mineDto.productFractCategory,
 				super.mineDto.numDecAlignment, true);
@@ -136,7 +135,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToStaNotation(String l_string) {
 		String temp = "";
-		
+		// 統計な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				CategoryTrns.FLACT_CATEGORY_HALF_UP,
 				super.mineDto.statsDecAlignment, true);
@@ -155,7 +154,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToIntNotation(String l_string) {
 		String temp = "";
-		
+		// 数量な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				CategoryTrns.FLACT_CATEGORY_HALF_UP, 0, true);
 		try {
@@ -176,7 +175,7 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 	 */
 	private String convertToLimitedDigitIntNotation(String l_string, int l_digit) {
 		String temp = "";
-		
+		// 仮な端数処理
 		DecimalFormat df = NumberUtil.createDecimalFormat(
 				CategoryTrns.FLACT_CATEGORY_HALF_UP, 0, true);
 		try {
@@ -219,56 +218,56 @@ public class ShowProductInfoDialogAction extends CommonAjaxResources {
 			Beans.copy(product, productInfosWithNameDto).dateConverter(
 					Constants.FORMAT.DATE).execute();
 
-			
+			//外貨単位の取得
 			SupplierJoin supplier = this.supplierService
 					.findById(product.supplierCode);
 			String cUnitStr = (supplier == null ? ""
 					: (supplier.cUnitSign == null ? "" : supplier.cUnitSign));
 
-			
+			//仕入単価(円)
 			productInfosWithNameDto.supplierPriceYen = convertToYenNotation(productInfosWithNameDto.supplierPriceYen);
-			
+			//仕入単価(外貨)
 			productInfosWithNameDto.supplierPriceDol = convertToDolNotation(
 					productInfosWithNameDto.supplierPriceDol, cUnitStr);
-			
+			//売上単価
 			productInfosWithNameDto.retailPrice = convertToYenNotation(productInfosWithNameDto.retailPrice);
 
-			
+			//入数
 			productInfosWithNameDto.packQuantity = convertToQuaNotation(productInfosWithNameDto.packQuantity);
-			
+			//月平均出荷数
 			productInfosWithNameDto.avgShipCount = convertToQuaNotation(productInfosWithNameDto.avgShipCount);
-			
+			//発注点
 			productInfosWithNameDto.poNum = convertToQuaNotation(productInfosWithNameDto.poNum);
-			
+			//発注ロット
 			productInfosWithNameDto.poLot = convertToQuaNotation(productInfosWithNameDto.poLot);
-			
+			//最大保有数
 			productInfosWithNameDto.maxStockNum = convertToQuaNotation(productInfosWithNameDto.maxStockNum);
-			
+			//単位発注限度数
 			productInfosWithNameDto.maxPoNum = convertToQuaNotation(productInfosWithNameDto.maxPoNum);
-			
+			//受注限度数
 			productInfosWithNameDto.roMaxNum = convertToQuaNotation(productInfosWithNameDto.roMaxNum);
 
-			
+			//特注品掛率
 			productInfosWithNameDto.soRate = convertToStaNotation(productInfosWithNameDto.soRate);
 
-			
+			//リードタイム
 			productInfosWithNameDto.leadTime = convertToIntNotation(productInfosWithNameDto.leadTime);
-			
+			//芯数
 			productInfosWithNameDto.coreNum = convertToIntNotation(productInfosWithNameDto.coreNum);
 
-			
+			//重量
 			productInfosWithNameDto.weight = convertToLimitedDigitIntNotation(
 					productInfosWithNameDto.weight, 6);
-			
+			//長さ
 			productInfosWithNameDto.length = convertToLimitedDigitIntNotation(
 					productInfosWithNameDto.length, 6);
-			
+			//幅
 			productInfosWithNameDto.width = convertToLimitedDigitIntNotation(
 					productInfosWithNameDto.width, 6);
-			
+			//奥行
 			productInfosWithNameDto.depth = convertToLimitedDigitIntNotation(
 					productInfosWithNameDto.depth, 6);
-			
+			//高さ
 			productInfosWithNameDto.height = convertToLimitedDigitIntNotation(
 					productInfosWithNameDto.height, 6);
 

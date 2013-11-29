@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.util.ArrayList;
@@ -47,26 +46,26 @@ public class OutputSalesReportAction extends
 	public List<LabelValueBean> getReportSelectionList() {
 		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
 
-		
+		// 全ての帳票
 		list.add(new LabelValueBean(Constants.REPORT_SELECTION.LABEL_ALL,
 				Constants.REPORT_SELECTION.VALUE_ALL));
-		
+		// 見積書
 		list.add(new LabelValueBean(Constants.REPORT_SELECTION.LABEL_ESTIMATE,
 				Constants.REPORT_SELECTION.VALUE_ESTIMATE));
-		
+		// 請求書
 		list.add(new LabelValueBean(Constants.REPORT_SELECTION.LABEL_BILL,
 				Constants.REPORT_SELECTION.VALUE_BILL));
-		
+		// 納品書
 		list.add(new LabelValueBean(Constants.REPORT_SELECTION.LABEL_DELIVERY,
 				Constants.REPORT_SELECTION.VALUE_DELIVERY));
-		
+		// 仮納品書
 		list.add(new LabelValueBean(
 				Constants.REPORT_SELECTION.LABEL_TEMP_DELIVERY,
 				Constants.REPORT_SELECTION.VALUE_TEMP_DELIVERY));
-		
+		// ピッキングリスト
 		list.add(new LabelValueBean(Constants.REPORT_SELECTION.LABEL_PICKING,
 				Constants.REPORT_SELECTION.VALUE_PICKING));
-		
+		// 納品書兼領収書
 		list.add(new LabelValueBean(
 				Constants.REPORT_SELECTION.LABEL_DELIVERY_RECEIPT,
 				Constants.REPORT_SELECTION.VALUE_DELIVERY_RECEIPT));
@@ -82,13 +81,13 @@ public class OutputSalesReportAction extends
 	public List<LabelValueBean> getStatusSelectionList() {
 		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
 
-		
+		// 全て
 		list.add(new LabelValueBean(Constants.STATUS_SELECTION.LABEL_ALL,
 				Constants.STATUS_SELECTION.VALUE_ALL));
-		
+		// 未出力
 		list.add(new LabelValueBean(Constants.STATUS_SELECTION.LABEL_UNOUTPUT,
 				Constants.STATUS_SELECTION.VALUE_UNOUTPUT));
-		
+		// 出力済
 		list.add(new LabelValueBean(Constants.STATUS_SELECTION.LABEL_OUTPUT,
 				Constants.STATUS_SELECTION.VALUE_OUTPUT));
 
@@ -105,10 +104,10 @@ public class OutputSalesReportAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 帳票選択プルダウン初期化
 		this.outputSalesReportForm.reportSelectionList = getReportSelectionList();
 
-		
+		// 状態選択プルダウン初期化
 		this.outputSalesReportForm.statusSelectionList = getStatusSelectionList();
 
 		this.outputSalesReportForm.salesCategoryList = this.categoryService

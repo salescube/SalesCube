@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.HashMap;
@@ -52,13 +51,13 @@ public class OutputStockListService extends AbstractService<EadSlipTrn> {
 	public List<ProductStockInfoDto> createOutputStockListDtoList(OutputStockListFormDto outputStockListFormDto)
 			throws ServiceException {
 		try {
-			
+			// 該当商品の在庫情報の抽出と集計を行う
 			Map<String, Object> conditions = new HashMap<String, Object>();
 
-			
+			// 期間条件
 			conditions.put(ProductService.Param.AGGREGATE_MONTHS_RANGE, Integer.valueOf(outputStockListFormDto.periodMonth));
 
-			
+			// 除外条件の判定
 			if(outputStockListFormDto.excludeRoNotExists) {
 				conditions.put(ProductService.Param.RO_EXISTS, true);
 			}
@@ -75,39 +74,39 @@ public class OutputStockListService extends AbstractService<EadSlipTrn> {
 			List<ProductStockInfoDto> dtoList = productService.aggregateProductStockInfoByCondition(conditions);
 
 			if(!OutputStockListForm.RadioCond2.VALUE_0.equals(outputStockListFormDto.radioCond2)) {
-				
+				// 数量条件が「全て」以外の場合は条件による抽出
 				Iterator<ProductStockInfoDto> ite = dtoList.iterator();
 				while (ite.hasNext()) {
 					ProductStockInfoDto dto = ite.next();
 
 					if (OutputStockListForm.RadioCond2.VALUE_1
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 保有数＜発注点
 						if (!dto.isHoldingStockQuantityLessPoNum()) {
 							ite.remove();
 						}
 					} else if (OutputStockListForm.RadioCond2.VALUE_2
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 現在庫数＜発注点
 						if (!dto.isCurrentStockQuantityLessPoNum()) {
 							ite.remove();
 						}
 					} else if (OutputStockListForm.RadioCond2.VALUE_3
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 引当可能数＜発注点（発注点がゼロのものは除く）
 						if (!dto.isAvailableStockQuantityLessPoNum()) {
 							ite.remove();
 						}
 					} else if (OutputStockListForm.RadioCond2.VALUE_4
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 引当可能数＋発注残数＜発注点（発注点がゼロのものは除く）
 						if (!dto
 								.isAvailableStockQuantityAndRestQuantityPoLessPoNum()) {
 							ite.remove();
 						}
 					} else if (OutputStockListForm.RadioCond2.VALUE_5
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 引当可能数個以下
 						if (!dto
 								.isAvailableStockQuantityLess(Integer
 										.parseInt(outputStockListFormDto.allocatedQuantity))) {
@@ -115,7 +114,7 @@ public class OutputStockListService extends AbstractService<EadSlipTrn> {
 						}
 					} else if (OutputStockListForm.RadioCond2.VALUE_6
 							.equals(outputStockListFormDto.radioCond2)) {
-						
+						// 最大保有数超過品
 						if (!dto.isOverMaxHoldingQuantity()) {
 							ite.remove();
 						}
@@ -123,9 +122,9 @@ public class OutputStockListService extends AbstractService<EadSlipTrn> {
 				}
 			}
 
-			
+			// 外貨記号を設定
 			for(ProductStockInfoDto dto : dtoList){
-				
+				//仕入先の外貨記号を取得
 				SupplierJoin supRateJoin = supplierService.findSupplierRateByProductCode(dto.productCode);
 				if(supRateJoin != null){
 					dto.cUnitSign = supRateJoin.cUnitSign;

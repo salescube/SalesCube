@@ -1,2 +1,0 @@
-DELETE FROM BILL_TRN_/*$domainId*/'DEFAULT'
-WHERE BILL_ID=/*billId*/0

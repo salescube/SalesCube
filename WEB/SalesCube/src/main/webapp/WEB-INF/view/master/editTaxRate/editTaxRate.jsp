@@ -119,7 +119,7 @@
         elemWork.attr("type", "text");
         elemWork.css("text-align", "center");
         elemWork.css("ime-mode", "disabled");
-        elemWork.css("width", "80px");
+        elemWork.css("width", "100px");
         elemWork.attr("maxlength", "10");
         elemWork.attr("id", "taxRateList_" + maxRowCount + ".startDate");
         elemWork.attr("name", "taxRateList[" + maxRowCount + "].startDate");
@@ -162,10 +162,10 @@
 </head>
 
 <body onhelp="return false;" onload="init()">
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1310"/>
@@ -196,6 +196,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 
 	<div class="function_forms">
 <s:form styleId="editTaxRateForm" onsubmit="return false;">
@@ -210,93 +211,108 @@
         	</html:messages>
     	</div>
 
-		<span>税区分情報</span><br>
+		<div class="form_section_wrap">
+			<div class="form_section">
+				<div class="section_title">
+					<span>税区分情報</span>
+					<button class="btn_toggle">
+	           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	      		</button>
+	      		<br>
+	      		<br>
+				</div><!-- /.section_title -->
+				<div class="section_body">
+					<table class="forms" style="width:210px;" summary="税区分名">
+						<colgroup>
+							<col span="1" style="width: 60px">
+							<col span="1" style="width:150px">
+						</colgroup>
 
-		<table class="forms" style="width:210px;" summary="税区分名">
-			<colgroup>
-				<col span="1" style="width: 60px">
-				<col span="1" style="width:150px">
-			</colgroup>
+					<tr id="row_0">
+						<th><div class="col_title_right">税区分</div></th>
+						<td>
+						<span >${f:h(category.categoryCodeName)}</span>
+			            </td>
+					</tr>
+					</table>
 
-		<tr id="row_0">
-			<th>税区分</th>
-			<td>
-                ${f:h(category.categoryCodeName)}
-            </td>
-		</tr>
-		</table>
-		<span>税率一覧</span><br>
+				</div><!-- /.section_body -->
+    		</div><!-- /.form_section -->
+   		</div><!-- /.form_section_wrap -->
 
-		<table id="edit_table" class="forms" style="width:320px;" summary="追加更新">
-			<colgroup>
-				<col span="1" style="width: 110px">
-				<col span="1" style="width:115px">
-				<col span="1" style="width: 95px">
-			</colgroup>
-			<thead>
-			<tr>
-				<th>開始年月日<bean:message key='labels.must'/></th>
-				<th>税率<bean:message key='labels.must'/></th>
-				<th></th>
-			</tr>
-			</thead>
-			<tbody>
-            <tr style="display:none;" id="taxRateList_dummy">
-                <td><input type="hidden" id="taxTypeCategory">
-                	<input id="startDate" maxlength="10" type="text" style="width:80px;text-align:center;ime-mode:disabled;"></td>
-                <td><input id="taxRate" maxlength="3" type="text" style="width:90px; text-align:right; ime-mode: disabled;" class="numeral_commas scale_0 scale_half_up" >％</td>
-				<td style="text-align: center">
+		<br>
+		<div id="detail_info_wrap">
+			<table class="detail_info"  class="forms" style="width:500px;" summary="追加更新">
+				<colgroup>
+					<col span="1" style="width: 200px">
+					<col span="1" style="width: 200px">
+					<col span="1" style="width: 100px">
+				</colgroup>
+				<thead>
+				<tr>
+					<th class="rd_top_left" style="height: 30px;">開始年月日<bean:message key='labels.must'/></th>
+					<th>税率<bean:message key='labels.must'/></th>
+					<th class="rd_top_right"></th>
+				</tr>
+				</thead>
+				<tbody>
+	            <tr style="display:none;" id="taxRateList_dummy">
+	                <td><input type="hidden" id="taxTypeCategory">
+	                	<input id="startDate" maxlength="10" type="text" style="width:100px;text-align:center;ime-mode:disabled;"></td>
+	                <td><input id="taxRate" maxlength="3" type="text" style="width:90px; text-align:right; ime-mode: disabled;" class="numeral_commas scale_0 scale_half_up" >％</td>
+					<td style="text-align: center">
+	<c:if test="${!isUpdate}">
+	                    <button class="btn_small"  style="width:80px;" disabled="disabled">削除</button>
+	</c:if>
+	<c:if test="${isUpdate}">
+	                    <button class="btn_small"  id="deleteBtn" style="width:80px;">削除</button>
+	</c:if>
+	                </td>
+	            </tr>
+	<c:forEach var="taxRateList" varStatus="s" items="${taxRateList}">
+	            <tr id="taxRateList_${s.index}">
+	                <td>
+	                	<input type="hidden" name="taxRateList[${s.index}].taxTypeCategory" value="${category.categoryCode}">
+	                    <html:text name="taxRateList" maxlength="10" styleId="taxRateList_${s.index}.startDate" tabindex="${s.index*4+201}" property="startDate" style="width:100px;text-align:center;ime-mode:disabled;" styleClass="date_input" indexed="true"/>
+	                </td>
+	                <td>
+	                    <html:text name="taxRateList" maxlength="3" styleId="taxRateList_${s.index}.taxRate" tabindex="${s.index*4+202}" styleClass="numeral_commas scale_0 scale_half_up" property="taxRate" style="width:90px; text-align:right; ime-mode: disabled;" indexed="true"/>％
+	                </td>
+					<td style="text-align: center">
+	<c:if test="${!isUpdate}">
+	                    <button class="btn_small" disabled="disabled" style="width:80px;">削除</button>
+	</c:if>
+	<c:if test="${isUpdate}">
+	                    <button class="btn_small" id="taxRateList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" style="width:80px;">削除</button>
+	</c:if>
+	                </td>
+	            </tr>
+	<script>
+	<!--
+	maxRowCount = ${s.index+1};
+	-->
+	</script>
+	</c:forEach>
+				<tr id="trAddLine" >
+					<td colspan="5" style="text-align:right;" class="rd_bottom_left rd_bottom_right">
+	<c:if test="${!isUpdate}">
+	                    <button class="btn_small" tabindex="1997" style="width:80px;" disabled>行追加</button>
+	</c:if>
+	<c:if test="${isUpdate}">
+	                    <button class="btn_small" tabindex="1997" onclick="addRow();" style="width:80px;">行追加</button>
+	</c:if>
+	                </td>
+				</tr>
+	            </tbody>
+	        </table>
+	    </div>
+		<div style="text-align: right; width: 500px">
+			<button class="btn_medium" tabindex="1998" onclick="initForm()">リセット</button>
 <c:if test="${!isUpdate}">
-                    <button style="width:80px;" disabled="disabled">削除</button>
+            <button class="btn_medium" tabindex="1999" disabled="true">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
-                    <button id="deleteBtn" style="width:80px;">削除</button>
-</c:if>
-                </td>
-            </tr>
-<c:forEach var="taxRateList" varStatus="s" items="${taxRateList}">
-            <tr id="taxRateList_${s.index}">
-                <td>
-                	<input type="hidden" name="taxRateList[${s.index}].taxTypeCategory" value="${category.categoryCode}">
-                    <html:text name="taxRateList" maxlength="10" styleId="taxRateList_${s.index}.startDate" tabindex="${s.index*4+201}" property="startDate" style="width:80px;text-align:center;ime-mode:disabled;" styleClass="date_input" indexed="true"/>
-                </td>
-                <td>
-                    <html:text name="taxRateList" maxlength="3" styleId="taxRateList_${s.index}.taxRate" tabindex="${s.index*4+202}" styleClass="numeral_commas scale_0 scale_half_up" property="taxRate" style="width:90px; text-align:right; ime-mode: disabled;" indexed="true"/>％
-                </td>
-				<td style="text-align: center">
-<c:if test="${!isUpdate}">
-                    <button disabled="disabled" style="width:80px;">削除</button>
-</c:if>
-<c:if test="${isUpdate}">
-                    <button id="taxRateList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" style="width:80px;">削除</button>
-</c:if>
-                </td>
-            </tr>
-<script>
-<!--
-maxRowCount = ${s.index+1};
--->
-</script>
-</c:forEach>
-			<tr id="trAddLine">
-				<td colspan="5" style="text-align:right;">
-<c:if test="${!isUpdate}">
-                    <button tabindex="1997" style="width:80px;" disabled>行追加</button>
-</c:if>
-<c:if test="${isUpdate}">
-                    <button tabindex="1997" onclick="addRow();" style="width:80px;">行追加</button>
-</c:if>
-                </td>
-			</tr>
-            </tbody>
-        </table>
-		<div style="text-align: right; width: 320px">
-			<button tabindex="1998" onclick="initForm()">リセット</button>
-<c:if test="${!isUpdate}">
-            <button tabindex="1999" disabled="true">更新</button>
-</c:if>
-<c:if test="${isUpdate}">
-            <button tabindex="1999" onclick="registerTaxRate()">更新</button>
+            <button class="btn_medium" tabindex="1999" onclick="registerTaxRate()">更新</button>
 </c:if>
 		</div>
 

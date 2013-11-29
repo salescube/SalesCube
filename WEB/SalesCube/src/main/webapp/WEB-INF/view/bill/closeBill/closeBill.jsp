@@ -35,11 +35,11 @@
 
 	// 検索
 	function onF2(){
-		if(confirm('<bean:message key="confirm.search" />')){
-			$("#message").hide();	// 締処理完了のメッセージを非表示にする
-			var data = createParamData();
-			return execSearch(data);
-		}
+
+		$("#message").hide();	// 締処理完了のメッセージを非表示にする
+		var data = createParamData();
+		return execSearch(data);
+
 	}
 
 	// 締実行
@@ -196,7 +196,7 @@
 			bgiframe: true,
 			autoOpen: false,
 			width: 400,
-			height: 150,
+			height: 200,
 			modal: false,
 			buttons: {
 			}
@@ -253,20 +253,21 @@
 		<span class="title">請求締処理</span>
 
 		<div class="function_buttons">
-			<button type="button" tabindex="2000" id="btnF1" onclick="onF1();">F1<br>初期化
-			</button><button type="button" tabindex="2001" id="btnF2" onclick="onF2();">F2<br>検索
-			</button><button type="button" tabindex="2002" id="btnF3" onclick="onF3();">F3<br>締実行
-			</button><button type="button" tabindex="2003" id="btnF4" onclick="onF4();">F4<br>締解除
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;</button>
+			<button type="button" tabindex="2000" id="btnF1" onclick="onF1();">F1<br>初期化</button>
+			<button type="button" tabindex="2001" id="btnF2" onclick="onF2();">F2<br>検索</button>
+			<button type="button" tabindex="2002" id="btnF3" onclick="onF3();">F3<br>締実行</button>
+			<button type="button" tabindex="2003" id="btnF4" onclick="onF4();">F4<br>締解除</button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 
 		<div class="function_forms">
@@ -280,65 +281,79 @@
 					<bean:write name="msg" ignore="true"/><br>
 				</html:messages>
 				</div>
-			<br>
 
-			<span >条件</span>
-			<table id="search_info" class="forms" style="width: 600px" summary="請求締処理">
-				<colgroup>
-					<col span="1" style="width: 20%">
-					<col span="1" style="width: 30%">
-					<col span="1" style="width: 20%">
-					<col span="1" style="width: 30%">
-				</colgroup>
-				<tr>
-					<th>支払条件</th>
-					<td>
-						<html:select tabindex="100" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" >
-							<c:forEach var="cgcl" items="${cutoffGroupCategoryList}">
-								<html:option value="${cgcl.value}">${cgcl.label}</html:option>
-							</c:forEach>
-						</html:select>
-					</td>
-					<th>請求漏れチェック</th>
-					<td>
-						<html:checkbox property="notYetRequestedCheck" styleId="notYetRequestedCheck"  onclick="notYetRequestedCheckChanged()" />請求漏れのみ
-					</td>
-				</tr>
-				<tr>
-					<th>顧客コード</th>
-					<td>
-						<html:text tabindex="100" property="customerCode" styleId="customerCode" style="width: 100px; ime-mode:disabled;"  />
-						<html:image tabindex="101" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch(true)" />
-						<html:hidden property="cutOffDate" styleId="cutOffDate" />
-					</td>
-					<th>顧客名</th>
-					<td>
-						<html:text tabindex="102" property="customerName" styleId="customerName" style="width: 240px; ime-mode:active;" />
-						<html:image tabindex="103" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch(false)" />
-					</td>
-				</tr>
-			</table>
+		<div class="form_section_wrap">
+			<div class="form_section">
+				<div class="section_title">
+					<span >検索条件</span>
+				</div><!-- /.section_title -->
+				<div class="section_body">
+						<table id="search_info" class="forms" style="width: 600px" summary="請求締処理">
+							<colgroup>
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 30%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 30%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right">支払条件</div></th>
+								<td>
+									<html:select tabindex="100" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" >
+										<c:forEach var="cgcl" items="${cutoffGroupCategoryList}">
+											<html:option value="${cgcl.value}">${cgcl.label}</html:option>
+										</c:forEach>
+									</html:select>
+								</td>
+								<th><div class="col_title_right">請求漏れチェック</div></th>
+								<td>
+									<html:checkbox property="notYetRequestedCheck" styleId="notYetRequestedCheck"  onclick="notYetRequestedCheckChanged()" />請求漏れのみ
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">顧客コード</div></th>
+								<td>
+									<html:text tabindex="100" property="customerCode" styleId="customerCode" style="width: 100px; ime-mode:disabled;"  />
+									<html:image tabindex="101" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch(true)" />
+									<html:hidden property="cutOffDate" styleId="cutOffDate" />
+								</td>
+								<th><div class="col_title_right">顧客名</div></th>
+								<td>
+									<html:text tabindex="102" property="customerName" styleId="customerName" style="width: 240px; ime-mode:active;" />
+									<html:image tabindex="103" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch(false)" />
+								</td>
+							</tr>
+						</table>
+					</div><!-- /.section_body -->
+    			</div><!-- /.form_section -->
+   			</div><!-- /.form_section_wrap -->
 
-			<div style="text-align: right; width: 600px">
-				<html:button tabindex="103" property="initSearch" onclick="onF1();" >初期化</html:button>
-				<html:button tabindex="104" property="search" onclick="onF2();" >検索</html:button>
+			<div style="text-align: right; width: 1160px">
+				<button name="initSearch" type="button" onclick="onF1()" tabindex="103" class="btn_medium">初期化</button><!-- 初期化 -->
+				<button name="search" type="button" onclick="onF2()" tabindex="104" class="btn_medium">検索</button><!-- 検索 -->
 			</div>
 
-			<br>
-
 			<span id="ListContainer">
-
 			<%@ include file="/WEB-INF/view/ajax/bill/searchCloseBillResultAjax/result.jsp" %>
-
 			</span>
-
 		</div>
-<!-- 情報ダイアログ -->
-<div id="do_close"
-	title="締実行" style="display: none; margin: 20px 0px 0px 10px;">
-	締実行日<input tabindex="-1" type="text" id="cutOffDateDlg" class="date_input" style="ime-mode:disabled;" /><br>
-	<button id="closeExecButton" tabindex="3000" onclick="dcCloseBill()">ＯＫ</button><button tabindex="3001" onclick="$('#do_close').dialog('close');">キャンセル</button>
-</div>
+		
+		<!-- 情報ダイアログ -->
+		<div id="do_close" title="締実行" style="display: none;">
+			<div style="padding: 20px 20px 0 20px;">
+				<s:form style="margin: 0px;">
+					<table class="forms" style="width: 380px;" summary="締実行">
+						<tr>
+							<th>締実行日</th>
+							<td><input tabindex="-1" type="text" id="cutOffDateDlg" class="date_input" style="ime-mode:disabled;" /></td>
+						</tr>
+					</table>
+				</s:form>
+				<div style="width: 96%; text-align: right; margin-top: 15px;">
+					<button id="closeExecButton" tabindex="3000" onclick="dcCloseBill()">ＯＫ</button>
+					<button tabindex="3001" onclick="$('#do_close').dialog('close');">キャンセル</button>
+				</div>
+			</div>
+		</div>
 	</s:form>
 	</div>
 </body>

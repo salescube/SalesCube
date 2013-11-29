@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.LinkedHashMap;
@@ -31,70 +30,70 @@ public class BillJoinService extends AbstractService<BillJoin> {
 	 */
 	public static class Param {
 		public static final String SORT_COLUMN = "sortColumn";
-		
+		// ソート方向
 		private static final String SORT_ORDER = "sortOrder";
 		public static final String SORT_ORDER_ASC = "sortOrderAsc";
-		
+		// 取得件数
 		public static final String ROW_COUNT = "rowCount";
-		
+		// 取得件数
 		public static final String OFFSET_ROW = "offsetRow";
 
-		
+		// 顧客コード
 		public static final String CUSTOMER_CODE = "customerCode";
-		
+		// 顧客名
 		public static final String CUSTOMER_NAME = "customerName";
-		
+		// 請求締日
 		public static final String BILL_CUTOFF_DATE = "billCutoffDate";
-		
+		// 請求締日From
 		public static final String BILL_CUTOFF_DATE_FROM = "billCutoffDateFrom";
-		
+		// 請求締日To
 		public static final String BILL_CUTOFF_DATE_TO = "billCutoffDateTo";
-		
+		// 請求書作成区分
 		public static final String BILL_CRT_CATEGORY = "billCrtCategory";
-		
+		// 締日グループ
 		public static final String CUTOFF_GROUP = "cutoffGroup";
-		
+		// 支払条件
 		public static final String CUTOFF_GROUP_CATEGORY = "cutoffGroupCategory";
-		
+		// 回収間隔
 		public static final String PAYBACK_CYCLE_CATEGORY = "paybackCycleCategory";
-		
+		// 取引区分
 		public static final String SALES_CM_CATEGORY = "salesCmCategory";
-		
+		// 請求締日のソート条件
 		private static final String SORT_COLUMN_CUTOFF_DATE = "sortColumnBillCutoffDate";
-		
+		// 顧客コードのソート条件
 		private static final String SORT_COLUMN_CUSTOMER_CODE = "sortColumnCustomerCode";
-		
+		// 請求書番号
 		public static final String BILL_ID = "billId";
-		
+		// 請求書種別
 		private static final String BILL_CATEGORY = "billCategory";
-		
+		// 最終売上日
 		private static final String LAST_SALES_DATE = "lastSalesDate";
-		
+		// 最終売上日From
 		private static final String LAST_SALES_DATE_FROM = "lastSalesDateFrom";
-		
+		// 最終売上日To
 		private static final String LAST_SALES_DATE_TO = "lastSalesDateTo";
-		
+		// 最終請求書発行日
 		private static final String LAST_PRINT_DATE = "lastPrintDate";
-		
+		// 最終請求書発行日From
 		private static final String LAST_PRINT_DATE_FROM = "lastPrintDateFrom";
-		
+		// 最終請求書発行日To
 		private static final String LAST_PRINT_DATE_TO = "lastPrintDateTo";
-		
+		// 請求書作成区分の区分マスタコード
 		private static final String BILL_CRT_CATEGORY_CODE = "billCrtCategoryCode";
-		
+		// 発行済を除く
 		private static final String EXCLUDE_PRINT = "excludePrint";
 
-		
+		// 繰越金額　なし
 		private static final String COV_PRICE_ZERO = "covPriceZero";
-		
+		// 繰越金額　過入金
 		private static final String COV_PRICE_MINUS = "covPriceMinus";
-		
+		// 繰越金額　不足
 		private static final String COV_PRICE_PLUS = "covPricePlus";
-		
+		// 今回請求金額　あり
 		private static final String THIS_BILL_PLUS = "thisBillPricePlus";
-		
+		// 今回請求金額　なし
 		private static final String THIS_BILL_ZERO = "thisBillPriceZero";
-		
+		// 今回請求金額　過入金
 		private static final String THIS_BILL_MINUS = "thisBillPriceMinus";
 
 	}
@@ -128,7 +127,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
+		// 条件設定
 		conditions.put(Param.BILL_CRT_CATEGORY, CategoryTrns.BILL_CRT_BILL);
 		conditions.put(Param.SALES_CM_CATEGORY, CategoryTrns.SALES_CM_CREDIT);
 
@@ -152,8 +151,8 @@ public class BillJoinService extends AbstractService<BillJoin> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.CUSTOMER_NAME, customerName);
 		conditions.put(Param.CUTOFF_GROUP, cutoffGroup);
@@ -206,7 +205,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 	private void setConditionParam(Map<String, Object> conditions,
 			Map<String, Object> param) {
 
-		
+		// 請求書番号
 		if (conditions.containsKey(Param.BILL_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.BILL_ID))) {
 				param.put(Param.BILL_ID, new Long((String) conditions
@@ -214,61 +213,61 @@ public class BillJoinService extends AbstractService<BillJoin> {
 			}
 		}
 
-		
+		// 請求書発行日From
 		setConditionItemString(conditions, param, Param.LAST_PRINT_DATE_FROM,
 				LikeType.NOTHING);
 
-		
+		// 請求書発行日To
 		setConditionItemString(conditions, param, Param.LAST_PRINT_DATE_TO,
 				LikeType.NOTHING);
 
-		
+		// 請求締日From
 		setConditionItemString(conditions, param, Param.BILL_CUTOFF_DATE_FROM,
 				LikeType.NOTHING);
 
-		
+		// 請求締日To
 		setConditionItemString(conditions, param, Param.BILL_CUTOFF_DATE_TO,
 				LikeType.NOTHING);
 
-		
+		// 最終売上日From
 		setConditionItemString(conditions, param, Param.LAST_SALES_DATE_FROM,
 				LikeType.NOTHING);
 
-		
+		// 最終売上日To
 		setConditionItemString(conditions, param, Param.LAST_SALES_DATE_TO,
 				LikeType.NOTHING);
 
-		
+		// 請求書分類
 		setConditionItemString(conditions, param, Param.BILL_CRT_CATEGORY,
 				LikeType.NOTHING);
-		
+		// 請求書分類区分マスタコード
 		param.put(Param.BILL_CRT_CATEGORY_CODE, Categories.BILL_CRT_CATEGORY);
 
-		
+		// 請求書種別
 		setConditionItemString(conditions, param, Param.BILL_CATEGORY,
 				LikeType.NOTHING);
 
-		
+		// 支払条件(回収間隔）
 		setConditionItemString(conditions, param, Param.PAYBACK_CYCLE_CATEGORY,
 				LikeType.NOTHING);
 
-		
+		// 支払条件(締日グループ）
 		setConditionItemString(conditions, param, Param.CUTOFF_GROUP,
 				LikeType.NOTHING);
 
-		
+		// 支払条件
 		setConditionItemString(conditions, param, Param.CUTOFF_GROUP_CATEGORY,
 				LikeType.NOTHING);
 
-		
+		// 顧客コード
 		setConditionItemString(conditions, param, Param.CUSTOMER_CODE,
 				LikeType.PREFIX);
 
-		
+		// 顧客名
 		setConditionItemString(conditions, param, Param.CUSTOMER_NAME,
 				LikeType.PARTIAL);
 
-		
+		// 繰越金額　なし
 		if (conditions.containsKey(Param.COV_PRICE_ZERO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.COV_PRICE_ZERO))) {
@@ -276,7 +275,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.COV_PRICE_ZERO));
 			}
 		}
-		
+		// 繰越金額　過入金
 		if (conditions.containsKey(Param.COV_PRICE_MINUS)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.COV_PRICE_MINUS))) {
@@ -284,7 +283,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.COV_PRICE_MINUS));
 			}
 		}
-		
+		// 繰越金額　不足
 		if (conditions.containsKey(Param.COV_PRICE_PLUS)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.COV_PRICE_PLUS))) {
@@ -292,7 +291,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.COV_PRICE_PLUS));
 			}
 		}
-		
+		// 今回請求金額　あり
 		if (conditions.containsKey(Param.THIS_BILL_PLUS)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.THIS_BILL_PLUS))) {
@@ -300,7 +299,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.THIS_BILL_PLUS));
 			}
 		}
-		
+		// 今回請求金額　なし
 		if (conditions.containsKey(Param.THIS_BILL_ZERO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.THIS_BILL_ZERO))) {
@@ -308,7 +307,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.THIS_BILL_ZERO));
 			}
 		}
-		
+		// 今回請求金額　過入金
 		if (conditions.containsKey(Param.THIS_BILL_MINUS)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.THIS_BILL_MINUS))) {
@@ -317,7 +316,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 			}
 		}
 
-		
+		// 発行済を除く
 		if (conditions.containsKey(Param.EXCLUDE_PRINT)) {
 			Boolean value = (Boolean) conditions.get(Param.EXCLUDE_PRINT);
 			if (value) {
@@ -325,7 +324,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.SORT_COLUMN))) {
@@ -333,7 +332,7 @@ public class BillJoinService extends AbstractService<BillJoin> {
 						.get(Param.SORT_COLUMN)));
 			}
 		}
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean) conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -341,13 +340,13 @@ public class BillJoinService extends AbstractService<BillJoin> {
 			param.put(Param.SORT_ORDER, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
@@ -362,72 +361,72 @@ public class BillJoinService extends AbstractService<BillJoin> {
 	 */
 	private Map<String, Object> setEmptyCondition(Map<String, Object> param) {
 
-		
+		// 請求書番号
 		param.put(Param.BILL_ID, null);
 
-		
+		// 請求書発行日From
 		param.put(Param.LAST_PRINT_DATE_FROM, null);
 
-		
+		// 請求書発行日To
 		param.put(Param.LAST_PRINT_DATE_TO, null);
 
-		
+		// 請求締日From
 		param.put(Param.BILL_CUTOFF_DATE_FROM, null);
 
-		
+		// 請求締日To
 		param.put(Param.BILL_CUTOFF_DATE_TO, null);
 
-		
+		// 最終売上日From
 		param.put(Param.LAST_SALES_DATE_FROM, null);
 
-		
+		// 最終売上日To
 		param.put(Param.LAST_SALES_DATE_TO, null);
 
-		
+		// 請求書分類
 		param.put(Param.BILL_CRT_CATEGORY, null);
 
-		
+		// 請求書種別
 		param.put(Param.BILL_CATEGORY, null);
 
-		
+		// 支払条件(回収間隔）
 		param.put(Param.PAYBACK_CYCLE_CATEGORY, null);
 
-		
+		// 支払条件(締日グループ）
 		param.put(Param.CUTOFF_GROUP, null);
 
-		
+		// 支払条件
 		param.put(Param.CUTOFF_GROUP_CATEGORY, null);
 
-		
+		// 顧客コード
 		param.put(Param.CUSTOMER_CODE, null);
 
-		
+		// 顧客名
 		param.put(Param.CUSTOMER_NAME, null);
 
-		
+		// 繰越金額　なし
 		param.put(Param.COV_PRICE_ZERO, null);
 
-		
+		// 繰越金額　過入金
 		param.put(Param.COV_PRICE_MINUS, null);
 
-		
+		// 繰越金額　不足
 		param.put(Param.COV_PRICE_PLUS, null);
 
-		
+		// 今回請求金額　あり
 		param.put(Param.THIS_BILL_PLUS, null);
 
-		
+		// 今回請求金額　なし
 		param.put(Param.THIS_BILL_ZERO, null);
 
-		
+		// 今回請求金額　過入金
 		param.put(Param.THIS_BILL_MINUS, null);
 
-		
+		// 発行済を除く
 		param.put(Param.EXCLUDE_PRINT, null);
 
-		
+		// ソートカラムを設定する
 		param.put(Param.SORT_COLUMN, null);
-		
+		// ソートオーダーを設定する
 		param.put(Param.SORT_ORDER, null);
 
 		param.put(Param.ROW_COUNT, null);

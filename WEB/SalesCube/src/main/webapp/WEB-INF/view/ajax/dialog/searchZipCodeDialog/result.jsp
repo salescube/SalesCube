@@ -1,6 +1,6 @@
 <table style="width: 600px;">
 	<tr>
-		<td style="text-align: left;">
+		<td style="text-align: left; color: #FFFFFF;">
 			検索結果件数: ${searchResultCount}件
 			<input type="hidden" id="${dialogId}_searchResultCount" name="${dialogId}_searchResultCount" value="${searchResultCount}"/>
 		</td>
@@ -14,37 +14,33 @@
 	</tr>
 </table>
 
-<div style="padding: 0px; border: none; width: 600px; height: 280px; overflow: hidden;">
-	<table id="${dialogId}List" summary="住所検索結果" style="width: 590px">
-		<colgroup>
-			<col span="1" style="width: 10%">
-			<col span="1" style="width: 15%">
-			<col span="1" style="width: 40%">
-			<col span="1" style="width: 35%">
-		</colgroup>
-		<tr>
-			<th>&nbsp;</th>
-			<th>郵便番号</th>
-			<th>住所１</th>
-			<th>住所２</th>
-		</tr>
-		<c:forEach var="bean" items="${searchResultList}" varStatus="status">
-		<tr>
-			<td style="text-align: center;"><input type="radio"
-				name="${dialogId}_selectedZipId" value="${f:h(bean.zipId)}"
-				tabindex="8100"
-				onclick="$('#${dialogId}_selectButton').attr('disabled', false);">
-			</td>
-			<td>${f:h(bean.zipCode)}</td>
-			<td>${f:h(bean.zipAddress1)}</td>
-			<td>${f:h(bean.zipAddress2)}</td>
-		</tr>
-		</c:forEach>
+<div id="${dialogId}ListContainer"
+	style="border: none; width: 600px; height: 260px; overflow: hidden;">
+<table class="dialog_resultList"  id="${dialogId}List" summary="住所検索結果" style="width: 100%;">
+	<colgroup>
+		<col span="1" style="width: 20%">
+		<col span="1" style="width: 40%">
+		<col span="1" style="width: 40%">
+	</colgroup>
+	<tr>
+		<th>郵便番号</th>
+		<th>住所１</th>
+		<th>住所２</th>
+	</tr>
+	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
+	<tr>
+		<td><a href="javascript:void(0)"  tabindex="8100" style="color: #1D9CCC" onclick="_selectLinkSearchResult( '${dialogId}', '${f:h(bean.zipId)}');
+				$('#${dialogId}').dialog('close');" >${f:h(bean.zipCode)}</a>
+		</td>
+		<td>${f:h(bean.zipAddress1)}</td>
+		<td>${f:h(bean.zipAddress2)}</td>
+	</tr>
+	</c:forEach>
 </table>
 </div>
 
 <c:forEach var="bean" items="${searchResultList}" varStatus="status">
-	
+	<%-- 顧客マスタの属性値をhiddenに保持する --%>
 	<input type="hidden" id="${dialogId}_${f:h(bean.zipId)}_zipId" name="${dialogId}_${f:h(bean.zipId)}_zipId" value="${f:h(bean.zipId)}">
 	<input type="hidden" id="${dialogId}_${f:h(bean.zipId)}_zipCode" name="${dialogId}_${f:h(bean.zipId)}_zipCode" value="${f:h(bean.zipCode)}">
 	<input type="hidden" id="${dialogId}_${f:h(bean.zipId)}_zipAddress1" name="${dialogId}_${f:h(bean.zipId)}_zipAddress1" value="${f:h(bean.zipAddress1)}">

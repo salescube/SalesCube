@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity.join;
 
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ import javax.persistence.TemporalType;
 @Entity
 public class SalesSlipTrnJoin {
 
-	
+	// 売上伝票
 	@Id
 	@GeneratedValue
 	@Column(name = "SALES_SLIP_ID")
@@ -205,7 +204,7 @@ public class SalesSlipTrnJoin {
 	@Column(name = "PRICE_FRACT_CATEGORY")
 	public String priceFractCategory;
 
-	
+	// 得意先マスタ
 	@Column(name = "TEMP_DELIVERY_SLIP_FLAG")
 	public String tempDeliverySlipFlag;
 	@Column(name = "SALES_SLIP_CATEGORY")

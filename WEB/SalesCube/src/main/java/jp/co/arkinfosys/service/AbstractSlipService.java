@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.sql.Timestamp;
@@ -113,7 +112,7 @@ public abstract class AbstractSlipService<ENTITY, DTOCLASS> extends
 	protected int lockRecord(String scrID, Object keyValue,
 			Timestamp updDatetm, String lockSQLFileName)
 			throws ServiceException, UnabledLockException {
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(scrID, keyValue);
 		int lockResult = LockResult.SUCCEEDED;

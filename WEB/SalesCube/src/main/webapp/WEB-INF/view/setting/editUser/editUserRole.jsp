@@ -1,6 +1,6 @@
-<th>${bean.caption}</th>
+<th><div class="col_title_right">${bean.caption}</div></th>
 <td>
-	
+	<%-- ファイル参照以外 --%>
 	<c:if test="${bean.menuId != '1407'}">
 	<input type="radio"
 		id="menuDtoList[${status.index}].validFlag1"
@@ -14,7 +14,7 @@
 		<label for="menuDtoList[${status.index}].validFlag2">有効</label>
 
 	<c:if test="${bean.validType=='1'}">
-	
+	<%-- メニューによっては参照が存在しない --%>
 	<input type="radio"
 		id="menuDtoList[${status.index}].validFlag3"
 		name="menuDtoList[${status.index}].validFlag" value="1"
@@ -23,7 +23,7 @@
 	</c:if>
 	</c:if>
 
-	
+	<%-- ファイル参照 --%>
 	<c:if test="${bean.menuId == '1407'}">
 	<input type="radio"
 		id="menuDtoList[${status.index}].validFlag"

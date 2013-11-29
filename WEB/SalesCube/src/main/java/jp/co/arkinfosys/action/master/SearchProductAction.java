@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -57,28 +56,28 @@ public class SearchProductAction extends AbstractSearchAction<ProductDto> {
 	 * @see jp.co.arkinfosys.action.AbstractSearchAction#createList()
 	 */
 	protected void createList() throws ServiceException {
-		
+		// 標準化分類リスト
 		this.searchProductForm.standardCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STANDARD);
 		this.searchProductForm.standardCategoryList
 				.add(0, new LabelValueBean());
 
-		
+		// 分類状況
 		this.searchProductForm.statusCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STATUS);
 		this.searchProductForm.statusCategoryList.add(0, new LabelValueBean());
 
-		
+		// 分類保管
 		this.searchProductForm.stockCategorylist = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STOCK);
 		this.searchProductForm.stockCategorylist.add(0, new LabelValueBean());
 
-		
+		// セット分類
 		this.searchProductForm.setCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_SET_TYPE);
 		this.searchProductForm.setCategoryList.add(0, new LabelValueBean());
 
-		
+		// 分類（大）
 		this.searchProductForm.product1List = this.productClassService
 				.findAllProductClass1LabelValueBeanList();
 		this.searchProductForm.product1List.add(0, new LabelValueBean());

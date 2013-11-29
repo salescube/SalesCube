@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.Iterator;
@@ -114,7 +113,7 @@ public class EditRackAction extends AbstractEditAction<RackDto, RackJoin> {
 	 */
 	@Execute(validator = false)
 	public String delete() throws Exception {
-		
+		// 関連データの存在チェック
 		Map<String, Object> result = this.rackService
 				.countRelations(this.editRackForm.rackCode);
 

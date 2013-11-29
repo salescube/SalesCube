@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -44,10 +43,10 @@ import org.seasar.struts.util.MessageResourcesUtil;
 public class DepositSlipService extends
 		AbstractSlipService<DepositSlip, DepositSlipDto> {
 
-	
+	// 発番用サービス
 	public SeqMakerService seqMakerService;
 
-	
+	// 伝票明細行用サービス
 	@Resource
 	private DepositLineService depositLineService;
 
@@ -68,22 +67,22 @@ public class DepositSlipService extends
 	 *
 	 */
 	public static class Param {
-		private static final String SORT_ORDER = "sortOrder"; 
-		private static final String ROW_COUNT = "rowCount"; 
-		private static final String OFFSET_ROW = "offsetRow"; 
-		public static final String DEPOSIT_SLIP_ID = "depositSlipId"; 
-		public static final String CUSTOMER_CODE = "customerCode"; 
-		public static final String DEPOSIT_DATE = "depositDate"; 
-		public static final String DEPOSIT_DATE_FROM = "depositDateFrom"; 
-		public static final String DEPOSIT_DATE_TO = "depositDateTo"; 
-		private static final String SORT_COLUMN_DEPOSIT_DATE = "sortColumnDepositDate"; 
-		private static final String STATUS = "status"; 
-		private static final String BILL_CUTOFF_DATE = "billCutoffDate"; 
-		private static final String SALES_SLIP_ID = "salesSlipId"; 
+		private static final String SORT_ORDER = "sortOrder"; // ソート方向
+		private static final String ROW_COUNT = "rowCount"; // 取得件数
+		private static final String OFFSET_ROW = "offsetRow"; // 取得件数
+		public static final String DEPOSIT_SLIP_ID = "depositSlipId"; // 入金伝票番号
+		public static final String CUSTOMER_CODE = "customerCode"; // 顧客コード
+		public static final String DEPOSIT_DATE = "depositDate"; // 入金日
+		public static final String DEPOSIT_DATE_FROM = "depositDateFrom"; // 入金日(期間指定FROM)
+		public static final String DEPOSIT_DATE_TO = "depositDateTo"; // 入金日(期間指定TO)
+		private static final String SORT_COLUMN_DEPOSIT_DATE = "sortColumnDepositDate"; // 入金日のソート条件
+		private static final String STATUS = "status"; // 状態
+		private static final String BILL_CUTOFF_DATE = "billCutoffDate"; // 請求締日
+		private static final String SALES_SLIP_ID = "salesSlipId"; // 発注伝票番号
 		public static final String IS_CONTAIN_CLOSE_LEAK = "isContainCloseLeak";
 		public static final String LEAK_CHECK_CUTOFF_DATE = "leakCheckCutoffDate";
 		public static final String DEPOSIT_CATEGORY = "depositCategory";
-		private static final String SALES_CUTOFF_DATE = "salesCutoffDate"; 
+		private static final String SALES_CUTOFF_DATE = "salesCutoffDate"; // 売掛締日
 
 	}
 
@@ -111,14 +110,14 @@ public class DepositSlipService extends
 	protected void setCloseDepositSlipBill(DepositSlipDto dto, Integer billId,
 			String lastCutOffDate, Timestamp cutoffPdate) throws ParseException {
 
-		
+		// 状態フラグ
 		dto.status = DepositSlip.STATUS_CLOSE;
-		
+		// 請求書番号
 		dto.billId = billId.toString();
-		
+		// 請求締日付
 		dto.billCutoffDate = super.convertUtilDateToSqlDate(
 				DF_YMD.parse(lastCutOffDate)).toString();
-		
+		// 請求締処理日
 		dto.billCutoffPdate = cutoffPdate.toString();
 	}
 
@@ -143,15 +142,15 @@ public class DepositSlipService extends
 			Integer artBalanceId, String lastCutOffDate, Timestamp cutoffPdate)
 			throws ParseException {
 
-		
+		// 売掛以外だったら状態フラグを締める
 		if (!isCreditType(ds)) {
 			ds.status = DepositSlip.STATUS_CLOSE;
 		}
-		
+		// 売掛残高番号
 		ds.artId = artBalanceId.toString();
-		
+		// 請求締日付
 		ds.salesCutoffDate = lastCutOffDate;
-		
+		// 請求締処理日
 		ds.salesCutoffPdate = new SimpleDateFormat(Constants.FORMAT.TIMESTAMP).format(cutoffPdate);
 	}
 
@@ -163,15 +162,15 @@ public class DepositSlipService extends
 	protected void setReOpenDepositSlipArt(DepositSlipDto ds)
 			throws ParseException {
 
-		
+		// 売掛以外だったら状態フラグを締める
 		if (!isCreditType(ds)) {
 			ds.status = DepositSlip.STATUS_INIT;
 		}
-		
+		// 売掛残高番号
 		ds.artId = null;
-		
+		// 請求締日付
 		ds.salesCutoffDate = null;
-		
+		// 請求締処理日
 		ds.salesCutoffPdate = null;
 	}
 
@@ -187,8 +186,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		if (startDate != null) {
 			conditions.put(Param.DEPOSIT_DATE, DF_YMD.format(startDate));
@@ -215,8 +214,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, DepositSlip.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.DEPOSIT_DATE, closeDate);
@@ -245,8 +244,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.DEPOSIT_DATE, closeDate);
 		conditions.put(Param.SALES_CUTOFF_DATE, null);
@@ -278,8 +277,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, DepositSlip.STATUS_CLOSE);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.BILL_CUTOFF_DATE, lastCutOffDate);
@@ -311,8 +310,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SALES_CUTOFF_DATE, lastCutOffDate);
 		conditions.put(Param.SORT_COLUMN_DEPOSIT_DATE, COLUMN_DEPOSIT_DATE);
@@ -339,8 +338,8 @@ public class DepositSlipService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.DEPOSIT_SLIP_ID, depositSlipId);
 
 		return findByCondition(conditions, params,
@@ -364,7 +363,7 @@ public class DepositSlipService extends
 
 		Double depositTotal = 0.0;
 
-		
+		// 読み飛ばし用伝票番号生成
 		Integer dsId;
 		if (!StringUtil.hasLength(depositSlipId)) {
 			dsId = -1;
@@ -372,9 +371,9 @@ public class DepositSlipService extends
 			dsId = Integer.parseInt(depositSlipId);
 		}
 
-		
+		// 伝票合計金額の合計
 		for (DepositSlip ds : depositList) {
-			
+			// 指定伝票（今、編集中の伝票）を除外
 			if (ds.depositSlipId.equals(dsId) == true) {
 				continue;
 			}
@@ -415,7 +414,7 @@ public class DepositSlipService extends
 	 * @param dto 入金伝票DTO
 	 */
 	private void copy(DepositSlip ds, DepositSlipDto dto) {
-		
+		// 単価系
 		Beans.copy(ds, dto).dateConverter(
 				Constants.FORMAT.DATE, "depositDate", "inputPdate",
 				"billCutoffDate").dateConverter(Constants.FORMAT.TIMESTAMP,
@@ -429,16 +428,16 @@ public class DepositSlipService extends
 	 */
 	private Map<String, Object> createParamMap(DepositSlipDto dsd){
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class,dsd)
 			.numberConverter("#","depositTotal")
 			.execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -465,16 +464,16 @@ public class DepositSlipService extends
 
 		int updateCount = 0;
 		for (DepositSlipDto ds : depositSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.DEPOSIT_SLIP_ID, ds.depositSlipId,
 					ds.updDatetm, "deposit/LockSlip.sql");
 
-			
+			// 明細エンティティの取得
 			List<DepositLineDto> dlList = depositLineService.loadBySlip(ds);
 
-			
+			// 明細行の更新
 			for (DepositLineDto dl : dlList) {
-				
+				// 存在したら常に更新
 				dl.status = DepositLine.STATUS_CLOSE;
 				if (depositLineService.updateRecord(depositLineService
 						.createAndCopy(ds.priceFractCategory, dl)) == 0) {
@@ -482,7 +481,7 @@ public class DepositSlipService extends
 				}
 			}
 
-			
+			// 伝票の更新
 			setCloseDepositSlipBill(ds, billId, lastCutOffDate, cutoffPdate);
 
 			try{
@@ -512,16 +511,16 @@ public class DepositSlipService extends
 
 		int updateCount = 0;
 		for (DepositSlipDto ds : depositSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.DEPOSIT_SLIP_ID, ds.depositSlipId,
 					ds.updDatetm, "deposit/LockSlip.sql");
 
-			
+			// 明細エンティティの取得
 			List<DepositLineDto> dlList = depositLineService.loadBySlip(ds);
 
-			
+			// 明細行の更新
 			for (DepositLineDto dl : dlList) {
-				
+				// 存在したら常に更新
 				dl.status = DepositLine.STATUS_INIT;
 				if (depositLineService.updateRecord(depositLineService
 						.createAndCopy(ds.priceFractCategory, dl)) == 0) {
@@ -529,14 +528,14 @@ public class DepositSlipService extends
 				}
 			}
 
-			
-			
+			// 伝票の更新
+			// 状態フラグ
 			ds.status = DepositSlip.STATUS_INIT;
-			
+			// 請求書番号
 			ds.billId = null;
-			
+			// 請求締日付
 			ds.billCutoffDate = null;
-			
+			// 請求締処理日
 			ds.billCutoffPdate = null;
 
 			try{
@@ -570,18 +569,18 @@ public class DepositSlipService extends
 
 		int updateCount = 0;
 		for (DepositSlipDto ds : depositSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.DEPOSIT_SLIP_ID, ds.depositSlipId,
 					ds.updDatetm, "deposit/LockSlip.sql");
 
-			
+			// 売掛以外の伝票だったら締める
 			if (!isCreditType(ds)) {
-				
+				// 明細エンティティの取得
 				List<DepositLineDto> dlList = depositLineService.loadBySlip(ds);
 
-				
+				// 明細行の更新
 				for (DepositLineDto dl : dlList) {
-					
+					// 存在したら常に更新
 					dl.status = DepositLine.STATUS_CLOSE;
 					if (depositLineService.updateRecord(depositLineService
 							.createAndCopy(ds.priceFractCategory, dl)) == 0) {
@@ -591,7 +590,7 @@ public class DepositSlipService extends
 			}
 
 
-			
+			// 伝票の更新
 			setCloseDepositSlipArt(ds, artBalanceId, lastCutOffDate,
 					cutoffPdate);
 			try{
@@ -621,17 +620,17 @@ public class DepositSlipService extends
 
 		int updateCount = 0;
 		for (DepositSlipDto ds : depositSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.DEPOSIT_SLIP_ID, ds.depositSlipId,
 					ds.updDatetm, "deposit/LockSlip.sql");
 
 			if (!isCreditType(ds)) {
-				
+				// 明細エンティティの取得
 				List<DepositLineDto> dlList = depositLineService.loadBySlip(ds);
 
-				
+				// 明細行の更新
 				for (DepositLineDto dl : dlList) {
-					
+					// 存在したら常に更新
 					dl.status = DepositLine.STATUS_INIT;
 					if (depositLineService.updateRecord(depositLineService
 							.createAndCopy(ds.priceFractCategory, dl)) == 0) {
@@ -640,7 +639,7 @@ public class DepositSlipService extends
 				}
 			}
 
-			
+			// 伝票の更新
 			setReOpenDepositSlipArt(ds);
 			try{
 				this.updateBySqlFile("deposit/UpdateDepositSlip.sql", createParamMap(ds)).execute();
@@ -682,16 +681,16 @@ public class DepositSlipService extends
 	public Long insertBySales(SalesSlipDto dto) throws Exception {
 		Long newSlipId = -1L;
 		try {
-			
+			// 入金伝票、明細行１件
 			DepositSlipDto tempDto = new DepositSlipDto();
 			DepositLineDto tempLineDto = (DepositLineDto) tempDto
 					.createLineDto();
 			tempDto.status = Constants.STATUS_DEPOSIT_SLIP.PAID;
 
-			
-			tempDto.depositDate = dto.salesDate; 
-			tempDto.inputPdate = dto.salesDate; 
-			tempDto.depositCategory = CategoryTrns.DEPOSIT_CATEGORY_CASH; 
+			// 売上伝票の内容を入金伝票へコピー
+			tempDto.depositDate = dto.salesDate; // 入金日→売上伝票.売上日
+			tempDto.inputPdate = dto.salesDate; // 入力日→売上伝票.売上日
+			tempDto.depositCategory = CategoryTrns.DEPOSIT_CATEGORY_CASH; // 入金区分→現金（売上伝票.取引区分は現金の場合のみ）
 			tempDto.depositAbstract = "";
 			tempDto.customerCode = dto.customerCode;
 			tempDto.customerName = dto.customerName;
@@ -718,11 +717,11 @@ public class DepositSlipService extends
 			tempDto.baEmail = dto.baEmail;
 			tempDto.baUrl = dto.baUrl;
 
-			tempDto.salesSlipId = dto.salesSlipId; 
+			tempDto.salesSlipId = dto.salesSlipId; // 売上伝票番号を保存（売上伝票削除時に入金伝票も削除する為）
 
-			
+			// 明細行
 			tempLineDto.depositSlipId = newSlipId.toString();
-			
+			// 伝票　状態フラグの初期値は入金
 			tempLineDto.status = Constants.STATUS_DEPOSIT_LINE.PAID;
 			Double dTotal = Double.parseDouble(dto.ctaxPriceTotal)
 					+ Double.parseDouble(dto.priceTotal);
@@ -748,11 +747,11 @@ public class DepositSlipService extends
 	public int deleteBySales(SalesSlipDto dto) throws Exception {
 		try {
 
-			
+			// 売上伝票番号から入金伝票取得
 			LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-			
-			
+			// 条件設定
+			// 売上伝票番号が一致
 			conditions.put(Param.SALES_SLIP_ID, dto.salesSlipId);
 
 			List<DepositSlip> dsList = findByCondition(conditions, params,
@@ -767,7 +766,7 @@ public class DepositSlipService extends
 			super.updateAudit(tempDto.depositSlipId);
 			int count = deleteById(tempDto.depositSlipId, tempDto.updDatetm);
 
-			
+			// 明細行を削除
 			depositLineService.updateAudit(tempDto.depositSlipId);
 			depositLineService.deleteRecords(tempDto.depositSlipId);
 
@@ -791,8 +790,8 @@ public class DepositSlipService extends
 			UnabledLockException {
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.DEPOSIT_SLIP_ID, id);
 
 		List<DepositSlip> l = findByCondition(conditions, params,
@@ -833,23 +832,23 @@ public class DepositSlipService extends
 	@Override
 	protected int insertRecord(DepositSlipDto dto) throws ServiceException {
 
-		
+		// 伝票番号の発番
 		Long newSlipId = seqMakerService.nextval(DepositSlip.TABLE_NAME);
 		dto.depositSlipId = newSlipId.toString();
 
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// アクションフォームの情報をPUT
 		BeanMap map = Beans.createAndCopy(BeanMap.class,
 				this.createAndCopy(dto)).execute();
 		param.putAll(map);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// SQLクエリを投げる
 		return this.updateBySqlFile("deposit/InsertDepositSlip.sql", param)
 				.execute();
 	}
@@ -865,23 +864,23 @@ public class DepositSlipService extends
 	@Override
 	protected int updateRecord(DepositSlipDto dto) throws UnabledLockException,
 			ServiceException {
-		
+		// 排他制御
 		this.lockRecord(Param.DEPOSIT_SLIP_ID, dto.depositSlipId,
 				dto.updDatetm, "deposit/LockSlip.sql");
 
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// アクションフォームの情報をPUT
 		BeanMap map = Beans.createAndCopy(BeanMap.class,
 				this.createAndCopy(dto)).execute();
 		param.putAll(map);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// SQLクエリを投げる
 		return this.updateBySqlFile("deposit/UpdateDepositSlip.sql", param)
 				.execute();
 	}
@@ -894,10 +893,10 @@ public class DepositSlipService extends
 	private void setSlipData(DepositSlipDto dto) throws ServiceException {
 
 		try {
-			
+			// 伝票　状態フラグの初期値は入金
 			dto.status = Constants.STATUS_DEPOSIT_SLIP.PAID;
 
-			
+			// 入金伝票の入出庫年度、月度、年月度を計算
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(new SimpleDateFormat(Constants.FORMAT.DATE)
 					.parse(dto.depositDate));
@@ -907,7 +906,7 @@ public class DepositSlipService extends
 
 			BigDecimal total = new BigDecimal(0);
 
-			
+			// 数値計算の調整
 			for (DepositLineDto lineDto : dto.getLineDtoList()) {
 				if (!this.depositLineService.check(lineDto)) {
 					continue;
@@ -918,10 +917,10 @@ public class DepositSlipService extends
 				}
 			}
 
-			
+			// 伝票金額合計
 			dto.depositTotal = total.toString();
 
-			
+			// 請求先情報の取得
 			List<DeliveryAndPre> deliveryList = this.deliveryService
 					.searchDeliveryByCompleteCustomerCode(dto.customerCode);
 			dto.baCode = deliveryList.get(0).deliveryCode;
@@ -950,21 +949,21 @@ public class DepositSlipService extends
 	public int deleteById(String id, String updDatetm) throws ServiceException,
 			UnabledLockException {
 
-		
+		// 排他制御
 		this.lockRecord(Param.DEPOSIT_SLIP_ID, id, updDatetm,
 				"deposit/LockSlip.sql");
 
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// アクションフォームの情報をPUT
 		param.put(Param.DEPOSIT_SLIP_ID, id);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// SQLクエリを投げる
 		return this.updateBySqlFile("deposit/DeleteDepositSlip.sql", param)
 				.execute();
 	}

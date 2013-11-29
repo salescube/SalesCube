@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -116,7 +115,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 				"category/FindCategoryNameByIdAndCode.sql", param).getResultList();
 
 		if (result == null || result.size() == 0) {
-			
+			// 見つからなかったらnullを返す
 			return null;
 		}
 
@@ -131,7 +130,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	public List<CategoryGroupDto> findUpdatableGroups() throws ServiceException {
 		List<CategoryGroupDto> result = new ArrayList<CategoryGroupDto>();
 
-		
+		// グループ名を検索する(DISTINCT)
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.SORT_ORDER_COLUMN, COLUMN_GROUP_NAME);
 
@@ -142,7 +141,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 			return result;
 		}
 
-		
+		// グループ名だけ抜き出す
 		for (Category category : list) {
 			CategoryGroupDto group = new CategoryGroupDto();
 			group.name = category.groupName;
@@ -160,7 +159,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	public List<CategoryMstDto> findCategoryByGroupName(String groupName) throws ServiceException {
 		List<CategoryMstDto> result = new ArrayList<CategoryMstDto>();
 
-		
+		// グループ名から、区分マスタのレコードを検索する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.SORT_ORDER_COLUMN, COLUMN_CATEGORY_ID);
 		param.put(Param.GROUP_NAME, groupName);
@@ -242,7 +241,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 			return;
 		}
 
-		
+		// 新規登録
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap categoryMap = Beans.createAndCopy(BeanMap.class, dto)
 								.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -262,15 +261,15 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	 */
 	@Override
 	public void updateRecord(CategoryDto dto) throws Exception {
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.CATEGORY_ID, dto.categoryId);
 		lockParam.put(Param.CATEGORY_CODE, dto.categoryCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("category/LockCategoryTrn.sql", lockParam, dto.updDatetm);
 
-		
+		// 更新日付を書き換える
 		this.updateBySqlFile("category/UpdateCategoryTrnUpdDatetm.sql", lockParam).execute();
 	}
 
@@ -281,14 +280,14 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	 * @throws Exception
 	 */
 	public void updateMasterRecordUpdDatetm(Integer categoryId, String updDatetm) throws Exception {
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.CATEGORY_ID, categoryId);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("category/LockCategoryByCategoryId.sql", lockParam, updDatetm);
 
-		
+		// 更新日付を書き換える
 		this.updateBySqlFile("category/UpdateCategoryUpdDatetm.sql", lockParam).execute();
 	}
 

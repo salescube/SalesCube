@@ -1,80 +1,79 @@
-<div style="width: 910px; height: 25px;">
+<div style="width: 1010px; height: 25px;">
 		<input type="hidden" id="searchResultCount" value="${f:h(searchResultCount)}">
 		<div style="position:absolute; left: 0px;">検索結果件数： ${searchResultCount}件</div>
-		<div style="position:absolute; width: 910px; text-align: center;">
+		<div style="position:absolute; width: 1160px; text-align: center;">
 			${sw:pageLink(searchResultCount,rowCount,pageNo)}
 		</div>
         <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 </div>
 
-<table summary="検索結果"  class="forms" style="table-layout: fixed;">
-
-                <colgroup>
-    				<col span="1" style="width: 80px">
-    				<col span="1" style="width:200px">
-    				<col span="1" style="width:120px">
-    				<col span="1" style="width:120px">
-    				<col span="1" style="">
-    				<col span="1" style="width:120px">
-                </colgroup>
-                <tr>
-		<th style="cursor: pointer" onclick="sort('rateId');">レート<br>タイプID
+<table id="detail_info" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+	<colgroup>
+		<col span="1" style="width: 80px">
+		<col span="1" style="width:200px">
+		<col span="1" style="width:120px">
+		<col span="1" style="width:120px">
+		<col span="1" style="">
+		<col span="1" style="width:120px">
+	</colgroup>
+	<tr>
+		<th class="rd_top_left" style="cursor: pointer; height: 60px;" onclick="sort('rateId');">レート<br>タイプID
 			<c:if test="${sortColumn == 'rateId'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('name');">レートタイプ名称
+		<th style="cursor: pointer; height: 30px;" onclick="sort('name');">レートタイプ名称
 			<c:if test="${sortColumn == 'name'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('rate');">本日付の<br>最新レート
+		<th style="cursor: pointer; height: 30px;" onclick="sort('rate');">本日付の<br>最新レート
 			<c:if test="${sortColumn == 'rate'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('startDate');">最新レートの<br>適用開始日
+		<th style="cursor: pointer; height: 30px;" onclick="sort('startDate');">最新レートの<br>適用開始日
 			<c:if test="${sortColumn == 'startDate'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('remarks');">レートタイプ備考
+		<th style="cursor: pointer; height: 30px;" onclick="sort('remarks');">レートタイプ備考
 			<c:if test="${sortColumn == 'remarks'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-                    <th>&nbsp;</th>
-     </tr>
-	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
-	<tr>
-		<td>${bean.rateId}</td>
-		<td style="white-space: normal">${f:h(bean.name)}</td>
-		<td style="white-space: normal;text-align: right;">${f:h(bean.rate)}</td>
-		<td style="white-space: normal;text-align: center;">${f:h(bean.startDate)}</td>
-		<td style="white-space: normal">${f:h(bean.remarks)}</td>
-		<td style="text-align: center">
-			<c:if test="${isUpdate}">
-			<button onclick="editRate('${bean.rateId}');">編集</button>
-			<button onclick="deleteRate('${bean.rateId}', '${bean.updDatetm}');">削除</button>
-			</c:if>
-			<c:if test="${!isUpdate}">
-			<button onclick="editRate('${bean.rateId}');">参照</button>
-			</c:if>
-		</td>
+		<th class="rd_top_right">&nbsp;</th>
 	</tr>
+	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
+		<tr>
+			<td>&nbsp;${bean.rateId}&nbsp;</td>
+			<td style="white-space: normal">&nbsp;${f:h(bean.name)}&nbsp;</td>
+			<td style="white-space: normal;text-align: right;">&nbsp;${f:h(bean.rate)}&nbsp;</td>
+			<td style="white-space: normal;text-align: center;">&nbsp;${f:h(bean.startDate)}&nbsp;</td>
+			<td style="white-space: normal">&nbsp;${f:h(bean.remarks)}&nbsp;</td>
+			<td style="text-align: center">
+				<c:if test="${isUpdate}">
+				<button onclick="editRate('${bean.rateId}');" class="btn_small">編集</button>
+				<button onclick="deleteRate('${bean.rateId}', '${bean.updDatetm}');" class="btn_small">削除</button>
+				</c:if>
+				<c:if test="${!isUpdate}">
+				<button onclick="editRate('${bean.rateId}');" class="btn_small">参照</button>
+				</c:if>
+			</td>
+		</tr>
 	</c:forEach>
 </table>
 
-<div style="position:absolute; width: 910px; text-align: center;">
+<div style="position:absolute; width: 1160px; text-align: center; margin-top: 20px;">
 	${sw:pageLink(searchResultCount,rowCount,pageNo)}
 </div>
 
-
+<%-- 今回の検索条件を保持 --%>
 <input type="hidden" id="prev_name" name="prev_name" value="${f:h(name)}">
 <input type="hidden" id="prev_remarks" name="prev_remarks" value="${f:h(remarks)}">
 <input type="hidden" id="prev_startDate1" name="prev_startDate1" value="${f:h(startDate1)}">
@@ -86,7 +85,7 @@
 
 
 <c:if test="${searchResultCount == 1}">
-
+<%-- 検索結果が1件の場合にはその棚番コードをhiddenで配置する --%>
 <c:forEach var="bean" items="${searchResultList}" varStatus="status">
 <input type="hidden" id="singleRateId" name="singleRateId" value="${bean.rateId}">
 </c:forEach>

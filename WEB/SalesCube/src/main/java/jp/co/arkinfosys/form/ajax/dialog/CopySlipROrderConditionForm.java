@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.dialog;
 
 import java.text.DateFormat;
@@ -90,7 +89,7 @@ public class CopySlipROrderConditionForm {
 
 		DateFormat df = new SimpleDateFormat(Constants.FORMAT.DATE);
 		df.setLenient(true);
-		
+		// 受注日フォーマットチェック
 		try {
 			if (StringUtil.hasLength(this.roDateFrom)) {
 				df.parse(StringUtil.trimBlank(this.roDateFrom));
@@ -104,7 +103,7 @@ public class CopySlipROrderConditionForm {
 							.getMessage("labels.roDate")));
 		}
 
-		
+		// 出荷日フォーマットチェック
 		try {
 			if (StringUtil.hasLength(this.shipDateFrom)) {
 				df.parse(StringUtil.trimBlank(this.shipDateFrom));

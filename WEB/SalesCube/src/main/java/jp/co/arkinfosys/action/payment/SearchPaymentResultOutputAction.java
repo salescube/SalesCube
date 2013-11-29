@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.payment;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class SearchPaymentResultOutputAction extends
 	 */
 	@Override
 	protected int doCount(BeanMap params) throws ServiceException {
-		
+		// カウントしない
 		return 0;
 	}
 

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -174,7 +173,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 	protected int insertRecord(InputEstimateDto dto)
 			throws ServiceException {
 
-		
+		// 見積伝票番号を採番
 		try {
 			EstimateSheetTrn entity = Beans.createAndCopy(
 					EstimateSheetTrn.class, dto).dateConverter(
@@ -206,7 +205,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 										.dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm")
 										.execute();
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(Param.ESTIMATE_SHEET_ID, entity.estimateSheetId, entity.updDatetm, "estimate/LockEstimateSheet.sql");
 
 		Map<String, Object> param = setEntityToParam(entity);
@@ -230,10 +229,10 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 			UnabledLockException {
 
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(Param.ESTIMATE_SHEET_ID, id, updDatetm, "estimate/LockEstimateSheet.sql");
 
-		
+		// 伝票番号を指定して見積伝票を削除する
 		Map<String, Object> param = createSqlParam();
 		param.put(Param.ESTIMATE_SHEET_ID, id);
 		this.updateBySqlFile("estimate/DeleteEstimateSheet.sql", param)
@@ -391,51 +390,51 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		setConditionItemString(conditions, param, Param.ESTIMATE_SHEET_ID,
 				LikeType.PREFIX);
 
-		
+		// 見積日From
 		setConditionItemString(conditions, param, Param.ESTIMATE_DATE_FROM,
 				LikeType.NOTHING);
 
-		
+		// 見積日To
 		setConditionItemString(conditions, param, Param.ESTIMATE_DATE_TO,
 				LikeType.NOTHING);
 
-		
+		// 有効期限From
 		setConditionItemString(conditions, param, Param.VALID_DATE_FROM,
 				LikeType.NOTHING);
 
-		
+		// 有効期限To
 		setConditionItemString(conditions, param, Param.VALID_DATE_TO,
 				LikeType.NOTHING);
 
-		
+		// 入力担当者コード
 		setConditionItemString(conditions, param, Param.USER_ID,
 				LikeType.PREFIX);
 
-		
+		// 入力担当者名
 		setConditionItemString(conditions, param, Param.USER_NAME,
 				LikeType.PARTIAL);
 
-		
+		// 件名
 		setConditionItemString(conditions, param, Param.TITLE,
 				LikeType.PARTIAL);
 
-		
+		// 摘要
 		setConditionItemString(conditions, param, Param.REMARKS,
 				LikeType.PARTIAL);
 
-		
+		// 提出先名
 		setConditionItemString(conditions, param, Param.SUBMIT_NAME,
 				LikeType.PARTIAL);
 
-		
+		// 顧客コード
 		setConditionItemString(conditions, param, Param.CUSTOMER_CODE,
 				LikeType.PREFIX);
 
-		
+		// 顧客名
 		setConditionItemString(conditions, param, Param.CUSTOMER_NAME,
 				LikeType.PARTIAL);
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.SORT_COLUMN))) {
@@ -444,7 +443,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 								.get(Param.SORT_COLUMN)));
 			}
 		}
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean) conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -452,13 +451,13 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 			param.put(Param.SORT_ORDER, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
@@ -473,47 +472,47 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 	 */
 	private Map<String, Object> setEmptyCondition(Map<String, Object> param) {
 
-		
+		// 見積番号
 		param.put(Param.ESTIMATE_SHEET_ID, null);
 
-		
+		// 見積日From
 		param.put(Param.ESTIMATE_DATE_FROM, null);
 
-		
+		// 見積日To
 		param.put(Param.ESTIMATE_DATE_TO, null);
 
-		
+		// 有効期限From
 		param.put(Param.VALID_DATE_FROM, null);
 
-		
+		// 有効期限To
 		param.put(Param.VALID_DATE_TO, null);
 
-		
+		// 入力担当者コード
 		param.put(Param.USER_ID, null);
 
-		
+		// 入力担当者名
 		param.put(Param.USER_NAME, null);
 
-		
+		// 件名
 		param.put(Param.TITLE, null);
 
-		
+		// 摘要
 		param.put(Param.REMARKS, null);
 
-		
+		// 提出先名
 		param.put(Param.SUBMIT_NAME, null);
 
-		
+		// 顧客コード
 		param.put(Param.CUSTOMER_CODE, null);
 
-		
+		// 顧客名
 		param.put(Param.CUSTOMER_NAME, null);
 
-		
+		// 顧客名
 		param.put(Param.DELIVERY_ZIP_CODE, null);
-		
+		// ソートカラムを設定する
 		param.put(Param.SORT_COLUMN, null);
-		
+		// ソートオーダーを設定する
 		param.put(Param.SORT_ORDER, null);
 
 		param.put(Param.ROW_COUNT, null);
@@ -558,10 +557,10 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 
 		CustomerService customerService = (CustomerService) abstractServices[0];
 
-		
+		// 見積年度、月度、年月度を計算
 		YmDto ymDto = ymService.getYm(dto.estimateDate);
 		if (ymDto == null) {
-			
+			// DTOの中身を空にしておく
 			dto.estimateAnnual = "";
 			dto.estimateMonthly = "";
 			dto.estimateYm = "";
@@ -574,7 +573,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		if(StringUtil.hasLength(dto.customerCode)){
 			Customer c = customerService.findCustomerByCode(dto.customerCode);
 			if(c != null){
-				
+				// カラム名はdelivery（納入先）だが顧客の郵便番号を登録する
 				dto.deliveryZipCode = c.customerZipCode;
 			}
 		}
@@ -582,10 +581,10 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		int lockResult = LockResult.SUCCEEDED;
 
 		if (dto.newData == null || dto.newData ) {
-			
+			// 見積を登録する
 			insertRecord(dto);
 		} else {
-			
+			// 見積を更新する
 			lockResult = updateRecord(dto);
 		}
 		return lockResult;

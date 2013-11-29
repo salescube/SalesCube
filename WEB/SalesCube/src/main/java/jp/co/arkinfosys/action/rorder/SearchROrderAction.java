@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.rorder;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class SearchROrderAction extends AbstractSearchAction<List<Object>> {
 	protected void doAfterIndex() throws Exception {
 		this.searchROrderForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), Constants.SEARCH_TARGET.VALUE_LINE);
 	}
@@ -95,7 +94,7 @@ public class SearchROrderAction extends AbstractSearchAction<List<Object>> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 画面のプルダウンリストを初期化する
 		this.searchROrderForm.searchTargetList = ListUtil.getSearchTargetList();
 		this.searchROrderForm.product1List = productClassService
 				.findAllProductClass1LabelValueBeanList();

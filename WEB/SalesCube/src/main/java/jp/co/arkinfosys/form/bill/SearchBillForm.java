@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.bill;
 
 import java.util.ArrayList;
@@ -120,13 +119,13 @@ public class SearchBillForm extends AbstractSearchForm<BeanMap> {
      */
     public String thisBillPriceMinus;
 
-	
+	// 締め解除種別
 	public String doa;
 
-	
+	// 請求書分類リストの内容
 	public List<LabelValueBean> billCrtCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 支払条件リストの内容
 	public List<LabelValueBean> cutoffGroupCategoryList = new ArrayList<LabelValueBean>();
 
 	/**

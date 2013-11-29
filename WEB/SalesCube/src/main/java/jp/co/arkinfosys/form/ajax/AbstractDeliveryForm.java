@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax;
 
 import jp.co.arkinfosys.common.Constants;
@@ -36,7 +35,7 @@ public abstract class AbstractDeliveryForm {
 	 */
 	public String salesCmCategoryName;
 
-	
+	// 得意先関連区分
 	public String custRelCategory;
 
 	/**
@@ -142,7 +141,7 @@ public abstract class AbstractDeliveryForm {
 	 */
 	public String updUser;
 
-	
+	// 敬称文字列　コードはDeliveryを参照のこと
 	public String categoryCodeName;
 
 	/**
@@ -153,5 +152,8 @@ public abstract class AbstractDeliveryForm {
 	 * 売上帳票区分
 	 */
 	public String salesSlipCategory;
-
+	/**
+	 * 請求書発行単位
+	 */
+	public String billPrintUnit;
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.rorder;
 
 import java.io.UnsupportedEncodingException;
@@ -83,7 +82,7 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
 				throw e;
 			}
@@ -124,16 +123,16 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 				return Mapping.INPUT;
 			}
 
-			
+			// オンライン受注データの読み込み
 			readXSV(importOnlineOrderForm.uploadFile);
-			
+			// エラーがあるか？
 			if(messages.size() != 0) {
-				
+				// エラーの設定
 				ActionMessagesUtil.addErrors(super.httpSession, messages);
 				return Mapping.INPUT;
 			}
 
-			
+			// 取り込んだ内容がない場合
 			if(dtoList.size()==0){
 				ActionMessages l_result = new ActionMessages();
 				l_result.add(ActionMessages.GLOBAL_MESSAGE
@@ -142,7 +141,7 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 				return Mapping.INPUT;
 			}
 
-			
+			// 読み込んだデータをInsert
 			int lineno = 1;
 			for(OnlineOrderWorkDto dto : dtoList) {
 				dto.lineNo = lineno;
@@ -159,7 +158,7 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 					}
 				}
 			}
-			
+			// 完了メッセージを表示
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("infos.import"));
 			ActionMessagesUtil.addMessages(super.httpSession, messages);
 		} catch (UnsupportedEncodingException e) {
@@ -168,9 +167,9 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -185,16 +184,16 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 	@Execute(validator = false)
 	public String delete() throws Exception {
 		try{
-			
+			// 以前のデータを削除する
 			importOnlineOrderService.deleteWorksByRoId(this.importOnlineOrderForm.roId);
 			importOnlineOrderForm.isUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_RORDER);
 			importOnlineOrderForm.isInputValid = userDto.isMenuValid(Constants.MENU_ID.INPUT_RORDER);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -208,7 +207,7 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 	 */
 	@Override
 	protected String getSeparator() {
-		
+		// オンライン受注データはタブ区切り
 		return SEPARATOR.TAB;
 	}
 
@@ -227,12 +226,12 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 
 		ActionMessage error;
 
-		
+		// エラーが最大件数に達している場合は処理しない
 		if(isErrorsMax()) {
 			return;
 		}
 
-		
+		// カラム数
 		if (values == null
 				|| values.length != Constants.ONLINE_ORDER_FILE.COLUMN_COUNT) {
 			addError("errors.line.onlineorder.format",
@@ -240,135 +239,135 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 			return;
 		}
 
-		
+		// オンライン受注Dtoの生成
 		OnlineOrderWorkDto dto = importOnlineOrderService.createOnlineOrderWorkDto(values);
 
-		
+		// 型チェック
 
-		
+		// purchase-date(日付)
 		error = ValidateUtil.dateType(dto.supplierDate, Constants.FORMAT.ISO8601_DATE, false, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.purchase-date") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// payments-date(日付)
 		error = ValidateUtil.dateType(dto.paymentDate, Constants.FORMAT.ISO8601_DATE, false, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.payments-date") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// delivery-start-date(日付)
 		error = ValidateUtil.dateType(dto.deliveryStartDate, Constants.FORMAT.ISO8601_DATE, false, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.delivery-start-date") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// delivery-end-date(日付)
 		error = ValidateUtil.dateType(dto.deliveryEndDate, Constants.FORMAT.ISO8601_DATE, false, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.delivery-end-date") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// quantity-purchased(数値)
 		error = ValidateUtil.integerType(dto.quantity, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.quantity-purchased") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// item-price(数値)
 		error = ValidateUtil.integerType(dto.price, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.item-price") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// item-tax(数値)
 		error = ValidateUtil.integerType(dto.taxPrice, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.item-tax") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// shipping-price(数値)
 		error = ValidateUtil.integerType(dto.shippingPrice, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.shipping-price") });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// shipping-tax(数値)
 		error = ValidateUtil.integerType(dto.shippingTax, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.shipping-tax") });
 		if(error != null) {
 			addError(error);
 		}
 
-		
+		// 長さチェック
 
-		
+		// order-id
 		error = ValidateUtil.maxlength(dto.onlineOrderId, 30, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.order-id"), 30 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// order-item-id
 		error = ValidateUtil.maxlength(dto.onlineItemId, 30, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.order-item-id"), 30 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// buyer-email
 		error = ValidateUtil.maxlength(dto.customerEmail, 255, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.buyer-email"), 255 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// buyer-name
 		error = ValidateUtil.maxlength(dto.customerName, 60, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.buyer-name"), 60 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// buyer-phone-number
 		error = ValidateUtil.maxlength(dto.customerTel, 15, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.buyer-phone-number"), 15 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// sku
 		error = ValidateUtil.maxlength(dto.sku, 30, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.sku"), 30 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// product-name
 		error = ValidateUtil.maxlength(dto.productName, 120, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.product-name"), 120 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// currency
 		error = ValidateUtil.maxlength(dto.currency, 10, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.currency"), 10 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-service-level
 		error = ValidateUtil.maxlength(dto.shipServiceLevel, 30, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-service-level"), 30 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// recipient-name
 		error = ValidateUtil.maxlength(dto.recipientName, 60, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.recipient-name"), 60 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-address-1
 		error = ValidateUtil.maxlength(dto.address1, 50, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-address-1"), 50 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-address-2とship-address-3
 		StringBuffer sb = new StringBuffer(dto.address2);
 		sb.append(dto.address3);
 		error = ValidateUtil.maxlength(sb.toString(), 50, "errors.line.maxlength.sum",
@@ -376,50 +375,50 @@ public class ImportOnlineOrderAction extends AbstractXSVUploadAction {
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-city
 		error = ValidateUtil.maxlength(dto.city, 60, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-city"), 60 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-state
 		error = ValidateUtil.maxlength(dto.state, 60, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-state"), 60 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-postal-code
 		error = ValidateUtil.maxlength(dto.zipCode, 8, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-postal-code"), 8 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-country
 		error = ValidateUtil.maxlength(dto.country, 10, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-country"), 10 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// ship-phone-number
 		error = ValidateUtil.maxlength(dto.shipTel, 15, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.ship-phone-number"), 15 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// delivery-time-zone
 		error = ValidateUtil.maxlength(dto.deliveryTimeZone, 20, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.delivery-time-zone"), 20 });
 		if(error != null) {
 			addError(error);
 		}
-		
+		// delivery-Instructions
 		error = ValidateUtil.maxlength(dto.deliveryInst, 60, "errors.line.maxlength",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.delivery-Instructions"), 60 });
 		if(error != null) {
 			addError(error);
 		}
 
-		
+		// Insert用リストに追加
 		dtoList.add(dto);
 
 	}

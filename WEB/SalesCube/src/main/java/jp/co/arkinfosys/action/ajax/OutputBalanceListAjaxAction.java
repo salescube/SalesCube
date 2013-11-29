@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.net.URLEncoder;
@@ -89,10 +88,10 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 	 */
 	private static SimpleDateFormat DF_YMD = new SimpleDateFormat(Constants.FORMAT.DATE);
 
-	
+	// 出力日
 	public String exceloutputdate;
 
-	
+	// 仕入先外貨記号
 	public String sign;
 
 	/**
@@ -114,34 +113,34 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 	public String prepare() {
 		ActionMessages errors = outputBalanceListForm.validate();
 		if (!errors.isEmpty()) {
-			
+			// 検索条件エラー
 			ActionMessagesUtil.addErrors(super.httpRequest, errors);
 			this.httpResponse.setStatus(450);
 			return "/ajax/errorResponse.jsp";
 		}
 		try {
-			
+			// パラメータを作成する
 			BeanMap params = Beans.createAndCopy(BeanMap.class, outputBalanceListForm).execute();
 
-			
+			// 出力件数を取得する
 			int count  = outputBalanceListService.getOutputResultCount(params);
 			if (count<1) {
-				
+				// 買掛残高の場合、仕入先の最終締処理日を取得
 				if (Constants.OUTPUT_BALANCE_TARGET.VALUE_PORDER.equals(outputBalanceListForm.outputTarget)) {
 					SupplierJoin supp = supplierService.findById(outputBalanceListForm.supplierCode);
 					if (supp!=null && supp.lastCutoffDate!=null) {
-						
+						// 最終締処理日を数値に変換
 						Calendar cal = Calendar.getInstance();
 						cal.setTimeInMillis(supp.lastCutoffDate.getTime());
 						int yy = cal.get(Calendar.YEAR);
-						int mm = cal.get(Calendar.MONTH)+1;	
+						int mm = cal.get(Calendar.MONTH)+1;	// 0～11が返却されるので＋１
 						int lastCutoffYM = yy*100+mm;
 
-						
+						// 出力対象年月を数値に変換
 						int targetYM = this.outputBalanceListService
 								.convertTargetYM(outputBalanceListForm.targetDate);
 
-						
+						// 出力対象がない
 						if (lastCutoffYM>=targetYM) {
 							errors.add(ActionMessages.GLOBAL_MESSAGE,
 									new ActionMessage("errors.report.targetDataNotExists"));
@@ -152,7 +151,7 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 					}
 				}
 
-				
+				// 検索結果がない（締処理がされていない）
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.report.NotClosed"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
@@ -160,13 +159,13 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 				return "/ajax/errorResponse.jsp";
 			}
 
-			
+			// 保存用検索条件にコピー
 			Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
 
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -181,26 +180,26 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
+			// 保存用出力条件からコピー
 			Beans.copy(outputBalanceListFormDto, outputBalanceListForm).execute();
 
-			
+			// パラメータを作成する
 			BeanMap params = Beans.createAndCopy(BeanMap.class, outputBalanceListForm).execute();
 
-			
+			// 検索を行う
 			List<BeanMap> resultMapList = outputBalanceListService.getOutputResult(params);
 
-			
+			// 出力日の設定
 			exceloutputdate = MessageResourcesUtil.getMessage("labels.outputDate") +
 								DF_YMD.format(new Date());
 
-			
+			// 出力タイプごとの処理
 			String attachFileName;
 			if (OUTPUT_BALANCE_TARGET.VALUE_PORDER.equals(outputBalanceListForm.outputTarget)) {
-				
+				// 添付ファイル名
 				attachFileName = AttachFileName.PORDER;
 
-				
+				// ヘッダ部の値設定
 				headerList.add(
 						new LabelValueBean(MessageResourcesUtil.getMessage("labels.report.porder.title"),
 						""));
@@ -215,10 +214,10 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 						(String)resultMapList.get(0).get("supplierName")));
 			}
 			else {
-				
+				// 添付ファイル名
 				attachFileName = AttachFileName.RORDER;
 
-				
+				// ヘッダ部の値設定
 				headerList.add(
 						new LabelValueBean(MessageResourcesUtil.getMessage("labels.report.rorder.title"),
 						""));
@@ -240,15 +239,15 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 				}
 			}
 
-			
+			// 出力調整
 			columnInfoList = detailDispItemService.createResult(
 					resultMapList, searchResultList, Constants.MENU_ID.OUTPUT_BALANCE_LIST,outputBalanceListForm.outputTarget);
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 
-			
+			// 仕入先の通貨記号を取得
 			String supplierCode = outputBalanceListForm.supplierCode;
 			if(StringUtil.hasLength(supplierCode)){
 				SupplierJoin supJoin = supplierService.findSupplierRateBySupplierCode(supplierCode);
@@ -257,7 +256,7 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

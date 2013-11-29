@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 
@@ -175,7 +174,7 @@ public class EditSupplierForm extends AbstractEditForm {
 	 * @return 表示するメッセージ
 	 */
 	public ActionMessages validate() {
-		
+		// ラベル変数
 		String labelSupplierName = MessageResourcesUtil
 				.getMessage("labels.supplierName");
 		String labelSupplierKana = MessageResourcesUtil
@@ -199,31 +198,31 @@ public class EditSupplierForm extends AbstractEditForm {
 				.getMessage("labels.commentData");
 
 		ActionMessages errors = new ActionMessages();
-		
+		// 必須チェックは@Requiredで済んでいる
 
-		
-		
+		// 長さチェック
+		// 仕入先名　60文字
 		checkMaxLength(supplierName, 60, labelSupplierName, errors);
-		
+		// 仕入先名カナ　60文字
 		checkMaxLength(supplierKana, 60, labelSupplierKana, errors);
-		
+		// 仕入先名略称　14文字
 		checkMaxLength(supplierAbbr, 14, labelSupplierAbbr, errors);
-		
+		// 住所１　50文字
 		checkMaxLength(supplierAddress1, 50, labelSupplierAddress1, errors);
-		
+		// 住所２　50文字
 		checkMaxLength(supplierAddress2, 50, labelSupplierAddress2, errors);
-		
+		// TEL　15文字
 		checkMaxLength(supplierTel, 15, labelSupplierTel, errors);
-		
+		// FAX　15文字
 		checkMaxLength(supplierFax, 15, labelSupplierFax, errors);
-		
+		// E-MAIL　255文字
 		checkMaxLength(supplierEmail, 255, labelSupplierEmail, errors);
-		
+		// 備考　120文字
 		checkMaxLength(remarks, 120, labelRemarks, errors);
-		
+		// コメント　1000文字
 		checkMaxLength(commentData, 1000, labelCommentData, errors);
 
-		
+		// 郵便番号チェック
 		checkMaxLength(supplierZipCode, 8, labelSupplierZipCode, errors);
 
 		return errors;

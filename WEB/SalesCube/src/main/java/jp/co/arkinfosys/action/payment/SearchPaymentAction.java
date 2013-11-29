@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.payment;
 
 import java.util.ArrayList;
@@ -57,13 +56,13 @@ public class SearchPaymentAction extends AbstractSearchAction<List<Object>> {
 		this.searchPaymentForm.isInputPurchaseValid = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_PURCHASE);
 
-		
+		// 検索対象プルダウンの初期値を設定
 		this.searchPaymentForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// ソートカラムの初期値を設定
 		this.searchPaymentForm.sortColumn = SearchPaymentService.Param.PAYMENT_SLIP_ID;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), searchPaymentForm.searchTarget);
 	}

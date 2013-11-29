@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.math.BigDecimal;
@@ -20,7 +19,7 @@ import javax.persistence.Id;
 @Entity
 public class ArtBalance {
 
-	public static final String TABLE_NAME = "ART_BALANCE_TRN";	
+	public static final String TABLE_NAME = "ART_BALANCE_TRN";	// 売掛残高
 
 	@Id
 	public Integer artBalanceId;

@@ -34,9 +34,7 @@
 	}
 
     function searchRate() {
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
     }
 
@@ -197,10 +195,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1313"/>
@@ -229,55 +227,71 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
 
-		<span>レートタイプ検索条件</span><br>
-		<table id="rate_code_search_condition" class="forms" summary="レートタイプ検索条件">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-			</colgroup>
-			<tr>
-				<th>レートタイプ名称</th>
-				<td>
-					<html:text styleId="name" property="name" style="width: 235px;" tabindex="100" maxlength="60"/>
-				</td>
-				<th>レートタイプ備考</th>
-				<td>
-					<html:text styleId="remarks" property="remarks" style="width: 235px;" tabindex="101" maxlength="120"/>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+        			<span>レートタイプ検索条件</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+		
+				<div id="search_info" class="section_body">
+					<table id="rate_code_search_condition" class="forms" summary="レートタイプ検索条件">
+						<tr>
+							<th><div class="col_title_right">レートタイプ名称</div></th>
+							<td>
+								<html:text styleId="name" property="name" style="width: 235px;" tabindex="100" maxlength="60"/>
+							</td>
+							<th><div class="col_title_right">レートタイプ備考</div></th>
+							<td>
+								<html:text styleId="remarks" property="remarks" style="width: 235px;" tabindex="101" maxlength="120"/>
+			
+							</td>
+						</tr>
+					</table>
+					<table id="rate_code_search_condition1" class="forms" summary="レートタイプ検索条件" style="width: auto;">
+						<tr>
+							<th><div class="col_title_right">&nbsp;&nbsp;最新レート適用開始日&nbsp;&nbsp;</div></th>
+							<td style="padding-right: 0;">
+								<div class="pos_r">
+									<html:text styleId="startDate1" property="startDate1" styleClass="date_input" style="width: 135px;" tabindex="102" maxlength="10"/>
+								</div>
+							</td>
+							<td style="text-align: center; width:30px; padding-right: 0;">
+								～
+							</td>
+							<td>
+								<div class="pos_r">
+									<html:text styleId="startDate2" property="startDate2" styleClass="date_input" style="width: 135px;" tabindex="103" maxlength="10"/>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    </div><!-- /.form_section_wrap -->
 
-				</td>
-			</tr>
-			<tr>
-				<th>最新レート適用開始日</th>
-				<td colspan="3">
-					<html:text styleId="startDate1" property="startDate1" styleClass="date_input" style="width: 80px;" tabindex="102" maxlength="10"/>～<!--
-					--><html:text styleId="startDate2" property="startDate2" styleClass="date_input" style="width: 80px;" tabindex="103" maxlength="10"/>
-				</td>
-			</tr>
-
-
-		</table>
-
-		<div style="text-align: right; width: 910px">
-			<button tabindex="150" style="width:80px" onclick="initForm()">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchRate()">検索</button>
+		<div style="text-align: right; width: 1160px">
+			<button tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="151" style="width:80px" onclick="searchRate()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
                     <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
 
-    		<table id="List" summary="検索結果" class="forms" style="width: 910px">
+    		<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 			<colgroup>
 				<col span="1" style="width: 80px">
 				<col span="1" style="width:200px">
@@ -288,19 +302,19 @@
 			</colgroup>
 			<thead>
 			<tr>
-				<th>レート<br>タイプID</th>
-				<th>レートタイプ名称</th>
-				<th>本日付の<br>最新レート</th>
-				<th>最新レートの<br>適用開始日</th>
-				<th>レートタイプ備考</th>
-				<th></th>
+				<th class="rd_top_left" style="height: 60px;">レート<br>タイプID</th>
+				<th class="xl64" style="height: 60px;">レートタイプ名称</th>
+				<th class="xl64" style="height: 60px;">本日付の<br>最新レート</th>
+				<th class="xl64" style="height: 60px;">最新レートの<br>適用開始日</th>
+				<th class="xl64" style="height: 60px;">レートタイプ備考</th>
+				<th class="rd_top_right" style="height: 60px;">&nbsp;</th>
 			</tr>
 			</thead>
             </table>
     	</div>
     </div>
 <html:hidden styleId="sortColumn" property="sortColumn" />
-<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
+<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
 </s:form>
 </div>
 </body>

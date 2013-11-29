@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.stock;
 
 import java.util.ArrayList;
@@ -97,7 +96,7 @@ public class InputStockForm extends AbstractSlipEditForm<EadLineTrnDto> {
 	 * フォームをクリアします.
 	 */
 	public void reset() {
-		
+		//menuUpdate = false;
 		eadSlipId = null;
 		eadDate = null;
 		eadSlipCategory = null;
@@ -136,9 +135,9 @@ public class InputStockForm extends AbstractSlipEditForm<EadLineTrnDto> {
 
 	@Override
 	public void initCopy() throws ServiceException {
-		
+		// Formを初期化
 		reset();
-		
+		//eadDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_STOCK);
 		eadSlipCategory = CategoryTrns.EAD_SLIP_CATEGORY_NORMAL;
 		eadCategory = CategoryTrns.EAD_CATEGORY_ENTER;
@@ -157,9 +156,9 @@ public class InputStockForm extends AbstractSlipEditForm<EadLineTrnDto> {
 	 */
 	@Override
 	public void initializeScreenInfo() {
-		
+		// Formを初期化
 		reset();
-		
+		//inputStockForm.eadDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_STOCK);
 		eadSlipCategory = CategoryTrns.EAD_SLIP_CATEGORY_NORMAL;
 		eadCategory = CategoryTrns.EAD_CATEGORY_ENTER;

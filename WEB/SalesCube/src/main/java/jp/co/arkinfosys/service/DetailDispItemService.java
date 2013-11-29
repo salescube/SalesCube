@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 
 		param.put(DetailDispItemService.Param.DISP_FLAG, null);
 		if (displayOnly) {
-			
+			// 表示項目のみ
 			param.put(DetailDispItemService.Param.DISP_FLAG, Constants.FLAG.ON);
 		}
 
@@ -63,7 +62,7 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 				"detaildisp/FindDetailDispItemByCondition.sql", param)
 				.getResultList();
 
-		
+		// EntityからDTOに変換
 		List<DetailDispItemDto> dtoList = new ArrayList<DetailDispItemDto>();
 		for (DetailDispItem entity : entityList) {
 			DetailDispItemDto dto = new DetailDispItemDto();
@@ -95,7 +94,7 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 					"detaildisp/FindDetailDispItemCfgByCondition.sql", param)
 					.getResultList();
 
-			
+			// EntityからDTOに変換
 			List<DetailDispItemDto> dtoList = new ArrayList<DetailDispItemDto>();
 			for (DetailDispItemJoin entity : entityList) {
 				DetailDispItemDto dto = new DetailDispItemDto();
@@ -123,17 +122,17 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 	public List<DetailDispItemDto> createResult(List<BeanMap> resultMapList,
 			List<List<Object>> searchResultList, String detailId, String target)
 			throws ServiceException {
-		
+		// 検索結果に表示する列を取得する
 
-		
+		// ユーザに設定されている表示列
 		List<DetailDispItemDto> columnInfoList = getUserSetColumns(detailId,
 				target);
 		if (columnInfoList == null || columnInfoList.size() == 0) {
-			
+			// 初期設定の表示列
 			columnInfoList = getInitColumns(detailId, target);
 		}
 
-		
+		// 検索前の初期表示時は不要
 		if (resultMapList != null && resultMapList.size() > 0) {
 			createSearchResultList(resultMapList, columnInfoList,
 					searchResultList);
@@ -182,11 +181,11 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 
 		for (BeanMap resultMap : resultMapList) {
 
-			
+			// 設定されている列を順に指定して、検索結果の値を取得し、リストに追加する
 			List<Object> list = new ArrayList<Object>();
 			for (DetailDispItemDto dto : columnInfoList) {
 
-				
+				// カラムを指定して検索結果から値を取得し、検索結果リストに追加する
 				if(resultMap.containsKey(dto.itemId)) {
 					list.add(resultMap.get(dto.itemId));
 				}
@@ -222,7 +221,7 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 			param.put(DetailDispItemService.Param.TARGET, target);
 
 			if (lockItemId != null && lockUpdDatetm != null) {
-				
+				// 過去の設定情報がある場合は排他制御
 				param.put(DetailDispItemService.Param.ITEM_ID, lockItemId);
 
 				int lockResult = super.lockRecordBySqlFile(
@@ -232,13 +231,13 @@ public class DetailDispItemService extends AbstractService<DetailDispItem> {
 					throw new ServiceException("");
 				}
 
-				
+				// 既存のレコードを削除する
 				this.updateBySqlFile(
 						"detaildisp/DeleteDetailDispItemCfgByCondition.sql",
 						param).execute();
 			}
 
-			
+			// 新規レコードを挿入する
 			for (int i = 0; i < itemId.length; i++) {
 				if (itemId[i] == null) {
 					continue;

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.math.RoundingMode;
@@ -37,7 +36,7 @@ public final class NumberUtil {
 			int alignment, boolean comma) {
 		StringBuffer format = new StringBuffer("##0");
 
-		
+		// 小数桁数
 		for (int i = 0; i < alignment; i++) {
 			if (i == 0) {
 				format.append(".");
@@ -45,12 +44,12 @@ public final class NumberUtil {
 			format.append("0");
 		}
 
-		
+		// カンマ付与
 		if (comma) {
 			format.insert(0, ",");
 		}
 
-		
+		// 端数処理方式
 		RoundingMode mode = NumberUtil.getRoundingMode(fract);
 		DecimalFormat df = new DecimalFormat(format.toString());
 		if (mode != null) {
@@ -68,13 +67,13 @@ public final class NumberUtil {
 	public static RoundingMode getRoundingMode(String fractCategory) {
 		RoundingMode mode = RoundingMode.HALF_UP;
 		if (CategoryTrns.FLACT_CATEGORY_DOWN.equals(fractCategory)) {
-			
+			// 切り捨て
 			mode = RoundingMode.DOWN;
 		} else if (CategoryTrns.FLACT_CATEGORY_HALF_UP.equals(fractCategory)) {
-			
+			// 四捨五入
 			mode = RoundingMode.HALF_UP;
 		} else if (CategoryTrns.FLACT_CATEGORY_UP.equals(fractCategory)) {
-			
+			// 切り上げ
 			mode = RoundingMode.UP;
 		}
 		return mode;

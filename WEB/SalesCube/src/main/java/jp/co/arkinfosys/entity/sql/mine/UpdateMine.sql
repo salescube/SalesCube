@@ -3,6 +3,7 @@ UPDATE MINE_MST_/*$domainId*/ SET
         ,COMPANY_KANA=/*companyKana*/
         ,COMPANY_ABBR=/*companyAbbr*/
         ,COMPANY_CEO_NAME=/*companyCeoName*/
+        ,COMPANY_CEO_TITLE=/*companyCeoTitle*/
         ,LOGO_IMG_PATH=/*logoImgPath*/
         ,COMPANY_ZIP_CODE=/*companyZipCode*/
         ,COMPANY_ADDRESS_1=/*companyAddress1*/

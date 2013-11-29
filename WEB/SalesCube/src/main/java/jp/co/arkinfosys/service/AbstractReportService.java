@@ -1,19 +1,23 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import jp.co.arkinfosys.common.Constants.VALID_FLAG;
+import jp.co.arkinfosys.entity.join.BankDwb;
 import jp.co.arkinfosys.service.ReportTemplateService.MimeType;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.seasar.framework.beans.util.BeanMap;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * レポート出力の基底サービスクラスです.
@@ -27,11 +31,21 @@ public abstract class AbstractReportService<ENTITY> extends AbstractService<ENTI
 
 	@Resource
 	protected MineService mineService;
+	@Resource
+	protected BankService bankService;
 
 	/**
 	 * 自社マスタのデータ
 	 */
 	protected BeanMap mineMst = null;
+	/**
+	 * 銀行マスタのデータをキャッシュする(銀行マスタの内、1つしか帳票出力しないので、1つしか持たないことに注意)
+	 */
+	protected BeanMap bankMst = null;
+	/**
+	 * 銀行マスタのREMARKSはマップから除外する（伝票側のREMARKSと重複するため）
+	 */
+	private static final String EXCLUDE_REMARKS = "remarks";
 
 	/**
 	 * ドキュメントタイプ
@@ -92,46 +106,52 @@ public abstract class AbstractReportService<ENTITY> extends AbstractService<ENTI
 	 * @throws ServiceException
 	 */
 	protected void createReport() throws ServiceException {
-		int reportCnt = 0;	
+		int reportCnt = 0;	// フラグでもいいけど何かに使えるかもなのでカウンタにする
 
-		
+		// レポート作成
 		for (int index=0;;index++) {
-			
+			// レポート取得
 			String reportId = this.getReportId(index);
 			if (reportId==null) {
 				break;
 			}
 
-			
+			// 伝票データ取得
 			BeanMap slip = this.getSlip(index);
 			if (slip==null) {
-				
+				// 次の帳票を出力
 				continue;
 			}
 
-			
+			// 明細データを取得
 			List<BeanMap> detail = this.getDetailList(index);
 			if (detail==null) {
-				
+				// 次の帳票を出力
 				continue;
 			}
 
-			
+			// 自社情報を取得して伝票データを追加する
 			BeanMap mine = this.getMine();
 			mine.putAll(slip);
 
-			
+			// 銀行情報を取得して自社データに追加する
+			BeanMap bank = this.getBank();
+			if(bank != null) {
+				mine.putAll(bank);
+			}
+
+			// レポート作成
 			this.reportTemplateService.createReport(reportId, mine, detail);
 			reportCnt++;
 
-			
+			// 実ファイル名を取得
 			String realFileName = this.getRealFilePreffix(index);
 			if (realFileName==null || realFileName.length()<1) {
 				continue;
 			}
 
 
-			
+			// 保存ディレクトリに出力
 			realFileName = getBaseSaveDir( this.docType, reportId, realFileName );
 			realFileName = this.reportTemplateService.getRealPath(realFileName);
 			if (this.docType==DocType.PDF) {
@@ -142,7 +162,7 @@ public abstract class AbstractReportService<ENTITY> extends AbstractService<ENTI
 			this.reportTemplateService.disposeReport();
 		}
 
-		
+		// レポート未作成の場合はここで終了
 		if (reportCnt==0) {
 			return;
 		}
@@ -157,15 +177,49 @@ public abstract class AbstractReportService<ENTITY> extends AbstractService<ENTI
 	 * @throws ServiceException
 	 */
 	protected BeanMap getMine() throws ServiceException {
-		
+		// 未取得の場合は取得する
 		if (mineMst==null) {
 			mineMst = this.mineService.getMineSimple();
 		}
 
-		
+		// コピーを返却
 		BeanMap ret = new BeanMap();
 		ret.putAll(mineMst);
 
+		return ret;
+	}
+	/**
+	 * 銀行マスタ情報を返します.<br>
+	 * 未取得の場合のみデータベースから返します.このとき、取得結果の先頭1件のみ結果に使用します.<br>
+	 * 未取得、取得済みに関わらず、コピーした銀行マスタ情報を返します.
+	 * @return コピーした銀行マスタ情報
+	 * @throws ServiceException
+	 */
+	protected BeanMap getBank() throws ServiceException {
+		// 未取得の場合は取得する
+		if (bankMst==null) {
+			Map<String, Object> param = new HashMap<String, Object>();
+//			param.put(BankService.Param.BANK_ID, this.getBankId());
+
+			// 有効な銀行のみ
+			param.put(BankService.Param.VALID, VALID_FLAG.VALID);
+
+			
+			List<BankDwb> bankList;
+			bankList = this.bankService.findByConditionLimit( param, BankService.Param.BANK_CODE, true, 1, 0);
+
+			if(bankList.size() > 0) {
+				bankMst = Beans.createAndCopy(BeanMap.class, bankList.get(0)).execute();
+			} else {
+				return null;
+			}
+		}
+
+		// コピーを返却
+		BeanMap ret = new BeanMap();
+		ret.putAll(bankMst);
+		ret.remove(EXCLUDE_REMARKS);	// 銀行マスタの適用は除外
+		
 		return ret;
 	}
 

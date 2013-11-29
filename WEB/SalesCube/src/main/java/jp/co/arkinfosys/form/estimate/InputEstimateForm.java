@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.estimate;
 
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public class InputEstimateForm extends
 
 	@Override
 	public void initCopy() throws ServiceException {
-		
+		// 値をクリアする
 		estimateSheetId = null;
 		updDatetm = null;
 		updUser = null;
@@ -198,7 +197,7 @@ public class InputEstimateForm extends
 			dto.updUser = null;
 		}
 
-		
+		// 初期値を設定する
 		initialize();
 	}
 	/**
@@ -206,7 +205,7 @@ public class InputEstimateForm extends
 	 */
 	@Override
 	public void initializeScreenInfo() {
-		
+		// 入力担当者
 		userId = this.userDto.userId;
 		userName = this.userDto.nameKnj;
 	}
@@ -241,8 +240,8 @@ public class InputEstimateForm extends
 		ctaxPriceTotal = null;
 		estimateTotal = null;
 
-		taxFractCategory = ""; 
-		priceFractCategory = ""; 
+		taxFractCategory = ""; // 税端数処理
+		priceFractCategory = ""; // 単価端数処理
 
 	}
 
@@ -263,10 +262,10 @@ public class InputEstimateForm extends
 		deliveryName = MessageResourcesUtil
 				.getMessage("labels.deliveryDefault");
 
-		
+		// 敬称は「様」（初期値マスタは使わない）
 		submitPreCategory = CategoryTrns.PREFIX_SAMA;
 
-		
+		// 明細行を再設定する
 		if (this.estimateLineTrnDtoList == null) {
 			this.estimateLineTrnDtoList = new ArrayList<InputEstimateLineDto>();
 		}

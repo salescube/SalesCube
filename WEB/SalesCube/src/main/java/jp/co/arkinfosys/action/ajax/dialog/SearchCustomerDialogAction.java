@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.List;
@@ -64,7 +63,7 @@ public class SearchCustomerDialogAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 顧客ランクリストを取得
 		List<CustomerRank> customerRankList = this.customerRankService
 				.findAllCustomerRank();
 		for (CustomerRank customerRank : customerRankList) {
@@ -75,7 +74,7 @@ public class SearchCustomerDialogAction extends
 		this.searchCustomerDialogForm.customerRankCategoryList.add(0,
 				new LabelValueBean());
 
-		
+		// 支払条件リストを取得
 		this.searchCustomerDialogForm.cutoffGroupList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUTOFF_GROUP);
 		this.searchCustomerDialogForm.cutoffGroupList.add(0,

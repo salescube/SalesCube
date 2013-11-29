@@ -1,8 +1,9 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
+
+import jp.co.arkinfosys.common.Constants;
 
 import org.apache.struts.action.ActionMessages;
 import org.seasar.struts.annotation.Maxlength;
@@ -47,6 +48,9 @@ public class EditBankForm extends AbstractEditForm {
 	@Maxlength(maxlength=7)
 	public String accountNum;
 
+	/** 有効 */
+	public String valid = "1";
+
 	@Override
 	public void initialize() {
 		bankId = "";
@@ -56,6 +60,7 @@ public class EditBankForm extends AbstractEditForm {
 		storeName = "";
 		dwbType = "";
 		accountNum = "";
+//		valid = "1";
 	}
 
 	/**
@@ -66,4 +71,9 @@ public class EditBankForm extends AbstractEditForm {
 		ActionMessages errors = new ActionMessages();
 		return errors;
 	}
+	
+    public void reset() {
+    	// チェックされていないときに、nullを送信するためにリセット
+		valid = Constants.VALID_FLAG.INVALID;
+    }
 }

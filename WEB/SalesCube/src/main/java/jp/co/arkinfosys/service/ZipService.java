@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.HashMap;
@@ -93,7 +92,7 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 	@Override
 	public int countByCondition(Map<String, Object> conditions)
 			throws ServiceException {
-		
+		// 未使用メソッド
 		return 0;
 	}
 
@@ -112,7 +111,7 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 	public List<Zip> findByConditionLimit(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, int rowCount, int offset)
 			throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -125,7 +124,7 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 	 */
 	@Override
 	public Zip findById(String id) throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -161,7 +160,7 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 				if(padAddress.startsWith(temp)) {
 					return true;
 				}
-				
+				// 「の」や「が」を除く
 				temp = temp.replaceAll("ノ|の|ﾉ|が|ケ|ヶ|ｹ", "");
 				if(padAddress.startsWith(temp)) {
 					return true;
@@ -200,28 +199,28 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 	private Map<String, Object> setCondition(Map<String, Object> param,
 			Map<String, Object> conditions, String sortColumn,
 			boolean sortOrderAsc) {
-		
+		// 郵便番号
 		if (conditions.containsKey(ZipService.Param.ZIP_CODE)) {
 			param.put(ZipService.Param.ZIP_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ZipService.Param.ZIP_CODE)));
 		}
 
-		
+		// 住所1
 		if (conditions.containsKey(ZipService.Param.ZIP_ADDRESS_1)) {
 			param.put(ZipService.Param.ZIP_ADDRESS_1, super
 					.createPartialSearchCondition((String) conditions
 							.get(ZipService.Param.ZIP_ADDRESS_1)));
 		}
 
-		
+		// 住所2
 		if (conditions.containsKey(ZipService.Param.ZIP_ADDRESS_2)) {
 			param.put(ZipService.Param.ZIP_ADDRESS_2, super
 					.createPartialSearchCondition((String) conditions
 							.get(ZipService.Param.ZIP_ADDRESS_2)));
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SORT_COLUMN))) {
 				param.put(Param.SORT_COLUMN,
@@ -229,7 +228,7 @@ public class ZipService extends AbstractService<Zip> implements MasterSearch<Zip
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(ZipService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {

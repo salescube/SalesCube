@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 	@Resource
 	protected OutputRecommendListForm outputRecommendListForm;
 
-	
+	// Excel出力フラグ
 	public boolean isOutputExcel = false;
 
 	/**
@@ -82,7 +81,7 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 	public String search() {
 		isOutputExcel = false;
 
-		
+		//(ソートでない)通常検索の場合、以前の入力値が格納されている可能性があるので削除する
 		outputRecommendListForm.searchResultInputProductCodeArray = null;
 		outputRecommendListForm.searchResultInputOrderCheckStatusArray = null;
 		outputRecommendListForm.searchResultInputOrderQuantityArray = null;
@@ -123,7 +122,7 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 	 */
 	private String searchCommon(String destJSP, boolean isStoreCount) {
 		try {
-			
+			// 条件をマップ化する
 			BeanMap conditions = Beans
 					.createAndCopy(BeanMap.class, this.outputRecommendListForm)
 					.excludesNull()
@@ -140,7 +139,7 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 
 			columnInfoList = outputRecommendListService.getColumnInfoList(conditions);
 
-			
+			// 検索を行う
 			outputRecommendListForm.searchResultList = outputRecommendListService
 					.findRecommendByCondition(
 							conditions,
@@ -150,12 +149,12 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 							outputRecommendListForm.searchResultInputOrderCheckStatusArray,
 							outputRecommendListForm.searchResultInputOrderQuantityArray);
 
-			
+			// 検索結果件数を取得する
 			if(isStoreCount) {
 				outputRecommendListForm.searchResultCount = outputRecommendListForm.searchResultList.size();
 			}
 
-			
+			// 仕入先、発注区分、都度発注区分をセットする
 			outputRecommendListForm.supplierName = supplierService.findById(outputRecommendListForm.supplierCode).supplierName;
 			outputRecommendListForm.poCategoryName = categoryService.findCategoryNameByIdAndCode( Categories.PO_CATEGORY, outputRecommendListForm.poCategory);
 			outputRecommendListForm.immediatelyPOCategoryName = categoryService.findCategoryNameByIdAndCode( Categories.IMMEDIATELY_PO_CATEGORY, outputRecommendListForm.immediatelyPOCategory);
@@ -164,7 +163,7 @@ public class OutputRecommendListAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

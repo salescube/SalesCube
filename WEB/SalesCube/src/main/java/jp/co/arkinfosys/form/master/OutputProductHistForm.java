@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import org.seasar.framework.container.annotation.tiger.Component;
@@ -21,11 +20,11 @@ import jp.co.arkinfosys.common.Constants;
 public class OutputProductHistForm {
 	@Required
 	@Maxlength(maxlength = Constants.CODE_SIZE.PRODUCT)
-	public String productCode; 
+	public String productCode; // 商品コード
 
 	@Required
 	@Maxlength(maxlength = 60)
-	public String productName; 
+	public String productName; // 商品名
 
 	/**
 	 * フォームを初期化します.

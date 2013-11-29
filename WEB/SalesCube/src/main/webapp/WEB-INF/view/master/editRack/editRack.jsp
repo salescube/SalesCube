@@ -77,10 +77,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1306"/>
@@ -127,6 +127,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
@@ -136,114 +137,128 @@
         	</html:messages>
     	</div>
 
-		<span>棚番情報</span><br>
-        <table id="user_info" class="forms" summary="倉庫情報1">
-            <colgroup>
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 25%">
-                <col span="1" style="width: 25%">
-            </colgroup>
-            <tr>
-                <th>倉庫コード</th>
-                <td>
-                 	<html:text maxlength="10" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;" tabindex="100"/>
-                	<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="warehouseSearch($('#warehouseCode'));" tabindex="101"/>
-                </td>
-                <th>倉庫名</th>
-                <td>
-                	<html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" readonly="true" styleClass="c_disable" tabindex="-1"/>
-                </td>
-                <td>
-                	<input type=button value="クリア" onclick="warehouseClear();">
-                </td>
-            </tr>
-        </table>
-        
-		<table id="user_info" class="forms" summary="棚番情報1">
-			<colgroup>
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 25%">
-                <col span="1" style="width: 15%">
-                <col span="1" style="width: 10%">
-			</colgroup>
-			<tr>
-				<th>棚番コード<bean:message key='labels.must'/></th>
-				<td>
-                <c:if test="${editMode}">
-                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200" readonly="true" styleClass="c_disable"/>
-                </c:if>
-                <c:if test="${!editMode}">
-                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200"/>
-                </c:if>
-                </td>
-				<th>棚番名<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="60" styleId="rackName" property="rackName" style="width: 200px" tabindex="201"/></td>
-				<th>重複登録可能</th>
-				<td><html:checkbox styleId="multiFlag" property="multiFlag" value="1" tabindex="203"></html:checkbox></td>
-			</tr>
-		</table>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    
+		    	<div class="section_title">
+					<span>棚番情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="order_section" class="section_body">
+			        <table id="user_info" class="forms" summary="倉庫情報1">
+			            <colgroup>
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 25%">
+			                <col span="1" style="width: 25%">
+			            </colgroup>
+			            <tr>
+			                <th><div class="col_title_right">倉庫コード</div></th>
+			                <td>
+			                 	<html:text maxlength="10" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;" tabindex="100"/>
+			                	<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="warehouseSearch($('#warehouseCode'));" tabindex="101"/>
+			                </td>
+			                <th><div class="col_title_right">倉庫名</div></th>
+			                <td>
+			                	<html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" readonly="true" styleClass="c_disable" tabindex="-1"/>
+			                </td>
+			                <td>
+			                	<input type=button class="btn_small" value="クリア" onclick="warehouseClear();"/>
+			                </td>
+			            </tr>
+			        </table>
+			        
+					<table id="user_info" class="forms" summary="棚番情報1">
+						<colgroup>
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 25%">
+			                <col span="1" style="width: 15%">
+			                <col span="1" style="width: 10%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">棚番コード<bean:message key='labels.must'/></div></th>
+							<td>
+			                <c:if test="${editMode}">
+			                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200" readonly="true" styleClass="c_disable"/>
+			                </c:if>
+			                <c:if test="${!editMode}">
+			                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200"/>
+			                </c:if>
+			                </td>
+							<th><div class="col_title_right">棚番名<bean:message key='labels.must'/></div></th>
+							<td><html:text maxlength="60" styleId="rackName" property="rackName" style="width: 200px" tabindex="201"/></td>
+							<th><div class="col_title_right">重複登録可能</div></th>
+							<td><html:checkbox styleId="multiFlag" property="multiFlag" value="1" tabindex="203"></html:checkbox></td>
+						</tr>
+					</table>
+			
+					<table class="forms" summary="商品情報2" style="display: none;">
+						<colgroup>
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 12%">
+							<col span="1" style="width: 8%">
+							<col span="1" style="width: 17%">
+							<col span="1" style="width: 8%">
+							<col span="1" style="width: 17%">
+							<col span="1" style="width: 8%">
+							<col span="1" style="width: 17%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">郵便番号</div></th>
+							<td>
+							<html:text maxlength="8" styleId="zipCode" property="zipCode" style="width:70px;ime-mode:disabled;" tabindex="200"/>
+			                <html:image tabindex="301" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSearchZipDialog('zipcode', setZipCode);$('#zipcode_zipCode').val($('#zipCode').val());" />
+			                </td>
+							<th><div class="col_title_right">住所１</div></th>
+							<td><html:text maxlength="50" styleId="address1" property="address1" tabindex="302" style="width: 150px"/></td>
+							<th><div class="col_title_right">住所２</div></th>
+							<td colspan="3"><html:text maxlength="50" styleId="address2" property="address2" tabindex="303" style="width: 300px"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">担当者</div></th>
+							<td><html:text maxlength="60" styleId="rackPcName" property="rackPcName" style="width: 100px" tabindex="304"/></td>
+							<th><div class="col_title_right">TEL</div></th>
+							<td><html:text maxlength="15" styleId="rackTel" property="rackTel" style="width:150px;ime-mode:disabled;" tabindex="305"/></td>
+							<th><div class="col_title_right">FAX</div></th>
+							<td><html:text maxlength="15" styleId="rackFax" property="rackFax" style="width:150px;ime-mode:disabled;" tabindex="306"/></td>
+							<th><div class="col_title_right">E-MAIL</div></th>
+							<td><html:text maxlength="255" styleId="rackEmail" property="rackEmail" style="width:180px;ime-mode:disabled;" tabindex="307"/></td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
 
-		<table class="forms" summary="商品情報2" style="display: none;">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-			</colgroup>
-			<tr>
-				<th>郵便番号</th>
-				<td><html:text maxlength="8" styleId="zipCode" property="zipCode" style="width:70px;ime-mode:disabled;" tabindex="200"/></td>
-                <html:image tabindex="301" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;" onclick="openSearchZipDialog('zipcode', setZipCode);$('#zipcode_zipCode').val($('#zipCode').val());" />
-				<th>住所１</th>
-				<td><html:text maxlength="50" styleId="address1" property="address1" tabindex="302" style="width: 150px"/></td>
-				<th>住所２</th>
-				<td colspan="3"><html:text maxlength="50" styleId="address2" property="address2" tabindex="303" style="width: 300px"/></td>
-			</tr>
-			<tr>
-				<th>担当者</th>
-				<td><html:text maxlength="60" styleId="rackPcName" property="rackPcName" style="width: 100px" tabindex="304"/></td>
-				<th>TEL</th>
-				<td><html:text maxlength="15" styleId="rackTel" property="rackTel" style="width:150px;ime-mode:disabled;" tabindex="305"/></td>
-				<th>FAX</th>
-				<td><html:text maxlength="15" styleId="rackFax" property="rackFax" style="width:150px;ime-mode:disabled;" tabindex="306"/></td>
-				<th>E-MAIL</th>
-				<td><html:text maxlength="255" styleId="rackEmail" property="rackEmail" style="width:180px;ime-mode:disabled;" tabindex="307"/></td>
-			</tr>
-		</table>
-
-
-		<div style="text-align: right; width: 910px">
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
-			<button tabindex="800" onclick="initForm()">初期化</button>
+			<button tabindex="800" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
-            <button tabindex="801" disabled="true">更新</button>
+            <button tabindex="801" disabled="true" class="btn_medium">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="801" onclick="registerRack()">更新</button>
+            <button tabindex="801" onclick="registerRack()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="801" onclick="registerRack()">登録</button>
+            <button tabindex="801" onclick="registerRack()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="802" disabled="true">削除</button>
+		<button tabindex="802" disabled="true" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="802" onclick="deleteRack()">削除</button>
+		<button tabindex="802" onclick="deleteRack()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="802" disabled="true">削除</button>
+		<button tabindex="802" disabled="true" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>

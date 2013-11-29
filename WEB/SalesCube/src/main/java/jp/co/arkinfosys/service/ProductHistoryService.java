@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.lang.reflect.Field;
@@ -53,23 +52,23 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 			/**
 			 * 商品履歴
 			 */
-			
+			// SQLの結果リストから、それぞれの差分を取得する
 			List<ProductHist> result = this.selectBySqlFile(ProductHist.class, "product/FindProductHistByCode.sql", param).getResultList();
 
 			List<BeanMap> compList = new ArrayList<BeanMap>();
 
-			
+			// 1レコードづつ比較する
 			ProductHist oldHist = null;
 			boolean flgFirst = true;
 			for(ProductHist newHist : result) {
-				
+				// INSERT
 				if(AbstractService.ActionType.INSERT.equals(newHist.actionType)) {
 					flgFirst = false;
 					oldHist = newHist;
 					addCompList(compList, 0, newHist.updDatetm, "追加", "", "");
 					continue;
 				}
-				
+				// 先頭
 				if(flgFirst) {
 					flgFirst = false;
 					oldHist = newHist;
@@ -82,15 +81,15 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 						Field f2 = newHist.getClass().getField(fs[i].getName());
 						String columnName = fs[i].getName();
 
-						
+						// 比較処理
 						Object o1 = fs[i].get(oldHist);
 						Object o2 = f2.get(newHist);
 
 						if(o1 == null || o2 == null) {
 							if(o1 == null && o2 == null) {
-								
+								// nullで一致
 							} else {
-								
+								// 不一致
 								if(columnName.indexOf("Cdx") != -1) {
 									i++;
 									columnName = fs[i].getName();
@@ -104,10 +103,10 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 						}
 
 						if(o1.equals(o2)) {
-							
+							// 一致
 						} else {
-							
-							
+							// 不一致
+							// コードで不一致なら、名称を出力する
 							if(columnName.indexOf("Cdx") != -1) {
 								i++;
 								columnName = fs[i].getName();
@@ -117,7 +116,7 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 							}
 							addCompList(compList, i, newHist.updDatetm, MessageResourcesUtil.getMessage("labels.product." + columnName), o1, o2);
 						}
-						
+						// コードなら、名称を飛ばす
 						if(columnName.indexOf("Cdx") != -1) {
 							i++;
 						}
@@ -138,14 +137,14 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 			/**
 			 * 数量割引
 			 */
-			
+			// SQLの結果リストから、それぞれの差分を取得する
 			List<DiscountRelHist> resultDiscount = this.selectBySqlFile(DiscountRelHist.class, "product/FindDiscountRelHistByCode.sql", param).getResultList();
 
-			
+			// 1レコードづつ比較する
 			DiscountRelHist oldRelHist = null;
 			flgFirst = true;
 			for(DiscountRelHist newRelHist : resultDiscount) {
-				
+				// INSERT
 				if(AbstractService.ActionType.INSERT.equals(newRelHist.actionType) || AbstractService.ActionType.DELETE.equals(newRelHist.actionType)) {
 					Field[] fs = newRelHist.getClass().getFields();
 					String columnName = fs[5].getName();
@@ -154,15 +153,15 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 					Object o1 = fs[5].get(newRelHist);
 
 					if(AbstractService.ActionType.INSERT.equals(newRelHist.actionType)) {
-						
+						// 追加
 						addCompList(compList, 1000, newRelHist.updDatetm, MessageResourcesUtil.getMessage("labels.product." + columnName), "", o1);
 					} else {
-						
+						// 削除
 						addCompList(compList, 1000, newRelHist.updDatetm, MessageResourcesUtil.getMessage("labels.product." + columnName), o1, "");
 					}
 					continue;
 				}
-				
+				// 先頭
 				if(flgFirst) {
 					flgFirst = false;
 					oldRelHist = newRelHist;
@@ -174,15 +173,15 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 						Field f2 = newRelHist.getClass().getField(fs[i].getName());
 						String columnName = fs[i].getName();
 
-						
+						// 比較処理
 						Object o1 = fs[i].get(oldRelHist);
 						Object o2 = f2.get(newRelHist);
 
 						if(o1 == null || o2 == null) {
 							if(o1 == null && o2 == null) {
-								
+								// nullで一致
 							} else {
-								
+								// 不一致
 								if(columnName.indexOf("Cdx") != -1) {
 									i++;
 									columnName = fs[i].getName();
@@ -196,10 +195,10 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 						}
 
 						if(o1.equals(o2)) {
-							
+							// 一致
 						} else {
-							
-							
+							// 不一致
+							// コードで不一致なら、名称を出力する
 							if(columnName.indexOf("Cdx") != -1) {
 								i++;
 								columnName = fs[i].getName();
@@ -209,7 +208,7 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 							}
 							addCompList(compList, 1000 + i, newRelHist.updDatetm, MessageResourcesUtil.getMessage("labels.product." + columnName), o1, o2);
 						}
-						
+						// コードなら、名称を飛ばす
 						if(columnName.indexOf("Cdx") != -1) {
 							i++;
 						}
@@ -226,7 +225,7 @@ public class ProductHistoryService extends AbstractService<BeanMap> {
 				oldRelHist = newRelHist;
 			}
 
-			
+			// 更新日順にソート
 			BeanMap[] array = (BeanMap[])compList.toArray(new BeanMap[0]);
 			java.util.Arrays.sort(array, new MyComparator());
 

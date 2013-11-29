@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.List;
@@ -48,11 +47,11 @@ public class MasterDefaultSettingDialogAction extends AbstractDialogAction {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 初期値マスタを検索する
 		List<InitMstJoin> initMstJoinList = this.initMstService
 				.findInitDataByTableNameWithCategory(this.masterDefaultSettingDialogForm.tableName);
 
-		
+		// 画面表示に適したデータに変換する
 		this.masterDefaultSettingDialogForm.initMstDtoList = this.initMstService
 				.convertEntityToDto(initMstJoinList);
 	}
@@ -71,7 +70,7 @@ public class MasterDefaultSettingDialogAction extends AbstractDialogAction {
 		} catch (UnabledLockException e) {
 			super.errorLog(e);
 
-			
+			// ロックエラー
 			ActionMessages errors = new ActionMessages();
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e
 					.getKey()));
@@ -81,7 +80,7 @@ public class MasterDefaultSettingDialogAction extends AbstractDialogAction {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 		}
 		return null;

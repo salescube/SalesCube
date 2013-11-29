@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 
@@ -75,16 +74,16 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	@Override
 	public int deleteRecords(String id) throws ServiceException {
 		try {
-			
+			// 最新の状態を取得する
 			List<EntrustEadLineTrn> eadLineTrnList = entrustEadService.findLineByEntrustEadSlipId(Integer.valueOf(id));
 			List<EntrustEadLineTrnDto> entrustEadLineTrnDtoList = new ArrayList<EntrustEadLineTrnDto>();
 			Converter conv = createProductNumConverter();
 			for (EntrustEadLineTrn eadLineTrn : eadLineTrnList) {
-				
+				// 画面表示用のDTOへ変換する
 				EntrustEadLineTrnDto entrustEadLineTrnDto = Beans.createAndCopy(
 						EntrustEadLineTrnDto.class, eadLineTrn).converter(conv, EntrustEadService.Param.QUANTITY).execute();
 
-				
+				// 商品備考の取得
 				ProductJoin pj = productService.findById(eadLineTrn.productCode);
 				if( pj != null ) {
 					entrustEadLineTrnDto.productRemarks = pj.remarks;
@@ -93,17 +92,17 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 				entrustEadLineTrnDtoList.add(entrustEadLineTrnDto);
 			}
 
-			
+			// 明細の削除
 			for (EntrustEadLineTrnDto entrustEadLineTrnDto : entrustEadLineTrnDtoList) {
 				entrustEadService.deleteLineByEntrustEadLineId(Integer.parseInt(entrustEadLineTrnDto.entrustEadLineId));
 				entrustEadService.updateRelEentrustEadLineIdByPoLineId(Integer.parseInt(entrustEadLineTrnDto.poLineId));
 
-				
+				// 発注伝票明細の状態を変更する
 				if(CategoryTrns.ENTRUST_EAD_CATEGORY_ENTER.equals(entrustEadLineTrnDto.entrustEadCategory)) {
-					
+					// 選択されている委託入出庫区分が入庫の場合、明細ステータスを発注状態にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ORDERED );
 				} else {
-					
+					// 選択されている委託入出庫区分が出庫の場合、明細ステータスを委託在庫生産完了にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_MAKED );
 				}
 			}
@@ -160,36 +159,36 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 		try {
 			String firstEntrnstEadLineId = ((EntrustEadLineTrnDto)lineList.get(0)).entrustEadLineId;
 			if (firstEntrnstEadLineId == null || firstEntrnstEadLineId.length() == 0) {
-				
+				// 入出庫伝票明細の処理
 				Integer lineNo = 0;
 				for (EntrustEadLineTrnDto entrustEadLineTrnDto : lineList) {
-					
+					// チェックされていない行は処理しない
 					if ( entrustEadLineTrnDto.checkEadLine == null ) {
 						continue;
 					}
 
 					if (entrustEadLineTrnDto.entrustEadLineId == null || entrustEadLineTrnDto.entrustEadLineId.length() == 0)
 					{
-					
+					// 入出庫伝票行IDを採番
 					entrustEadLineTrnDto.entrustEadLineId = Long.toString(seqMakerService
 							.nextval(EntrustEadService.Table.ENTRUST_EAD_LINE_TRN));
-					
+					// 入出庫伝票番号を設定
 					entrustEadLineTrnDto.entrustEadSlipId = slipDto.entrustEadSlipId;
 
-					
+					// 商品情報を取得する
 					Product product = productService
 							.findById(entrustEadLineTrnDto.productCode);
 
-					
+					// 行番号
 					entrustEadLineTrnDto.lineNo = (++lineNo).toString();
 
-					
+					// 商品名
 					entrustEadLineTrnDto.productAbstract = product.productName;
 
-					
+					// 明細の委託入出庫区分
 					entrustEadLineTrnDto.entrustEadCategory = slipDto.entrustEadCategory;
 
-					
+					// 数量
 					Converter conv = createProductNumConverter();
 					Number num = (Number) conv.getAsObject(entrustEadLineTrnDto.quantity);
 					entrustEadLineTrnDto.quantity = num.toString();
@@ -198,11 +197,11 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 					}
 				}
 
-				
+				// Insert
 				insertLine(slipDto);
 
 			}else{
-				
+				// 明細の更新
 				for (EntrustEadLineTrnDto entrustEadLineTrnDto : lineList) {
 
 					EntrustEadLineTrn entrustEadLineTrn = Beans.createAndCopy(EntrustEadLineTrn.class,
@@ -229,7 +228,7 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	protected int insertRecord(EntrustEadLineTrn entity)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(entity);
 			return this.updateBySqlFile("entrustead/InsertLine.sql", param).execute();
 		} catch (Exception e) {
@@ -249,7 +248,7 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	protected int updateRecord(EntrustEadLineTrn entity)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(entity);
 			return this.updateBySqlFile("entrustead/UpdateLine.sql", param).execute();
 		} catch (Exception e) {
@@ -286,7 +285,7 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	 */
 	public void updateRelEentrustEadLineIdByPoLineId( Integer poLineId ) throws ServiceException  {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.PO_LINE_ID, poLineId );
 			this.updateBySqlFile("entrustead/UpdateRelEentrustEadLineIdByPoLineId.sql", param).execute();
@@ -305,34 +304,34 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	public void insertLine(EntrustEadSlipTrnDto entrustEadSlipTrnDto)
 			throws ServiceException {
 		try {
-			
+			// 入出庫伝票明細の処理
 			for (EntrustEadLineTrnDto entrustEadLineTrnDto : entrustEadSlipTrnDto.getLineDtoList()) {
-				
+				// チェックされていない行は処理しない
 				if ( entrustEadLineTrnDto.checkEadLine == null ) {
 					continue;
 				}
 				EntrustEadLineTrn entrustEadLineTrn = Beans.createAndCopy(EntrustEadLineTrn.class,
 						entrustEadLineTrnDto).execute();
 
-				
+				// Insert
 				insertRecord(entrustEadLineTrn);
 
-				
+				// 委託出庫入力の場合、委託入出庫明細の「関連委託入出庫伝票行ID」を設定する(入庫明細・出庫明細両方)
 				if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(entrustEadLineTrnDto.entrustEadCategory) ) {
 					updateRelEentrustEadLineIdByPoLineId(entrustEadLineTrn.poLineId );
 				}
 
-				
+				// 発注伝票明細の状態を変更する
 				if(CategoryTrns.ENTRUST_EAD_CATEGORY_ENTER.equals(entrustEadLineTrnDto.entrustEadCategory)) {
-					
+					// 選択されている委託入出庫区分が入庫の場合、明細ステータスを委託在庫生産完了にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_MAKED , entrustEadLineTrnDto.quantity);
 				} else {
-					
+					// 選択されている委託入出庫区分が出庫の場合、明細ステータスを委託在庫出庫完了にする
 					poSlipService.updatePOrderLineTrnStatusByPoLineId(entrustEadLineTrnDto.poLineId, Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED , entrustEadLineTrnDto.quantity);
 				}
 			}
 
-			
+			// 発注伝票の状態を変更する(更新済みの明細状態を再集計してメソッド内で自動的に伝票状態を判別し、設定される)
 			poSlipService.updatePOrderTrnStatusByPoSlipId(entrustEadSlipTrnDto.poSlipId);
 
 		} catch (Exception e) {
@@ -350,33 +349,33 @@ public class InputEntrustStockLineService extends AbstractLineService<EntrustEad
 	public EntrustEadSlipTrnDto createEntrustEadSlipTrnDto(String entrustEadSlipId)
 			throws ServiceException {
 		try {
-			
+			// 入力された入出庫番号が数値であるかチェック
 			try {
 				Integer.valueOf(entrustEadSlipId);
 			} catch (NumberFormatException e) {
 				return null;
 			}
 
-			
+			// TrnオブジェクトをDBから取得する
 			EntrustEadSlipTrn entrustEadSlipTrn = entrustEadService.findSlipByEntrustEadSlipId(Integer.valueOf(entrustEadSlipId));
 			List<EntrustEadLineTrn> eadLineTrnList = entrustEadService.findLineByEntrustEadSlipId(Integer.valueOf(entrustEadSlipId));
 			if (entrustEadSlipTrn == null
 					|| (eadLineTrnList == null || eadLineTrnList.size() == 0)) {
-				
+				// 伝票または明細を取得できなかった場合はnullを返す
 				return null;
 			}
 
-			
+			// TrnDtoオブジェクトをTrnオブジェクトから生成する
 			EntrustEadSlipTrnDto entrustEadSlipTrnDto = Beans.createAndCopy(
 					EntrustEadSlipTrnDto.class, entrustEadSlipTrn).execute();
 			List<EntrustEadLineTrnDto> entrustEadLineTrnDtoList = new ArrayList<EntrustEadLineTrnDto>();
 			Converter conv = createProductNumConverter();
 			for (EntrustEadLineTrn eadLineTrn : eadLineTrnList) {
-				
+				// 画面表示用のDTOへ変換する
 				EntrustEadLineTrnDto entrustEadLineTrnDto = Beans.createAndCopy(
 						EntrustEadLineTrnDto.class, eadLineTrn).converter(conv, EntrustEadService.Param.QUANTITY).execute();
 
-				
+				// 商品備考の取得
 				ProductJoin pj = productService.findById(eadLineTrn.productCode);
 				if( pj != null ) {
 					entrustEadLineTrnDto.productRemarks = pj.remarks;

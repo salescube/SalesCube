@@ -149,10 +149,13 @@
 
 					if($("#salesSlipId").val() == "" ){
 						// 明細行にて、伝票呼出された行は金額を再計算
-						calcUnitRetailPrice( i );
-						calcUnitCost(i);
-						calcGm( i );
-						calcCTax( i );
+						
+						calcQuantity( i );
+						
+						// calcUnitRetailPrice( i );
+						// calcUnitCost(i);
+						// calcGm( i );
+						// calcCTax( i );
 					}
 				}
 			}
@@ -487,13 +490,13 @@
 		setElem( elemTd, "stockCtlCategory", maxIndex, null );
 
 		elemTd = elemTd.next();
-		elemWork = setElem( elemTd, "productCode", maxIndex, null, (++tabIdx) );
+		elemWork = setElem( elemTd.children(), "productCode", maxIndex, null, (++tabIdx) );
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
 		elemWork.unbind("blur");
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(e); } });
 
-		elemWork = elemTd.children("#productCodeImg0");
+		elemWork = elemTd.children().children("#productCodeImg0");
 		elemWork.attr("id", "productCodeImg" + maxIndex);
 		elemWork.attr("tabindex", (++tabIdx));
 		elemWork.bind("click", {index: maxIndex}, openProductSearchDialog);
@@ -504,34 +507,34 @@
 		elemWork.attr("id", "productAbstract" + maxIndex );
 		elemWork.text("");
 		//setElem( elemTd, "productAbstract", maxIndex, "", null );
-		setElem( elemTd, "productRemarks", maxIndex, "", (++tabIdx) );
+		setElem( elemTd.children(), "productRemarks", maxIndex, "", (++tabIdx) );
 
 		elemTd = elemTd.next();
-		elemWork = setElem( elemTd, "quantity", maxIndex, null , (++tabIdx));
+		elemWork = setElem( elemTd.children(), "quantity", maxIndex, null , (++tabIdx));
 //		elemWork.bind("change", {index: maxIndex}, changeQuantity);
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
 		elemWork.unbind("blur");
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ changeQuantity(e); } });
 
-		elemWork = elemTd.children("#stockBtn0");
+		elemWork = elemTd.children().children("#stockBtn0");
 		elemWork.attr("id", "stockBtn" + maxIndex);
 		elemWork.attr("tabindex", (++tabIdx));
 		elemWork.bind("click", {index: maxIndex}, showStockInfo);
 
 		elemTd = elemTd.next();
-		setElem( elemTd, "deliveryProcessCategory", maxIndex, null, (++tabIdx) );
+		setElem( elemTd.children(), "deliveryProcessCategory", maxIndex, null, (++tabIdx) );
 		elemWork.bind("click", {index: maxIndex}, changeCategory);
 
 		elemTd = elemTd.next();
-		elemWork = setElem( elemTd, "unitCost", maxIndex, null, (++tabIdx) );
+		elemWork = setElem( elemTd.children(), "unitCost", maxIndex, null, (++tabIdx) );
 //		elemWork.bind("change", {index: maxIndex}, changeUnitCost);
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
 		elemWork.unbind("blur");
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ changeUnitCost(e); } });
 
-		elemWork = setElem( elemTd, "cost", maxIndex, null, (++tabIdx) );
+		elemWork = setElem( elemTd.children(), "cost", maxIndex, null, (++tabIdx) );
 //		elemWork.bind("change", {index: maxIndex}, changeCost);
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
@@ -539,14 +542,14 @@
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ changeCost(e); } });
 
 		elemTd = elemTd.next();
-		elemWork = setElem( elemTd, "unitRetailPrice", maxIndex, null, (++tabIdx) );
+		elemWork = setElem( elemTd.children(), "unitRetailPrice", maxIndex, null, (++tabIdx) );
 //		elemWork.bind("change", {index: maxIndex}, changeUnitRetailPrice);
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
 		elemWork.unbind("blur");
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ changeUnitRetailPrice(e); } });
 
-		elemWork = setElem( elemTd, "retailPrice", maxIndex, null, (++tabIdx) );
+		elemWork = setElem( elemTd.children(), "retailPrice", maxIndex, null, (++tabIdx) );
 //		elemWork.bind("change", {index: maxIndex}, changeRetailPrice);
 		elemWork.unbind("focus");
 		elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
@@ -554,19 +557,19 @@
 		elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ changeRetailPrice(e); } });
 
 		elemTd = elemTd.next();
-		setElem( elemTd, "remarks", maxIndex, null, (++tabIdx) );
-		setElem( elemTd, "eadRemarks", maxIndex, null, (++tabIdx) );
+		setElem( elemTd.children(), "remarks", maxIndex, null, (++tabIdx) );
+		setElem( elemTd.children(), "eadRemarks", maxIndex, null, (++tabIdx) );
 
 		elemTd = elemTd.next();
-		setElem( elemTd, "rackCodeSrc", maxIndex, null, (++tabIdx) );
+		setElem( elemTd.children(), "rackCodeSrc", maxIndex, null, (++tabIdx) );
 
 		elemTd = elemTd.next();
-		elemWork = elemTd.children("#deleteBtn0");
+		elemWork = elemTd.children().children("#deleteBtn0");
 		elemWork.attr("id", "deleteBtn" + maxIndex);
 		elemWork.attr("tabindex", (++tabIdx));
 		elemWork.bind("click", {index: maxIndex}, deleteRow);
 
-		elemWork = elemTd.children("#copyBtn0");
+		elemWork = elemTd.children().children("#copyBtn0");
 		elemWork.attr("id", "copyBtn" + maxIndex);
 		elemWork.attr("tabindex", (++tabIdx));
 		elemWork.bind("click", {index: maxIndex}, copyRow);
@@ -825,6 +828,9 @@
 				$("#"+ CustomerInfosIDList[i]).attr("value",value[CustomerInfosDBList[i]]);
 			}
 		}
+
+		$("#billPrintUnit").val(value.billPrintUnit);
+
 		// 宛名には、敬称も追加する。
 		if($("#adlabel").val() != ""){
 			$("#adlabel").attr("value",$("#adlabel").val() + "　" + value["customerPcPreCategoryName"]);
@@ -1693,15 +1699,15 @@ function outputDialog(evt) {
 	$("#output_dialog").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 200,
-		height: 250,
+		width: 290,
+		height: 300,
 		modal: false,
 		buttons: {
 		}
 	});
 
 	$("#output_dialog").dialog('open');
-	$("#output_dialog").dialog('option', 'height', 250);
+	$("#output_dialog").dialog('option', 'height', 300);
 
 	if(jQuery.browser.msie) {
 		window.event.keyCode = null;
@@ -1828,36 +1834,36 @@ function changeDate(){
 
 		<div class="function_buttons">
 			<!-- TODO EL式でファンクション制御用DTOを参照して表示制御する  -->
-			<button type="button" tabindex="2000" id="btnF1" onclick="onF1();">F1<br>初期化</button><!--
-			--><c:if test="${closed || !menuUpdate}"><button type="button" tabindex="2001" id="btnF2" onclick="onF2();" disabled>F2<br>削除</button></c:if><!--
-			--><c:if test="${!closed && menuUpdate}"><button type="button" tabindex="2001" id="btnF2" onclick="onF2();">F2<br>削除</button></c:if><!--
-			--><c:if test="${newData}" ><!--
-				--><c:if test="${closed || !menuUpdate}"><button type="button" tabindex="2002" id="btnF3" onclick="onF3();" disabled>F3<br>登録</button></c:if><!--
-				--><c:if test="${!closed && menuUpdate}"><button type="button" tabindex="2002" id="btnF3" onclick="onF3();">F3<br>登録</button></c:if><!--
-			--></c:if><!--
-			--><c:if test="${!newData}" ><!--
-				--><c:if test="${closed || !menuUpdate}"><button type="button" tabindex="" id="btnF3" onclick="onF3();" disabled>F3<br>更新</button></c:if><!--
-				--><c:if test="${!closed && menuUpdate}"><button type="button" tabindex="" id="btnF3" onclick="onF3();">F3<br>更新</button></c:if><!--
-			--></c:if><!--
-			--><button type="button" tabindex="2003" id="btnF4" disabled>F4<br>&nbsp;</button><!-- F4
-			--><c:if test="${newData}" ><button type="button" tabindex="2004" id="btnF5" onclick="onF5();" disabled>F5<br>PDF</button></c:if><!-- F5
-			--><c:if test="${!newData}" ><button type="button" tabindex="2004" id="btnF5" onclick="onF5();">F5<br>PDF</button></c:if><!-- F5
-			--><c:if test="${newData}" ><!--
-			--><button type="button" tabindex="2005" id="btnF6" onclick="onF6();">F6<br>伝票呼出</button><!--
-			--></c:if><!--
-			--><c:if test="${!newData}" ><!--
-			--><button type="button" tabindex="2005" id="btnF6" onclick="onF6();" disabled>F6<br>伝票呼出</button><!--
-			--></c:if><!--
-			--><button type="button" tabindex="" id="btnF7" disabled="disabled" >F7<br>&nbsp;</button><!--
-			--><button type="button" tabindex="" id="btnF8" disabled="disabled" >F8<br>&nbsp;</button><!--
-			--><button type="button" tabindex="" id="btnF9" disabled="disabled" >F9<br>&nbsp;</button><!--
-			--><button type="button" tabindex="" id="btnF10" disabled="disabled" >F10<br>&nbsp;</button><!--
-			--><button type="button" tabindex="" id="btnF11" disabled="disabled" >F11<br>&nbsp;</button><!--
-			--><button type="button" tabindex="" id="btnF12" disabled="disabled" >F12<br>&nbsp;</button><!--
-			-->
+			<button type="button" tabindex="2000" id="btnF1" onclick="onF1();">F1<br>初期化</button>
+			<c:if test="${closed || !menuUpdate}"><button type="button" tabindex="2001" id="btnF2" onclick="onF2();" disabled>F2<br>削除</button></c:if>
+			<c:if test="${!closed && menuUpdate}"><button type="button" tabindex="2001" id="btnF2" onclick="onF2();">F2<br>削除</button></c:if>
+			<c:if test="${newData}" >
+				<c:if test="${closed || !menuUpdate}"><button type="button" tabindex="2002" id="btnF3" onclick="onF3();" disabled>F3<br>登録</button></c:if>
+				<c:if test="${!closed && menuUpdate}"><button type="button" tabindex="2002" id="btnF3" onclick="onF3();">F3<br>登録</button></c:if>
+			</c:if>
+			<c:if test="${!newData}" >
+				<c:if test="${closed || !menuUpdate}"><button type="button" tabindex="" id="btnF3" onclick="onF3();" disabled>F3<br>更新</button></c:if>
+				<c:if test="${!closed && menuUpdate}"><button type="button" tabindex="" id="btnF3" onclick="onF3();">F3<br>更新</button></c:if>
+			</c:if>
+			<button type="button" tabindex="2003" id="btnF4" disabled>F4<br>&nbsp;</button>
+			<c:if test="${newData}" ><button type="button" tabindex="2004" id="btnF5" onclick="onF5();" disabled>F5<br>PDF</button></c:if>
+			<c:if test="${!newData}" ><button type="button" tabindex="2004" id="btnF5" onclick="onF5();">F5<br>PDF</button></c:if>
+			<c:if test="${newData}" >
+			<button type="button" tabindex="2005" id="btnF6" onclick="onF6();">F6<br>伝票呼出</button>
+			</c:if>
+			<c:if test="${!newData}" >
+			<button type="button" tabindex="2005" id="btnF6" onclick="onF6();" disabled>F6<br>伝票呼出</button>
+			</c:if>
+			<button type="button" tabindex="" id="btnF7" disabled="disabled" >F7<br>&nbsp;</button>
+			<button type="button" tabindex="" id="btnF8" disabled="disabled" >F8<br>&nbsp;</button>
+			<button type="button" tabindex="" id="btnF9" disabled="disabled" >F9<br>&nbsp;</button>
+			<button type="button" tabindex="" id="btnF10" disabled="disabled" >F10<br>&nbsp;</button>
+			<button type="button" tabindex="" id="btnF11" disabled="disabled" >F11<br>&nbsp;</button>
+			<button type="button" tabindex="" id="btnF12" disabled="disabled" >F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
-		<s:form onsubmit="return false;" >
+		<s:form onsubmit="return false;">
 		<!--  表示・入力領域 -->
 			<div class="function_forms">
 			<!-- エラー情報 -->
@@ -1870,336 +1876,340 @@ function changeDate(){
 					<bean:write name="msg" ignore="true"/><br>
 				</html:messages>
 				</div>
-			<br>
-				<span >売上伝票情報</span><br>
-				<table id="order_info" class="forms" summary="売上伝票情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 19%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 19%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 11%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 11%">
-					</colgroup>
+
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span >売上伝票情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+						
+						<div id="order_section" class="section_body">
+							<table id="order_info1" class="forms" summary="売上伝票情報">
+								<tr>
+									<th><div class="col_title_right">売上番号</div></th>
+									<td>
+										<html:text tabindex="100" property="salesSlipId" styleId="salesSlipId" style="width: 135px; ime-mode:disabled;"  maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){findSlip();}" />
+									</td>
+									<th><div class="col_title_right">受注番号</div></th>
+									<td>
+										<html:text tabindex="101" property="roSlipId" styleId="roSlipId" style="width: 135px; ime-mode:disabled;" maxlength="10"  onchange="findCopy();"/>
+									</td>
+									<th><div class="col_title_right">売上日※</div></th>
+									<td>
+										<html:text tabindex="102" property="salesDate" styleId="salesDate" styleClass="date_input"  style="width: 135px; ime-mode:disabled; text-align:center;" maxlength="10" onchange="changeDate();"/>
+									</td>
+									<th><div class="col_title_right">納期指定日</div></th>
+									<td>
+										<html:text tabindex="103" property="deliveryDate" styleId="deliveryDate" styleClass="date_input"  style="width: 135px; ime-mode:disabled;" maxlength="10" />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">受付番号</div></th>
+									<td>
+										<html:text tabindex="104" property="receptNo" styleId="receptNo" style="width: 135px; ime-mode:disabled;" maxlength="30" />
+									</td>
+									<th><div class="col_title_right">客先伝票番号</div></th>
+									<td>
+										<html:text tabindex="105" property="customerSlipNo" styleId="customerSlipNo" style="width: 135px; ime-mode:disabled;" maxlength="30" />
+									</td>
+									<th><div class="col_title_right">入力担当者</div></th>
+									<td colspan="3">
+										<html:text tabindex="106" property="userName" styleId="userName" readonly="true" styleClass="c_disable" style="width: 135px" />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">摘要</div></th>
+									<td colspan="3">
+										<html:text tabindex="107" property="remarks" styleId="remarks" style="width: 420px; ime-mode:active;" maxlength="50" />
+									</td>
+									<th><div class="col_title_right">配送業者</div></th>
+									<td>
+										<html:select tabindex="108" property="dcCategory"  styleId="dcCategory" >
+											<c:forEach var="dcl" items="${dcCategoryList}">
+												<html:option value="${dcl.value}">${dcl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</td>
+									<th><div class="col_title_right">配送時間帯</div></th>
+									<td>
+										<html:select tabindex="109" property="dcTimezoneCategory"  styleId="dcTimezoneCategory" >
+											<c:forEach var="dctl" items="${dcTimeZoneCategoryList}">
+												<html:option value="${dctl.value}">${dctl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</td>
+									</tr>
+								<tr>
+									<th><div class="col_title_right">ピッキング備考</div></th>
+									<td colspan="7">
+										<html:text tabindex="110" property="pickingRemarks" styleId="pickingRemarks" style="width: 810px; ime-mode:active;" maxlength="120" />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">宛名</div></th>
+									<td colspan="3">
+										<html:text tabindex="111" property="adlabel" styleId="adlabel" style="width: 420px; ime-mode:active;" maxlength="100" />
+									</td>
+									<th><div class="col_title_right">但書</div></th>
+									<td colspan="3" >
+										<html:text tabindex="112" property="disclaimer" styleId="disclaimer" style="width: 135px; ime-mode:active;" maxlength="60" />
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
+				
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span >顧客情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+						
+						<div id="order_section" class="section_body">
+							<table id="customer_info" class="forms" summary="顧客情報">
+								<tr>
+									<th><div class="col_title_right">顧客コード※</div></th>
+									<td>
+										<html:text tabindex="200" property="customerCode" styleId="customerCode" style="width: 130px; ime-mode:disabled;"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeCustomerCode(); }"/>
+										<html:image tabindex="201" styleId="customerCodeImg" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch()" />
+									</td>
+									<th><div class="col_title_right">顧客名</div></th>
+									<td colspan="3">
+										<html:text tabindex="202" property="customerName" styleId="customerName" style="width: 500px" readonly="true" styleClass="c_disable" maxlength="60" />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">税転嫁</div></th>
+									<td>
+										<html:select tabindex="203" property="taxShiftCategory"  styleId="taxShiftCategory" styleClass="c_disable"  >
+											<c:forEach var="tscl" items="${taxShiftCategoryList}">
+												<html:option value="${tscl.value}">${tscl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</td>
+									<th><div class="col_title_right">支払条件</div></th>
+									<td>
+										<html:select tabindex="203" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" styleClass="c_disable" >
+											<c:forEach var="pdcl" items="${cutoffGroupCategoryList}">
+												<html:option value="${pdcl.value}">${pdcl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</td>
+									<th><div class="col_title_right">取引区分</div></th>
+									<td>
+										<html:select tabindex="204" property="salesCmCategory"  styleId="salesCmCategory" >
+											<c:forEach var="scmcl" items="${salesCmCategoryList}">
+												<html:option value="${scmcl.value}">${scmcl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</td>
+										<td style="display: none;">
+											<html:hidden property="userId" styleId="userId" />
+											<html:hidden property="status" styleId="status" />
+											<html:hidden property="billId" styleId="billId" />
+											<html:hidden property="salesBillId" styleId="salesBillId" />
+											<html:hidden property="billDate" styleId="billDate" />
+											<html:hidden property="billCutoffGroup" styleId="billCutoffGroup" />
+											<html:hidden property="paybackCycleCategory" styleId="paybackCycleCategory" />
+											<html:hidden property="billCutoffDate" styleId="billCutoffDate" />
+											<html:hidden property="billCutoffPdate" styleId="billCutoffPdate" />
+											<html:hidden property="salesCutoffDate" styleId="salesCutoffDate" />
+											<html:hidden property="salesCutoffPdate" styleId="salesCutoffPdate" />
+											<html:hidden property="baCode" styleId="baCode" />
+											<html:hidden property="baName" styleId="baName" />
+											<html:hidden property="baKana" styleId="baKana" />
+											<html:hidden property="baOfficeName" styleId="baOfficeName" />
+											<html:hidden property="baOfficeKana" styleId="baOfficeKana" />
+											<html:hidden property="baDeptName" styleId="baDeptName" />
+											<html:hidden property="baZipCode" styleId="baZipCode" />
+											<html:hidden property="baAddress1" styleId="baAddress1" />
+											<html:hidden property="baAddress2" styleId="baAddress2" />
+											<html:hidden property="baPcName" styleId="baPcName" />
+											<html:hidden property="baPcKana" styleId="baPcKana" />
+											<html:hidden property="baPcPreCategory" styleId="baPcPreCategory" />
+											<html:hidden property="baPcPre" styleId="baPcPre" />
+											<html:hidden property="baTel" styleId="baTel" />
+											<html:hidden property="baFax" styleId="baFax" />
+											<html:hidden property="baEmail" styleId="baEmail" />
+											<html:hidden property="baUrl" styleId="baUrl" />
+											<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
+											<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
+											<html:hidden property="billPrintCount" styleId="billPrintCount" />
+											<html:hidden property="deliveryPrintCount" styleId="deliveryPrintCount" />
+											<html:hidden property="tempDeliveryPrintCount" styleId="tempDeliveryPrintCount" />
+											<html:hidden property="shippingPrintCount" styleId="shippingPrintCount" />
+											<html:hidden property="siPrintCount" styleId="siPrintCount" />
+											<html:hidden property="updDatetm" styleId="updDatetm" />
+											<html:hidden styleId="copySlipName" property="copySlipName"/>
+											<html:hidden styleId="copySlipId" property="copySlipId"/>
+											<html:hidden styleId="roUpdDatetm" property="roUpdDatetm"/>
+											<html:hidden styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag"/>
+											<html:hidden styleId="taxRate" property="taxRate"/>
+											<html:hidden styleId="codSc" property="codSc"/>
+											<html:hidden property="custsalesCmCategory" styleId="custsalesCmCategory" />
+											<html:hidden styleId="reportEFlag" property="reportEFlag"/>
+											<html:hidden styleId="artId" property="artId"/>
+											<html:hidden styleId="billPrintUnit" property="billPrintUnit"/>
+											<html:hidden styleId="billDatePrint" property="billDatePrint"/>
+											<html:hidden property="newData" />
+										</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">備考</div></th>
+									<td colspan="5">
+										<html:text property="customerRemarks" styleId="customerRemarks" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="205" />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">コメント</div></th>
+									<td colspan="5">
+										<html:text property="customerCommentData" styleId="customerCommentData" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="206" />
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
+				
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span >納入先情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+						
+						<div id="order_section" class="section_body">
+							<table id="delivery_info" class="forms" summary="納入先情報">
+								<tr>
+									<th><div class="col_title_right">顧客納入先<c:if test="${!onlineOrderData}">※</c:if></div></th>
+									<td colspan="7">
+										<c:if test="${!onlineOrderData}">
+										<html:select tabindex="300" property="deliveryCode"  styleId="deliveryCode" onchange="changedelivery()" >
+											<c:forEach var="dell" items="${deliveryList}">
+												<html:option value="${dell.value}">${dell.label}</html:option>
+											</c:forEach>
+										</html:select>
+										<html:hidden styleId="deliveryName" property="deliveryName"/>
+										</c:if>
+										<c:if test="${onlineOrderData}">
+										<html:hidden styleId="deliveryCode" property="deliveryCode"/>
+										<html:text tabindex="300" property="deliveryName" styleId="deliveryName" style="width: 500px" readonly="true" styleClass="c_disable"  />
+										</c:if>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">事業所名</div></th>
+									<td>
+										<html:hidden styleId="deliveryKana" property="deliveryKana"/>
+										<html:text tabindex="301" property="deliveryOfficeName" styleId="deliveryOfficeName" style="width: 200px" readonly="true" styleClass="c_disable"  />
+										<html:hidden styleId="deliveryOfficeKana" property="deliveryOfficeKana"/>
+										<html:hidden styleId="pickingListId" property="pickingListId"/>
+										<html:hidden styleId="roDate" property="roDate"/>
+										<html:hidden styleId="customerPcName" property="customerPcName"/>
+										<html:hidden styleId="customerZipCode" property="customerZipCode"/>
+										<html:hidden styleId="customerAddress1" property="customerAddress1"/>
+										<html:hidden styleId="customerAddress2" property="customerAddress2"/>
+										<html:hidden styleId="customerTel" property="customerTel"/>
+										<html:hidden styleId="printDate" property="printDate"/>
+									</td>
+									<th><div class="col_title_right">部署名</div></th>
+									<td>
+										<html:text tabindex="302" property="deliveryDeptName" styleId="deliveryDeptName" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">郵便番号</div></th>
+									<td>
+										<html:text tabindex="303" property="deliveryZipCode" styleId="deliveryZipCode" style="width: 70px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th><div class="col_title_right">住所１</div></th>
+									<td>
+										<html:text tabindex="304" property="deliveryAddress1" styleId="deliveryAddress1" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th ><div class="col_title_right">住所２</div></th>
+									<td>
+										<html:text tabindex="305" property="deliveryAddress2" styleId="deliveryAddress2" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">担当者</div></th>
+									<td>
+										<html:text tabindex="306" property="deliveryPcName" styleId="deliveryPcName" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th><div class="col_title_right">担当者カナ</div></th>
+									<td>
+										<html:text tabindex="307" property="deliveryPcKana" styleId="deliveryPcKana" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th><div class="col_title_right">敬称</div></th>
+									<td>
+										<html:select tabindex="308" property="deliveryPcPreCategory" styleId="deliveryPcPreCategory" styleClass="c_disable" style="width: 220px">
+											<c:forEach var="ptcl" items="${preTypeCategoryList}">
+												<html:option value="${ptcl.value}">${ptcl.label}</html:option>
+											</c:forEach>
+										</html:select>
+										<html:hidden styleId="deliveryPcPre" property="deliveryPcPre"/>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">TEL</div></th>
+									<td>
+										<html:text tabindex="309" property="deliveryTel" styleId="deliveryTel" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th><div class="col_title_right">FAX</div></th>
+									<td>
+										<html:text tabindex="310" property="deliveryFax" styleId="deliveryFax" style="width: 200px" readonly="true" styleClass="c_disable"  />
+									</td>
+									<th><div class="col_title_right">E-MAIL</div></th>
+									<td>
+										<html:text tabindex="311" property="deliveryEmail" styleId="deliveryEmail" style="width: 200px" readonly="true" styleClass="c_disable"  />
+										<html:hidden styleId="deliveryUrl" property="deliveryUrl"/>
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
+				
+				<div id="order_detail_info_wrap">
+				<table summary="受注商品明細リスト" class="forms detail_info" style="margin-top: 20px;">
 					<tr>
-						<th>売上番号</th>
-						<td>
-							<html:text tabindex="100" property="salesSlipId" styleId="salesSlipId" style="width: 160px; ime-mode:disabled;"  maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){findSlip();}" />
-						</td>
-						<th>受注番号</th>
-						<td>
-							<html:text tabindex="101" property="roSlipId" styleId="roSlipId" style="width: 160px; ime-mode:disabled;" maxlength="10"  onchange="findCopy();"/>
-						</td>
-						<th>売上日※</th>
-						<td>
-							<html:text tabindex="102" property="salesDate" styleId="salesDate" styleClass="date_input"  style="width: 90px; ime-mode:disabled;" maxlength="10" onchange="changeDate();"/>
-						</td>
-						<th>納期指定日</th>
-						<td>
-							<html:text tabindex="103" property="deliveryDate" styleId="deliveryDate" styleClass="date_input"  style="width: 90px; ime-mode:disabled;" maxlength="10" />
-						</td>
+						<th rowspan="2" class="rd_top_left" style="height: 60px; width: 30px;">No</th>
+						<th rowspan="2" style="height: 60px;">商品コード※</th>
+						<th style="height: 30px;">商品名・摘要</th>
+						<th rowspan="2" style="height: 60px;">数量※</th>
+						<th rowspan="2" style="height: 60px;">完納区分※</th>
+						<th style="height: 30px;">仕入単価※</th>
+						<th style="height: 30px;">売上単価※</th>
+						<th style="height: 30px;">備考</th>
+						<th rowspan="2" style="height: 60px;">棚番</th>
+						<th rowspan="2" class="rd_top_right" style="height: 60px;">&nbsp;</th>
 					</tr>
 					<tr>
-						<th>受付番号</th>
-						<td>
-							<html:text tabindex="104" property="receptNo" styleId="receptNo" style="width: 160px; ime-mode:disabled;" maxlength="30" />
-						</td>
-						<th>客先伝票番号</th>
-						<td>
-							<html:text tabindex="105" property="customerSlipNo" styleId="customerSlipNo" style="width: 160px; ime-mode:disabled;" maxlength="30" />
-						</td>
-						<th>入力担当者</th>
-						<td colspan="3">
-							<html:text tabindex="106" property="userName" styleId="userName" readonly="true" styleClass="c_disable" style="width: 140px" />
-						</td>
-					</tr>
-					<tr>
-						<th>摘要</th>
-						<td colspan="3">
-							<html:text tabindex="107" property="remarks" styleId="remarks" style="width: 420px; ime-mode:active;" maxlength="50" />
-						</td>
-						<th>配送業者</th>
-						<td>
-							<html:select tabindex="108" property="dcCategory"  styleId="dcCategory" >
-								<c:forEach var="dcl" items="${dcCategoryList}">
-									<html:option value="${dcl.value}">${dcl.label}</html:option>
-								</c:forEach>
-							</html:select>
-						</td>
-						<th>配送時間帯</th>
-						<td>
-							<html:select tabindex="109" property="dcTimezoneCategory"  styleId="dcTimezoneCategory" >
-								<c:forEach var="dctl" items="${dcTimeZoneCategoryList}">
-									<html:option value="${dctl.value}">${dctl.label}</html:option>
-								</c:forEach>
-							</html:select>
-						</td>
-						</tr>
-					<tr>
-						<th>ピッキング備考</th>
-						<td colspan="7">
-							<html:text tabindex="110" property="pickingRemarks" styleId="pickingRemarks" style="width: 810px; ime-mode:active;" maxlength="120" />
-						</td>
-					</tr>
-					<tr>
-						<th>宛名</th>
-						<td colspan="3">
-							<html:text tabindex="111" property="adlabel" styleId="adlabel" style="width: 420px; ime-mode:active;" maxlength="100" />
-						</td>
-						<th>但書</th>
-						<td colspan="3" >
-							<html:text tabindex="112" property="disclaimer" styleId="disclaimer" style="width: 120px; ime-mode:active;" maxlength="60" />
-						</td>
-					</tr>
-				</table>
-				<span >顧客情報</span><br>
-				<table id="customer_info" class="forms" summary="顧客情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 35%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 25%">
-					</colgroup>
-					<tr>
-						<th>顧客コード※</th>
-						<td>
-							<html:text tabindex="200" property="customerCode" styleId="customerCode" style="width: 130px; ime-mode:disabled;"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeCustomerCode(); }"/>
-							<html:image tabindex="201" styleId="customerCodeImg" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch()" />
-						</td>
-						<th>顧客名</th>
-						<td colspan="3">
-							<html:text tabindex="202" property="customerName" styleId="customerName" style="width: 500px" readonly="readonly" styleClass="c_disable" maxlength="60" />
-						</td>
-					</tr>
-					<tr>
-						<th>税転嫁</th>
-						<td>
-							<html:select tabindex="203" property="taxShiftCategory"  styleId="taxShiftCategory" styleClass="c_disable"  >
-								<c:forEach var="tscl" items="${taxShiftCategoryList}">
-									<html:option value="${tscl.value}">${tscl.label}</html:option>
-								</c:forEach>
-							</html:select>
-						</td>
-						<th>支払条件</th>
-						<td>
-							<html:select tabindex="203" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" styleClass="c_disable" >
-								<c:forEach var="pdcl" items="${cutoffGroupCategoryList}">
-									<html:option value="${pdcl.value}">${pdcl.label}</html:option>
-								</c:forEach>
-							</html:select>
-						</td>
-						<th>取引区分</th>
-						<td>
-							<html:select tabindex="204" property="salesCmCategory"  styleId="salesCmCategory" >
-								<c:forEach var="scmcl" items="${salesCmCategoryList}">
-									<html:option value="${scmcl.value}">${scmcl.label}</html:option>
-								</c:forEach>
-							</html:select>
-						</td>
-							<td style="display: none;">
-								<html:hidden property="userId" styleId="userId" />
-								<html:hidden property="status" styleId="status" />
-								<html:hidden property="billId" styleId="billId" />
-								<html:hidden property="salesBillId" styleId="salesBillId" />
-								<html:hidden property="billDate" styleId="billDate" />
-								<html:hidden property="billCutoffGroup" styleId="billCutoffGroup" />
-								<html:hidden property="paybackCycleCategory" styleId="paybackCycleCategory" />
-								<html:hidden property="billCutoffDate" styleId="billCutoffDate" />
-								<html:hidden property="billCutoffPdate" styleId="billCutoffPdate" />
-								<html:hidden property="salesCutoffDate" styleId="salesCutoffDate" />
-								<html:hidden property="salesCutoffPdate" styleId="salesCutoffPdate" />
-								<html:hidden property="baCode" styleId="baCode" />
-								<html:hidden property="baName" styleId="baName" />
-								<html:hidden property="baKana" styleId="baKana" />
-								<html:hidden property="baOfficeName" styleId="baOfficeName" />
-								<html:hidden property="baOfficeKana" styleId="baOfficeKana" />
-								<html:hidden property="baDeptName" styleId="baDeptName" />
-								<html:hidden property="baZipCode" styleId="baZipCode" />
-								<html:hidden property="baAddress1" styleId="baAddress1" />
-								<html:hidden property="baAddress2" styleId="baAddress2" />
-								<html:hidden property="baPcName" styleId="baPcName" />
-								<html:hidden property="baPcKana" styleId="baPcKana" />
-								<html:hidden property="baPcPreCategory" styleId="baPcPreCategory" />
-								<html:hidden property="baPcPre" styleId="baPcPre" />
-								<html:hidden property="baTel" styleId="baTel" />
-								<html:hidden property="baFax" styleId="baFax" />
-								<html:hidden property="baEmail" styleId="baEmail" />
-								<html:hidden property="baUrl" styleId="baUrl" />
-								<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
-								<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
-								<html:hidden property="billPrintCount" styleId="billPrintCount" />
-								<html:hidden property="deliveryPrintCount" styleId="deliveryPrintCount" />
-								<html:hidden property="tempDeliveryPrintCount" styleId="tempDeliveryPrintCount" />
-								<html:hidden property="shippingPrintCount" styleId="shippingPrintCount" />
-								<html:hidden property="siPrintCount" styleId="siPrintCount" />
-								<html:hidden property="updDatetm" styleId="updDatetm" />
-								<html:hidden styleId="copySlipName" property="copySlipName"/>
-								<html:hidden styleId="copySlipId" property="copySlipId"/>
-								<html:hidden styleId="roUpdDatetm" property="roUpdDatetm"/>
-								<html:hidden styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag"/>
-								<html:hidden styleId="taxRate" property="taxRate"/>
-								<html:hidden styleId="codSc" property="codSc"/>
-								<html:hidden property="custsalesCmCategory" styleId="custsalesCmCategory" />
-								<html:hidden styleId="reportEFlag" property="reportEFlag"/>
-								<html:hidden styleId="artId" property="artId"/>
-								<html:hidden styleId="billPrintUnit" property="billPrintUnit"/>
-								<html:hidden styleId="billDatePrint" property="billDatePrint"/>
-								<html:hidden property="newData" />
-							</td>
-					</tr>
-					<tr>
-						<th>備考</th>
-						<td colspan="5">
-							<html:text property="customerRemarks" styleId="customerRemarks" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="205" />
-						</td>
-					</tr>
-					<tr>
-						<th>コメント</th>
-						<td colspan="5">
-							<html:text property="customerCommentData" styleId="customerCommentData" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="206" />
-						</td>
-					</tr>
-				</table>
-				<span >納入先情報</span><br>
-				<table id="delivery_info" class="forms" summary="納入先情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 12%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 17%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 17%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 17%">
-					</colgroup>
-					<tr>
-						<th>顧客納入先<c:if test="${!onlineOrderData}">※</c:if></th>
-						<td colspan="7">
-							<c:if test="${!onlineOrderData}">
-							<html:select tabindex="300" property="deliveryCode"  styleId="deliveryCode" onchange="changedelivery()" >
-								<c:forEach var="dell" items="${deliveryList}">
-									<html:option value="${dell.value}">${dell.label}</html:option>
-								</c:forEach>
-							</html:select>
-							<html:hidden styleId="deliveryName" property="deliveryName"/>
-							</c:if>
-							<c:if test="${onlineOrderData}">
-							<html:hidden styleId="deliveryCode" property="deliveryCode"/>
-							<html:text tabindex="300" property="deliveryName" styleId="deliveryName" style="width: 500px" readonly="readonly" styleClass="c_disable"  />
-							</c:if>
-						</td>
-					</tr>
-					<tr>
-						<th>事業所名</th>
-						<td>
-							<html:hidden styleId="deliveryKana" property="deliveryKana"/>
-							<html:text tabindex="301" property="deliveryOfficeName" styleId="deliveryOfficeName" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-							<html:hidden styleId="deliveryOfficeKana" property="deliveryOfficeKana"/>
-							<html:hidden styleId="pickingListId" property="pickingListId"/>
-							<html:hidden styleId="roDate" property="roDate"/>
-							<html:hidden styleId="customerPcName" property="customerPcName"/>
-							<html:hidden styleId="customerZipCode" property="customerZipCode"/>
-							<html:hidden styleId="customerAddress1" property="customerAddress1"/>
-							<html:hidden styleId="customerAddress2" property="customerAddress2"/>
-							<html:hidden styleId="customerTel" property="customerTel"/>
-							<html:hidden styleId="printDate" property="printDate"/>
-						</td>
-						<th>部署名</th>
-						<td colspan="5">
-							<html:text tabindex="302" property="deliveryDeptName" styleId="deliveryDeptName" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-					</tr>
-					<tr>
-						<th>郵便番号</th>
-						<td>
-							<html:text tabindex="303" property="deliveryZipCode" styleId="deliveryZipCode" style="width: 70px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th>住所１</th>
-						<td>
-							<html:text tabindex="304" property="deliveryAddress1" styleId="deliveryAddress1" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th >住所２</th>
-						<td colspan="3">
-							<html:text tabindex="305" property="deliveryAddress2" styleId="deliveryAddress2" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-					</tr>
-					<tr>
-						<th>担当者</th>
-						<td>
-							<html:text tabindex="306" property="deliveryPcName" styleId="deliveryPcName" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th>担当者カナ</th>
-						<td>
-							<html:text tabindex="307" property="deliveryPcKana" styleId="deliveryPcKana" style="width: 200px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th>敬称</th>
-						<td colspan="3">
-							<html:select tabindex="308" property="deliveryPcPreCategory" styleId="deliveryPcPreCategory" styleClass="c_disable" >
-								<c:forEach var="ptcl" items="${preTypeCategoryList}">
-									<html:option value="${ptcl.value}">${ptcl.label}</html:option>
-								</c:forEach>
-							</html:select>
-							<html:hidden styleId="deliveryPcPre" property="deliveryPcPre"/>
-						</td>
-					</tr>
-					<tr>
-						<th>TEL</th>
-						<td>
-							<html:text tabindex="309" property="deliveryTel" styleId="deliveryTel" style="width: 150px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th>FAX</th>
-						<td>
-							<html:text tabindex="310" property="deliveryFax" styleId="deliveryFax" style="width: 150px" readonly="readonly" styleClass="c_disable"  />
-						</td>
-						<th>E-MAIL</th>
-						<td colspan="3">
-							<html:text tabindex="311" property="deliveryEmail" styleId="deliveryEmail" style="width: 150px" readonly="readonly" styleClass="c_disable"  />
-							<html:hidden styleId="deliveryUrl" property="deliveryUrl"/>
-						</td>
-					</tr>
-				</table>
-				<table summary="受注商品明細リスト" class="forms" style="margin-top: 20px;">
-					<colgroup>
-						<col span="1" style="width: 5%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 5%">
-						<col span="1" style="width: 6%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 10%">
-					</colgroup>
-					<tr>
-						<th rowspan="2">No</th>
-						<th rowspan="2">商品コード※</th>
-						<th>商品名・摘要</th>
-						<th rowspan="2">数量※</th>
-						<th rowspan="2">完納区分※</th>
-						<th>仕入単価※</th>
-						<th>売上単価※</th>
-						<th>備考</th>
-						<th rowspan="2">棚番</th>
-						<th rowspan="2">&nbsp;</th>
-					</tr>
-					<tr>
-						<th>商品備考</th>
-						<th>仕入金額※</th>
-						<th>売価金額※</th>
-						<th>ピッキング備考</th>
+						<th style="height: 30px;">商品備考</th>
+						<th style="height: 30px;">仕入金額※</th>
+						<th style="height: 30px;">売価金額※</th>
+						<th style="height: 30px;">ピッキング備考</th>
 					</tr>
 					<tbody id="tbodyLine">
 						<c:forEach var="salesLineList" items="${salesLineList}" varStatus="s" >
 							<c:if test='${salesLineList.lineNo != null}'>
 							<tr id="trLine${s.index}">
-								<td id="tdNo${s.index}" style="text-align: right">
-									<c:out value="${f:h(salesLineList.lineNo)}" />
+							
+								<!-- No -->
+								<td id="tdNo${s.index}">
+									<div class="box_1of1">
+										<c:out value="${f:h(salesLineList.lineNo)}" />
+									</div>
 								</td>
 								<td style="display: none;">
 									<html:hidden name="salesLineList" property="salesLineId" indexed="true" styleId="salesLineList[${s.index}].salesLineId" />
@@ -2227,161 +2237,253 @@ function changeDate(){
 									// 受注伝票行ID
 									// 数量
 								</td>
+								
+								<!-- 商品コード -->
 								<td style="text-align: right;">
-									<html:text tabindex="${1000+s.index*16}" name="salesLineList" property="productCode"
-										style="width: 165px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].productCode" maxlength="20" />
-									<br><html:image styleId="productCodeImg${s.index}" tabindex="${1001+s.index*16}" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" />
+									<div class="box_1of1" style="margin: 5px;">
+										<html:text tabindex="${1000+s.index*16}" name="salesLineList" property="productCode"
+											style="width: 120px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].productCode" maxlength="20" />
+										<html:image styleId="productCodeImg${s.index}" tabindex="${1001+s.index*16}" src="${f:url('/images//customize/btn_search.png')}" 
+											style="width: auto; vertical-align: middle; cursor: pointer;" />
+									</div>
 								</td>
+								
+								<!-- 商品名・摘要、商品備考 -->
 								<td  style="white-space: normal">
-									<div id="productAbstract${s.index}" style="position: static; width:135px; height:50px; white-space: normal;">
+									<div class="box_1of2" id="productAbstract${s.index}" style="position: static; white-space: normal;">
 										<c:out value="${salesLineList.productAbstract}" />
 									</div>
-									<html:textarea name="salesLineList"  styleId="salesLineList[${s.index}].productRemarks" property="productRemarks"  style="width: 135px; height: 50px;" tabindex="${1002+s.index*16}" readonly="true" styleClass="c_disable" indexed="true" />
+									<div class="box_2of2">
+										<html:textarea name="salesLineList"  styleId="salesLineList[${s.index}].productRemarks" property="productRemarks" 
+											tabindex="${1002+s.index*16}" readonly="true" styleClass="c_disable" indexed="true" style="width: 110px;"/>
+									</div>
 								</td>
+								
+								<!-- 数量※ -->
 								<td>
-									<html:text tabindex="${1003+s.index*16}" name="salesLineList" property="quantity"
-										style="width: 50px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].quantity"  styleClass="numeral_commas" maxlength="6" />
-									<br>
-									<button id="stockBtn${s.index}" tabindex="${1005+s.index*16}" >在庫</button>
+									<div class="box_1of2" style="border-bottom: 0;">
+										<html:text tabindex="${1003+s.index*16}" name="salesLineList" property="quantity"
+											style="width: 40px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].quantity"  styleClass="numeral_commas" maxlength="6" />
+									</div>
+									<div class="box_2of2">
+										<button id="stockBtn${s.index}" tabindex="${1005+s.index*16}" class="btn_small">在庫</button>
+									</div>
 								</td>
+								
+								<!-- 完納区分※ -->
 								<td>
-									<html:select tabindex="${1006+s.index*16}" name="salesLineList" property="deliveryProcessCategory" styleId="salesLineList[${s.index}].deliveryProcessCategory"  indexed="true" >
-										<c:forEach var="dpcl" items="${delivertProcessCategoryList}">
-											<html:option value="${dpcl.value}">${dpcl.label}</html:option>
-										</c:forEach>
-									</html:select>
+									<div class="box_1of1" style="width: 80px; margin: 5px;">
+										<html:select tabindex="${1006+s.index*16}" name="salesLineList" property="deliveryProcessCategory" 
+											styleId="salesLineList[${s.index}].deliveryProcessCategory"  indexed="true" >
+											<c:forEach var="dpcl" items="${delivertProcessCategoryList}">
+												<html:option value="${dpcl.value}">${dpcl.label}</html:option>
+											</c:forEach>
+										</html:select>
+									</div>
 								</td>
+								
+								<!-- 仕入単価※、仕入金額※ -->
 								<td>
-									<html:text tabindex="${1007+s.index*16}" name="salesLineList" property="unitCost"
-										style="width: 75px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitCost" styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
-									<br>
-									<html:text tabindex="${1008+s.index*16}" name="salesLineList" property="cost"
-										style="width: 75px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].cost" styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
+									<div class="box_1of2">
+										<html:text tabindex="${1007+s.index*16}" name="salesLineList" property="unitCost"
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitCost" 
+											styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
+									</div>
+									<div class="box_2of2">
+										<html:text tabindex="${1008+s.index*16}" name="salesLineList" property="cost"
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].cost" 
+											styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
+									</div>
 								</td>
+								
+								<!-- 売上単価※、売価金額※ -->
 								<td>
-									<html:text tabindex="${1009+s.index*16}" name="salesLineList" property="unitRetailPrice"
-										style="width: 75px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitRetailPrice" styleClass="numeral_commas" maxlength="9" />
-									<br>
-									<html:text tabindex="${1010+s.index*16}" name="salesLineList" property="retailPrice"
-										style="width: 75px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].retailPrice" styleClass="numeral_commas" maxlength="9" />
+									<div class="box_1of2">
+										<html:text tabindex="${1009+s.index*16}" name="salesLineList" property="unitRetailPrice"
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitRetailPrice" styleClass="numeral_commas" maxlength="9" />
+									</div>
+									<div class="box_2of2">
+										<html:text tabindex="${1010+s.index*16}" name="salesLineList" property="retailPrice"
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].retailPrice" styleClass="numeral_commas" maxlength="9" />
+									</div>
 								</td>
+								
+								<!-- 備考、ピッキング備考 -->
 								<td>
-									<html:textarea tabindex="${1011+s.index*16}" name="salesLineList" property="remarks" style="width: 150px; height: 45px; ime-mode:active;" indexed="true" styleId="salesLineList[${s.index}].remarks" />
-									<br>
-									<html:textarea tabindex="${1012+s.index*16}" name="salesLineList" property="eadRemarks" style="width: 150px; height: 45px; ime-mode:active;" indexed="true" styleId="salesLineList[${s.index}].eadRemarks" readonly="true" styleClass="c_disable"/>
+									<div class="box_1of2">
+										<html:textarea tabindex="${1011+s.index*16}" name="salesLineList" property="remarks" style="width: 150px; ime-mode:active;" 
+										indexed="true" styleId="salesLineList[${s.index}].remarks" />
+									</div>
+									<div class="box_2of2">
+										<html:textarea tabindex="${1012+s.index*16}" name="salesLineList" property="eadRemarks" style="width: 150px; ime-mode:active;" 
+										indexed="true" styleId="salesLineList[${s.index}].eadRemarks" readonly="true" styleClass="c_disable"/>
+									</div>
 								</td>
+								
+								<!-- 棚番 -->
 								<td style="text-align: right;">
-									<html:text tabindex="${1013+s.index*16}" name="salesLineList" property="rackCodeSrc" readonly="readonly" styleClass="c_disable"
-										style="width: 75px; ime-mode:inactive;" indexed="true" styleId="salesLineList[${s.index}].rackCodeSrc" maxlength="7" />
+									<div class="box_1of1" style="margin: 5px;">
+										<html:text tabindex="${1013+s.index*16}" name="salesLineList" property="rackCodeSrc" readonly="true" styleClass="c_disable"
+											style="width: 55px; ime-mode:inactive;" indexed="true" styleId="salesLineList[${s.index}].rackCodeSrc" maxlength="7" />
+									</div>
 								</td>
+								
+								<!--  -->
 								<td>
+									<div class="box_1of2">
 									<c:if test="${closed || !menuUpdate}">
-										<html:button tabindex="${1014+s.index*16}" property="salesLineList" styleId="deleteBtn${s.index}" style="width: 70px" disabled="true" >削除</html:button><br>
+										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_small" disabled="disabled" >削除</button>
 									</c:if>
 									<c:if test="${!closed && menuUpdate}">
-										<html:button tabindex="${1014+s.index*16}" property="salesLineList" styleId="deleteBtn${s.index}" style="width: 70px">削除</html:button><br>
+										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_small" >削除</button>
 									</c:if>
+									</div>
+									<div class="box_2of2">
 									<c:if test="${s.first}" >
-										<html:button tabindex="${1015+s.index*16}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 70px" disabled="true" >前行複写</html:button>
+										<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small" disabled="disabled" >前行複写</button>
 									</c:if>
 									<c:if test="${!s.first}" >
 										<c:if test="${closed || !menuUpdate}">
-											<html:button tabindex="${1015+s.index*16}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 70px" disabled="true" >前行複写</html:button>
+											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small" disabled="disabled" >前行複写</button>
 										</c:if>
 										<c:if test="${!closed && menuUpdate}">
-											<html:button tabindex="${1015+s.index*16}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 70px">前行複写</html:button>
+											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small">前行複写</button>
 										</c:if>
 									</c:if>
+									</div>
 								</td>
 							</tr>
 							</c:if>
 						</c:forEach>
+						
+						<!-- 追加ボタン -->
 						<tr id="trAddLine">
-							<td style="text-align: right" colspan="10">
+							<td style="height: 60px; text-align: center" colspan="10" class="rd_bottom_left rd_bottom_right">
 							<c:if test="${closed || !menuUpdate}">
-								<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled">行追加</html:button>
+								<!--<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled" styleClass="btn_small">追加</html:button>-->
+								
+								<button type="button" tabindex="1999" id="addRowBtn" style="width:80px;" disabled="disabled" >
+									<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+								</button>
 							</c:if>
 							<c:if test="${!closed && menuUpdate}">
-								<html:button tabindex="1999" styleId ="addLine" property="addLine" onclick="addRow();" >行追加</html:button>
+								<!--<html:button tabindex="1999" styleId ="addLine" property="addLine" onclick="addRow();" style="cursor: pointer;" styleClass="btn_small">追加</html:button>-->
+								
+								<button type="button" tabindex="1999" id="addRowBtn" style="width:80px; cursor: pointer;" onclick="addRow();" onkeypress="addRow();">
+									<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+								</button>
 							</c:if>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				</div>
+				
 				<!-- 削除された行のCSVデータ -->
 		        <html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-				<div id="information" class="information" style="margin-top: 20px;">
-					<table class="forms" summary="伝票情報" style="width: 450px; position: absolute; top: 0px; left: 460px;">
-						<colgroup>
-							<col span="5" style="width: 20%">
-						</colgroup>
+		        
+				<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
+		        <div id="information" class="information" style="">
+					<table id="voucher_info" class="forms" summary="伝票情報" style="">
 						<tr>
-							<th>粗利益</th>
+							<th style="height: 60px;" class="rd_top_left">粗利益</th>
 							<th>粗利益率</th>
 							<th>金額合計</th>
 							<th>消費税</th>
-							<th>伝票合計金額</th>
+							<th class="rd_top_right">伝票合計</th>
 						</tr>
 						<tr>
-							<td id="gmTotal" style="text-align: right" class="numeral_commas">
+							<td id="gmTotal" style="text-align: center; height: 100px;" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(gmTotal)}" />
 							</td>
-							<td id="gmTotalPer" style="text-align: right" class="numeral_commas">
+							<td id="gmTotalPer" style="text-align: center" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(gmTotalPer)}" />
 							</td>
-							<td id="priceTotal" style="text-align: right" class="numeral_commas">
+							<td id="priceTotal" style="text-align: center" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(priceTotal)}" />
 							</td>
-							<td id="ctaxPriceTotal" style="text-align: right" class="numeral_commas">
+							<td id="ctaxPriceTotal" style="text-align: center" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(ctaxPriceTotal)}" />
 							</td>
-							<td id="total" style="text-align: right" class="numeral_commas">
+							<td id="total" style="text-align: center" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(total)}" />
 							</td>
 						</tr>
 					</table>
 				</div>
-				<br>
-				<br>
-				<br>
-				<div style="text-align: right; width: 910px">
+				</div>
+
+				<div style="width: 1160px; text-align: center; margin-top: 10px;">
 					<c:if test="${newData}" >
 						<c:if test="${closed || !menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" disabled>登録</button>
+							<button type="button" tabindex="1999" id="btnF3btm" disabled>
+								<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							</button>
 						</c:if>
 						<c:if test="${!closed && menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();">登録</button>
+							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();">
+								<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							</button>
 						</c:if>
 					</c:if>
 					<c:if test="${!newData}" >
 						<c:if test="${closed || !menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" disabled >更新</button>
+							<button type="button" tabindex="1999" id="btnF3btm" disabled>
+								<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							</button>
 						</c:if>
 						<c:if test="${!closed && menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();" >更新</button>
+							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();">
+								<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							</button>
 						</c:if>
 					</c:if>
 				</div>
 			</div>
 		</s:form>
 	</div>
-<div id="output_dialog" title="出力選択" style="display: none; margin: 20px 0px 0px 10px;">
-<form name="printForm" method="post" >
-	<input type="hidden" id="printId" name="printId" />
-	<input type="hidden" id="printBillDatePrint" name="printBillDatePrint" />
-	<span id="spanJ" ><input type="checkbox" id="typeJ" name="typeJ" class="dummy" tabindex="3006" onclick="checkPrint();" >ピッキングリスト<br></span>
-	<span id="spanA" ><input type="checkbox" id="typeA" name="typeA" class="dummy" tabindex="3000" onclick="checkPrint();" >見積書<br></span>
-	<span id="spanH" ><input type="checkbox" id="typeH" name="typeH" class="dummy" tabindex="3002" onclick="checkPrint();" >請求書<br></span>
-	<span id="spanD" ><input type="checkbox" id="typeD" name="typeD" class="dummy" tabindex="3003" onclick="checkPrint();" >納品書<br></span>
-	<span id="spanC" ><input type="checkbox" id="typeC" name="typeC" class="dummy" tabindex="3004" onclick="checkPrint();" >納品書<br></span>
-	<span id="spanF" ><input type="checkbox" id="typeF" name="typeF" class="dummy" tabindex="3007" onclick="checkPrint();" >納品書兼領収書<br></span>
-	<span id="spanE" ><input type="checkbox" id="typeE" name="typeE" class="dummy" tabindex="3005" onclick="checkPrint();" >仮納品書<br></span>
-	<span id="spanG" ><input type="checkbox" id="typeG" name="typeG" class="dummy" tabindex="3001" onclick="checkPrint();" >請求書<br></span>
-</form>
-	<button id="doPrintButton" tabindex="3008" onclick="doPrint()" >出力</button>
-	<button tabindex="3009" onclick="$('#output_dialog').dialog('close');">閉じる</button>
-</div>
-
-
+	
+	<div id="output_dialog" title="出力選択" style="display: none;">
+		<div style="padding: 20px 20px 0 20px;">
+			<form name="printForm" method="post" style="margin: 0px;">
+				<table class="forms" style="width: 260px;" summary="出力選択">
+					<tr style="display: none;">
+						<td>
+							<input type="hidden" id="printId" name="printId" />
+							<input type="hidden" id="printBillDatePrint" name="printBillDatePrint" />
+						</td>
+					</tr>
+					<tr id="spanJ">
+						<td><input type="checkbox" id="typeJ" name="typeJ" class="dummy" tabindex="3006" onclick="checkPrint();" />ピッキングリスト</td>
+					</tr>
+					<tr id="spanA">
+						<td><input type="checkbox" id="typeA" name="typeA" class="dummy" tabindex="3000" onclick="checkPrint();" />見積書</td>
+					</tr>
+					<tr id="spanH">
+						<td><input type="checkbox" id="typeH" name="typeH" class="dummy" tabindex="3002" onclick="checkPrint();" />請求書</td>
+					</tr>
+					<tr id="spanD">
+						<td><input type="checkbox" id="typeD" name="typeD" class="dummy" tabindex="3003" onclick="checkPrint();" />納品書</td>
+					</tr>
+					<tr id="spanC">
+						<td><input type="checkbox" id="typeC" name="typeC" class="dummy" tabindex="3004" onclick="checkPrint();" />納品書</td>
+					</tr>
+					<tr id="spanF">
+						<td><input type="checkbox" id="typeF" name="typeF" class="dummy" tabindex="3007" onclick="checkPrint();" />納品書兼領収書</td>
+					</tr>
+					<tr id="spanE">
+						<td><input type="checkbox" id="typeE" name="typeE" class="dummy" tabindex="3005" onclick="checkPrint();" />仮納品書</td>
+					</tr>
+					<tr id="spanG">
+						<td><input type="checkbox" id="typeG" name="typeG" class="dummy" tabindex="3001" onclick="checkPrint();" />請求書</td>
+					</tr>
+				</table>
+			</form>
+			<div style="width: 96%; text-align: right; margin-top: 15px;">
+				<button id="doPrintButton" tabindex="3008" onclick="doPrint()" >出力</button>
+				<button tabindex="3009" onclick="$('#output_dialog').dialog('close');">閉じる</button>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

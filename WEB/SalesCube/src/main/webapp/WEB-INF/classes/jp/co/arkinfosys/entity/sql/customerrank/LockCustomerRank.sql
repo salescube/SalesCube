@@ -1,1 +1,0 @@
-SELECT * FROM CUSTOMER_RANK_MST_/*$domainId*/ WHERE RANK_CODE=/*rankCode*/

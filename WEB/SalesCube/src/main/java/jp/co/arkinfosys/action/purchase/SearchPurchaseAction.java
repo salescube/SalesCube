@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.purchase;
 
 import java.util.ArrayList;
@@ -57,19 +56,19 @@ public class SearchPurchaseAction extends AbstractSearchAction<List<Object>> {
 	 */
 	@Override
 	protected void doAfterIndex() throws Exception {
-		
+		// 発注入力画面・支払入力画面の権限を取得
 		this.searchPurchaseForm.isInputPOrderValid = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_PORDER);
 		this.searchPurchaseForm.isInputPaymentValid = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_PAYMENT);
 
-		
+		// 検索対象プルダウンの初期値を設定
 		searchPurchaseForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// ソートカラムの初期値を設定
 		searchPurchaseForm.sortColumn = SearchPurchaseService.Param.SUPPLIER_SLIP_ID;
 
-		
+		// 検索結果表示項目の取得
 		columnInfoList = detailDispItemService.createResult(null, null, this
 				.getSearchMenuID(), searchPurchaseForm.searchTarget);
 	}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.report;
 
 import java.util.List;
@@ -58,10 +57,10 @@ public class ReferenceHistoryAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception{
-		
+		// プルダウンの初期化
 		initList();
 
-		
+		// 出力対象プルダウンの初期値を設定
 		referenceHistoryForm.outputTarget = Constants.REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE;
 
 		return ReferenceHistoryAction.Mapping.INPUT;

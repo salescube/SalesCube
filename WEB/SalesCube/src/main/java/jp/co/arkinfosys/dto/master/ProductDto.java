@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.master;
 
 /**
@@ -197,17 +196,17 @@ public class ProductDto implements MasterEditDto {
 	 */
 	public String discountUpdDatetm;
 
-	
+	// 単位表示名
 	public String unitCategoryName;
-	
+	// 重量単位表示名
 	public String weightUnitSizeCategoryName;
-	
+	// 長さ単位表示名
 	public String lengthUnitSizeCategoryName;
-	
+	// サイズ幅単位表示名
 	public String widthUnitSizeCategoryName;
-	
+	// サイズ奥行単位表示名
 	public String depthUnitSizeCategoryName;
-	
+	// サイズ高さ単位表示名
 	public String heightUnitSizeCategoryName;
 
 	/**

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class InvoiceDataWorkService extends AbstractService<InvoiceDataWork>{
 			BeanMap shipWorkDtoMap = Beans.createAndCopy(BeanMap.class, shipWorkDto).execute();
 			param.putAll(shipWorkDtoMap);
 
-			
+			// データ登録
 			this.updateBySqlFile("invoicedatawork/InsertInvoiceDataWork.sql", param).execute();
 
 		} catch (Exception e) {

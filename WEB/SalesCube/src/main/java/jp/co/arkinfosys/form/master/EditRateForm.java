@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class EditRateForm extends AbstractEditForm {
 	/** レートデータ */
 	public List<RateTrnDto> rateTrnList = new ArrayList<RateTrnDto>();
 
-	
+	// レートデータ検索用
 
 	/** レートデータの件数 */
 	public int rateTrnListSize;
@@ -80,75 +79,75 @@ public class EditRateForm extends AbstractEditForm {
 		String labelRemarks = MessageResourcesUtil.getMessage("labels.rate.remarks");
 		String labelTrnRemarks = MessageResourcesUtil.getMessage("labels.ratetrn.remarks");
 
-		
-		
+		// 長さチェック
+		// レートタイプ名称
 		checkMaxLength(name, 60, labelName, errors);
 
-		
+		// 記号
 		checkMaxLength(sign, 1, labelSign, errors);
 
-		
+		// レートタイプ備考
 		checkMaxLength(remarks, 120, labelRemarks, errors);
 
-		
-		
-		
+		//
+		// レートデータチェック
+		//
 		if (this.rateTrnList != null) {
 			int index = 1;
 			Map<String, Object> checkMap = new TreeMap<String, Object>();
 			for (RateTrnDto trn : this.rateTrnList) {
-				
-				
-				
+				//
+				// 必須
+				//
 
-				
+				// 適用開始日
 				if (this.editMode) {
 					if (checkRequired(index, trn.startDate, labelStartDate, errors)) {
-						
+						// 型チェック
 						checkDate(index, trn.startDate, labelStartDate, errors);
 					}
 				} else {
 					if (checkRequired(trn.startDate, labelStartDate, errors)) {
-						
+						// 型チェック
 						checkDate(trn.startDate, labelStartDate, errors);
 					}
 				}
 
-				
+				// レート
 				if (this.editMode) {
 					if (checkRequired(index, trn.rate, labelRate, errors)) {
-						
+						// 型チェック
 						/**
 						 * 当該カラムのDB設計DECIMAL(8,3)に従い5+3形式のDECIMAL型Checkを採用する。
 						 * ---以下参照---
 						 * DECIMAL(M,D) カラムは小数点の左側に最大M – D 桁を容認します。
-						 * http:
+						 * http://dev.mysql.com/doc/refman/5.1/ja/precision-math-decimal-changes.html
 						 */
 						checkDecimal5_3(index, trn.rate, labelRate, errors);
 					}
 				} else {
 					if (checkRequired(trn.rate, labelRate, errors)) {
-						
+						// 型チェック
 						checkDecimal5_3(trn.rate, labelRate, errors);
 					}
 				}
 
-				
-				
-				
+				//
+				// 長さ
+				//
 
-				
+				// レートデータ備考
 				if (this.editMode) {
 					checkMaxLength(index, trn.remarks, 120, labelTrnRemarks, errors);
 				} else {
 					checkMaxLength(trn.remarks, 120, labelTrnRemarks, errors);
 				}
 
-				
+				// 重複
 				if (checkMap.containsKey(trn.startDate)) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 							"errors.doubleStartDate"));
-					
+					// ここまで
 					break;
 				}
 				checkMap.put(trn.startDate, trn);

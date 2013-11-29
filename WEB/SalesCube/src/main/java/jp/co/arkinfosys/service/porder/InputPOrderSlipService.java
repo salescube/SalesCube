@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	 * パラメータ定義クラスです.
 	 *
 	 */
-	
+	// 独自に代入あるいはチェックすべきパラメータ(DB対応有)
 	public static class Param {
 		public static final String PO_SLIP_ID = "poSlipId";
 		public static final String PO_DATE = "poDate";
@@ -73,7 +72,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	 * ローカルのみで使用するパラメータ定義クラスです.
 	 *
 	 */
-	
+	// その他ローカルでしか使わないパラメータ(DB対応無)
 	public static class ParamLocal {
 		public static final String productIsExist = "productIsExist";
 		public static final String PO_LINE_STATUS = "poLineStatusCategory";
@@ -91,28 +90,28 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	 */
 	public static final String COLUMN_PO_SLIP_ID = "PO_SLIP_ID";
 
-	
+	// 発番エラー検出用初期値
 	public static final Long DEFAULT_ID = -1L;
-	
+	// 有効明細行無しの場合の戻り値
 	public static final Long NO_VALID_LINE = -2L;
-	
+	// 発番エラー時の戻り値
 	public static final Long CANNOT_GET_ID = DEFAULT_ID;
-	
+	// 伝票登録失敗時の戻り値
 	public static final Long CANNOT_CREATE_SLIP = -3L;
 	public static final Long CANNOT_UPDATE_SLIP = CANNOT_CREATE_SLIP;
 	public static final Long CANNOT_DELETE_SLIP = CANNOT_CREATE_SLIP;
-	
+	// アクションフォームに対応する値がないです
 	public static final Long LACK_OF_VALUES = -4L;
 
-	
+	// 発番のため
 	@Resource
 	private SeqMakerService seqMakerService;
 
-	
+	// 仕入先情報取得のため
 	@Resource
 	private SupplierService supplierService;
 
-	
+	// 年月度取得のため
 	@Resource
 	protected YmService ymService;
 
@@ -129,10 +128,10 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	public int deleteById(String id, String updDatetm) throws ServiceException,
 			UnabledLockException {
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(Param.PO_SLIP_ID, id, updDatetm, "porder/LockPOrderSlipByPOSlipId.sql");
 
-		
+		// 伝票番号を指定して発注伝票を削除する
 		Map<String, Object> param = createSqlParam();
 		param.put(Param.PO_SLIP_ID, id);
 		this.updateBySqlFile("porder/DeletePOrderSlip.sql", param)
@@ -166,14 +165,14 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	 */
 	private Map<String, Object> setEntityToParam(PoSlipTrn entity){
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class,entity).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -189,7 +188,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	@Override
 	protected int insertRecord(InputPOrderSlipDto dto) throws ServiceException {
 		try {
-			
+			// 伝票番号発番
 			Long newPoSlipId = DEFAULT_ID;
 			newPoSlipId = seqMakerService.nextval(PoSlipTrn.TABLE_NAME);
 			if (newPoSlipId.equals(DEFAULT_ID)) {
@@ -239,7 +238,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 						"poDate", "deliveryDate").dateConverter(
 						Constants.FORMAT.TIMESTAMP, "updDatetm", "creDatetm").execute();
 				SupplierJoin supplier = supplierService.findById(dto.supplierCode);
-				
+				//外貨通貨記号
 				dto.defaultCUnit = supplier.cUnitSign;
 
 				setSlipPaymentStatus(dto);
@@ -265,10 +264,10 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 	public int save(InputPOrderSlipDto dto, AbstractService<?>... abstractServices)
 			throws ServiceException, UnabledLockException {
 
-		
+		// 見積年度、月度、年月度を計算
 		YmDto ymDto = ymService.getYm(dto.poDate);
 		if (ymDto == null) {
-			
+			// DTOの中身を空にしておく
 			dto.poAnnual = "";
 			dto.poMonthly = "";
 			dto.poYm = "";
@@ -281,10 +280,10 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 		int lockResult = LockResult.SUCCEEDED;
 
 		if ( !StringUtil.hasLength(dto.poSlipId) ) {
-			
+			// 見積を登録する
 			insertRecord(dto);
 		} else {
-			
+			// 見積を更新する
 			lockResult = updateRecord(dto);
 		}
 		return lockResult;
@@ -307,7 +306,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 			.dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm")
 			.excludesWhitespace().execute();
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(Param.PO_SLIP_ID, entity.poSlipId, entity.updDatetm, "porder/LockPOrderSlipByPOSlipId.sql");
 
 		Map<String, Object> param = setEntityToParam(entity);
@@ -326,20 +325,20 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 		dto.slipPaymentDate = "";
 
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.PO_SLIP_ID,
 					dto.poSlipId);
 
-			
+			// 未払い
 			param.put(ParamLocal.UNPAID, MessageResourcesUtil
 					.getMessage("labels.slipPaymentStatus.unpaid"));
-			
+			// 済
 			param.put(ParamLocal.PAID, MessageResourcesUtil
 					.getMessage("labels.slipPaymentStatus.paid"));
-			
+			// 発注伝票状態 仕入完了：Constants.STATUS_PORDER_SLIP.PURCHASED
 			param.put(ParamLocal.STATUS_PORDER_SLIP_PURCHASED, Constants.STATUS_PORDER_SLIP.PURCHASED);
-			
+			// 仕入伝票状態 未払い：Constants.STATUS_SUPPLIER_SLIP.UNPAID
 			param.put(ParamLocal.STATUS_SUPPLIER_SLIP_UNPAID, Constants.STATUS_SUPPLIER_SLIP.UNPAID);
 
 			PoSlipTrnJoin poSlipTrnJoin = this.selectBySqlFile(

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class SearchRackDialogAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 棚区分リスト
 		this.searchRackDialogForm.rackCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.RACK_CATEGORY);
 		this.searchRackDialogForm.rackCategoryList.add(0, new LabelValueBean());
@@ -81,7 +80,7 @@ public class SearchRackDialogAction extends
 	protected List<RackDto> exchange(List<RackJoin> entityList)
 			throws Exception {
 		List<RackDto> rackDtoList = super.exchange(entityList);
-		
+		// 棚に属する商品の情報を追加する
 		this.rackService.addProductInfoToRackDto(rackDtoList);
 		return rackDtoList;
 	}

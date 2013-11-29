@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.math.BigDecimal;
@@ -107,14 +106,14 @@ public class EditCustomerRankForm extends AbstractEditForm {
 		String labelRoMonthlyAvgTo = MessageResourcesUtil
 				.getMessage("labels.roMonthlyAvgTo");
 
-		
-		
-		
+		//
+		// 長さ
+		//
 
-		
+		// 顧客ランク名 60文字
 		checkMaxLength(rankName, 60, labelRankName, errors);
 
-		
+		// 売上回数
 		boolean isError = true;
 		if (StringUtil.hasLength(roCountFrom)) {
 			isError = !checkInteger(roCountFrom, labelRoCountFrom, errors);
@@ -123,7 +122,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			isError = !checkInteger(roCountTo, labelRoCountTo, errors)
 					|| isError;
 		}
-		
+		// 整合性チェック
 		if (!isError && StringUtil.hasLength(roCountFrom)
 				&& StringUtil.hasLength(roCountTo)) {
 			int roCountFromVal = Integer.parseInt(roCountFrom);
@@ -135,7 +134,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			}
 		}
 
-		
+		// 在籍期間
 		isError = true;
 		if (StringUtil.hasLength(enrollTermFrom)) {
 			isError = !checkIntegerPlus(enrollTermFrom, labelEnrollTermFrom,
@@ -145,7 +144,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			isError = !checkIntegerPlus(enrollTermTo, labelEnrollTermTo, errors)
 					|| isError;
 		}
-		
+		// 整合性チェック
 		if (!isError && StringUtil.hasLength(enrollTermFrom)
 				&& StringUtil.hasLength(enrollTermTo)) {
 			int enrollTermFromVal = Integer.parseInt(enrollTermFrom);
@@ -157,7 +156,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			}
 		}
 
-		
+		// 離脱期間
 		isError = true;
 		if (StringUtil.hasLength(defectTermFrom)) {
 			isError = !checkIntegerPlus(defectTermFrom, labelDefectTermFrom,
@@ -167,7 +166,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			isError = !checkIntegerPlus(defectTermTo, labelDefectTermTo, errors)
 					|| isError;
 		}
-		
+		// 整合性チェック
 		if (!isError && StringUtil.hasLength(defectTermFrom)
 				&& StringUtil.hasLength(defectTermTo)) {
 			int defectTermFromVal = Integer.parseInt(defectTermFrom);
@@ -179,7 +178,7 @@ public class EditCustomerRankForm extends AbstractEditForm {
 			}
 		}
 
-		
+		//月平均売上額
 		isError = true;
 		if (StringUtil.hasLength(roMonthlyAvgFrom)) {
 			isError = !checkDecimal(roMonthlyAvgFrom, labelRoMonthlyAvgFrom,

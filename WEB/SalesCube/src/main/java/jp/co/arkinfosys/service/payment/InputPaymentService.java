@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.payment;
 
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	protected int updateRecord(InputPaymentDto dto) throws UnabledLockException, ServiceException {
 		PaymentSlipTrn entity = Beans.createAndCopy(PaymentSlipTrn.class, dto).execute();
 
-		
+		// 排他制御を行う
 		int lockResult = this.lockPaymentRecord(dto);
 
 		Map<String, Object> param = setEntityToParam(entity);
@@ -171,7 +170,7 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 				InputPaymentDto dto = new InputPaymentDto();
 				Beans.copy(entity, dto).dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm").execute();
 
-				
+				// 外貨記号を取得
 				if(StringUtil.hasLength(dto.rateId)){
 					Rate rate = rateService.findById(dto.rateId);
 					dto.cUnitSign = rate.sign;
@@ -199,7 +198,7 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 */
 	@Override
 	public int save(InputPaymentDto dto, AbstractService<?>... abstractServices) throws ServiceException, UnabledLockException {
-		
+		// 支払日から支払年度、支払月度、支払年月度を取得する
 		YmDto ymDto = ymService.getYm(dto.paymentDate);
 		if(ymDto == null) {
 			dto.paymentAnnual = "";
@@ -211,7 +210,7 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 			dto.paymentYm = ymDto.ym.toString();
 		}
 
-		
+		// 外貨伝票合計が空欄の場合、0に変換してDBに設定する
 		if("".equals(dto.fePriceTotal)) {
 			dto.fePriceTotal = "0";
 		}
@@ -219,14 +218,14 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 		int lockResult = LockResult.SUCCEEDED;
 
 		if(dto.paymentSlipId == null || dto.paymentSlipId.length() == 0) {
-			
+			// 支払IDを採番する
 			dto.paymentSlipId = Long.toString(seqMakerService.nextval(PaymentSlipTrn.TABLE_NAME));
 
-			
+			// 支払伝票を登録する
 			insertRecord(dto);
 
 		} else {
-			
+			// 支払伝票を更新する
 			lockResult = updateRecord(dto);
 		}
 
@@ -241,61 +240,61 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	private Map<String, Object> setEntityToParam(PaymentSlipTrn entity) {
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// 支払伝票番号
 		param.put(InputPaymentService.Param.PAYMENT_SLIP_ID, entity.paymentSlipId);
 
-		
+		// 状態フラグ
 		param.put(InputPaymentService.Param.STATUS, entity.status);
 
-		
+		// 支払日
 		param.put(InputPaymentService.Param.PAYMENT_DATE, entity.paymentDate);
 
-		
+		// 担当者コード
 		param.put(InputPaymentService.Param.USER_ID, entity.userId);
 
-		
+		// 担当者名
 		param.put(InputPaymentService.Param.USER_NAME, entity.userName);
 
-		
+		// 仕入先コード
 		param.put(InputPaymentService.Param.SUPPLIER_CODE, entity.supplierCode);
 
-		
+		// 仕入先名称
 		param.put(InputPaymentService.Param.SUPPLIER_NAME, entity.supplierName);
 
-		
+		// レートタイプ
 		param.put(InputPaymentService.Param.RATE_ID, entity.rateId);
 
-		
+		// 伝票合計金額
 		param.put(InputPaymentService.Param.PRICE_TOTAL, entity.priceTotal);
 
-		
+		// 伝票合計外貨金額
 		param.put(InputPaymentService.Param.FE_PRICE_TOTAL, entity.fePriceTotal);
 
-		
+		// 発注伝票番号
 		param.put(InputPaymentService.Param.PO_SLIP_ID, entity.poSlipId);
 
-		
+		// 備考
 		param.put(InputPaymentService.Param.REMARKS, entity.remarks);
 
-		
+		// 支払年度
 		param.put(InputPaymentService.Param.PAYMENT_ANNUAL, entity.paymentAnnual);
 
-		
+		// 支払月度
 		param.put(InputPaymentService.Param.PAYMENT_MONTHLY, entity.paymentMonthly);
 
-		
+		// 支払年月度
 		param.put(InputPaymentService.Param.PAYMENT_YM, entity.paymentYm);
 
-		
+		// 税転嫁
 		param.put(InputPaymentService.Param.TAX_SHIFT_CATEGORY, entity.taxShiftCategory);
 
-		
+		// 税端数処理
 		param.put(InputPaymentService.Param.TAX_FRACT_CATEGORY, entity.taxFractCategory);
 
-		
+		// 単価端数処理
 		param.put(InputPaymentService.Param.PRICE_FRACT_CATEGORY, entity.priceFractCategory);
 
-		
+		// 買掛残高番号
 		param.put(InputPaymentService.Param.APT_BALANCE_ID, null);
 
 		return param;
@@ -320,11 +319,11 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws UnabledLockException
 	 */
 	public int lockSupplierRecord(InputPaymentDto dto) throws ServiceException, UnabledLockException {
-		
+		// 仕入伝票IDと更新時間のマップを取得する
 		Map<String, String> supplierMap = dto.getSupplierSlipIdAndUpdateTime();
 		Iterator<String> iterator = supplierMap.keySet().iterator();
 
-		
+		// 関連レコードをすべてロックする
 		while(iterator.hasNext()) {
 			String id = iterator.next();
 			String updDateTm = supplierMap.get(id);
@@ -342,52 +341,52 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws UnabledLockException
 	 */
 	public void updateSupplierForUpdate(InputPaymentDto dto) throws ServiceException, UnabledLockException {
-		
+		// 仕入伝票テーブルロック
 		this.lockSupplierRecord(dto);
 
-		
+		// 更新対象の仕入伝票番号を取得(同じ値が入る可能性があるためHashSetを使用)
 		HashSet<String> supIdList = new HashSet<String>();
 		for(InputPaymentLineDto line : dto.getLineDtoList()) {
-			
+			// チェックされている支払明細が保持している仕入番号のみを取得する
 			if(line.checkPayLine) {
 				supIdList.add(line.supplierSlipId);
 			}
 		}
 
-		
+		// パラメータを設定
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// 仕入伝票テーブル更新処理
 		for(String supId : supIdList) {
 
-			
+			// 全ての明細が支払われた場合は支払済みとし、１つでも支払済みとならなかった支払明細がある場合は支払中とする。
 			if(isAllPaidSupplierSlip(dto, supId)) {
-				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAID);
+				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAID);// 支払済
 			} else {
-				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAYING);
+				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAYING);// 支払中
 			}
 
-			param.put(InputPaymentService.Param.SUPPLIER_SLIP_ID, supId);
-			param.put(InputPaymentService.Param.PAYMENT_SLIP_ID, dto.paymentSlipId);
+			param.put(InputPaymentService.Param.SUPPLIER_SLIP_ID, supId);// 仕入伝票ID
+			param.put(InputPaymentService.Param.PAYMENT_SLIP_ID, dto.paymentSlipId);// 支払伝票ID
 			param.put(InputPaymentService.Param.PAYMENT_DATE, dto.paymentDate);
 
-			
+			// 仕入伝票更新
 			this.updateBySqlFile("payment/UpdateSupplierSlipTrnBySupplierSlipId.sql", param).execute();
 		}
 
-		
+		// 仕入伝票明細行更新処理
 		for(InputPaymentLineDto line : dto.getLineDtoList()) {
-			
+			// チェックされていない支払明細に紐付く仕入明細は変更しない
 			if(!line.checkPayLine) {
 				continue;
 			}
 
-			
-			param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_LINE.PAID);
-			param.put(InputPaymentService.Param.SUPPLIER_LINE_ID, line.supplierLineId);
-			param.put(InputPaymentService.Param.PAYMENT_LINE_ID, line.paymentLineId); 
+			// 仕入伝票明細行の更新パラメータを設定
+			param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_LINE.PAID);// 支払済
+			param.put(InputPaymentService.Param.SUPPLIER_LINE_ID, line.supplierLineId);// 仕入伝票行ID
+			param.put(InputPaymentService.Param.PAYMENT_LINE_ID, line.paymentLineId); // 支払伝票行ID
 
-			
+			// 仕入伝票明細行更新
 			this.updateBySqlFile("payment/UpdateSupplierLineTrnBySupplierLineId.sql", param).execute();
 		}
 	}
@@ -400,39 +399,39 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws UnabledLockException
 	 */
 	public void updateSupplierForDelete(InputPaymentDto dto) throws ServiceException, UnabledLockException {
-		
+		// 更新対象の仕入伝票番号を取得(同じ値が入る可能性があるためHashSetを使用)
 		HashSet<String> supIdList = new HashSet<String>();
 		for(InputPaymentLineDto line : dto.getLineDtoList()) {
 			supIdList.add(line.supplierSlipId);
 		}
 
-		
+		// 仕入伝票を更新する
 		Map<String, Object> param = super.createSqlParam();
 
 		for(String supId : supIdList) {
-			
+			// 仕入伝票の更新パラメータを設定
 			param.put(InputPaymentService.Param.SUPPLIER_SLIP_ID, supId);
 			param.put(InputPaymentService.Param.PAYMENT_SLIP_ID, null);
 			param.put(InputPaymentService.Param.PAYMENT_DATE, null);
 
-			
+			// 削除した支払伝票以外に、同一の仕入伝票に対する支払伝票が存在する場合支払中とし、なければ未払いとする
 			if(countPaymentSlipBySupplierSlipId(supId) > 0) {
-				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAYING);
+				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.PAYING);// 支払中
 			} else {
-				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.UNPAID);
+				param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.UNPAID);// 未払い
 			}
-			
+			// 仕入伝票更新
 			this.updateBySqlFile("payment/UpdateSupplierSlipTrnBySupplierSlipId.sql", param).execute();
 		}
 
-		
+		// 仕入伝票明細行を更新
 		for(InputPaymentLineDto lineDto : dto.getLineDtoList()) {
-			
-			param.put(InputPaymentService.Param.SUPPLIER_LINE_ID, lineDto.supplierLineId);
+			// パラメータを設定する
+			param.put(InputPaymentService.Param.SUPPLIER_LINE_ID, lineDto.supplierLineId);// 仕入伝票明細行ID
 			param.put(InputPaymentService.Param.PAYMENT_LINE_ID, null);
-			param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_LINE.UNPAID);
+			param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_LINE.UNPAID);// 未払い
 
-			
+			// 仕入伝票明細行
 			this.updateBySqlFile("payment/UpdateSupplierLineTrnBySupplierLineId.sql", param).execute();
 		}
 	}
@@ -472,12 +471,12 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws ServiceException
 	 */
 	public int searchUnpaidSupplierSlipCount(String poSlipId) throws ServiceException {
-		
+		// パラメータ設定
 		Map<String, Object> param = super.createSqlParam();
 		param.put(InputPaymentService.Param.PO_SLIP_ID, poSlipId);
 		param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_SLIP.UNPAID);
 
-		
+		// 未払いの仕入伝票を検索
 		return this.selectBySqlFile(Integer.class, "payment/searchUnpaidSupplierSlipCount.sql", param).getSingleResult();
 	}
 
@@ -489,31 +488,31 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws ServiceException
 	 */
 	public InputPaymentDto findByPoSlipId(String poSlipId) throws ServiceException {
-		
+		// 発注伝票データ取得
 		PoSlipJoin po = getPoSlipTrn(poSlipId);
 
-		
+		// 検索結果が0件の場合はnullを返す
 		if(po == null) {
 			return null;
 		}
 
-		
+		// 仕入先情報取得
 		SupplierJoin supplier = this.supplierService.findById(po.supplierCode);
 		String paymentCategory = this.convertPaymentTypeCategory(supplier.paymentTypeCategory);
 
-		
+		// 発注伝票明細データ取得
 		List<PoSlipLineJoin> poList = getPoSlipLine(poSlipId);
 
-		
+		// Entity情報をDTOにコピーする
 		InputPaymentDto payTrnDto = Beans.createAndCopy(InputPaymentDto.class, po).dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm").execute();
 
-		
+		// 数量端数処理
 		Converter numConv = new NumberConverter(super.mineDto.productFractCategory, super.mineDto.numDecAlignment, true);
 
-		
+		// 円単価端数処理
 		Converter yenConv = new NumberConverter(payTrnDto.priceFractCategory, 0, true);
 
-		
+		// 外貨単価端数処理
 		Converter dolConv = new NumberConverter(payTrnDto.priceFractCategory, super.mineDto.unitPriceDecAlignment, true);
 
 		List<InputPaymentLineDto> lineList = new ArrayList<InputPaymentLineDto>();
@@ -524,10 +523,10 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 		}
 		payTrnDto.setLineDtoList(lineList);
 
-		
+		// 先頭の明細行の消費税率を伝票にセットする
 		payTrnDto.supplierTaxRate = payTrnDto.getLineDtoList().get(0).ctaxRate;
 
-		
+		// 通貨記号をセットする
 		payTrnDto.cUnitSign = supplier.cUnitSign;
 
 		return payTrnDto;
@@ -556,7 +555,7 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws ServiceException
 	 */
 	protected PoSlipJoin getPoSlipTrn(String poSlipId) throws ServiceException {
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(InputPaymentService.Param.PO_SLIP_ID, poSlipId);
 
@@ -572,12 +571,12 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 	 * @throws ServiceException
 	 */
 	protected List<PoSlipLineJoin> getPoSlipLine(String poSlipId) throws ServiceException {
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(InputPaymentService.Param.PO_SLIP_ID, poSlipId);
 		param.put(InputPaymentService.Param.STATUS, Constants.STATUS_SUPPLIER_LINE.UNPAID);
 
-		
+		// 仕入伝票のうち、未払いの明細情報のみ取得
 		return this.selectBySqlFile(PoSlipLineJoin.class, "payment/FindPoSlipLineByPoSlipId.sql", param).getResultList();
 	}
 

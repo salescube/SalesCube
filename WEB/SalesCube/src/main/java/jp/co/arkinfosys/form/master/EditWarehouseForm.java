@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -112,47 +111,47 @@ public class EditWarehouseForm extends AbstractEditForm {
 		
 		ActionMessages errors = new ActionMessages();
 
-		
+		// 必須チェックは@Requiredで済んでいる
 
-		
-		
+		// 長さチェック
+		// 倉庫コード　10文字
 		checkMaxLength(warehouseCode, CODE_SIZE.WAREHOUSE, labelWarehouseCode, errors);
-		
+		// 倉庫名　60文字
 		checkMaxLength(warehouseName, 60, labelWarehouseName, errors);
-		
+		// 　8文字
 		checkMaxLength(warehouseZipCode, 8, labelZipCode, errors);
-		
+		// 住所１　50文字
 		checkMaxLength(warehouseAddress1, 50, labelAddress1, errors);
-		
+		// 住所２　50文字
 		checkMaxLength(warehouseAddress2, 50, labelAddress2, errors);
-		
+		// TEL　15文字
 		checkMaxLength(warehouseTel, 15, labelWarehouseTel, errors);
-		
+		// FAX　15文字
 		checkMaxLength(warehouseFax, 15, labelWarehouseFax, errors);
-		
+		// 管理者名　60文字
 		checkMaxLength(managerName, 60, labelManagerName, errors);
-		
+		// 管理者カナ　60文字
 		checkMaxLength(managerKana, 60, labelManagerKana, errors);
-		
+		// Tel　15文字
 		checkMaxLength(managerTel, 15, labelManagerTel, errors);
-		
+		// FAX　15文字
 		checkMaxLength(managerFax, 15, labelManagerFax, errors);
-		
+		// E-MAIL　60文字
 		checkMaxLength(managerEmail, 60, labelManagerEmail, errors);
-		
+		// 状態　10文字
 		checkMaxLength(warehouseState, 10, labelWarehouseState, errors);
 
 		/** 倉庫から削除しないrackCodeリスト */
 		Set<String> rackCodes = new HashSet<String>();
 		
-		
+		//必須・型チェック
 		int index = 0;
 		for (EditRackForm editRackForm : editRackList) {
 			index++;
-			
+			// 棚番コード
 			checkRequired(index, editRackForm.rackCode, labelRackCode, errors);
 			checkMaxLength(index, editRackForm.rackCode, 10, labelRackCode, errors);
-			
+			// 棚番名
 			checkRequired(index, editRackForm.rackName, labelRackName, errors);
 			checkMaxLength(index, editRackForm.rackName, 60, labelRackName, errors);
 			
@@ -162,11 +161,11 @@ public class EditWarehouseForm extends AbstractEditForm {
 			
 			editRackForm.warehouseCode=warehouseCode;
 			
-			
+			// 棚番名追加
 			rackCodes.add(editRackForm.rackCode);
 		}
 
-		
+		// 棚番コードの重複チェック
 		for (int i = 0; i < editRackList.size(); i++) {
 			for (int j = i+1; j < editRackList.size(); j++) {
 				String srcCode = editRackList.get(i).rackCode;
@@ -181,7 +180,7 @@ public class EditWarehouseForm extends AbstractEditForm {
 			}
 		}
 
-		
+		// 削除された棚番の抽出
 		int count = rackCodesHist.size();
 		for(int i = 0; i < count ; i++) {
 			if(rackCodes.contains(rackCodesHist.get(i).rackCode)) {

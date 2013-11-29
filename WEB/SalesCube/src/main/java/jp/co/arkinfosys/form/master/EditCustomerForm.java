@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -25,8 +24,8 @@ import org.seasar.struts.util.MessageResourcesUtil;
  */
 public class EditCustomerForm extends AbstractEditForm {
 
-	
-	
+	// 基本情報
+	// 名称など
 	/** 顧客コード */
 	@Required
 	@Maxlength(maxlength = Constants.CODE_SIZE.CUSTOMER)
@@ -222,7 +221,7 @@ public class EditCustomerForm extends AbstractEditForm {
 
 	public String lastSalesCutoffDate;
 
-	
+	// リスト
 	/** 敬称 */
 	public List<LabelValueBean> preTypeCategoryList = new ArrayList<LabelValueBean>();
 
@@ -344,12 +343,12 @@ public class EditCustomerForm extends AbstractEditForm {
 	 * @return 表示するメッセージ
 	 */
 	public ActionMessages validate() {
-		
+		// 調整処理
 		if (customerUrl == null) {
 			customerUrl = "";
 		}
 
-		
+		// ラベル変数
 		String labelCustomerZipCode = MessageResourcesUtil
 				.getMessage("labels.customerZipCode");
 		String labelDelivery = MessageResourcesUtil
@@ -409,11 +408,11 @@ public class EditCustomerForm extends AbstractEditForm {
 
 		ActionMessages errors = new ActionMessages();
 
-		
+		// 納入先必須チェック
 		if (deliveryList != null && deliveryList.size() > 0) {
 			int index = 1;
 			for (DeliveryAndPre delivery : deliveryList) {
-				
+				// 調整処理
 				if (delivery.deliveryEmail == null) {
 					delivery.deliveryEmail = "";
 				}
@@ -424,16 +423,16 @@ public class EditCustomerForm extends AbstractEditForm {
 					delivery.remarks = "";
 				}
 
-				
+				// 納入先名
 				checkRequired(index, delivery.deliveryName, labelDeliveryName,
 						errors);
-				
+				// 納入先名カナ
 				checkRequired(index, delivery.deliveryKana, labelDeliveryKana,
 						errors);
-				
+				// 郵便番号
 				checkRequired(index, delivery.deliveryZipCode,
 						labelDeliveryZipCode, errors);
-				
+				// 住所１
 				checkRequired(index, delivery.deliveryAddress1,
 						labelDeliveryAddress1, errors);
 				index++;
@@ -443,8 +442,8 @@ public class EditCustomerForm extends AbstractEditForm {
 					"errors.required", labelDelivery));
 		}
 
-		
-		
+		// 請求先必須チェック
+		// 調整処理
 		if (billTo.deliveryEmail == null) {
 			billTo.deliveryEmail = "";
 		}
@@ -454,111 +453,111 @@ public class EditCustomerForm extends AbstractEditForm {
 		if (billTo.remarks == null) {
 			billTo.remarks = "";
 		}
-		
+		// 請求先名
 		checkRequired(billTo.deliveryName, labelBillName, errors);
-		
+		// 請求先名カナ
 		checkRequired(billTo.deliveryKana, labelBillKana, errors);
-		
+		// 郵便番号
 		checkRequired(billTo.deliveryZipCode, labelBillZipCode, errors);
-		
+		// 住所１
 		checkRequired(billTo.deliveryAddress1, labelBillAddress1, errors);
-		
+		// 敬称
 		checkRequired(billTo.deliveryPcPreCategory, labelBillPcPreTypeCategory,
 				errors);
 
-		
-		
-		
-		
-		
+		//
+		// 長さチェック
+		//
+		// 顧客コード
+		//checkLength(customerCode, Constants.CODE_SIZE.CUSTOMER, labelCustomerCode, errors);
 
-		
+		// 納入先長さチェック
 		if (deliveryList != null) {
 			int index = 1;
 			for (DeliveryAndPre delivery : deliveryList) {
-				
+				// 納入先名　60文字
 				checkMaxLength(index, delivery.deliveryName, 60,
 						labelDeliveryName, errors);
-				
+				// 納入先名カナ　60文字
 				checkMaxLength(index, delivery.deliveryKana, 60,
 						labelDeliveryKana, errors);
-				
+				// 事業所名　60文字
 				checkMaxLength(index, delivery.deliveryOfficeName, 60,
 						labelDeliveryOfficeName, errors);
-				
+				// 事業所名カナ　60文字
 				checkMaxLength(index, delivery.deliveryOfficeKana, 60,
 						labelDeliveryOfficeKana, errors);
-				
+				// 部署名　60文字
 				checkMaxLength(index, delivery.deliveryDeptName, 60,
 						labelDeliveryDeptName, errors);
-				
+				// 住所１　50文字
 				checkMaxLength(index, delivery.deliveryAddress1, 50,
 						labelDeliveryAddress1, errors);
-				
+				// 住所２　50文字
 				checkMaxLength(index, delivery.deliveryAddress2, 50,
 						labelDeliveryAddress2, errors);
-				
+				// 担当者　60文字
 				checkMaxLength(index, delivery.deliveryPcName, 60,
 						labelDeliveryPcName, errors);
-				
+				// 担当者カナ　60文字
 				checkMaxLength(index, delivery.deliveryPcKana, 60,
 						labelDeliveryPcKana, errors);
-				
+				// TEL　15文字
 				checkMaxLength(index, delivery.deliveryTel, 15,
 						labelDeliveryTel, errors);
-				
+				// FAX　15文字
 				checkMaxLength(index, delivery.deliveryFax, 15,
 						labelDeliveryFax, errors);
-				
+				// E-MAIL　255文字
 				checkMaxLength(index, delivery.deliveryEmail, 255,
 						labelDeliveryEmail, errors);
 				index++;
 			}
 		}
 
-		
-		
+		// 請求先長さチェック
+		// 請求先名　60文字
 		checkMaxLength(billTo.deliveryName, 60, labelBillName, errors);
-		
+		// 請求先名カナ　60文字
 		checkMaxLength(billTo.deliveryKana, 60, labelBillKana, errors);
-		
+		// 事業所名　60文字
 		checkMaxLength(billTo.deliveryOfficeName, 60, labelBillOfficeName,
 				errors);
-		
+		// 事業所名カナ　60文字
 		checkMaxLength(billTo.deliveryOfficeKana, 60, labelBillOfficeKana,
 				errors);
-		
+		// 部署名　60文字
 		checkMaxLength(billTo.deliveryDeptName, 60, labelBillDeptName, errors);
-		
+		// 住所１　50文字
 		checkMaxLength(billTo.deliveryAddress1, 50, labelBillAddress1, errors);
-		
+		// 住所２　50文字
 		checkMaxLength(billTo.deliveryAddress2, 50, labelBillAddress2, errors);
-		
+		// 担当者　60文字
 		checkMaxLength(billTo.deliveryPcName, 60, labelBillPcName, errors);
-		
+		// 担当者カナ　60文字
 		checkMaxLength(billTo.deliveryPcKana, 60, labelBillPcKana, errors);
-		
+		// TEL　15文字
 		checkMaxLength(billTo.deliveryTel, 15, labelBillTel, errors);
-		
+		// FAX　15文字
 		checkMaxLength(billTo.deliveryFax, 15, labelBillFax, errors);
-		
+		// E-MAIL　255文字
 		checkMaxLength(billTo.deliveryEmail, 255, labelBillEmail, errors);
 
-		
+		// 郵便番号チェック
 
-		
+		// 顧客の郵便番号
 		checkMaxLength(customerZipCode, 8, labelCustomerZipCode, errors);
 
 		if (deliveryList != null) {
 			int index = 1;
 			for (DeliveryAndPre delivery : deliveryList) {
-				
+				// 納入先の郵便番号
 				checkMaxLength(index, delivery.deliveryZipCode, 8,
 						labelDeliveryZipCode, errors);
 			}
 		}
 
-		
+		// 請求先の郵便番号
 		checkMaxLength(billTo.deliveryZipCode, 8, labelBillZipCode, errors);
 
 		return errors;

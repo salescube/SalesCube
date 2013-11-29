@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.bill;
 
 import java.text.ParseException;
@@ -47,7 +46,7 @@ public class CloseArtBalanceAction extends CommonResources {
 		public static final String INPUT = "closeArtBalance.jsp";
 	}
 
-	
+	// 画面とAction間でデータをやり取りするオブジェクトを定義する
 	@ActionForm
 	@Resource
 	public CloseArtBalanceForm closeArtBalanceForm;
@@ -67,7 +66,7 @@ public class CloseArtBalanceAction extends CommonResources {
 	@Resource
 	private ArtBalanceService artBalanceService;
 
-	
+	// 支払条件リストの内容
 	public List<LabelValueBean> cutoffGroupCategoryList = new ArrayList<LabelValueBean>();
 
 	private SimpleDateFormat DF_YMD = new SimpleDateFormat(Constants.FORMAT.DATE);
@@ -83,10 +82,10 @@ public class CloseArtBalanceAction extends CommonResources {
 	public String index() {
 		try {
 
-			
+			// 入力フォームを初期化する
 			closeArtBalanceForm.initialize();
 
-			
+			// 結果の再検索
 			findOther();
 
 		} catch (ServiceException e) {
@@ -108,16 +107,16 @@ public class CloseArtBalanceAction extends CommonResources {
 	public String close() {
 		try {
 
-			
+			// 全てのユーザに対する売掛残高締め処理を行う
 			ActionMessages msgs = artBalanceService.closeAll(closeArtBalanceForm.cutOffDate);
 			if( msgs.size() > 0 ){
 				ActionMessagesUtil.addMessages(super.httpRequest, msgs);
 			}
 
-			
+			// 結果の再検索
 			findOther();
 
-			
+			// 完了メッセージ
 			addMessage("infos.closeArtBalance.close");
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 		} catch (ServiceException e) {
@@ -157,15 +156,15 @@ public class CloseArtBalanceAction extends CommonResources {
 	public String reopen() throws Exception {
 		try {
 
-			
+			// 全顧客を順に締め解除する
 			ActionMessages msgs = artBalanceService.reOpenAll(closeArtBalanceForm.lastCutOffDate);
 			if( msgs.size() > 0 ){
 				ActionMessagesUtil.addMessages(super.httpRequest, msgs);
 			}
-			
+			// 結果の再検索
 			findOther();
 
-			
+			// 完了メッセージ
 			addMessage("infos.closeArtBalance.reopen");
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 		} catch (ServiceException e) {
@@ -186,7 +185,7 @@ public class CloseArtBalanceAction extends CommonResources {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errProc(e);
-
+//			throw e;
 			addMessage( e.getMessage() );
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 		}
@@ -204,7 +203,7 @@ public class CloseArtBalanceAction extends CommonResources {
 	 */
 	private void addMessage( String... arg  ) {
 
-		
+		// 第一引数にerrors.が入っていない時には文言が入っている
 		if(( arg[0].indexOf("errors.") < 0 )&&( arg[0].indexOf("infos.") < 0 )){
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage( "errors.none", arg[0]));
@@ -250,27 +249,27 @@ public class CloseArtBalanceAction extends CommonResources {
 	public ActionErrors validateCheckClose() {
 		ActionErrors errors = new ActionErrors();
 
-		
+		// 売掛締が1度も行われていない場合はエラーなし
 		if(closeArtBalanceForm.lastCutOffDate.length() == 0) {
 			return errors;
 		}
 
-		
+		// 締年度確定　値が変ならエラーで返す
 		YmDto ymDto;
 		try {
 			ymDto = ymService.getYm(closeArtBalanceForm.cutOffDate);
 			if( ymDto == null ){
 				throw new Exception();
 			}
-			
+			// 最終締日以前での締めはエラーとする
 			Date lcd = DF_YMD.parse(closeArtBalanceForm.lastCutOffDate);
-			Date pcd = DF_YMD.parse(closeArtBalanceForm.cutOffDate); 
+			Date pcd = DF_YMD.parse(closeArtBalanceForm.cutOffDate); // 締め処理日
 			if( !pcd.after(lcd) ){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.closeArtBalance.closeDate"));
 				return errors;
 			}
-			
+			// 同月での締めはエラーとする
 			YmDto ymLast = ymService.getYm(closeArtBalanceForm.lastCutOffDate);
 			if( ymLast.annual.equals( ymDto.annual )&& ymLast.monthly.equals( ymDto.monthly )){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -318,7 +317,7 @@ public class CloseArtBalanceAction extends CommonResources {
 	 */
 	protected void findOther() throws ServiceException {
 
-		
+		// 最も新しい売掛締め処理日を検索
 		Date lastDate = customerService.findLastCloseArtBalanceCutOffDate();
 		if( lastDate != null ){
 			SimpleDateFormat DF_YMD = new SimpleDateFormat(Constants.FORMAT.DATE);

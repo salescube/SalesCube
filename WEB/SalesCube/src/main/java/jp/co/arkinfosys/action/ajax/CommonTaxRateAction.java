@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 
@@ -50,7 +49,7 @@ public class CommonTaxRateAction extends CommonResources {
 	@Execute(validator = false, urlPattern = "getTaxRateByDate/{targetDate}")
 	public String getTaxRateByDate() throws Exception {
 
-		
+		//受け取った日付
 		if( !StringUtil.hasLength(commonDateForm.targetDate)){
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.condition.insufficiency"));
@@ -59,7 +58,7 @@ public class CommonTaxRateAction extends CommonResources {
 		}
 
 		String result = "";
-		
+		//レートを取得し返す
 		try {
 			String date = commonDateForm.targetDate.replaceAll("\\*", "/");
 			java.sql.Date sqlDate = new java.sql.Date(DF_YMD.parse(date).getTime());

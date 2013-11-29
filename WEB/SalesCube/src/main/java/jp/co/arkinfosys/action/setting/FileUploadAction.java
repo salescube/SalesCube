@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.io.InputStream;
@@ -59,16 +58,16 @@ public class FileUploadAction extends AbstractSearchAction<FileInfoDto> {
 		SizeLimitExceededException e = (SizeLimitExceededException) super.httpRequest
 				.getAttribute(S2MultipartRequestHandler.SIZE_EXCEPTION_KEY);
 		if (e != null) {
-			
+			// 他のエラーは削除
 			super.httpRequest.setAttribute(Globals.ERROR_KEY, null);
-			
+			// ファイルサイズエラーを書き込み
 			super.messages.add(
 					ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.upload.size", e
 							.getPermittedSize()));
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 	
-			
+			// 読みかけのファイルの残りを読む
 			InputStream is = null;
 			try {
 				is = this.httpRequest.getInputStream();
@@ -127,7 +126,7 @@ public class FileUploadAction extends AbstractSearchAction<FileInfoDto> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 公開範囲
 		this.fileUploadForm.openLevelList
 				.add(new LabelValueBean(MessageResourcesUtil
 						.getMessage("labels.file.valid.limitation"),
@@ -148,7 +147,7 @@ public class FileUploadAction extends AbstractSearchAction<FileInfoDto> {
 	@Execute(validator = true, validate = "validate", input = "index")
 	public String upload() throws Exception {
 		try {
-			
+			// ファイル情報登録
 			FileInfoDto dto = Beans.createAndCopy(FileInfoDto.class,
 					this.fileUploadForm).execute();
 			this.fileInfoService.insertRecord(dto);

@@ -1,1 +1,0 @@
-DELETE FROM DELIVERY_MST_/*$domainId*/ WHERE DELIVERY_CODE=/*deliveryCode*/

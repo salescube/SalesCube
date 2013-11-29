@@ -1,2 +1,0 @@
-SELECT
-        DATE_FORMAT(SYSDATE(),'%Y/%m/%d') AS PO_DATE

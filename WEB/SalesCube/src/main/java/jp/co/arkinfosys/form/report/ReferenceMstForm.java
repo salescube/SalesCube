@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.report;
 
 import jp.co.arkinfosys.common.StringUtil;
@@ -20,7 +19,7 @@ public class ReferenceMstForm {
 	 */
     public String outputTarget;
 
-     ////////
+     ////////// 顧客マスタ
     /**
      * 顧客コードFrom
      */
@@ -43,7 +42,7 @@ public class ReferenceMstForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo9;
 
-    ////////
+    ////////// 商品マスタ
     /**
      * 商品コードFrom
      */
@@ -66,7 +65,7 @@ public class ReferenceMstForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo10;
 
-    ////////
+    ////////// 仕入先マスタ
     /**
      * 仕入先コードFrom
      */
@@ -89,7 +88,7 @@ public class ReferenceMstForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo11;
 
-    ////////
+    ////////// 社員マスタ
     /**
      * 登録日From
      */
@@ -132,7 +131,7 @@ public class ReferenceMstForm {
 	 * @return 表示するメッセージ
 	 */
 	public ActionErrors validate() {
-		
+		// 数値項目，日付項目のトリム
 		creDateFrom9 = StringUtil.trimBlank(creDateFrom9);
 		creDateTo9 = StringUtil.trimBlank(creDateTo9);
 		creDateFrom10 = StringUtil.trimBlank(creDateFrom10);

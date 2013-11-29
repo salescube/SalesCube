@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -81,13 +80,13 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 	@Override
 	public void deleteRecord(CustomerRankDto dto) throws Exception {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.RANK_CODE, dto.rankCode);
 			this.lockRecordBySqlFile("customerrank/LockCustomerRank.sql",
 					param, dto.updDatetm);
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(Param.RANK_CODE, dto.rankCode);
 			this.updateBySqlFile("customerrank/DeleteCustomerRank.sql", param)
@@ -111,13 +110,13 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 			return;
 		}
 		try {
-			
+			// 顧客情報の登録
 			Map<String, Object> param = super.createSqlParam();
 
 			long newRankCode = seqMakerService.nextval(CustomerRank.TABLE_NAME);
 			dto.rankCode = String.valueOf(newRankCode);
 
-			
+			// データ調整
 			blankToNull(dto);
 
 			BeanMap customerRankInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -144,18 +143,18 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.RANK_CODE, dto.rankCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("customerrank/LockCustomerRank.sql", lockParam,
 				dto.updDatetm);
 
-		
+		// データ調整
 		blankToNull(dto);
 
-		
+		// 顧客情報の更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap customerRankInfo = Beans.createAndCopy(BeanMap.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
@@ -239,7 +238,7 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -266,7 +265,7 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 	public List<CustomerRank> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
 		return new ArrayList<CustomerRank>();
-		
+		// 未使用メソッド
 	}
 
 	/**
@@ -293,21 +292,21 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 顧客ランクコード
 		if (conditions.containsKey(Param.RANK_CODE)) {
 			param.put(Param.RANK_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(Param.RANK_CODE)));
 		}
 
-		
+		// 顧客ランク名
 		if (conditions.containsKey(Param.RANK_NAME)) {
 			param.put(Param.RANK_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(Param.RANK_NAME)));
 		}
 
-		
+		// 値引率１
 		if (conditions.containsKey(Param.RANK_RATE_1)) {
 			if (conditions.get(Param.RANK_RATE_1) != null) {
 				param
@@ -317,7 +316,7 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 			}
 		}
 
-		
+		// 値引率２
 		if (conditions.containsKey(Param.RANK_RATE_2)) {
 			if (conditions.get(Param.RANK_RATE_2) != null) {
 				param
@@ -327,23 +326,23 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 			}
 		}
 
-		
+		// 送料区分
 		if (conditions.containsKey(Param.POSTAGE_TYPE)) {
 			param.put(Param.POSTAGE_TYPE, conditions.get(Param.POSTAGE_TYPE));
 		}
-		
+		// ソートカラムを設定する
 		if (Param.RANK_CODE.equals(sortColumn)) {
-			
+			// 顧客ランクコード
 			param.put(Param.SORT_COLUMN_RANK, COLUMN_RANK_CODE);
 		} else if (Param.RANK_NAME.equals(sortColumn)) {
-			
+			// 顧客ランク名
 			param.put(Param.SORT_COLUMN_RANK, COLUMN_RANK_NAME);
 		} else if (Param.RANK_RATE.equals(sortColumn)) {
-			
+			// 値引率
 			param.put(Param.SORT_COLUMN_RANK, COLUMN_RANK_RATE);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {

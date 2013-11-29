@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.math.BigDecimal;
@@ -51,20 +50,20 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 * キー項目
 	 */
 	public static class Key {
-		public static final String PICKING_LIST_ID = "pickingListId";
-		public static final String SET_TYPE_CATEGORY = "setTypeCategory";
-		public static final String PRODUCT_CODE = "productCode";
-		public static final String SET_PRODUCT_CODE = "setProductCode";
-		public static final String QUANTITY= "quantity";
-		public static final String STOCK_NUM = "stockNum";
-		public static final String RACK_CODE_SRC = "rackCodeSrc";
-		public static final String PURCHASE_DATE_1 = "purchaseDate1";
-		public static final String PURCHASE_NUM_1 = "purchaseNum1";
-		public static final String PURCHASE_DATE_2 = "purchaseDate2";
-		public static final String PURCHASE_NUM_2 = "purchaseNum2";
-		public static final String STOCK_CTL_CATEGORY = "stockCtlCategory";
-		public static final String PRODUCT_ABSTRACT = "productAbstract";
-		public static final String PICKING_REMARKS = "pickingRemarks";
+		public static final String PICKING_LIST_ID = "pickingListId";// 出荷指示書番号
+		public static final String SET_TYPE_CATEGORY = "setTypeCategory";// セット商品フラグ
+		public static final String PRODUCT_CODE = "productCode";// 商品コード
+		public static final String SET_PRODUCT_CODE = "setProductCode";//親商品コード
+		public static final String QUANTITY= "quantity";// 数量
+		public static final String STOCK_NUM = "stockNum";// 現在庫数
+		public static final String RACK_CODE_SRC = "rackCodeSrc";// 出荷元棚番コード
+		public static final String PURCHASE_DATE_1 = "purchaseDate1";// 仕入予定１
+		public static final String PURCHASE_NUM_1 = "purchaseNum1";// 仕入予定数量１
+		public static final String PURCHASE_DATE_2 = "purchaseDate2";// 仕入予定２
+		public static final String PURCHASE_NUM_2 = "purchaseNum2";// 仕入予定数量２
+		public static final String STOCK_CTL_CATEGORY = "stockCtlCategory";// 在庫管理区分
+		public static final String PRODUCT_ABSTRACT = "productAbstract";// 商品名
+		public static final String PICKING_REMARKS = "pickingRemarks";// ピッキング備考
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 */
 	@Override
 	protected String getRealFilePreffix(int index){
-		
+		// データ件数以上は処理しない
 		if(index >= reportDataList.size()){
 			return null;
 		}
@@ -181,7 +180,7 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 */
 	@Override
 	protected String getReportId(int index) {
-		
+		// データ件数以上は処理しない
 		if(index >= reportDataList.size()){
 			return null;
 		}
@@ -201,29 +200,29 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 */
 	@Override
 	protected BeanMap getSlip(int index) throws ServiceException {
-		
+		// データ件数以上は処理しない
 		if(index >= reportDataList.size()){
 			return null;
 		}
 
-		
+		// パラメータを作成する
 		BeanMap params = Beans.createAndCopy(BeanMap.class, reportDataList.get(index)).execute();
 
-		
+		// 検索
 		String reportFile = reportDataList.get(index).reportFile;
 		BeanMap beanMap;
 
-		
+		// ピッキングリスト or 組み立て指示書の場合
 		if(REPORT_ID_J.equals(reportFile)
 				|| REPORT_ID_K.equals(reportFile)){
 			beanMap = outputSalesReportSheetService.findPickingSheetByCondition(params);
 
-			
+			// ピッキングリストが存在しない（移行データ等）場合、Nullを返す
 			if(beanMap == null){
 				return null;
 			}
 
-			
+			// 明細行の検索用に出荷指示書番号を保持しておく
 			pickingListIdMap.put(index, (Integer)beanMap.get("pickingListId"));
 		}else if(REPORT_ID_C.equals(reportFile)
 					|| REPORT_ID_G.equals(reportFile)){
@@ -232,10 +231,10 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 			beanMap = outputSalesReportSheetService.findSalesSheetByCondition(params);
 		}
 
-		
+		// 日付表示フラグを設定する
 		beanMap.put(DISP_DATE_FLAG, reportDataList.get(index).dispDateFlag);
 
-		
+		// 2010.04.23 add kaki 納品書兼領収書にて、取引区分が「クレジット」の場合のみ、クレジット決済コメントを表示する。
 		if(REPORT_ID_F.equals(reportFile)){
 			if(Constants.SALES_CM_CATEGORY_NAME.CATEGORY_CREDIT_CARD.equals(beanMap.get("salesCmCategory"))){
 				beanMap.put(DISP_CREDIT_CMT, true);
@@ -247,9 +246,9 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 
 		Customer customer = customerService.findCustomerByCode(beanMap.get("customerCode").toString());
 
-		
+		// 納品書(D)にて、下部のコメント（【請求書発行】お客様締日～）を設定する。
 		if(REPORT_ID_D.equals(reportFile)){
-			
+			// 請求書発行単位=請求締め単位の場合締日を設定する
 			if( CategoryTrns.BILL_PRINT_UNIT_BILL_CLOSE.equals(customer.billPrintUnit) ){
 				if(beanMap.get("billCutoffGroup").equals("31")){
 					beanMap.put(BILL_CUTOFF_DATE, "(" + Constants.BILL_CUTOFF_GROUP_NAME.CUTOFF_END + ")");
@@ -265,15 +264,15 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 			}
 		}
 		if((REPORT_ID_D.equals(reportFile))||(REPORT_ID_E.equals(reportFile))){
-			
+			//出力帳票が納品書か仮納品書の場合
 			beanMap.put(ID_HEAD_CLM, "");
 
-			
-			
+			// ヘッダ情報の出力制御
+			// テンプレートDのフッタ部分(Page Footer)にある「納品書に消費税額が含まれていないので請求書で別途請求する」旨の注意書きを出力するかどうかを設定する
 			if( CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP.equals(customer.billPrintUnit) ) {
-				beanMap.put(REPORT_D_FOOTER, "0");	
+				beanMap.put(REPORT_D_FOOTER, "0");	// 請求書発行単位が売上伝票単位の場合は出力しない
 			} else if( CategoryTrns.BILL_PRINT_UNIT_BILL_CLOSE.equals(customer.billPrintUnit) ) {
-				beanMap.put(REPORT_D_FOOTER, "1");	
+				beanMap.put(REPORT_D_FOOTER, "1");	// 請求書発行単位が請求締め単位の場合は出力する
 			}
 		}
 
@@ -291,29 +290,29 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 */
 	@Override
 	protected List<BeanMap> getDetailList(int index) throws ServiceException {
-		
+		// データ件数以上は処理しない
 		if(index >= reportDataList.size()){
 			return null;
 		}
 
-		
+		// パラメータを作成する
 		BeanMap params = Beans.createAndCopy(BeanMap.class, reportDataList.get(index)).execute();
 
-		
+		// 検索
 		String reportFile = reportDataList.get(index).reportFile;
 		List<BeanMap> beanMapList;
 		List<BeanMap> tempBeanMapList;
 
-		if(REPORT_ID_J.equals(reportFile)){
+		if(REPORT_ID_J.equals(reportFile)){// ピッキングリストの場合
 			params.put(Key.PICKING_LIST_ID, pickingListIdMap.get(index));
 			beanMapList = outputSalesReportSheetLineService.findPickingLineSheetByCondition(params);
 
-			
+			// 出荷指示明細行以外から取得するデータを設定
 			addPickingData(beanMapList);
 			PrintUtil.removeSpaceToExceptianalProductLine(beanMapList);
-		}else if(REPORT_ID_K.equals(reportFile)){
+		}else if(REPORT_ID_K.equals(reportFile)){// 組み立て指示書の場合
 			params.put(Key.PICKING_LIST_ID, pickingListIdMap.get(index));
-			params.put(Key.SET_TYPE_CATEGORY, CategoryTrns.PRODUCT_SET_TYPE_SET);
+			params.put(Key.SET_TYPE_CATEGORY, CategoryTrns.PRODUCT_SET_TYPE_SET);// セット商品フラグ:1 (「セット商品」)
 			tempBeanMapList = outputSalesReportSheetLineService.findPickingLineSheetByCondition(params);
 			beanMapList = createAssembleInstructiongData(tempBeanMapList);
 			PrintUtil.removeSpaceToExceptianalProductLine(beanMapList);
@@ -330,14 +329,14 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 *
 	 */
 	private void createReportFileData(){
-		
+		// レポート出力用のリストを作成
 		for(int i=0;i<resultList.size();i++){
 			OutputReportParamDto paramDto = resultList.get(i);
 
-			
+			// 出力帳票名をリスト化(csv⇒List)
 			paramDto.createFileCommaToList();
 
-			
+			// 出力帳票が選択されてない場合は印刷対象リストに追加しない
 			if(paramDto.reportFileList == null
 					|| paramDto.reportFileList.size() <= 0){
 				continue;
@@ -355,7 +354,7 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 					dataDto.dispDateFlag = Boolean.FALSE;
 				}
 
-				
+				// 行の終端には出力するExcelファイル名を設定する
 				if(Constants.REPORT_FORMAT.EXCEL.equals(printKind)
 						&& j+1 == paramDto.reportFileList.size()){
 					dataDto.outputFileName = "SALES" + dataDto.salesSlipId;
@@ -399,13 +398,13 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	public String excel() throws Exception {
 		this.printKind = Constants.REPORT_FORMAT.EXCEL;
 
-		
+		// 出力ファイルリスト作成
 		createReportFileData();
 
-		
+		// フラグの更新と履歴追加
 		updatePrintCount();
 
-		
+		// ファイル出力
 		return super.excel();
 	}
 
@@ -418,13 +417,13 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	public String pdf() throws Exception {
 		this.printKind = Constants.REPORT_FORMAT.PDF;
 
-		
+		// 出力ファイルリスト作成
 		createReportFileData();
 
-		
+		// フラグの更新と履歴追加
 		updatePrintCount();
 
-		
+		// ファイル出力
 		return super.pdf();
 	}
 
@@ -450,19 +449,19 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 		int i = 0;
 		for(i = 0 ; i < beanMapList.size() ; i++ ){
 			BeanMap beanMap = beanMapList.get(i);
-			String setTypeCategory = (String)beanMap.get(Key.SET_TYPE_CATEGORY);
-			String productCode = (String)beanMap.get(Key.PRODUCT_CODE); 
+			String setTypeCategory = (String)beanMap.get(Key.SET_TYPE_CATEGORY);// セット商品フラグ
+			String productCode = (String)beanMap.get(Key.PRODUCT_CODE); // 商品番号
 			if( SET_CHILD.equals(setTypeCategory)){
 				continue;
 			}
 
-			
-			beanMap.put(Key.PURCHASE_DATE_1, null);
-			beanMap.put(Key.PURCHASE_NUM_1, null);
-			beanMap.put(Key.PURCHASE_DATE_2, null);
-			beanMap.put(Key.PURCHASE_NUM_2, null);
+			// 追加するパラメータを初期化
+			beanMap.put(Key.PURCHASE_DATE_1, null);// 仕入予定１
+			beanMap.put(Key.PURCHASE_NUM_1, null);// 仕入予定数量１
+			beanMap.put(Key.PURCHASE_DATE_2, null);// 仕入予定２
+			beanMap.put(Key.PURCHASE_NUM_2, null);// 仕入予定数量２
 
-			
+			// セット商品でない場合は仕入予定１～２を設定する
 			if(!CategoryTrns.PRODUCT_SET_TYPE_SET.equals(setTypeCategory)){
 				List<BeanMap> scheduleList = poSlipService.findPurchaseSchedule(productCode);
 				for(BeanMap schedule : scheduleList) {
@@ -470,20 +469,20 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 					break;
 				}
 			}
-			
+			// 数量を取得
 			BigDecimal quantity = (BigDecimal)beanMap.get(Key.QUANTITY);
 
-			
+			// 現在庫数を設定
 			ProductJoin pj = productService.findById(productCode);
 			beanMap.put(Key.STOCK_NUM, null);
 			if( pj != null ){
-				if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ 
+				if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ // 在庫管理区分
 					StockInfoDto dto = productStockService.calcStockQuantityByProductCode(productCode);
-					
+					// 現在庫数はサービスが返す現在庫数＋この伝票明細行の数量とする
 					beanMap.put(Key.STOCK_NUM, new BigDecimal(dto.currentTotalQuantity).add(quantity));
 				}
 			}
-			
+			// セット品の場合には、展開して子部品のリストを作る
 			if(CategoryTrns.PRODUCT_SET_TYPE_SET.equals(setTypeCategory)){
 				List<BeanMap> childBeanMapList = addPickingChildData(beanMap);
 				int parentIndex = beanMapList.indexOf(beanMap);
@@ -504,34 +503,34 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 */
 	protected List<BeanMap> addPickingChildData(BeanMap parentBeanMap) throws ServiceException{
 
-		
+		// 結果セット
 		List<BeanMap> resultBeanList = new ArrayList<BeanMap>();
 		try{
 
-			String setProductCode = (String)parentBeanMap.get(Key.PRODUCT_CODE); 
+			String setProductCode = (String)parentBeanMap.get(Key.PRODUCT_CODE); // 商品番号
 			List<ProductSetJoin> productSetList = productSetService.findProductSetByProductCode(setProductCode);
 			for(ProductSetJoin productSet : productSetList){
 				BeanMap beanMap = new BeanMap();
-				
-				beanMap.put(Key.PRODUCT_CODE, null);
-				beanMap.put(Key.QUANTITY, null);
-				beanMap.put(Key.RACK_CODE_SRC, null);
-				beanMap.put(Key.PURCHASE_DATE_1, null);
-				beanMap.put(Key.PURCHASE_NUM_1, null);
-				beanMap.put(Key.PURCHASE_DATE_2, null);
-				beanMap.put(Key.PURCHASE_NUM_2, null);
+				// 設定するパラメータを初期化
+				beanMap.put(Key.PRODUCT_CODE, null);// 子商品コード
+				beanMap.put(Key.QUANTITY, null);// 数量
+				beanMap.put(Key.RACK_CODE_SRC, null);// 棚番号
+				beanMap.put(Key.PURCHASE_DATE_1, null);// 仕入予定１
+				beanMap.put(Key.PURCHASE_NUM_1, null);// 仕入予定数量１
+				beanMap.put(Key.PURCHASE_DATE_2, null);// 仕入予定２
+				beanMap.put(Key.PURCHASE_NUM_2, null);// 仕入予定数量２
 				beanMap.put(Key.STOCK_NUM, null);
-				beanMap.put(Key.PICKING_REMARKS, null);
+				beanMap.put(Key.PICKING_REMARKS, null);// ピッキング備考
 
-				
+				// セット品フラグに子を示すダミー値を設定
 				beanMap.put(Key.SET_TYPE_CATEGORY,SET_CHILD);
-				
+				// 子商品コード
 				beanMap.put(Key.PRODUCT_CODE,productSet.productCode);
-				
+				// 数量
 				BigDecimal parentQuantity = (BigDecimal)parentBeanMap.get(Key.QUANTITY);
 				beanMap.put(Key.QUANTITY, productSet.quantity.multiply( parentQuantity ) );
 
-				
+				// 仕入予定１～２
 				List<BeanMap> scheduleList = poSlipService.findPurchaseSchedule(productSet.productCode);
 				for(BeanMap schedule : scheduleList) {
 					beanMap.putAll(schedule);
@@ -540,18 +539,18 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 
 				ProductJoin pj = productService.findById(productSet.productCode);
 				if( pj != null ){
-					
+					// 棚番号
 					String rackCode = pj.rackCode;
 					beanMap.put(Key.RACK_CODE_SRC, rackCode);
-					
+					// 商品名
 					beanMap.put(Key.PRODUCT_ABSTRACT, pj.productName);
-					
+					// ピッキング備考
 					beanMap.put(Key.PICKING_REMARKS, pj.eadRemarks);
 
-					
-					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ 
+					// 現在庫数
+					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ // 在庫管理区分
 						StockInfoDto dto = productStockService.calcStockQuantityByProductCode(productSet.productCode);
-						
+						// 現在庫数は当伝票明細行の分を追加して表示する
 						beanMap.put(Key.STOCK_NUM, new BigDecimal(dto.currentTotalQuantity).add(productSet.quantity.multiply( parentQuantity )));
 					}else{
 						beanMap.put(Key.STOCK_NUM, null);
@@ -574,45 +573,45 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 	 * @throws Exception
 	 */
 	protected List<BeanMap> createAssembleInstructiongData(List<BeanMap> paramBeanMapList) throws ServiceException{
-		
+		// 結果セット
 		List<BeanMap> resultBeanList = new ArrayList<BeanMap>();
 
-		
+		// 出荷指示明細行データ（セット商品のみ）分処理を行う
 		for(BeanMap paramBeanMap : paramBeanMapList){
-			String setProductCode = (String)paramBeanMap.get(Key.PRODUCT_CODE); 
+			String setProductCode = (String)paramBeanMap.get(Key.PRODUCT_CODE); // 商品番号
 			List<ProductSetJoin> productSetList = productSetService.findProductSetByProductCode(setProductCode);
 			Boolean parentSet = false;
 			for(ProductSetJoin productSet : productSetList){
 				BeanMap beanMap = new BeanMap();
-				
-				beanMap.put(Key.SET_PRODUCT_CODE, null);
-				beanMap.put(Key.PRODUCT_CODE, null);
-				beanMap.put(Key.QUANTITY, null);
-				beanMap.put(Key.RACK_CODE_SRC, null);
-				beanMap.put(Key.PURCHASE_DATE_1, null);
-				beanMap.put(Key.PURCHASE_NUM_1, null);
-				beanMap.put(Key.PURCHASE_DATE_2, null);
-				beanMap.put(Key.PURCHASE_NUM_2, null);
+				// 設定するパラメータを初期化
+				beanMap.put(Key.SET_PRODUCT_CODE, null);// 親商品コード
+				beanMap.put(Key.PRODUCT_CODE, null);// 子商品コード
+				beanMap.put(Key.QUANTITY, null);// 数量
+				beanMap.put(Key.RACK_CODE_SRC, null);// 棚番号
+				beanMap.put(Key.PURCHASE_DATE_1, null);// 仕入予定１
+				beanMap.put(Key.PURCHASE_NUM_1, null);// 仕入予定数量１
+				beanMap.put(Key.PURCHASE_DATE_2, null);// 仕入予定２
+				beanMap.put(Key.PURCHASE_NUM_2, null);// 仕入予定数量２
 				beanMap.put(Key.STOCK_NUM, null);
-				
+				// 親の数量
 				BigDecimal parentQuantity = (BigDecimal)paramBeanMap.get(Key.QUANTITY);
 
-				
+				// 親商品コード
 				if( !parentSet ){
-					
+					// 1行目は親商品だけに変更
 					beanMap.put(Key.SET_PRODUCT_CODE,setProductCode);
-					beanMap.put(Key.PRODUCT_CODE, "");
-					beanMap.put(Key.QUANTITY, new BigDecimal(1));
-					beanMap.put(Key.RACK_CODE_SRC, "");
+					beanMap.put(Key.PRODUCT_CODE, "");// 子商品コード
+					beanMap.put(Key.QUANTITY, new BigDecimal(1));// 数量
+					beanMap.put(Key.RACK_CODE_SRC, "");// 棚番号
 					resultBeanList.add(beanMap);
 					beanMap = new BeanMap();
-					beanMap.put(Key.SET_PRODUCT_CODE, null);
+					beanMap.put(Key.SET_PRODUCT_CODE, null);// 親商品コード
 					parentSet = true;
 				}
-				
+				// 子商品コード
 				beanMap.put(Key.PRODUCT_CODE,productSet.productCode);
 
-				
+				// 仕入予定１～２
 				List<BeanMap> scheduleList = poSlipService.findPurchaseSchedule(productSet.productCode);
 				for(BeanMap schedule : scheduleList) {
 					beanMap.putAll(schedule);
@@ -621,12 +620,12 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 
 				ProductJoin pj = productService.findById(productSet.productCode);
 				if( pj != null ){
-					
+					// 棚番号
 					String rackCode = pj.rackCode;
 					beanMap.put(Key.RACK_CODE_SRC, rackCode);
 
-					
-					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ 
+					// 現在庫数
+					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ // 在庫管理区分
 						StockInfoDto dto = productStockService.calcStockQuantityByProductCode(productSet.productCode);
 						beanMap.put(Key.STOCK_NUM, new BigDecimal(dto.currentTotalQuantity).add(parentQuantity.multiply( productSet.quantity )));
 					}else{
@@ -634,7 +633,7 @@ public class OutputSalesReportResultAction extends AbstractReportWriterAction {
 					}
 				}
 
-				
+				// 数量
 				beanMap.put(Key.QUANTITY, productSet.quantity);
 
 				resultBeanList.add(beanMap);

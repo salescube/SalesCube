@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -281,7 +280,7 @@ public class EstimateLineService extends AbstractLineService<EstimateLineTrn,Inp
 				short i = 1;
 				for (InputEstimateLineDto dto : lineList) {
 
-					
+					// 見積番号を明細に設定する。
 					dto.estimateSheetId = slipDto.getKeyValue();
 
 					EstimateLineTrn entity = Beans.createAndCopy(
@@ -291,7 +290,7 @@ public class EstimateLineService extends AbstractLineService<EstimateLineTrn,Inp
 					entity.lineNo = i++;
 					if (dto.estimateLineId == null
 							|| dto.estimateLineId.length() == 0) {
-						
+						// 見積伝票明細番号を採番
 						dto.estimateLineId = Long
 								.toString(seqMakerService
 										.nextval(EstimateLineService.Table.LINE_TABLE_NAME));

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class EditProductClassAction extends
 		classCode1List = ListUtil.addEmptyLabelValue(classCode1List);
 		classCode2List = ListUtil.addEmptyLabelValue(classCode2List);
 
-		
+		// 分類（大）のコード
 		Map<String, Object> conditions = new HashMap<String, Object>();
 		conditions.put(ProductClassService.Param.TARGET_COLUMN, ProductClassService.COLUMN_CLASS_CODE_1);
 		String nextVal = productClassService.getNextCode(conditions);
@@ -101,7 +100,7 @@ public class EditProductClassAction extends
 	public String insert() throws Exception {
 		ProductClassDto tempDto = this.createSearchDto();
 
-		
+		// 値を入れておく
 		String classCode1 = this.editProductClassForm.classCode1;
 		String classCode2 = this.editProductClassForm.classCode2;
 		if (tempDto != null) {
@@ -111,7 +110,7 @@ public class EditProductClassAction extends
 
 		String result = doInsert();
 
-		
+		// 値を戻しておく
 		this.editProductClassForm.classCode1 = classCode1;
 		this.editProductClassForm.classCode2 = classCode2;
 		return result;
@@ -127,7 +126,7 @@ public class EditProductClassAction extends
 	public String update() throws Exception {
 		ProductClassDto tempDto = this.createSearchDto();
 
-		
+		// 値を入れておく
 		String classCode1 = this.editProductClassForm.classCode1;
 		String classCode2 = this.editProductClassForm.classCode2;
 		if (tempDto != null) {
@@ -137,7 +136,7 @@ public class EditProductClassAction extends
 
 		String result = doUpdate();
 
-		
+		// 値を戻しておく
 		this.editProductClassForm.classCode1 = classCode1;
 		this.editProductClassForm.classCode2 = classCode2;
 
@@ -153,16 +152,16 @@ public class EditProductClassAction extends
 	 */
 	@Execute(validator = false)
 	public String delete() throws Exception {
-		
+		// 値を入れておく
 		setClassCode();
 
-		
+		// 子分類があるかどうかチェックする
 		BeanMap params = Beans.createAndCopy(BeanMap.class,
 				this.editProductClassForm).excludesWhitespace().execute();
 
 		params.remove("className");
 
-		
+		// 検索結果件数を取得する
 		int count = this.productClassService.countByCondition(params);
 
 		if(count > 1) {
@@ -231,16 +230,16 @@ public class EditProductClassAction extends
 	protected String getKey() {
 		if (this.editProductClassForm.targetClass != null) {
 			if ("1".equals(this.editProductClassForm.targetClass)) {
-				
+				// 分類（大）の場合
 				return this.editProductClassForm.classCode + "--";
 			}
 			if ("2".equals(this.editProductClassForm.targetClass)) {
-				
+				// 分類（中）の場合
 				return this.editProductClassForm.classCode1 + "-"
 						+ this.editProductClassForm.classCode + "-";
 			}
 			if ("3".equals(this.editProductClassForm.targetClass)) {
-				
+				// 分類（小）の場合
 				return this.editProductClassForm.classCode1 + "-"
 						+ this.editProductClassForm.classCode2 + "-"
 						+ this.editProductClassForm.classCode;
@@ -248,7 +247,7 @@ public class EditProductClassAction extends
 		} else {
 			return this.editProductClassForm.classCode;
 		}
-		
+		// ありえない・・・
 		return null;
 	}
 
@@ -291,16 +290,16 @@ public class EditProductClassAction extends
 				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 				"infos.delete"));
 				ActionMessagesUtil.addErrors(this.httpRequest, this.messages);
-				this.editProductClassForm.targetClass = "1";	
+				this.editProductClassForm.targetClass = "1";	// とりあえず分類（大）
 				this.editProductClassForm.classCode = "";
 			} else {
-				
+				// 新規のここでコードをセットしておく
 				setClassCode();
 			}
 			return null;
 		}
 		if (result.classCode2.length() == 0 && result.classCode3.length() == 0) {
-			
+			// 分類（大）
 			this.editProductClassForm.targetClass = "1";
 			this.editProductClassForm.classCode = result.classCode1;
 			this.editProductClassForm.classCode3 = "";
@@ -372,35 +371,35 @@ public class EditProductClassAction extends
 		classCode2List = ListUtil.addEmptyLabelValue(classCode2List);
 		ProductClassDto dto = createSearchDto();
 		if ("1".equals(this.editProductClassForm.targetClass)) {
-			
+			// 分類（大）
 			classCode1List = ListUtil.addEmptyLabelValue(classCode1List);
 			classCode2List = ListUtil.addEmptyLabelValue(classCode2List);
 		} else if ("2".equals(this.editProductClassForm.targetClass)) {
-			
+			// 分類（中）
 			classCode1List = new ArrayList<LabelValueBean>();
-			
+			// 分類（大）を検索する（classCode2を空欄にして、検索条件を分類１コードだけにする）
 			dto.classCode2 = "";
 			ProductClass product = productClassService.findProductClassByKey(dto);
 			classCode1List.add(new LabelValueBean(product.className, product.classCode1));
 			classCode2List = ListUtil.addEmptyLabelValue(classCode2List);
 		} else {
-			
+			// 分類（小）
 			classCode1List = new ArrayList<LabelValueBean>();
 			classCode2List = new ArrayList<LabelValueBean>();
 			if (this.editProductClassForm.editMode) {
-				
+				// 分類（中）を検索する（classCode3を空欄にして、検索条件を分類１コード、分類２コードにする）
 				dto.classCode3 = "";
 				ProductClass product2 = productClassService.findProductClassByKey(dto);
-				
+				// 分類（大）を検索する（さらにclassCode2を空欄にして、検索条件を分類１コードだけにする）
 				dto.classCode2 = "";
 				ProductClass product1 = productClassService.findProductClassByKey(dto);
 				classCode1List.add(new LabelValueBean(product1.className, product1.classCode1));
 				classCode2List.add(new LabelValueBean(product2.className, product2.classCode2));
 			} else {
-				
+				// 分類（大）のリストを取得する
 				classCode1List = productClassService.findAllProductClass1LabelValueBeanList();
 
-				
+				// 分類（中）のリストを取得する
 				classCode2List = productClassService.findAllProductClass2LabelValueBeanList(this.editProductClassForm.classCode1);
 			}
 

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import jp.co.arkinfosys.entity.Product;
@@ -55,11 +54,11 @@ public class CheckUtil {
 	 * @return 棚番必須の商品か否か
 	 */
 	public static boolean isRackCheck( Product product ) {
-		
+		// セット品は無視
 		if( CategoryTrns.PRODUCT_SET_TYPE_SET.equals( product.setTypeCategory ) ){
 			return false;
 		}
-		
+		// 特殊商品コードは無視
 		if( isLooseExceptianalProduct(product)){
 			return false;
 		}

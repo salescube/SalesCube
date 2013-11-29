@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.report;
 
 import java.io.Serializable;
@@ -34,7 +33,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String recDateTo;
 
-    ////////
+    ////////// 見積入力
     /**
      * 見積日From
      */
@@ -45,7 +44,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String estimateDateTo1;
 
-    ////////
+    ////////// 受注入力
     /**
      * 顧客コードFrom
      */
@@ -76,7 +75,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String shipDateTo2;
 
-    ////////
+    ////////// 売上入力
     /**
      * 顧客コードFrom
      */
@@ -97,7 +96,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String productCodeTo3;
 
-    ////////
+    ////////// 入金入力
     /**
      * 顧客コードFrom
      */
@@ -108,7 +107,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String customerCodeTo4;
 
-    ////////
+    ////////// 発注入力
     /**
      * 仕入先コードFrom
      */
@@ -129,7 +128,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String productCodeTo5;
 
-    ////////
+    ////////// 仕入入力
     /**
      * 仕入先コードFrom
      */
@@ -160,7 +159,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String deliveryDateTo6;
 
-    ////////
+    ////////// 支払入力
     /**
      * 仕入先コードFrom
      */
@@ -191,7 +190,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String paymentDateTo7;
 
-    ////////
+    ////////// 入出庫入力
     /**
      * 商品コードFrom
      */
@@ -207,7 +206,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String[] eadSlipCategory8;
 
-    ////////
+    ////////// 顧客マスタ
     /**
      * 顧客コードFrom
      */
@@ -228,7 +227,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String creDateTo9;
 
-    ////////
+    ////////// 商品マスタ
     /**
      * 商品コードFrom
      */
@@ -249,7 +248,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String creDateTo10;
 
-    ////////
+    ////////// 仕入先マスタ
     /**
      * 仕入先コードFrom
      */
@@ -270,7 +269,7 @@ public class ReferenceHistoryFormDto implements Serializable  {
      */
     public String creDateTo11;
 
-    ////////
+    ////////// 社員マスタ
     /**
      * 登録日From
      */

@@ -1,0 +1,210 @@
+@charset "utf-8";
+
+
+/************************************************************************/
+
+/*ダイアログの閉じるボタン*/
+
+.ui-dialog .ui-dialog-titlebar-close span{
+	background-image: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+	background-image: url("../images/customize/btn_close.png");
+	width: 30px;
+	height: 31px;
+}
+
+
+
+/********************************************/
+/*ダイアログの検索結果テーブル*/
+table.dialog_resultList {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+table.dialog_resultList th {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: none;
+    border-right: solid 1px #555555;
+    height: 25px;
+}
+
+table.dialog_resultList td {
+    color: #FFFFFF;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.dialog_resultList tr:nth-child(odd) td {
+    background-color: #333333;
+}
+table.dialog_resultList tr:nth-child(even) td {
+    background-color: #404040;
+}
+
+/********************************************/
+
+
+/*ARKcustom button*/
+div.section_title button.btn_copy_customer_action {
+    width: 150px;
+    height: 32px;
+    line-height: 25px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 13px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+	position: relative;
+	left: 680px;
+}
+
+div.section_title button.btn_copy_customer_action:disabled {
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+}
+
+
+.btn_extralarge{
+    width: 260px;
+    height: 51px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 18px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+}
+
+.btn_extralarge:disabled{
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+
+}
+
+
+
+.btn_large{
+    width: 150px;
+    height: 40px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 15px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+}
+
+.btn_large:disabled{
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+
+}
+
+.btn_medium{
+    width: 100px;
+    height: 32px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 13px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+}
+
+.btn_medium:disabled{
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+
+}
+
+.btn_small{
+    width: 60px;
+    height: 25px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 10px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+}
+
+.btn_small:disabled{
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+
+}
+
+/***********************************************************/
+/*明細行以外の表形式表示の定義
+ *
+ */
+
+div#detail_info_wrap {
+    width: 1158px;
+}
+table.detail_info {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: solid 1px #EBEBEB;
+    /* table-layout: fixed; */
+    width: 100%;
+    /*最終行の角のみ丸くする*/
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+}
+
+table.detail_info th{
+    background-color: #666666;
+    color: #FFFFFF;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: normal;
+    border-right: solid 1px #555555;
+    margin: 0;
+    padding: 0;
+}
+
+table.detail_info td{
+    margin: 0;
+    padding: 2px;
+    border-right: solid 1px #CCCCCC;
+    border-bottom: solid 1px #CCCCCC;
+    text-align: center;
+    vertical-align: middle;
+}
+table.detail_info input {
+    width: 80%;
+}
+table.detail_info input[type="text"] {
+    width: 80%;
+}
+table.detail_info textarea {
+    width: 80%;
+}
+

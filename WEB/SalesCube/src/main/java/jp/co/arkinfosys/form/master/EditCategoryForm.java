@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class EditCategoryForm extends AbstractEditForm {
 	 */
 	@Override
 	public void initialize() {
-		
+		// 削除がないので実装なし
 	}
 
 	/**
@@ -65,56 +64,56 @@ public class EditCategoryForm extends AbstractEditForm {
 		if (categoryTrnList != null) {
 			Map<String, CategoryDto> doubleCheck = new HashMap<String, CategoryDto>();
 			for (CategoryDto dto : categoryTrnList) {
-				
-				
-				
+				//
+				// 基本情報チェック
+				//
 
-				
+				// 区分コード
 				if (checkRequired(index, dto.categoryCode, labelCategoryCode, errors)) {
 
-					
+					// 区分コード　可変
 					checkMaxLength(index, dto.categoryCode, categoryCodeSize, labelCategoryCode, errors);
 				}
 
-				
+				// 区分コード名称
 				if (checkRequired(index, dto.categoryCodeName, labelCategoryCodeName, errors)) {
 
-					
+					// 区分コード名　60文字
 					checkMaxLength(index, dto.categoryCodeName, 60, labelCategoryCodeName, errors);
 				}
 
-				
-				
-				
+				//
+				// タイプ別チェック
+				//
 				if (Constants.CATEGORY_DATA_TYPE.CATEGORY_DATA_TYPE_STRING.equals(category.categoryDataType)) {
-					
+					// 文字列
 
-					
+					// 必須チェック
 					if (checkRequired(index, dto.categoryStr, labelCategoryTitle, errors)) {
 
-						
+						// 長さチェック　可変
 						checkMaxLength(index, dto.categoryStr, categoryStrSize, labelCategoryTitle, errors);
 					}
 
 				} else if (Constants.CATEGORY_DATA_TYPE.CATEGORY_DATA_TYPE_NUMBER.equals(category.categoryDataType)) {
-					
+					// 整数
 
-					
+					// 必須チェック
 					if (checkRequired(index, dto.categoryNum, labelCategoryTitle, errors)) {
-						
+						// 型チェック
 						checkInteger(index, dto.categoryNum, labelCategoryTitle, errors);
 					}
 				} else if (Constants.CATEGORY_DATA_TYPE.CATEGORY_DATA_TYPE_FLOAT.equals(category.categoryDataType)) {
-					
+					// 小数
 
-					
+					// 必須チェック
 					if (checkRequired(index, dto.categoryFlt, labelCategoryTitle, errors)) {
-						
+						// 型チェック
 						checkFloat(index, dto.categoryFlt, labelCategoryTitle, errors);
 					}
 				}
 
-				
+				// 区分コード重複チェック
 				if (doubleCheck.containsKey(dto.categoryCode) && StringUtil.hasLength(dto.categoryCode)) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 							"errors.doubleCategoryCode"));

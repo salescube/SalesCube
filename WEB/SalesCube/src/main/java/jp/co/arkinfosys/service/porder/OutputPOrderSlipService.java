@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
 import java.util.List;
@@ -33,11 +32,11 @@ public class OutputPOrderSlipService extends AbstractService<PoSlipTrn> {
 	public BeanMap getBeanMapPOrderSlipBySlipId(String slipId)
 			throws ServiceException {
 		try {
-			
+			// ドメイン名の取得
 			Map<String, Object> param = super.createSqlParam();
-			
+			// 発注番号の設定
 			param.put(SQLParam.PO_SLIP_ID, slipId);
-			
+			// クエリ
 			BeanMap temp = this.selectBySqlFile(BeanMap.class,
 					"porder/FindPOrderSlipByPOSlipIdWithCUnit.sql", param)
 					.getSingleResult();
@@ -56,11 +55,11 @@ public class OutputPOrderSlipService extends AbstractService<PoSlipTrn> {
 	public List<BeanMap> getBeanMapListPOrderLinesBySlipId(String slipId)
 			throws ServiceException {
 		try {
-			
+			// ドメイン名の取得
 			Map<String, Object> param = super.createSqlParam();
-			
+			// 発注番号の設定
 			param.put(SQLParam.PO_SLIP_ID, slipId);
-			
+			// クエリ
 			return this.selectBySqlFile(BeanMap.class,
 					"porder/FindPOrderLineByPOSlipIdWithCUnit.sql", param)
 					.getResultList();

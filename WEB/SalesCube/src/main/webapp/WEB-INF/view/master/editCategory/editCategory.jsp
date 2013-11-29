@@ -272,10 +272,10 @@
 </head>
 
 <body onhelp="return false;" onload="init()">
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1309"/>
@@ -319,6 +319,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
@@ -328,205 +329,218 @@
         	</html:messages>
     	</div>
 
-		<span>区分情報</span><br>
+		<div class="form_section_wrap">
+			<div class="form_section">
+				<div class="section_title">
+					<span>区分情報</span>
+					<button class="btn_toggle">
+		           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+		      		</button>
+					<br>
+				</div><!-- /.section_title -->
+			<div class="section_body">
+				<table class="forms" style="width:210px;" summary="対象区分名">
+					<colgroup>
+						<col span="1" style="width: 60px">
+						<col span="1" style="width:150px">
+					</colgroup>
 
-		<table class="forms" style="width:210px;" summary="対象区分名">
-			<colgroup>
-				<col span="1" style="width: 60px">
-				<col span="1" style="width:150px">
-			</colgroup>
+				<tr id="row_0">
+					<th><div class="col_title_right">区分名</div></th>
+					<td>
+		                <span >${f:h(category.categoryName)}</span>
+		            </td>
+				</tr>
+				</table>
+			</div><!-- /.section_body -->
+    		</div><!-- /.form_section -->
+   		</div><!-- /.form_section_wrap -->
 
-		<tr id="row_0">
-			<th>区分名</th>
-			<td>
-                ${f:h(category.categoryName)}
-            </td>
-		</tr>
-		</table>
-		<span>区分コード情報</span><br>
+	     <br>
+		<div id="detail_info_wrap">
+			<table class="detail_info"  id="edit_table" class="forms" style="width:800px;" summary="追加更新">
+				<colgroup>
+					<col span="1" style="width: 50px">
+					<col span="1" style="width:200px">
+					<col span="1" style="width:250px">
+					<col span="1" style="width:300px">
+					<col span="1" style="">
+				</colgroup>
+	            <tr style="display:none;" id="deletedRow">
+	                <td style="text-align:center;">*</td>
+	                <td colspan="4">削除されました</td>
+	            </tr>
+	            <tr style="display:none;" id="categoryTrnList_dummy">
+	                <td style="text-align:center;"></td>
+	                <td><input id="categoryCode" maxlength="${category.categoryCodeSize}" type="text" style="width:175px;"></td>
+	                <td><input id="categoryCodeName" type="text" style="width:175px;"></td>
+	                <td>
+	<c:if test='${category.categoryUpd == 0}'>
+	                <input type="text" readonly="true" class="c_disable" style="width:175px;">
+	                <input type="hidden" id="categoryStr" value="">
+	</c:if>
+	<c:if test="${category.categoryDataType == 0}">
+	                <input type="text" readonly="true" class="c_disable" style="width:175px;">
+	                <input type="hidden" id="categoryStr" value="">
+	</c:if>
+	<c:if test="${category.categoryDataType == 1}">
+	                    <input type="text" maxlength="${category.categoryStrSize}" id="categoryStr" style="width:175px;">
+	</c:if>
+	<c:if test="${category.categoryDataType == 2}">
+	                    <input type="text" id="categoryNum" style="width:175px;">
+	                    <input type="hidden" id="categoryStr" value="">
+	</c:if>
+	<c:if test="${category.categoryDataType == 3}">
+	                    <input type="text" id="categoryFlt" style="width:175px;">
+	                    <input type="hidden" id="categoryStr" value="">
+	</c:if>
+	<c:if test="${category.categoryDataType == 4}">
+	                    <input type="checkbox" id="categoryBool"/>${f:h(category.categoryTitle)}
+	                    <input type="hidden" id="categoryStr" value="">
+	</c:if>
+	                </td>
+					<td style="text-align: center">
+	<c:if test="${!isUpdate}">
+	                    <button class="btn_small" disabled="disabled">削除</button>
+	</c:if>
+	<c:if test="${isUpdate}">
+	                    <button class="btn_small"  id="deleteBtn" >削除</button>
+	</c:if>
+						<input type="hidden" id="categoryDsp" name="categoryDsp" value="1"/>
+	            </tr>
+				<thead>
+				<tr>
+					<th class="rd_top_left" style="height: 30px;">変更</th>
+					<th>区分コード<bean:message key='labels.must'/></th>
+					<th>区分コード名<bean:message key='labels.must'/></th>
+	                <th>
+	<c:if test="${category.categoryDataType == 0}">
+					(値なし)
+	</c:if>
+	<c:if test="${category.categoryDataType == 1}">
+					${f:h(category.categoryTitle)}(文字列)<bean:message key='labels.must'/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 2}">
+					${f:h(category.categoryTitle)}(整数)<bean:message key='labels.must'/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 3}">
+					${f:h(category.categoryTitle)}(小数)<bean:message key='labels.must'/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 4}">
+					${f:h(category.categoryTitle)}(論理)
+	</c:if>
+	                </th>
+					<th class="rd_top_right"></th>
+				</tr>
+				</thead>
+				<tbody>
+	<c:forEach var="categoryTrnList" varStatus="s" items="${categoryTrnList}">
+	            <tr id="categoryTrnList_${s.index}">
+	                <td id="categoryTrnList_${s.index}.mark" style="text-align:center;">&nbsp;</td>
+	                <td>
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
+	    </c:if>
+	                </td>
+	                <td>
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:text name="categoryTrnList" maxlength="60" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCodeName" property="categoryCodeName" style="width:175px;" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:text name="categoryTrnList" maxlength="60" styleId="categoryTrnList_${s.index}.categoryCodeName" property="categoryCodeName" style="width:175px;" indexed="true"/>
+	    </c:if>
+	                </td>
+	                <td>
+	<c:if test="${category.categoryDataType == 0}">
+	                <input type="text" readonly="true" class="c_disable" style="width:175px;">
+	                <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 1}">
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:text name="categoryTrnList" maxlength="${category.categoryStrSize}" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:text name="categoryTrnList" maxlength="${category.categoryStrSize}" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" style="width:175px;" indexed="true"/>
+	    </c:if>
+	</c:if>
+	<c:if test="${category.categoryDataType == 2}">
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:text name="categoryTrnList" maxlength="10" styleId="categoryTrnList_${s.index}.categoryNum" property="categoryNum" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:text name="categoryTrnList" maxlength="10" styleId="categoryTrnList_${s.index}.categoryNum" property="categoryNum" style="width:175px;" indexed="true"/>
+	    </c:if>
+	    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 3}">
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:text name="categoryTrnList" maxlength="16" styleId="categoryTrnList_${s.index}.categoryFlt" property="categoryFlt" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:text name="categoryTrnList" maxlength="16" styleId="categoryTrnList_${s.index}.categoryFlt" property="categoryFlt" style="width:175px;" indexed="true"/>
+	    </c:if>
+	    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
+	</c:if>
+	<c:if test="${category.categoryDataType == 4}">
+	    <c:if test='${category.categoryUpd == 0}'>
+	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" disabled="true" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
+	                    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool_hidden" property="categoryBool" indexed="true"/>
+	    </c:if>
+	    <c:if test='${category.categoryUpd == 1}'>
+	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
+	    </c:if>
+	    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
+	</c:if>
+	                </td>
+					<td style="text-align: center">
+	<c:if test="${!isUpdate}">
+	                    <button class="btn_small"  disabled="disabled">削除</button>
+	</c:if>
+	<c:if test="${isUpdate}">
+	<c:if test='${category.categoryDel == 0}'>
+	                    <button class="btn_small"  disabled="disabled">削除</button>
+	</c:if>
+	<c:if test="${category.categoryDel == 1}">
+	                    <button class="btn_small"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
+	</c:if>
+	<c:if test="${category.categoryDel == 2}">
+	                    <button class="btn_small"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
+	</c:if>
+	</c:if>
+						<html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryDsp" property="categoryDsp" indexed="true"/>
+	                </td>
+	            </tr>
+	<script>
+	<!--
+	maxRowCount = ${s.index+1};
+	-->
+	</script>
 
-		<table id="edit_table" class="forms" style="width:710px;" summary="追加更新">
-			<colgroup>
-				<col span="1" style="width: 30px">
-				<col span="1" style="width:100px">
-				<col span="1" style="width:190px">
-				<col span="1" style="width:200px">
-				<col span="1" style="">
-			</colgroup>
-            <tr style="display:none;" id="deletedRow">
-                <td style="text-align:center;">*</td>
-                <td colspan="4">削除されました</td>
-            </tr>
-            <tr style="display:none;" id="categoryTrnList_dummy">
-                <td style="text-align:center;"></td>
-                <td><input id="categoryCode" maxlength="${category.categoryCodeSize}" type="text" style="width:175px;"></td>
-                <td><input id="categoryCodeName" type="text" style="width:175px;"></td>
-                <td>
-<c:if test='${category.categoryUpd == 0}'>
-                <input type="text" readonly="true" class="c_disable" style="width:175px;">
-                <input type="hidden" id="categoryStr" value="">
-</c:if>
-<c:if test="${category.categoryDataType == 0}">
-                <input type="text" readonly="true" class="c_disable" style="width:175px;">
-                <input type="hidden" id="categoryStr" value="">
-</c:if>
-<c:if test="${category.categoryDataType == 1}">
-                    <input type="text" maxlength="${category.categoryStrSize}" id="categoryStr" style="width:175px;">
-</c:if>
-<c:if test="${category.categoryDataType == 2}">
-                    <input type="text" id="categoryNum" style="width:175px;">
-                    <input type="hidden" id="categoryStr" value="">
-</c:if>
-<c:if test="${category.categoryDataType == 3}">
-                    <input type="text" id="categoryFlt" style="width:175px;">
-                    <input type="hidden" id="categoryStr" value="">
-</c:if>
-<c:if test="${category.categoryDataType == 4}">
-                    <input type="checkbox" id="categoryBool"/>${f:h(category.categoryTitle)}
-                    <input type="hidden" id="categoryStr" value="">
-</c:if>
-                </td>
-				<td style="text-align: center">
-<c:if test="${!isUpdate}">
-                    <button disabled="disabled">削除</button>
-</c:if>
-<c:if test="${isUpdate}">
-                    <button id="deleteBtn" >削除</button>
-</c:if>
-					<input type="hidden" id="categoryDsp" name="categoryDsp" value="1"/>
-            </tr>
-			<thead>
-			<tr>
-				<th>変更</th>
-				<th>区分コード<bean:message key='labels.must'/></th>
-				<th>区分コード名<bean:message key='labels.must'/></th>
-                <th>
-<c:if test="${category.categoryDataType == 0}">
-				(値なし)
-</c:if>
-<c:if test="${category.categoryDataType == 1}">
-				${f:h(category.categoryTitle)}(文字列)<bean:message key='labels.must'/>
-</c:if>
-<c:if test="${category.categoryDataType == 2}">
-				${f:h(category.categoryTitle)}(整数)<bean:message key='labels.must'/>
-</c:if>
-<c:if test="${category.categoryDataType == 3}">
-				${f:h(category.categoryTitle)}(小数)<bean:message key='labels.must'/>
-</c:if>
-<c:if test="${category.categoryDataType == 4}">
-				${f:h(category.categoryTitle)}(論理)
-</c:if>
-                </th>
-				<th></th>
-			</tr>
-			</thead>
-			<tbody>
-<c:forEach var="categoryTrnList" varStatus="s" items="${categoryTrnList}">
-            <tr id="categoryTrnList_${s.index}">
-                <td id="categoryTrnList_${s.index}.mark" style="text-align:center;"></td>
-                <td>
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
-    </c:if>
-                </td>
-                <td>
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:text name="categoryTrnList" maxlength="60" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCodeName" property="categoryCodeName" style="width:175px;" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:text name="categoryTrnList" maxlength="60" styleId="categoryTrnList_${s.index}.categoryCodeName" property="categoryCodeName" style="width:175px;" indexed="true"/>
-    </c:if>
-                </td>
-                <td>
-<c:if test="${category.categoryDataType == 0}">
-                <input type="text" readonly="true" class="c_disable" style="width:175px;">
-                <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
-</c:if>
-<c:if test="${category.categoryDataType == 1}">
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:text name="categoryTrnList" maxlength="${category.categoryStrSize}" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:text name="categoryTrnList" maxlength="${category.categoryStrSize}" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" style="width:175px;" indexed="true"/>
-    </c:if>
-</c:if>
-<c:if test="${category.categoryDataType == 2}">
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:text name="categoryTrnList" maxlength="10" styleId="categoryTrnList_${s.index}.categoryNum" property="categoryNum" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:text name="categoryTrnList" maxlength="10" styleId="categoryTrnList_${s.index}.categoryNum" property="categoryNum" style="width:175px;" indexed="true"/>
-    </c:if>
-    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
-</c:if>
-<c:if test="${category.categoryDataType == 3}">
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:text name="categoryTrnList" maxlength="16" styleId="categoryTrnList_${s.index}.categoryFlt" property="categoryFlt" style="width:175px;" readonly="true" styleClass="c_disable" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:text name="categoryTrnList" maxlength="16" styleId="categoryTrnList_${s.index}.categoryFlt" property="categoryFlt" style="width:175px;" indexed="true"/>
-    </c:if>
-    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
-</c:if>
-<c:if test="${category.categoryDataType == 4}">
-    <c:if test='${category.categoryUpd == 0}'>
-                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" disabled="true" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
-                    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool_hidden" property="categoryBool" indexed="true"/>
-    </c:if>
-    <c:if test='${category.categoryUpd == 1}'>
-                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
-    </c:if>
-    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
-</c:if>
-                </td>
-				<td style="text-align: center">
-<c:if test="${!isUpdate}">
-                    <button disabled="disabled">削除</button>
-</c:if>
-<c:if test="${isUpdate}">
-<c:if test='${category.categoryDel == 0}'>
-                    <button disabled="disabled">削除</button>
-</c:if>
-<c:if test="${category.categoryDel == 1}">
-                    <button id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
-</c:if>
-<c:if test="${category.categoryDel == 2}">
-                    <button id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
-</c:if>
-</c:if>
-					<html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryDsp" property="categoryDsp" indexed="true"/>
-                </td>
-            </tr>
-<script>
-<!--
-maxRowCount = ${s.index+1};
--->
-</script>
-
-</c:forEach>
-			<tr id="trAddLine">
-				<td colspan="5" style="text-align:right;">
-<c:if test='${category.categoryAdd == 0}'>
-                    <button disabled="disabled" style="width:80px;">行追加</button>
-</c:if>
-<c:if test='${category.categoryAdd == 1}'>
-                    <button onclick="addRow();" style="width:80px;">行追加</button>
-</c:if>
-                </td>
-			</tr>
-            </tbody>
-        </table>
-		<div style="text-align: right; width: 710px">
+	</c:forEach>
+				<tr id="trAddLine">
+					<td colspan="5" style="text-align:right;">
+	<c:if test='${category.categoryAdd == 0}'>
+	                    <button class="btn_small"  disabled="disabled" style="width:80px;">行追加</button>
+	</c:if>
+	<c:if test='${category.categoryAdd == 1}'>
+	                    <button class="btn_small"  onclick="addRow();" style="width:80px;">行追加</button>
+	</c:if>
+	                </td>
+				</tr>
+	            </tbody>
+	        </table>
+	     </div>
+		<div style="text-align: right; width: 800px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
-			<button tabindex="206" onclick="initForm()">リセット</button>
+			<button class="btn_medium" tabindex="206" onclick="initForm()">リセット</button>
 <c:if test="${!isUpdate}">
-            <button tabindex="207" disabled="true">更新</button>
+            <button class="btn_medium" tabindex="207" disabled="true">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
-            <button tabindex="207" onclick="registerCategory()">更新</button>
+            <button class="btn_medium" tabindex="207" onclick="registerCategory()">更新</button>
 </c:if>
 		</div>
 

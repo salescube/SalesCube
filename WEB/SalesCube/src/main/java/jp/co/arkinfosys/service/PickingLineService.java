@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import org.seasar.framework.beans.util.Beans;
  */
 public class PickingLineService extends AbstractService<PickingLine> {
 
-	
+	//発番用サービス
 	@Resource
 	public SeqMakerService seqMakerService;
 
@@ -37,11 +36,11 @@ public class PickingLineService extends AbstractService<PickingLine> {
 	 * SQLファイルのパラメータ名定義
 	 */
 	public static class Param {
-		
+		// ソート方向
 		private static final String SORT_ORDER = "sortOrder";
-		
+		// 取得件数
 		private static final String ROW_COUNT = "rowCount";
-		
+		// 取得件数
 		private static final String OFFSET_ROW = "offsetRow";
 
 		public static final String PICKING_LINE_ID = "pickingLineId";
@@ -49,7 +48,7 @@ public class PickingLineService extends AbstractService<PickingLine> {
 		public static final String RO_LINE_ID = "roLineId";
 		public static final String PICKING_LINE_NO = "pickingLineNo";
 		public static final String SALES_LINE_ID = "salesLineId";
-		private static final String SORT_COLUMN_LINE_NO = "sortColumnLineNo"; 
+		private static final String SORT_COLUMN_LINE_NO = "sortColumnLineNo"; // 行番号のソート条件
 		public static final String SALES_SLIP_ID = "salesSlipId";
 		public static final String SET_TYPE_CATEGORY = "setTypeCategory";
 
@@ -70,18 +69,18 @@ public class PickingLineService extends AbstractService<PickingLine> {
 	 */
 	private Map<String, Object> createParamMap(PickingLine pll) {
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
-		
-		
+		//基礎となるカラム名(空で)をエンティティからPUT
+		//		BeanMap FoundationParam = Beans.createAndCopy(BeanMap.class,this.depositLine).execute();
+		//		param.putAll(FoundationParam);
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, pll).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -96,7 +95,7 @@ public class PickingLineService extends AbstractService<PickingLine> {
 	public Long getNextVal() throws Exception {
 
 		Long newSlipId = -1L;
-		
+		//伝票番号の発番
 		try {
 			newSlipId = seqMakerService.nextval(PickingLine.TABLE_NAME);
 		} catch (Exception e) {
@@ -199,7 +198,7 @@ public class PickingLineService extends AbstractService<PickingLine> {
 	 *
 	 */
 	public int insert(PickingLine pll) {
-		
+		//SQLクエリを投げる
 		return this.updateBySqlFile("picking/InsertPickingLineBySales.sql",
 				createParamMap(pll)).execute();
 	}
@@ -212,7 +211,7 @@ public class PickingLineService extends AbstractService<PickingLine> {
 	 *
 	 */
 	public int update(PickingLine pll) {
-		
+		//SQLクエリを投げる
 		return this.updateBySqlFile("picking/UpdatePickingLineBySales.sql",
 				createParamMap(pll)).execute();
 	}
@@ -242,8 +241,8 @@ public class PickingLineService extends AbstractService<PickingLine> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.PICKING_LIST_ID, pickingListId);
 		conditions.put(Param.SORT_COLUMN_LINE_NO, SORT_COLUMN_PICKING_LINE_NO);
 		conditions.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -264,8 +263,8 @@ public class PickingLineService extends AbstractService<PickingLine> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_LINE_ID, salesLineId);
 
 		List<PickingLine> plList = findByCondition(conditions, paramNames,
@@ -288,8 +287,8 @@ public class PickingLineService extends AbstractService<PickingLine> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesSlipId);
 		conditions.put(Param.SORT_COLUMN_LINE_NO, SORT_COLUMN_PICKING_LINE_NO);
 		conditions.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -309,8 +308,8 @@ public class PickingLineService extends AbstractService<PickingLine> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesLineId);
 		conditions.put(Param.SORT_COLUMN_LINE_NO, SORT_COLUMN_PICKING_LINE_NO);
 		conditions.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -335,8 +334,8 @@ public class PickingLineService extends AbstractService<PickingLine> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesLineId);
 		conditions.put(Param.SET_TYPE_CATEGORY,
 				CategoryTrns.PRODUCT_SET_TYPE_SET);

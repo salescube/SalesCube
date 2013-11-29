@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class SearchStockService extends AbstractService<EadSlipTrn> {
 	public List<DetailDispItemDto> createSearchStockResult(List<EadSlipLineJoinDto> eadSlipLineJoinDtoList,
 			List<List<Object>> searchResultList,String searchTarget) throws ServiceException {
 		try {
-			
+			// パラメータを作成する
 			List<BeanMap> resultMapList = new ArrayList<BeanMap>();
 			if(eadSlipLineJoinDtoList != null) {
 				for(EadSlipLineJoinDto eadSlipLineJoinDto : eadSlipLineJoinDtoList) {
@@ -80,7 +79,7 @@ public class SearchStockService extends AbstractService<EadSlipTrn> {
 				}
 			}
 
-			
+			// 検索結果に表示する列を取得する
 			List<DetailDispItemDto> columnInfoList = detailDispItemService.createResult(resultMapList,
 					searchResultList, Constants.MENU_ID.SEARCH_STOCK, searchTarget);
 
@@ -102,10 +101,10 @@ public class SearchStockService extends AbstractService<EadSlipTrn> {
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(EadService.Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				count = eadService.findEadSlipCntByCondition(params);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -129,63 +128,63 @@ public class SearchStockService extends AbstractService<EadSlipTrn> {
 	public List<EadSlipLineJoinDto> createEadSlipJoinDtoList(
 			BeanMap params) throws ServiceException {
 		try {
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(EadService.Param.SEARCH_TARGET);
 
-			
+			// ソートカラムを設定
 			String sortColumn = (String) params.get(EadService.Param.SORT_COLUMN);
 
-			
+			// ソート順を設定
 			boolean sortOrderAsc = (Boolean) params.get(EadService.Param.SORT_ORDER_ASC);
 
-			
+			// 伝票単位か明細単位か
 			List<EadSlipLineJoin> eadSlipLineJoinList = new ArrayList<EadSlipLineJoin>();
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
-				
+				// 検索を行う
 				eadSlipLineJoinList = eadService.findEadSlipByCondition(
 						params, sortColumn, sortOrderAsc);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
-				
+				// 検索を行う
 				eadSlipLineJoinList = eadService.findEadSlipLineByCondition(
 						params, sortColumn, sortOrderAsc);
 			}
 
-			
+			// EadSlipLineJoinDtoリストを生成する
 			List<EadSlipLineJoinDto> eadSlipLineJoinDtoList = new ArrayList<EadSlipLineJoinDto>();
 			for(EadSlipLineJoin eadSlipLineJoin : eadSlipLineJoinList) {
-				
+				// Dtoを生成
 				EadSlipLineJoinDto eadSlipLineJoinDto = Beans.createAndCopy(
 						EadSlipLineJoinDto.class, eadSlipLineJoin).execute();
 
-				
+				// 伝票番号の設定
 				if(Constants.SRC_FUNC.SALES.equals(eadSlipLineJoinDto.srcFunc)) {
-					
+					// 売上の場合
 					eadSlipLineJoinDto.srcFuncName = Constants.SRC_FUNC.LABEL_SALES;
 					eadSlipLineJoinDto.slipId = eadSlipLineJoinDto.salesSlipId;
 					eadSlipLineJoinDto.menuValid = userDto.isMenuValid(Constants.MENU_ID.INPUT_SALES);
 				} else if(Constants.SRC_FUNC.PURCHASE.equals(eadSlipLineJoinDto.srcFunc)) {
-					
+					// 仕入の場合
 					eadSlipLineJoinDto.srcFuncName = Constants.SRC_FUNC.LABEL_PURCHASE;
 					eadSlipLineJoinDto.slipId = eadSlipLineJoinDto.supplierSlipId;
 					eadSlipLineJoinDto.menuValid = userDto.isMenuValid(Constants.MENU_ID.INPUT_PURCHASE);
 				} else if(Constants.SRC_FUNC.STOCK.equals(eadSlipLineJoinDto.srcFunc)) {
-					
+					// 入出庫の場合
 					eadSlipLineJoinDto.srcFuncName = eadSlipLineJoinDto.eadCategoryName;
 					eadSlipLineJoinDto.slipId = eadSlipLineJoinDto.eadSlipId;
 					eadSlipLineJoinDto.menuValid = userDto.isMenuValid(Constants.MENU_ID.INPUT_STOCK);
 				} else if(Constants.SRC_FUNC.STOCK_TRANSFER.equals(eadSlipLineJoinDto.srcFunc)) {
-					
+					// 在庫移動の場合
 					eadSlipLineJoinDto.srcFuncName = Constants.SRC_FUNC.LABEL_STOCK_TRANSFER;
 					eadSlipLineJoinDto.slipId = eadSlipLineJoinDto.eadSlipId;
 					eadSlipLineJoinDto.menuValid = userDto.isMenuValid(Constants.MENU_ID.INPUT_STOCK_TRANSFER);
 				}
 				if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
-					
+					// 明細検索の場合
 					eadSlipLineJoinDto.slipId =
 						eadSlipLineJoinDto.slipId + " - " + eadSlipLineJoinDto.lineNo;
 				}
 
-				
+				// リストに追加
 				eadSlipLineJoinDtoList.add(eadSlipLineJoinDto);
 			}
 

@@ -221,10 +221,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1313"/>
@@ -272,7 +272,8 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
     	<div style="padding-left: 20px;color: blue;">
@@ -281,169 +282,189 @@
         	</html:messages>
     	</div>
 
-		<span>レートタイプ情報</span><br>
-		<table id="rate_info" class="forms" summary="レートタイプ情報">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 25%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-			</colgroup>
-			<tr>
-				<th>レートタイプID</th>
-				<td>${rateId}<html:hidden styleId="rateId" property="rateId"/></td>
-				<th>レートタイプ名称<bean:message key='labels.must'/></th>
-				<td>
-					<html:text maxlength="60" styleId="name" property="name" style="width: 235px;" tabindex="100"/>
-				</td>
-                <th>レートタイプ記号</th>
-                <td>
-                    <html:text maxlength="1" styleId="sign" property="sign" style="width:20px;" tabindex="101"/>
-                </td>
-			</tr>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>レートタイプ情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="order_section" class="section_body">
+					<table id="rate_info" class="forms" summary="レートタイプ情報">
+						<tr>
+							<th><div class="col_title_right">レートタイプID</div></th>
+							<td>&nbsp;${rateId}<html:hidden styleId="rateId" property="rateId"/></td>
+							<th><div class="col_title_right">レートタイプ名称<bean:message key='labels.must'/></div></th>
+							<td>
+								<html:text maxlength="60" styleId="name" property="name" style="width: 235px;" tabindex="100"/>
+							</td>
+			                <th><div class="col_title_right">レートタイプ記号</div></th>
+			                <td>
+			                    <html:text maxlength="1" styleId="sign" property="sign" style="width:50px;" tabindex="101"/>
+			                </td>
+						</tr>
+			
+						<tr>
+							<th><div class="col_title_right">レートタイプ備考</div></th>
+							<td colspan="5">
+								<html:text maxlength="120" styleId="remarks" property="remarks" style="width: 400px;" tabindex="102"/>
+							</td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+		
+		
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<c:if test="${isUpdate && editMode}">
+						<span style="margin: 10px 0px 5px 0px;">レートデータ追加</span><br>
+					</c:if>
+					<c:if test="${!isUpdate || !editMode}">
+						<span style="margin: 10px 0px 5px 0px;">レートデータ</span><br>
+					</c:if>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="order_section" class="section_body">
+					<table id="add_row" class="forms detail_info" summary="行追加" style="margin-top: 0px; width: 910px;">
+						<colgroup>
+			
+							<col span="1" style="width:120px">
+							<col span="1" style="width:120px">
+							<col span="1" style="">
+							<col span="1" style="width:100px">
+						</colgroup>
+						<thead>
+						<tr>
+							<th class="rd_top_left" style="height: 30px;">適用開始日<bean:message key='labels.must'/></th>
+							<th class="xl64" style="height: 30px;">レート<bean:message key='labels.must'/></th>
+							<th class="xl64" style="height: 30px;">レートデータ備考</th>
+							<th class="rd_top_right" style="height: 30px;"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr class="rate_list_data">
+							<c:if test="${isUpdate && editMode}">
+								<td style="text-align:center;"><input maxlength="10" id="add_startDate" class="date_input" type="text" style="width: 90px; text-align: center; margin: 3px;" value="" tabindex="200"></td>
+								<td style="text-align:center;"><input maxlength="9" id="add_rate" type="text" style="width: 100px; text-align: right;ime-mode:disabled; margin: 3px;" value="" tabindex="201"></td>
+								<td style="text-align:center;"><input maxlength="120" id="add_remarks" type="text" style="width: 600px; margin: 3px;" value="" tabindex="202"></td>
+								<td style="text-align:center;"><button style="width:80px;" onclick="addRow()" tabindex="203" class="btn_small">レート追加</button></td>
+							</c:if>
+							<c:if test="${isUpdate && !editMode}">
+								<td style="text-align:center;"><html:text maxlength="10" styleId="rateTrnList_0_startDate" styleClass="date_input" property="rateTrnList[0].startDate"  style="width: 90px; text-align: center; margin: 3px;"  tabindex="200"/></td>
+								<td style="text-align:center;"><html:text maxlength="9" styleId="rateTrnList_0_rate" property="rateTrnList[0].rate" style="width: 100px; text-align: right;ime-mode:disabled; margin: 3px;" tabindex="201"/></td>
+								<td style="text-align:center;"><html:text maxlength="120" styleId="rateTrnList_0_remarks" property="rateTrnList[0].remarks" style="width: 600px; margin: 3px;" tabindex="202"/></td>
+								<td></td>
+							</c:if>
+							<c:if test="${!isUpdate}">
+								<td style="text-align:center;"><html:text maxlength="10" styleId="rateTrnList_0_startDate" property="rateTrnList[0].startDate"  style="width: 90px; text-align: center; margin: 3px;" tabindex="200"/></td>
+								<td style="text-align:center;"><html:text maxlength="9" styleId="rateTrnList_0_rate" property="rateTrnList[0].rate" style="width: 100px; text-align: right;ime-mode:disabled; margin: 3px;" tabindex="201"/></td>
+								<td style="text-align:center;"><html:text maxlength="120" styleId="rateTrnList_0_remarks" property="rateTrnList[0].remarks" style="width: 600px; margin: 3px;" tabindex="202"/></td>
+								<td></td>
+							</c:if>
+						</tr>
+						</tbody>
+					</table>
 
-			<tr>
-				<th>レートタイプ備考</th>
-				<td colspan="5">
-					<html:text maxlength="120" styleId="remarks" property="remarks" style="width: 400px;" tabindex="102"/>
-				</td>
-			</tr>
+					<c:if test="${isUpdate && editMode}">
+					<div id="ListContainer" class="search_paging" style="margin: 20px 0px 5px 0px;">
+						<div id="count">レートデータ:<span id="rateTrnListSize">${rateTrnListSize}</span>件</div>
+			            <table id="List" class="forms detail_info" summary="レートデータ一覧" style="width:910px;">
+			    			<colgroup>
+			    				<col span="1" style="width:120px">
+			    				<col span="1" style="width:120px">
+			    				<col span="1" style="">
+			    				<col span="1" style="width:100px">
+			    			</colgroup>
+			    			<thead>
+				    			<tr>
+				    				<th class="rd_top_left" style="height: 30px;">適用開始日</th>
+				    				<th class="xl64" style="height: 30px;">レート</th>
+				    				<th class="xl64" style="height: 30px;">レートデータ備考</th>
+				    				<th class="rd_top_right" style="height: 30px;"></th>
+				    			</tr>
+			    			</thead>
+			    			<tbody>
+				                <!--　行追加用のダミー行 -->
+				                <tr class="rate_list_date" id="rateTrnList_dummy" style="display:none;">
+				                    <td style="text-align:center;">
+				                    	<input type="hidden" id="rateId_dummy" value="">
+				                    	<input type="text" maxlength="10" id="startDate" style="width: 90px; text-align: center;" tabindex="-1">
+				                    </td>
+				    				<td style="text-align:center;"><input type="text" maxlength="9" id="rate" style="width: 100px; text-align: right;ime-mode:disabled; margin: 3px;" tabindex="-1"></td>
+				    				<td style="text-align:center;"><input type="text" maxlength="120" id="remarks" style="width: 600px; margin: 3px;" tabindex="-1"></td>
+				    				<td style="text-align: center;"><button id="deleteBtn" style="width:80px; margin: 3px;" tabindex="-1" class="btn_small">削除</button></td>
+				    			</tr>
+				
+								<c:forEach var="rateTrnList" varStatus="s" items="${rateTrnList}">
+					    			<tr class="rate_list_data" id="rateTrnList_${s.index}">
+					    				<td style="text-align:center;">
+						    				<html:hidden name="rateTrnList" styleId="rateTrnList_${s.index}_rateId" property="rateId" indexed="true"/>
+											<c:if test="${rateTrnList.rateId == ''}">
+						                    	<html:text name="rateTrnList" maxlength="10" styleId="rateTrnList_${s.index}_startDate" property="startDate" styleClass="date_input" style="width: 90px; text-align: center; margin: 3px;" indexed="true" tabindex="${300+(s.index*4)}"/>
+											</c:if>
+											<c:if test="${rateTrnList.rateId != ''}">
+						                    	<html:text name="rateTrnList" maxlength="10" styleId="rateTrnList_${s.index}_startDate" property="startDate" styleClass="c_disable" readonly="true" style="width: 90px; text-align: center; margin: 3px;" indexed="true" tabindex="${300+(s.index*4)}"/>
+											</c:if>
+					                    </td>
+					    				<td style="text-align:center;"><html:text name="rateTrnList" maxlength="9" styleId="rateTrnList_${s.index}_rate" property="rate" style="width: 100px; text-align: right;ime-mode:disabled; margin: 3px;" indexed="true" tabindex="${301+(s.index*4)}"/></td>
+					    				<td style="text-align:center;"><html:text name="rateTrnList" maxlength="120" styleId="rateTrnList_${s.index}_remarks" property="remarks" style="width: 600px; margin: 3px;" indexed="true" tabindex="${302+(s.index*4)}"/></td>
+					    				<td style="text-align: center;"><button id="rateTrnList_${s.index}_deleteBtn" style="width:80px;" tabindex="${303+(s.index*4)}" class="btn_small">削除</button></td>
+					    			</tr>
+									<script type="text/javascript">
+									<!--
+									// イベントの張り付け
+									$("#rateTrnList_${s.index}_deleteBtn").bind("click", {"index": ${s.index}}, deleteRow);
+									-->
+									</script>
+								</c:forEach>
+			                </tbody>
+			            </table>
+					</div>
+					</c:if>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
 
-		</table>
-<c:if test="${isUpdate && editMode}">
-		<span style="margin: 10px 0px 5px 0px;">レートデータ追加</span><br>
-</c:if>
-<c:if test="${!isUpdate || !editMode}">
-		<span style="margin: 10px 0px 5px 0px;">レートデータ</span><br>
-</c:if>
-
-		<table id="add_row" class="forms" summary="行追加" style="margin-top: 0px; width: 910px;">
-			<colgroup>
-
-				<col span="1" style="width:120px">
-				<col span="1" style="width:120px">
-				<col span="1" style="">
-				<col span="1" style="width:100px">
-			</colgroup>
-			<thead>
-			<tr>
-
-				<th>適用開始日<bean:message key='labels.must'/></th>
-				<th>レート<bean:message key='labels.must'/></th>
-				<th>レートデータ備考</th>
-				<th></th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr class="rate_list_data">
-<c:if test="${isUpdate && editMode}">
-				<td style="text-align:center;"><input maxlength="10" id="add_startDate" class="date_input" type="text" style="width: 90px; text-align: center;" value="" tabindex="200"></td>
-				<td style="text-align:center;"><input maxlength="9" id="add_rate" type="text" style="width: 100px; text-align: right;ime-mode:disabled;" value="" tabindex="201"></td>
-				<td style="text-align:center;"><input maxlength="120" id="add_remarks" type="text" style="width: 600px;" value="" tabindex="202"></td>
-				<td style="text-align:center;"><button style="width:80px;" onclick="addRow()" tabindex="203">レート追加</button></td>
-</c:if>
-<c:if test="${isUpdate && !editMode}">
-				<td style="text-align:center;"><html:text maxlength="10" styleId="rateTrnList_0_startDate" styleClass="date_input" property="rateTrnList[0].startDate"  style="width: 90px; text-align: center;"  tabindex="200"/></td>
-				<td style="text-align:center;"><html:text maxlength="9" styleId="rateTrnList_0_rate" property="rateTrnList[0].rate" style="width: 100px; text-align: right;ime-mode:disabled;" tabindex="201"/></td>
-				<td style="text-align:center;"><html:text maxlength="120" styleId="rateTrnList_0_remarks" property="rateTrnList[0].remarks" style="width: 600px;" tabindex="202"/></td>
-				<td></td>
-</c:if>
-<c:if test="${!isUpdate}">
-				<td style="text-align:center;"><html:text maxlength="10" styleId="rateTrnList_0_startDate" property="rateTrnList[0].startDate"  style="width: 90px; text-align: center;" tabindex="200"/></td>
-				<td style="text-align:center;"><html:text maxlength="9" styleId="rateTrnList_0_rate" property="rateTrnList[0].rate" style="width: 100px; text-align: right;ime-mode:disabled;" tabindex="201"/></td>
-				<td style="text-align:center;"><html:text maxlength="120" styleId="rateTrnList_0_remarks" property="rateTrnList[0].remarks" style="width: 600px;" tabindex="202"/></td>
-				<td></td>
-</c:if>
-			</tr>
-			</tbody>
-		</table>
-<c:if test="${isUpdate && editMode}">
-		<div id="ListContainer" class="search_paging" style="margin: 10px 0px 5px 0px;">
-			<div id="count">レートデータ:<span id="rateTrnListSize">${rateTrnListSize}</span>件</div>
-            <table id="List" class="forms" summary="レートデータ一覧" style="width:910px">
-    			<colgroup>
-
-    				<col span="1" style="width:120px">
-    				<col span="1" style="width:120px">
-    				<col span="1" style="">
-    				<col span="1" style="width:100px">
-    			</colgroup>
-    			<thead>
-    			<tr>
-
-    				<th>適用開始日</th>
-    				<th>レート</th>
-    				<th>レートデータ備考</th>
-    				<th></th>
-    			</tr>
-
-    			</thead>
-    			<tbody>
-                <!--　行追加用のダミー行 -->
-                <tr class="rate_list_date" id="rateTrnList_dummy" style="display:none;">
-                    <td style="text-align:center;"><input type="hidden" id="rateId_dummy" value=""><input type="text" maxlength="10" id="startDate" style="width: 90px; text-align: center;" tabindex="-1"></td>
-    				<td style="text-align:center;"><input type="text" maxlength="9" id="rate" style="width: 100px; text-align: right;ime-mode:disabled;" tabindex="-1"></td>
-    				<td style="text-align:center;"><input type="text" maxlength="120" id="remarks" style="width: 600px;" tabindex="-1"></td>
-    				<td style="text-align: center;"><button id="deleteBtn" style="width:80px;" tabindex="-1">削除</button></td>
-    			</tr>
-
-<c:forEach var="rateTrnList" varStatus="s" items="${rateTrnList}">
-    			<tr class="rate_list_data" id="rateTrnList_${s.index}">
-    				<td style="text-align:center;"><html:hidden name="rateTrnList" styleId="rateTrnList_${s.index}_rateId" property="rateId" indexed="true"/>
-<c:if test="${rateTrnList.rateId == ''}">
-                    <html:text name="rateTrnList" maxlength="10" styleId="rateTrnList_${s.index}_startDate" property="startDate" styleClass="date_input" style="width: 90px; text-align: center;" indexed="true" tabindex="${300+(s.index*4)}"/>
-</c:if>
-<c:if test="${rateTrnList.rateId != ''}">
-                    <html:text name="rateTrnList" maxlength="10" styleId="rateTrnList_${s.index}_startDate" property="startDate" styleClass="c_disable" readonly="true" style="width: 90px; text-align: center;" indexed="true" tabindex="${300+(s.index*4)}"/>
-</c:if>
-                    </td>
-    				<td style="text-align:center;"><html:text name="rateTrnList" maxlength="9" styleId="rateTrnList_${s.index}_rate" property="rate" style="width: 100px; text-align: right;ime-mode:disabled;" indexed="true" tabindex="${301+(s.index*4)}"/></td>
-    				<td style="text-align:center;"><html:text name="rateTrnList" maxlength="120" styleId="rateTrnList_${s.index}_remarks" property="remarks" style="width: 600px;" indexed="true" tabindex="${302+(s.index*4)}"/></td>
-    				<td style="text-align: center;"><button id="rateTrnList_${s.index}_deleteBtn" style="width:80px;" tabindex="${303+(s.index*4)}">削除</button></td>
-    			</tr>
-<script type="text/javascript">
-<!--
-// イベントの張り付け
-$("#rateTrnList_${s.index}_deleteBtn").bind("click", {"index": ${s.index}}, deleteRow);
--->
-</script>
-</c:forEach>
-                </tbody>
-            </table>
+		<div style="text-align: right; width: 1160px">
+			<c:if test="${editMode}">
+				<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
+			</c:if>
+			
+			<c:if test="${!editMode}">
+            	<span>（新規レートタイプ）</span>
+			</c:if>
+			
+			<html:hidden property="creDatetm"/>
+			<html:hidden property="creDatetmShow"/>
+			<html:hidden property="updDatetm"/>
+			<html:hidden property="updDatetmShow"/>
+			<button tabindex="350" onclick="initForm();" class="btn_medium">初期化</button>
+			
+			<c:if test="${!isUpdate}">
+				<button tabindex="351" disabled="disabled" class="btn_medium">更新</button>
+			</c:if>
+			<c:if test="${isUpdate}">
+				<c:if test="${editMode}">
+					<button tabindex="351" onclick="registerRate()" class="btn_medium">更新</button>
+			    </c:if>
+				<c:if test="${!editMode}">
+					<button tabindex="351" onclick="registerRate()" class="btn_medium">登録</button>
+			    </c:if>
+			</c:if>
+			<c:if test="${isUpdate}">
+				<c:if test="${editMode}">
+					<button tabindex="352" onclick="deleteRate()" class="btn_medium">削除</button>
+			    </c:if>
+			</c:if>
 		</div>
-</c:if>
-		<div style="text-align: right; width: 910px">
-<c:if test="${editMode}">
-			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
-</c:if>
-<c:if test="${!editMode}">
-            <span>（新規レートタイプ）</span>
-</c:if>
-<html:hidden property="creDatetm"/>
-<html:hidden property="creDatetmShow"/>
-<html:hidden property="updDatetm"/>
-<html:hidden property="updDatetmShow"/>
-			<button tabindex="350" onclick="initForm();">初期化</button>
-<c:if test="${!isUpdate}">
-            <button tabindex="351" disabled="disabled">更新</button>
-</c:if>
-<c:if test="${isUpdate}">
-	<c:if test="${editMode}">
-            <button tabindex="351" onclick="registerRate()">更新</button>
-    </c:if>
-	<c:if test="${!editMode}">
-            <button tabindex="351" onclick="registerRate()">登録</button>
-    </c:if>
-</c:if>
-<c:if test="${isUpdate}">
-	<c:if test="${editMode}">
-		<button tabindex="352" onclick="deleteRate()">削除</button>
-    </c:if>
-</c:if>
-		</div>
-
 	</div>
 </div>
 </s:form>

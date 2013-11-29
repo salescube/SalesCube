@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.sales;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class SearchSalesResultAjaxAction extends
 	 */
 	@Override
 	protected void doBeforeSearch() throws Exception {
-		
+		// 受注入力画面の権限フラグを設定する
 		this.searchSalesForm.isInputROrderValid = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_RORDER);
 	}
@@ -148,7 +147,7 @@ public class SearchSalesResultAjaxAction extends
 	 */
 	@Override
 	protected MasterSearch<BeanMap> getService() {
-		
+		// 未使用
 		return null;
 	}
 
@@ -159,7 +158,7 @@ public class SearchSalesResultAjaxAction extends
 	 */
 	@Override
 	protected Class<List<Object>> getDtoClass() {
-		
+		// 未使用
 		return null;
 	}
 }

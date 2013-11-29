@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.master;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class SearchCustomerRankAjaxAction extends
 	protected List<CustomerRankDto> exchange(List<CustomerRank> entityList)
 			throws Exception {
 
-		
+		// 金額と値引率のフォーマット変換
 		Converter rateConv = this.customerRankService
 				.createStatusPriceConverter();
 		Converter priceConv = new NumberConverter(

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -145,7 +144,7 @@ public class DiscountService extends
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(DiscountService.Param.ROW_COUNT, rowCount);
 				param.put(DiscountService.Param.OFFSET, offset);
@@ -197,60 +196,60 @@ public class DiscountService extends
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 割引ID
 		if (conditions.containsKey(DiscountService.Param.DISCOUNT_ID)) {
 			param.put(DiscountService.Param.DISCOUNT_ID, super
 					.createPrefixSearchCondition((String) conditions
 							.get(DiscountService.Param.DISCOUNT_ID)));
 		}
 
-		
+		// 割引名
 		if (conditions.containsKey(DiscountService.Param.DISCOUNT_NAME)) {
 			param.put(DiscountService.Param.DISCOUNT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(DiscountService.Param.DISCOUNT_NAME)));
 		}
 
-		
+		// 割引有効フラグ
 		if (conditions.containsKey(DiscountService.Param.USE_FLAG)) {
 			param.put(DiscountService.Param.USE_FLAG, conditions
 					.get(DiscountService.Param.USE_FLAG));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(DiscountService.Param.REMARKS)) {
 			param.put(DiscountService.Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(DiscountService.Param.REMARKS)));
 		}
 
-		
+		// 区分IDは固定で有効無効フラグを指定する
 		param.put(DiscountService.Param.CATEGORY_ID, Categories.USE_FLAG);
 
-		
+		// ソートカラムを設定する
 		if (DiscountService.Param.DISCOUNT_ID.equals(sortColumn)) {
-			
+			// 割引ID
 			param.put(DiscountService.Param.SORT_COLUMN_DISCOUNT,
 					DiscountService.COLUMN_DISCOUNT_ID);
 		} else if (DiscountService.Param.DISCOUNT_NAME.equals(sortColumn)) {
-			
+			// 割引名
 			param.put(DiscountService.Param.SORT_COLUMN_DISCOUNT,
 					DiscountService.COLUMN_DISCOUNT_NAME);
 		} else if (DiscountService.Param.USE_FLAG.equals(sortColumn)) {
-			
+			// 割引有効フラグ
 			param.put(DiscountService.Param.SORT_COLUMN_DISCOUNT,
 					DiscountService.COLUMN_USE_FLAG);
 		} else if (DiscountService.Param.USE_FLAG_NAME.equals(sortColumn)) {
-			
+			// 割引有効（名称）
 			param.put(DiscountService.Param.SORT_COLUMN_DISCOUNT,
 					DiscountService.COLUMN_USE_FLAG_NAME);
 		} else if (DiscountService.Param.REMARKS.equals(sortColumn)) {
-			
+			// 備考
 			param.put(DiscountService.Param.SORT_COLUMN_DISCOUNT,
 					DiscountService.COLUMN_REMARKS);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(DiscountService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -300,16 +299,16 @@ public class DiscountService extends
 							Constants.FORMAT.DATE).execute();
 				}
 
-				
+				// 割引データの追加
 				if (discountDto.discountTrnList == null) {
 					discountDto.discountTrnList = new ArrayList<DiscountTrnDto>();
 				}
 				DiscountTrnDto discountTrnDto = new DiscountTrnDto();
 				discountDto.discountTrnList.add(discountTrnDto);
 
-				
+				// 数量範囲用の数値フォーマット
 				Converter convRange = new NumberConverter(null, 0, true);
-				
+				// 掛率用の数値フォーマット
 				Converter convRate = new NumberConverter(null, 2, true);
 
 				Beans.copy(discountJoin, discountTrnDto).converter(convRange,
@@ -344,13 +343,13 @@ public class DiscountService extends
 	 */
 	public void deleteDiscountByDiscountId(String discountId, String timestamp)
 			throws Exception {
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 		param.put(DiscountService.Param.DISCOUNT_ID, discountId);
 		this.lockRecordBySqlFile("discount/LockDiscountByDiscountId.sql",
 				param, timestamp);
 
-		
+		// 削除
 		param = super.createSqlParam();
 		param.put(DiscountService.Param.DISCOUNT_ID, discountId);
 		this.updateBySqlFile("discount/DeleteDiscountByDiscountId.sql", param)
@@ -368,7 +367,7 @@ public class DiscountService extends
 			return;
 		}
 
-		
+		// 登録
 		Map<String, Object> param = super.createSqlParam();
 
 		BeanMap discountInfo = Beans.createAndCopy(BeanMap.class, discountDto)
@@ -390,15 +389,15 @@ public class DiscountService extends
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.DISCOUNT_ID, discountDto.discountId);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("discount/LockDiscountByDiscountId.sql", lockParam,
 				discountDto.updDatetm);
 
-		
+		// 更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap discountInfo = Beans.createAndCopy(BeanMap.class, discountDto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(

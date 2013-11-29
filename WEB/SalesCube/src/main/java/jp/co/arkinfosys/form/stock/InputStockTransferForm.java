@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.stock;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class InputStockTransferForm extends AbstractSlipEditForm<EadLineTrnDto>{
      */
     public List<EadLineTrnDto> eadLineTrnDtoList;
 
-	
+	// 明細行のタブ移動可能項目数
 	public int lineElementCount = 12;
 
 	 /**
@@ -94,7 +93,7 @@ public class InputStockTransferForm extends AbstractSlipEditForm<EadLineTrnDto>{
 	 * フォームをクリアします.
 	 */
 	public void reset() {
-		
+		//menuUpdate = false;
 		eadSlipId = null;
 		eadDate = null;
 		remarks = null;
@@ -136,7 +135,7 @@ public class InputStockTransferForm extends AbstractSlipEditForm<EadLineTrnDto>{
 	 *
 	 */
 	public void initializeScreenInfo() {
-		
+		// Formの初期化
     	reset();
 		userId = this.userDto.userId;
 		userName = this.userDto.nameKnj;
@@ -164,7 +163,7 @@ public class InputStockTransferForm extends AbstractSlipEditForm<EadLineTrnDto>{
 	 */
 	@Override
 	public void setDefaultSelected(AbstractSlipDto<EadLineTrnDto> dto) {
-		
+		// 明細行を再設定する
 		if (this.eadLineTrnDtoList == null) {
 			this.eadLineTrnDtoList = new ArrayList<EadLineTrnDto>();
 		}
@@ -175,7 +174,7 @@ public class InputStockTransferForm extends AbstractSlipEditForm<EadLineTrnDto>{
 	 * 未使用です.
 	 */
 	public void initCopy() throws ServiceException {
-		
+		// 伝票複写なし
 		return ;
 	}
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.stock;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class OutputStockListForm {
 		public static final String VALUE_6 = "6";
 	}
 
-	
+	// JSP側のEL式で使用する定数
 	public String RADIO_COND2_VALUE_0 = RadioCond2.VALUE_0;
 	public String RADIO_COND2_VALUE_1 = RadioCond2.VALUE_1;
 	public String RADIO_COND2_VALUE_2 = RadioCond2.VALUE_2;
@@ -117,18 +116,18 @@ public class OutputStockListForm {
 		String labelPeriodMonth = MessageResourcesUtil.getMessage("labels.periodMonth");
 		String labelAllocatedQuantity = MessageResourcesUtil.getMessage("labels.allocatedQuantity");
 
-		
+		// 必須チェック
 
-		
+		// 引当可能数
 		if(RadioCond2.VALUE_5.equals(radioCond2)
 				&& !StringUtil.hasLength(allocatedQuantity)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.required", labelAllocatedQuantity));
 		}
 
-		
+		// 型チェック
 
-		
+		// 抽出期間
 		if(StringUtil.hasLength(periodMonth)) {
 			try {
 				Integer.valueOf(periodMonth);
@@ -137,7 +136,7 @@ public class OutputStockListForm {
 						new ActionMessage("errors.integer", labelPeriodMonth));
 			}
 		}
-		
+		// 引当可能数
 		if(RadioCond2.VALUE_5.equals(radioCond2)
 				&& StringUtil.hasLength(allocatedQuantity)) {
 			try {

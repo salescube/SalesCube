@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.math.BigDecimal;
@@ -48,7 +47,7 @@ public class CommonSupplierAction extends CommonAjaxResources {
 	@Execute(validator = true, input = CommonAjaxResources.Mapping.ERROR_JSP)
 	public String getSupplierInfosBySupplierCode() throws Exception {
 
-		
+		// 仕入先コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonSupplierForm.supplierCode)) {
 			ResponseUtil.write("");
 			return null;
@@ -59,10 +58,10 @@ public class CommonSupplierAction extends CommonAjaxResources {
 			SupplierJoin sup = supplierService
 					.findById(commonSupplierForm.supplierCode);
 
-			
+			// 納入先コードを指定した検索なので複数はかえらない
 			if (sup != null) {
 
-				
+				// エンティティの内容をマップに展開
 				BeanMap map = Beans.createAndCopy(BeanMap.class, sup)
 						.dateConverter(Constants.FORMAT.TIMESTAMP,
 								"lastCutoffDate", "creDatetm", "updDatetm")
@@ -76,7 +75,7 @@ public class CommonSupplierAction extends CommonAjaxResources {
 				map.put("aptBalance", aptBalance != null ? df
 						.format(aptBalance) : "");
 
-				
+				// アクションフォームの内容（計算結果）をマップに展開
 				BeanMap bmap = super.createBeanMapWithNullToEmpty(map);
 				ResponseUtil.write(JSON.encode(bmap));
 

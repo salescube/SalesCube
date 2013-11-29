@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.payment;
 
 import java.util.Date;
@@ -53,10 +52,10 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	 * パラメータ定義クラスです.
 	 */
     public static class Param {
-    	
+    	// 共通
     	public static final String SUPPLIER_CODE = "supplierCode";
 
-    	
+    	// 買掛残高
     	public static final String APT_CUTOFF_DATE = "aptCutoffDate";
     	public static final String APT_BALANCE_ID = "aptBalanceId";
     	public static final String APT_ANNUAL = "aptAnnual";
@@ -74,12 +73,12 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
     	public static final String DOL_UNIT_PRICE = "dolUnitPrice";
     	public static final String DOL_PRICE = "dolPrice";
 
-    	
+    	// 支払伝票
     	public static final String PAYMENT_SLIP_ID = "paymentSlipId";
     	public static final String PAYMENT_STATUS = "status";
     	public static final String PAYMENT_CUTOFF_DATE = "paymentCutoffDate";
     	public static final String PAYMENT_PDATE = "paymentPdate";
-    	
+    	// 仕入伝票
     	public static final String SUPPLIER_SLIP_ID = "supplierSlipId";
     	public static final String SUPPLIER_LINE_ID = "supplierLineId";
     	public static final String SUPPLIER_SLIP_STATUS_UNPAID = "unpaid";
@@ -88,7 +87,7 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
     	public static final String SUPPLIER_LINE_STATUS_PAID = "paid";
     	public static final String SUPPLIER_DATE = "supplierDate";
     	public static final String SUPPLIER_CUTOFF_DATE = "supplierCutoffDate";
-    	
+    	// 発注伝票
     	public static final String PO_SLIP_ID = "poSlipId";
     	public static final String PO_LINE_ID = "poLineId";
     	public static final String PORDER_SLIP_STATUS_PURCHASED = "porderSlipStatusPurchased";
@@ -117,22 +116,22 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	 */
 	public void reopenPayment() throws ServiceException,UnabledLockException{
 		try{
-			
+			// 最終締日を取得
 			Date latestAptCutoffDate = aptBalanceService.findLatestAptBalance();
 
-			
+			//***** 買掛残高更新 *****
 			deleteAptBalance(latestAptCutoffDate);
 
-			
+			//***** 支払伝票更新 *****
 			updatePaymentSlipReopen(latestAptCutoffDate);
 
-			
+			//***** 仕入伝票更新 *****
 			updateSupplierSlipReopen(latestAptCutoffDate);
 
-			
+			//***** 仕入先マスタの最終締処理日を元に戻す *****
 			List<Supplier> supplierList = supplierService.findAllSupplier();
 			for(Supplier supplier : supplierList){
-				
+				// 仕入先ごとに仕入伝票から最新の締処理日を取得する
 				SupplierSlipTrn supplierSlipTrn = supplierSlipService.findLatestCutoffDateBySupplierCode(supplier.supplierCode);
 
 				Date lastCutoffDate = null;
@@ -140,7 +139,7 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 					lastCutoffDate = supplierSlipTrn.paymentCutoffDate;
 				}
 
-				
+				// 仕入先マスタの最終締処理日を更新する
 				supplierService.updateLastCutoffDate(supplier.supplierCode,convertUtilDateToSqlDate(lastCutoffDate));
 			}
 		}catch(Exception e){
@@ -227,26 +226,26 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	 * @throws ServiceException
 	 */
 	public void closePayment(Date cutoffDate) throws ServiceException{
-		
+		// 仕入先マスタから全仕入先を取得
 		List<Supplier> supplierList = supplierService.findAllSupplier();
 
 		java.sql.Date cutoffDateSql = super.convertUtilDateToSqlDate(cutoffDate);
 
-		
+		// 全仕入先について処理を実施
 		for(Supplier supplier : supplierList){
-			
+			//***** 支払伝票更新 *****
 			updatePaymentSlipClose(supplier,cutoffDateSql);
 
-			
+			//***** 仕入伝票更新 *****
 			updateSupplierSlipClose(supplier,cutoffDateSql);
 
-			
+			// 仕入伝票明細行から買掛残高作成用データ取得
 			List<SupplierSlipLineJoin> supplierLineList = selectSupplierLineTrnClose(supplier,cutoffDateSql);
 
-			
+			// 買掛残高設定
 			insertAptBalanceClose(supplierLineList,cutoffDateSql);
 
-			
+			// 仕入先マスタの最終締処理日を更新
 			supplierService.updateLastCutoffDate(supplier.supplierCode, cutoffDateSql);
 		}
 	}
@@ -259,7 +258,7 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	 */
 	private void updatePaymentSlipClose(Supplier supplier,Date cutoffDate){
     	Map<String, Object> param = super.createSqlParam();
-    	param.put(ClosePaymentService.Param.PAYMENT_STATUS,Constants.STATUS_PAYMENT_SLIP.CUTOFF);
+    	param.put(ClosePaymentService.Param.PAYMENT_STATUS,Constants.STATUS_PAYMENT_SLIP.CUTOFF);// 支払締め
     	param.put(ClosePaymentService.Param.SUPPLIER_CODE,supplier.supplierCode);
     	param.put(ClosePaymentService.Param.PAYMENT_CUTOFF_DATE,cutoffDate);
 
@@ -293,10 +292,10 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
     	Map<String, Object> param = super.createSqlParam();
     	param.put(ClosePaymentService.Param.SUPPLIER_CUTOFF_DATE,cutoffDate);
     	param.put(ClosePaymentService.Param.SUPPLIER_CODE,supplier.supplierCode);
-    	param.put(ClosePaymentService.Param.SUPPLIER_LINE_STATUS_UNPAID, Constants.STATUS_SUPPLIER_LINE.UNPAID); 
-    	param.put(ClosePaymentService.Param.SUPPLIER_LINE_STATUS_PAID, Constants.STATUS_SUPPLIER_LINE.PAID); 
+    	param.put(ClosePaymentService.Param.SUPPLIER_LINE_STATUS_UNPAID, Constants.STATUS_SUPPLIER_LINE.UNPAID); // 未払い
+    	param.put(ClosePaymentService.Param.SUPPLIER_LINE_STATUS_PAID, Constants.STATUS_SUPPLIER_LINE.PAID); // 支払済
 
-    	
+    	// 仕入伝票明細行テーブルから情報を取得する
     	return this.selectBySqlFile(SupplierSlipLineJoin.class, "payment/FindSupplierLineTrnForClose.sql", param).getResultList();
 	}
 
@@ -309,18 +308,18 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	 * @param cutoffDate 締年月日
 	 */
 	private void insertAptBalanceClose(List<SupplierSlipLineJoin> supplierLineList,Date cutoffDate) throws ServiceException{
-		
+		// 発注伝票明細行から仕入伝票情報を取得し、買掛残高に設定
 		for(SupplierSlipLineJoin supplierSlipLineJoin  : supplierLineList){
 	    	Map<String, Object> param = super.createSqlParam();
 			param.put(ClosePaymentService.Param.PO_LINE_ID,supplierSlipLineJoin.poLineId);
 
-			
+			// 仕入伝票明細行に紐づく発注伝票明細行情報を取得
 			PoLineTrn poLineTrn = this.selectBySqlFile(PoLineTrn.class,
 					"payment/FindPoLineTrnByIdForClose.sql", param).getSingleResult();
 
-			
+			// 発注伝票明細行情報が存在する場合のみ処理対象とする
 			if(poLineTrn != null){
-				
+				// 買掛残高にデータを設定(履歴も設定)
 				insertAptBalance(poLineTrn,supplierSlipLineJoin,cutoffDate);
 			}
 		}
@@ -336,34 +335,34 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	private void insertAptBalance(PoLineTrn poLineTrn, SupplierSlipLineJoin supplierSlipLineJoin,Date cutoffDate) throws ServiceException{
     	Map<String, Object> param = super.createSqlParam();
 
-    	
+    	// パラメータ設定
 	    try{
-	    	
+	    	// 買掛残高ID
 	    	long aptBalanceId = seqMakerService.nextval(Table.APT_BALANCE_TRN);
 	    	param.put(ClosePaymentService.Param.APT_BALANCE_ID,aptBalanceId);
-	    	
+	    	// 年度、月度、年月度
 	    	YmDto ymDto = ymService.getYm(cutoffDate);
 	    	if(ymDto != null){
 		    	param.put(ClosePaymentService.Param.APT_ANNUAL,ymDto.annual);
 		    	param.put(ClosePaymentService.Param.APT_MONTHLY,ymDto.monthly);
 		    	param.put(ClosePaymentService.Param.APT_YM,ymDto.ym);
 	    	}
-	    	
+	    	// 買掛締日
 	    	param.put(ClosePaymentService.Param.APT_CUTOFF_DATE,cutoffDate);
-	    	
+	    	// 担当者
 	    	param.put(ClosePaymentService.Param.USER_ID,userDto.userId);
 	    	param.put(ClosePaymentService.Param.USER_NAME,userDto.nameKnj);
-	    	
+	    	// 仕入先
 	    	param.put(ClosePaymentService.Param.SUPPLIER_CODE,supplierSlipLineJoin.supplierCode);
 	    	SupplierJoin supplierJoin = supplierService.findById(supplierSlipLineJoin.supplierCode);
 	    	param.put(ClosePaymentService.Param.SUPPLIER_NAME,supplierJoin.supplierName);
-	    	
+	    	// 発注伝票明細行
 	    	param.put(ClosePaymentService.Param.PRODUCT_CODE,poLineTrn.productCode);
 	    	param.put(ClosePaymentService.Param.PRODUCT_NAME,poLineTrn.productAbstract);
 	    	param.put(ClosePaymentService.Param.SUPPLIER_PCODE,poLineTrn.supplierPcode);
 	    	param.put(ClosePaymentService.Param.PO_SLIP_ID,poLineTrn.poSlipId);
 	    	param.put(ClosePaymentService.Param.PO_LINE_ID,poLineTrn.poLineId);
-	    	
+	    	// 仕入伝票明細行
 	    	param.put(ClosePaymentService.Param.QUANTITY,supplierSlipLineJoin.quantity);
 	    	param.put(ClosePaymentService.Param.UNIT_PRICE,supplierSlipLineJoin.unitPrice);
 	    	param.put(ClosePaymentService.Param.PRICE,supplierSlipLineJoin.price);
@@ -374,7 +373,7 @@ public class ClosePaymentService extends AbstractService<AptBalanceTrn> {
 	    	param.put(ClosePaymentService.Param.SUPPLIER_DATE,supplierSlipLineJoin.supplierDate);
 	    	param.put(ClosePaymentService.Param.PRICE,supplierSlipLineJoin.price);
 
-	    	
+	    	// 買掛残高テーブルにデータを設定
 	    	this.updateBySqlFile("payment/InsertAptBalanceForClose.sql", param).execute();
 		}catch(Exception e){
 			throw new ServiceException(e);

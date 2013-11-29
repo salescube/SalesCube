@@ -148,19 +148,19 @@
 
 		<!-- ファンクションボタン -->
 		<div class="function_buttons">
-			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button disabled="disabled">F2<br>&nbsp;
-			</button><button id="btnF3" tabindex="2001" onclick="onF3()">F3<br><bean:message key='words.name.excel'/>
-			</button><button disabled="disabled">F4<br>&nbsp;
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;</button>
-		</div>
+			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button disabled="disabled">F2<br>&nbsp;</button>
+			<button id="btnF3" tabindex="2001" onclick="onF3()">F3<br><bean:message key='words.name.excel'/></button>
+			<button disabled="disabled">F4<br>&nbsp;</button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
+		</div><br><br><br>
 
 		<s:form onsubmit="return false;">
 
@@ -169,6 +169,18 @@
 				<div id="errors" style="color: red">
 					<html:errors/>
 				</div>
+				
+				<div class="form_section_wrap">
+				<div class="form_section">
+				<div class="section_title">
+					<span><bean:message key='labels.searchCondition'/></span>
+					<br>
+					<button class="btn_toggle">
+						<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+					</button>
+				</div>
+				<div class="section_body">
+				
 
 				<div id="target_info">
 					<table id="output_condition" class="forms" summary="outputCondition">
@@ -179,13 +191,13 @@
 							<col span="1" style="width: 54%">
 						</colgroup>
 						<tr>
-							<th><bean:message key='labels.outputTarget'/></th> <!-- 出力対象 -->
+							<th><div class="col_title_right"><bean:message key='labels.outputTarget'/></div></th> <!-- 出力対象 -->
 							<td>
 								<html:select property="outputTarget" styleId="outputTarget" onchange="onChangeTarget()" tabindex="100">
 									<html:options collection="outputTargetList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><bean:message key='labels.targetDate'/> <bean:message key='labels.must'/></th> <!-- 対象年月 -->
+							<th><div class="col_title_right"><bean:message key='labels.targetDate'/> <bean:message key='labels.must'/></div></th> <!-- 対象年月 -->
 							<td>
 								<html:text property="targetDate" styleId="targetDate" style="width: 150px; ime-mode: disabled;" tabindex="101" />
 								<bean:message key='labels.targetDateSuffix'/>
@@ -200,10 +212,10 @@
 							<col span="1" style="width: 87%">
 						</colgroup>
 						<tr>
-							<th><bean:message key='labels.supplierCode'/> <bean:message key='labels.must'/></th> <!-- 仕入先コード -->
+							<th><div class="col_title_right"><bean:message key='labels.supplierCode'/> <bean:message key='labels.must'/></div></th> <!-- 仕入先コード -->
 							<td>
 								<html:text property="supplierCode" styleId="supplierCode" style="width: 150px; ime-mode: disabled;" maxlength="9" tabindex="102" />
-								<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="103" onclick="openSupplierSearchDialog(1);"/>
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="103" onclick="openSupplierSearchDialog(1);"/>
 							</td>
 
 						</tr>
@@ -216,17 +228,20 @@
 							<col span="1" style="width: 87%">
 						</colgroup>
 						<tr>
-							<th><bean:message key='labels.customerCodeRange'/></th> <!-- 顧客コード範囲 -->
+							<th><div class="col_title_right"><bean:message key='labels.customerCodeRange'/></div></th> <!-- 顧客コード範囲 -->
 							<td>
 								<html:text property="customerCodeFrom" styleId="customerCodeFrom" style="width: 150px; ime-mode: disabled;" maxlength="13" tabindex="106" />
-								<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="107" />
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="107" />
 								<bean:message key='labels.betweenSign'/> <!-- ～ -->
 								<html:text property="customerCodeTo" styleId="customerCodeTo" style="width: 150px; ime-mode: disabled;" maxlength="13" tabindex="108" />
-								<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="109" />
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="109" />
 							</td>
 						</tr>
 					</table>
 				</div>
+			</div>
+			</div>
+			</div>
 			</div>
 		</s:form>
 	</div>

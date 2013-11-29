@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import jp.co.arkinfosys.entity.Customer;
@@ -24,7 +23,7 @@ public class PostageUtil {
 	 */
 	public static String getPostagePrice( Customer customer, Double normalTotalPrice ) {
 		String postagePrice = null;
-		
+		// 3000円未満は登録しない
 		if( normalTotalPrice >= 3000 ){
 			return null;
 		}

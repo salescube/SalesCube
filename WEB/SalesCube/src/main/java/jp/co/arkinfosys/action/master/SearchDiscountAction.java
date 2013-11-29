@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import javax.annotation.Resource;
@@ -52,7 +51,7 @@ public class SearchDiscountAction extends AbstractSearchAction<DiscountDto> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 割引有効リスト
 		this.searchDiscountForm.useFlagList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.USE_FLAG);
 		this.searchDiscountForm.useFlagList.add(0, new LabelValueBean());

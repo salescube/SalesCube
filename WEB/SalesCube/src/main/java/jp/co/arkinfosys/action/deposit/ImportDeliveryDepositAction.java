@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.deposit;
 
 import java.io.UnsupportedEncodingException;
@@ -84,7 +83,7 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			importDeliveryDepositForm.searchResultCount = importDeliveryDepositForm.searchResultList.size();
 			importDeliveryDepositForm.dispResultCount =importDeliveryDepositForm.searchResultCount;
 
-			
+			// 処理結果件数表示
 			setListCount();
 
 		} catch (ServiceException e) {
@@ -112,19 +111,19 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	 */
 	@Execute(validator = true, validate = "validate", input = "reinput")
 	public String upload() throws Exception {
-		
+		// CSVファイルを読み込む
 
 		try {
 			String userId = this.userDto.userId;
 
 
 			invoiceFlag = false;
-			
+			// 配送業者入金データテーブルからユーザIDが一致する行を削除
 			deliveryDepositWorkService.deleteByUserId(userId);
 
-			
+			// CSVの読み込み
 			if (this.importDeliveryDepositForm.infoBoxFile.getFileSize() == 0) {
-				
+				// エラー
 				ActionMessages errors = new ActionMessages();
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.delivery.deposit.csv.format"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
@@ -135,26 +134,26 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			this.readXSV(this.importDeliveryDepositForm.infoBoxFile);
 
 			if( this.isReadStop ){
-				
+				//データ削除
 				deliveryDepositWorkService.deleteByUserId(userId);
 				invoiceDataWorkService.deleteByUserId(userId);
 				return ImportDeliveryDepositAction.Mapping.INPUT;
 			}
-			
+			// ラベル行のみ
 			if( bNoData ){
-				
+				// エラー
 				ActionMessages errors = new ActionMessages();
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.delivery.deposit.csv.format"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
 				return ImportDeliveryDepositAction.Mapping.INPUT;
 			}
 
-			
+			// 送り状データテーブルからユーザIDが一致する行を削除
 			invoiceFlag = true;
 			invoiceDataWorkService.deleteByUserId(userId);
-			
+			// CSVの読み込み
 			if (this.importDeliveryDepositForm.invoiceFile.getFileSize() == 0) {
-				
+				// エラー
 				ActionMessages errors = new ActionMessages();
 				errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.delivery.invoice.data.format"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
@@ -165,26 +164,26 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			this.readXSV(this.importDeliveryDepositForm.invoiceFile);
 
 			if( this.isReadStop){
-				
+				//データ削除
 				deliveryDepositWorkService.deleteByUserId(userId);
 				invoiceDataWorkService.deleteByUserId(userId);
 				return ImportDeliveryDepositAction.Mapping.INPUT;
 			}
-			
+			// ラベル行のみ
 			if( bNoData ){
-				
+				// エラー
 				ActionMessages errors = new ActionMessages();
 				errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.delivery.invoice.data.format"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
 				return ImportDeliveryDepositAction.Mapping.INPUT;
 			}
-			
+			// エラーがあるか確認する
 
-			
+			// 配送業者入金データと送り状データを伝票番号で突合する
 			List<ActionMessages> errorList = new ArrayList<ActionMessages>();
 			importDeliveryDepositForm.newDepositSlipIdStr= importDeliveryDepositService.insertDeliveryDeposit( userId, importDeliveryDepositForm.bankId, errorList);
 
-			
+			// 結果の取得
 			importDeliveryDepositForm.searchResultList =
 				importDeliveryDepositService.getImportResultList(
 					importDeliveryDepositForm.sortColumn,
@@ -197,11 +196,11 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			importDeliveryDepositForm.linkInputDeposit = this.userDto.isMenuUpdate( Constants.MENU_ID.INPUT_DEPOSIT );
 			importDeliveryDepositForm.linkInputSales = this.userDto.isMenuUpdate( Constants.MENU_ID.INPUT_SALES);
 
-			
-			
-			
+			// メッセージ設定
+			// エラーがなければ、登録メッセージをセット
+			//if(messages.size() == 0) {
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("infos.import"));
-			
+			//}
 			ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
 			for (ActionMessages errors : errorList) {
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
@@ -209,7 +208,7 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 
 			importDeliveryDepositForm.dispResultCount =importDeliveryDepositForm.searchResultCount;
 
-			
+			//処理結果件数表示
 			setListCount();
 
 		} catch (UnsupportedEncodingException e) {
@@ -242,9 +241,9 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 					userDto.userId,
 					importDeliveryDepositForm.newDepositSlipIdStr);
 			importDeliveryDepositForm.searchResultCount = importDeliveryDepositForm.searchResultList.size();
-			importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.searchResultCount;	
+			importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.searchResultCount;	// 表示件数を初期化
 
-			
+			// 処理結果件数表示
 			setListCount();
 
 		} catch (ServiceException e) {
@@ -282,13 +281,13 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	protected void processLine(int index, String line, String[] values)
 			throws Exception {
 		if (index == 1) {
-			
+			// 1行目はタイトルなので戻る
 			return;
 		}
 		if (!invoiceFlag) {
-			
+			// 入力チェック
 			ActionMessages errors = new ActionMessages();
-			
+			// カラム（＝フィールド）数
 			if (values == null
 					|| values.length != Constants.DELIVERY_DEPOSIT_CSV.DEPOSIT_COLUMN_COUNT) {
 				this.isReadStop = true;
@@ -299,7 +298,7 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			String userId = this.userDto.userId;
 
 			ShipDepositWorkDto inDto = new ShipDepositWorkDto();
-			
+			// 配送業者入金データ
 			inDto.userId = userId;
 			inDto.paymentCategory = values[0];
 			inDto.customerCode = values[1];
@@ -323,15 +322,15 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			}
 			inDto.rgSlipId = values[14];
 
-			
+			// 行追加
 			deliveryDepositWorkService.insertRecord(inDto);
 			bNoData = false;
 		} else {
-			
+			// 送り状データ
 
-			
+			// 入力チェック
 			ActionMessages errors = new ActionMessages();
-			
+			// カラム（＝フィールド）数
 			if (values == null
 					|| values.length != Constants.DELIVERY_DEPOSIT_CSV.INVOICE_COLUMN_COUNT) {
 				this.isReadStop = true;
@@ -425,7 +424,7 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			inDto.apsProductName = values[71];
 			inDto.apsRemark = values[72];
 
-			
+			// 行追加
 			invoiceDataWorkService.insertRecord(inDto);
 			bNoData = false;
 		}
@@ -444,25 +443,25 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	/**
 	 * 処理結果の各種件数を設定します.
 	 */
-	
+	// 処理結果の各種件数を設定
 	public void setListCount(){
-		
+		// 処理結果件数を取得　add 2010.05.24 kaki
 		int iOK = 0;
 		int iNG = 0;
 		int iEtc = 0;
 		for(ImportDeliveryDepositResultDto resultList : importDeliveryDepositForm.searchResultList){
 
 			if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_INVOICE_ONLY)){
-				
+				// その他（送り状のみ）
 				iEtc++;
 			}
 			else if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_OLD)||
 					resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_NEW)){
-				// 
+				// // 登録済み（登録済み、新規登録）
 				iOK++;
 			}
 			else{
-				
+				// それ以外は、不一致件数
 				iNG++;
 			}
 		}
@@ -484,11 +483,11 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	@Execute(validator = false)
 	public String resetListOK() throws Exception {
 
-		
+		// 選択値保存
 		importDeliveryDepositForm.selectCount = 1;
 
 		String ret =  resetList(1);
-		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importOKCount;	
+		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importOKCount;	// 表示件数を設定
 		return ret;
 
 	}
@@ -501,10 +500,10 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	 */
 	@Execute(validator = false)
 	public String resetListErr() throws Exception {
-		
+		// 選択値保存
 		importDeliveryDepositForm.selectCount = 2;
 		String ret = resetList(2);
-		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importNGCount;	
+		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importNGCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -516,10 +515,10 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	 */
 	@Execute(validator = false)
 	public String resetListEtc() throws Exception {
-		
+		// 選択値保存
 		importDeliveryDepositForm.selectCount = 3;
 		String ret =  resetList(3);
-		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importEtcCount;	
+		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.importEtcCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -531,10 +530,10 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 	 */
 	@Execute(validator = false)
 	public String resetListAll() throws Exception {
-		
+		// 選択値保存
 		importDeliveryDepositForm.selectCount = 0;
 		String ret =  resetList(0);
-		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.searchResultCount;	
+		importDeliveryDepositForm.dispResultCount = importDeliveryDepositForm.searchResultCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -565,20 +564,20 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			for(ImportDeliveryDepositResultDto resultList : searchAllResultList){
 
 				if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_INVOICE_ONLY)){
-					
+					// その他（送り状のみ）
 					iEtc++;
 					if((iList == 0)||(iList == 3))
 						importDeliveryDepositForm.searchResultList.add(resultList);
 				}
 				else if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_OLD)||
 						resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_NEW)){
-					// 
+					// // 登録済み（登録済み、新規登録）
 					iOK++;
 					if((iList == 0)||(iList == 1))
 						importDeliveryDepositForm.searchResultList.add(resultList);
 				}
 				else{
-					
+					// それ以外は、不一致件数
 					iNG++;
 					if((iList == 0)||(iList == 2))
 						importDeliveryDepositForm.searchResultList.add(resultList);
@@ -615,7 +614,7 @@ public class ImportDeliveryDepositAction extends AbstractXSVUploadAction {
 			return (dt!=null);
 		}
 		catch (Exception e) {
-			
+			// 無処理
 		}
 		return false;
 	}

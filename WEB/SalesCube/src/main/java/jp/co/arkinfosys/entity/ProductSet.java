@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.io.Serializable;
@@ -25,23 +24,23 @@ public class ProductSet implements Serializable {
 	public static final String TABLE_NAME = "PRODUCT_SET_MST";
 
 	@Id
-	public String setProductCode; 
+	public String setProductCode; // セット商品コード
 
 	@Id
-	public String productCode; 
+	public String productCode; // 商品コード
 
-	public BigDecimal quantity; 
+	public BigDecimal quantity; // 数量
 
-	public String creFunc; 
+	public String creFunc; // 作成機能
 
-	public Timestamp creDatetm; 
+	public Timestamp creDatetm; // 作成日時
 
-	public String creUser; 
+	public String creUser; // 作成者
 
-	public String updFunc; 
+	public String updFunc; // 更新機能
 
-	public Timestamp updDatetm; 
+	public Timestamp updDatetm; // 更新日時
 
-	public String updUser; 
+	public String updUser; // 更新者
 
 }

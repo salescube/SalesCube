@@ -29,16 +29,14 @@ function onF1(){
 }
 // 検索
 function onF2(){
-	// この条件で検索しますか？
-	if(confirm('<bean:message key="confirm.search" />')){
-		// 検索条件を設定し検索を実行する
-		var paramData = createParamData();
-		paramData[ "pageNo" ] = 1;
-		execSearch(paramData, false);
-	}
+
+	// 検索条件を設定し検索を実行する
+	var paramData = createParamData();
+	paramData[ "pageNo" ] = 1;
+	execSearch(paramData, false);
 }
 
-// PDF
+//PDF
 function onF3(){
 	pdf();
 }
@@ -360,10 +358,10 @@ function setDisplayCheckState() {
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0007"/>
 		<jsp:param name="MENU_ID" value="0702"/>
@@ -376,20 +374,21 @@ function setDisplayCheckState() {
 	<span class="title"><bean:message key='titles.makeOutPOrder'/></span>
 
 	<div class="function_buttons">
-		   <button            onclick="onF1()"                     tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button><!--初期化
-		--><button            onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.search'/></button><!--検索
-		--><button id="btnF3" onclick="onF3()" disabled="disabled" tabindex="2002">F3<br><bean:message key='words.name.pdf'/></button><!--PDF
-		--><button                             disabled="disabled" tabindex="2003">F4<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
+		<button            onclick="onF1()"                     tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button><!--初期化-->
+		<button            onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.search'/></button><!--検索-->
+		<button id="btnF3" onclick="onF3()" disabled="disabled" tabindex="2002">F3<br><bean:message key='words.name.pdf'/></button><!--PDF-->
+		<button                             disabled="disabled" tabindex="2003">F4<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
 	</div>
-
+	<br><br><br>
+	
 	<s:form onsubmit="return false;">
 
 	<div class="function_forms">
@@ -404,59 +403,64 @@ function setDisplayCheckState() {
 		</html:messages>
 	</div>
 
-		<span><bean:message key='labels.makePOSlipSearchCondition'/></span><br><!-- 検索条件 -->
-		<div id="search_info">
-
-			<table id="search_info1" class="forms" style="width: 700px; table-layout: fixed;" summary="search_info1">
-				<colgroup>
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-					<col span="1" style="width: 12.5%;">
-				</colgroup>
-
+	<div class="form_section_wrap">
+	<div class="form_section">
+		<div class="section_title">
+			<span><bean:message key='labels.makePOSlipSearchCondition'/></span><br><!-- 検索条件 -->
+			<button class="btn_toggle">
+			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			</button>
+		</div><!-- /.section_title -->
+		
+		<div id="search_info" class="section_body">
+			<table id="search_info1" class="forms" style="width: auto;" summary="search_info1">
 				<tr>
-					<th><bean:message key='labels.poSlipId'/></th><!-- 発注番号 -->
+					<th><div class="col_title_right"><bean:message key='labels.poSlipId'/></div></th><!-- 発注番号 -->
 					<td colspan="3">
 						<html:text property="poSlipIdFrom" styleId="poSlipIdFrom" styleClass="c_ime_off" style="width:100px;" tabindex="100" /> <bean:message key='labels.betweenSign'/>
 						<html:text property="poSlipIdTo" styleId="poSlipIdTo" styleClass="c_ime_off" style="width:100px;" tabindex="101" />
 					</td>
-
-					<th><bean:message key='labels.poDate'/></th><!-- 発注日 -->
-					<td colspan="3">
-						<html:text property="poDateFrom" styleId="poDateFrom" styleClass="date_input c_ime_off" style="width:100px;" tabindex="102" /> <bean:message key='labels.betweenSign'/>
-						<html:text property="poDateTo" styleId="poDateTo" styleClass="date_input c_ime_off" style="width:100px;" tabindex="103" />
+					<th><div class="col_title_right"><bean:message key='labels.poDate'/></div></th><!-- 発注日 -->
+					<td style="padding-right: 0;">
+						<div class="pos_r">
+							<html:text property="poDateFrom" styleId="poDateFrom" styleClass="date_input c_ime_off" style="text-align:center; width:135px;" tabindex="102" />
+						</div>
+					</td>
+					<td style="text-align: center; width:30px; padding-right: 0;">
+						<bean:message key='labels.betweenSign'/><!-- ～ -->
+					</td>
+					<td>
+						<div class="pos_r">
+							<html:text property="poDateTo" styleId="poDateTo" styleClass="date_input c_ime_off" style="text-align:center; width:135px;" tabindex="103" />
+						</div>
 					</td>
 				</tr>
+			</table>
+			<table id="search_info2" class="forms" style="table-layout: fixed;" summary="search_info2">
 				<tr>
-					<th><bean:message key='labels.supplierCode'/></th><!-- 仕入先コード -->
+					<th><div class="col_title_right"><bean:message key='labels.supplierCode'/></div></th><!-- 仕入先コード -->
 					<td colspan="2">
 						<html:text property="supplierCode" styleId="supplierCode" styleClass="c_ime_off" style="width: 100px;" tabindex="104" />
-						<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(1)" tabindex="105" />
+						<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(1)" tabindex="105" />
 					</td>
-					<th><bean:message key='labels.supplierName'/></th><!-- 仕入先名 -->
+					<th><div class="col_title_right"><bean:message key='labels.supplierName'/></div></th><!-- 仕入先名 -->
 					<td colspan="4">
 						<html:text property="supplierName" styleId="supplierName" style="width: 250px;" tabindex="106" />
-						<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(2)" tabindex="107" />
+						<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(2)" tabindex="107" />
 					</td>
 
 				</tr>
 
 				<tr>
-					<th><bean:message key='labels.userName'/></th><!-- 入力担当者 -->
+					<th><div class="col_title_right"><bean:message key='labels.userName'/></div></th><!-- 入力担当者 -->
 					<td colspan="7">
 						<html:text property="userName" styleId="userName" style="width:100px;" tabindex="108" />
-						<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog()" tabindex="109" />
+						<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog()" tabindex="109" />
 					</td>
 				</tr>
 
 				<tr>
-					<th><bean:message key='labels.alreadyOutput'/></th><!-- 発行済み -->
+					<th><div class="col_title_right"><bean:message key='labels.alreadyOutput'/></div></th><!-- 発行済み -->
 					<td colspan="7">
 						<html:checkbox property="exceptAlreadyOutput" styleId="exceptAlreadyOutput" tabindex="110" /><bean:message key='labels.exceptAlreadyOutput' /><!-- 発行済みを除く -->
 					</td>
@@ -464,25 +468,27 @@ function setDisplayCheckState() {
 
 			</table>
 		</div>
+	</div><!-- /.form_section -->
+   	</div><!-- /.form_section_wrap -->
 
-		<div style="width: 700px; text-align: right">
-			<button onclick="onF1()" tabindex="150" style="width: 80px;"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
-			<button onclick="onF2()" tabindex="151" style="width: 80px;"><bean:message key='words.action.search'/></button><!-- 検索 -->
-		</div>
+	<div style="width: 1160px; text-align: right">
+		<button onclick="onF1()" tabindex="150" style="" class="btn_medium"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
+		<button onclick="onF2()" tabindex="151" style="" class="btn_medium"><bean:message key='words.action.search'/></button><!-- 検索 -->
+	</div>
 	</div>
 
 	<html:hidden property="sortColumn" styleId="sortColumn" />
 	<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 </s:form>
 
-		   <button onclick="checkAll()" tabindex="1000">
+		   <button onclick="checkAll()" tabindex="1000" class="btn_small">
 				<bean:message key='words.action.selectAll'/>
 		   </button><!--
-		--><button onclick="checkNone()" tabindex="1001">
+		--><button onclick="checkNone()" tabindex="1001" class="btn_small">
 				<bean:message key='words.action.selectNone'/>
 		   </button>
 		<span id="listContainer">
-			
+			<%-- 検索結果領域 --%>
 			<%@ include file="/WEB-INF/view/ajax/porder/makeOutPOrderAjax/result.jsp" %>
 		</span>
 

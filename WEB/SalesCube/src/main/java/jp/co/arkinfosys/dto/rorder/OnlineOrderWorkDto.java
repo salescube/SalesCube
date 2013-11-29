@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.rorder;
 
 import java.sql.Date;
@@ -76,5 +75,5 @@ public class OnlineOrderWorkDto {
 
 	public int lineNo;
 
-	public Date loadDate;	
+	public Date loadDate;	// 取込日付
 }

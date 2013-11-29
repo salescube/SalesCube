@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.math.BigDecimal;
@@ -75,30 +74,30 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 	public Integer close(String cutoffDate)
 			throws ServiceException {
 		try {
-			
+			// 今回締日までにあった入出庫の棚番コードと商品コードを全て取得する
 			List<BeanMap> eadRackAndProductList =
 				eadService.findRackAndProductByStockPdate(cutoffDate, null);
 
-			
+			// 棚と商品の最終締情報を全て取得する
 			List<ProductStockTrn> lastProductStockList =
 				productStockService.findLastProductStockTrn();
 
-			
+			// 棚番コードと商品コードをキーにして最終締状態を取得するマップを作成
 			Map<String, ProductStockTrn> lastProductStockMap = new HashMap<String, ProductStockTrn>();
 			for(ProductStockTrn lastProductStock : lastProductStockList) {
 				lastProductStockMap.put(lastProductStock.rackCode.toUpperCase() + lastProductStock.productCode.toUpperCase(), lastProductStock);
 			}
 
-			
+			// 入出庫情報が存在する棚番・商品について締め情報を作成
 			Map<Integer, EadSlipTrn> slipMap = new HashMap<Integer, EadSlipTrn>();
 			for(BeanMap rackAndProduct : eadRackAndProductList) {
 				ProductStockTrn lastProductStock = null;
 
-				
+				// 商品在庫情報の作成
 				String rackCode = (String) rackAndProduct.get(Param.RACK_CODE);
 				String productCode = (String) rackAndProduct.get(Param.PRODUCT_CODE);
 
-				
+				// 棚番コードと商品コードから前回締情報が取得できる場合は、在庫数量に前回情報を加味する
 				String key = rackCode.toUpperCase() + productCode.toUpperCase();
 				if(lastProductStockMap.containsKey(key)) {
 					lastProductStock = lastProductStockMap.get(key);
@@ -111,13 +110,13 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 				}
 			}
 
-			
+			// 入出庫情報が存在しないけど最終在庫締がある場合は締め情報を作成
 			Set<String> keySet = lastProductStockMap.keySet();
 			Iterator<String> it = keySet.iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				ProductStockTrn lastProductStock = lastProductStockMap.get(key);
-				
+				// 最終在庫がゼロ以外の場合は締め情報を作成する
 				if (lastProductStock.stockNum.compareTo(BigDecimal.ZERO)!=0) {
 					String rackCode = lastProductStock.rackCode;
 					String productCode = lastProductStock.productCode;
@@ -128,14 +127,14 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 				}
 			}
 
-			
+			// 処理した伝票を更新する
 			for(EadSlipTrn eadSlipTrn : slipMap.values()) {
-				
+				// 排他制御
 				Map<String, Object> param = super.createSqlParam();
 				param.put(EadService.Param.EAD_SLIP_ID, eadSlipTrn.eadSlipId);
 				lockRecordBySqlFile("ead/LockSlipByEadSlipId.sql",
 						param, eadSlipTrn.updDatetm);
-				
+				// 入出庫伝票をUpdate
 				eadService.updateSlipStockPdateByEadSlipId(
 						cutoffDate, eadSlipTrn.eadSlipId);
 			}
@@ -157,17 +156,17 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 	public void reopen()
 			throws ServiceException, UnabledLockException {
 		try {
-			
+			// 最終締年月日
 			String lastCutoffDate = StringUtil.getDateString(Constants.FORMAT.DATE, findMaxStockPDateDate());
 			if(!StringUtil.hasLength(lastCutoffDate)) {
 				lastCutoffDate = null;
 			}
 
-			
+			// 商品在庫の締解除
 			List<ProductStockTrn> productStockList =
 				productStockService.findProductStockByCodeAndPdate(null, null, lastCutoffDate);
 			for(ProductStockTrn productStockTrn : productStockList) {
-				
+				// 排他制御
 				Map<String, Object> param = super.createSqlParam();
 				param.put(ProductStockService.Param.RACK_CODE, productStockTrn.rackCode);
 				param.put(ProductStockService.Param.PRODUCT_CODE, productStockTrn.productCode);
@@ -175,20 +174,20 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 				param.put(ProductStockService.Param.STOCK_MONTHLY, productStockTrn.stockMonthly);
 				lockRecordBySqlFile("productstock/LockProductStockByCode.sql",
 						param, productStockTrn.updDatetm);
-				
+				// 商品在庫を削除する
 				productStockService.deleteProductStockByCode(productStockTrn);
 			}
 
-			
+			// 入出庫伝票の締解除
 			List<EadSlipTrn> eadSlipList =
 				eadService.findEadSlipByCodeAndPdate(null, null, null, lastCutoffDate);
 			for(EadSlipTrn eadSlipTrn : eadSlipList) {
-				
+				// 排他制御
 				Map<String, Object> param = super.createSqlParam();
 				param.put(EadService.Param.EAD_SLIP_ID, eadSlipTrn.eadSlipId);
 				lockRecordBySqlFile("ead/LockSlipByEadSlipId.sql",
 						param, eadSlipTrn.updDatetm);
-				
+				// 入出庫伝票の在庫締処理日をnullに更新する
 				eadService.updateSlipStockPdateByEadSlipId(null, eadSlipTrn.eadSlipId);
 			}
 		} catch(ServiceException e) {
@@ -214,7 +213,7 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 	public Map<Integer, EadSlipTrn> createProductStock(String rackCode, String productCode,
 			ProductStockTrn lastProductStock, String cutoffDate) throws ServiceException {
 		try {
-			
+			// 戻り値格納用
 			Map<Integer, EadSlipTrn> result = new HashMap<Integer, EadSlipTrn>();
 
 			BigDecimal lastStockNum = BigDecimal.ZERO;
@@ -222,30 +221,30 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 				lastStockNum = lastProductStock.stockNum;
 			}
 
-			
+			// 商品毎の在庫数を取得
 			List<EadSlipLineJoin> productQuantityList =
 				eadService.countUnclosedQuantityByCodeAndPdate(rackCode, productCode, cutoffDate);
 			BigDecimal enterQuantity = BigDecimal.ZERO;
 			BigDecimal dispatchQuantity = BigDecimal.ZERO;
 			for(EadSlipLineJoin productQuantity : productQuantityList) {
-				
+				// 入出庫数を取得する
 				if(CategoryTrns.EAD_CATEGORY_ENTER.equals(productQuantity.eadCategory)) {
-					
+					// 入庫の場合
 					enterQuantity = productQuantity.quantity;
 				} else if(CategoryTrns.EAD_CATEGORY_DISPATCH.equals(productQuantity.eadCategory)) {
-					
+					// 出庫の場合
 					dispatchQuantity = productQuantity.quantity;
 				}
-				
+				// 棚番コードと商品コードから更新する入出庫伝票を取得する
 				List<EadSlipTrn> eadSlipList = eadService.findEadSlipByCodeAndPdate(
 							productQuantity.rackCode, productQuantity.productCode, cutoffDate, null);
 				for(EadSlipTrn eadSlipTrn : eadSlipList) {
-					
+					// 結果Mapに処理した伝票を格納する
 					result.put(eadSlipTrn.eadSlipId, eadSlipTrn);
 				}
 			}
 
-			
+			// 年月度を取得
 			YmDto ymDto = ymService.getYm(cutoffDate);
 			if(ymDto == null) {
 				ServiceException se = new ServiceException(
@@ -254,7 +253,7 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 				throw se;
 			}
 
-			
+			// 商品在庫情報を生成
 			ProductStockTrn productStockTrn = new ProductStockTrn();
 			productStockTrn.rackCode = rackCode;
 			productStockTrn.productCode = productCode;
@@ -268,7 +267,7 @@ public class CloseStockService extends AbstractService<EadSlipTrn> {
 			productStockTrn.dispatchNum = dispatchQuantity;
 			productStockTrn.remarks = "";
 
-			
+			// 商品在庫をInsert
 			productStockService.insertProductStock(productStockTrn);
 
 			return result;

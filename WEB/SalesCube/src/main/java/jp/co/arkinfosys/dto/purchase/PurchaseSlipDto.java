@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.purchase;
 
 import jp.co.arkinfosys.dto.AbstractLineDto;
@@ -32,9 +31,9 @@ public class PurchaseSlipDto extends AbstractSlipDto<PurchaseLineDto> {
 	public String supplierCmCategory;
 	public String deliveryDate;
 	public String rateId;
-	public String taxShiftCategory;
-	public String taxFractCategory;
-	public String priceFractCategory;
+	public String taxShiftCategory;/* 税転嫁 */
+	public String taxFractCategory;/* 税端数処理 */
+	public String priceFractCategory;/* 単価端数処理 */
 	public String ctaxTotal;
 	public String priceTotal;
 	public String fePriceTotal;
@@ -53,13 +52,13 @@ public class PurchaseSlipDto extends AbstractSlipDto<PurchaseLineDto> {
     public String updDatetm;
     public String updUser;
 
-    
+    // 作業用
     public String rate;
     public String rateName;
     public String sign;
     public String supplierTaxRate;
 
-	
+	// 新規作成状態の管理フラグ
 	public Boolean newData;
 
 	/**

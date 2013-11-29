@@ -185,10 +185,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1305"/>
@@ -236,6 +236,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
@@ -245,127 +246,145 @@
         	</html:messages>
     	</div>
 
-		<span>割引情報</span><br>
-		<table id="discount_info" class="forms" summary="割引パターン情報" style="width: 600px">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 25%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 40%">
-			</colgroup>
-			<tr>
-				<th>割引コード<bean:message key='labels.must'/></th>
-				<td>
-                <c:if test="${editMode}">
-                    <html:text maxlength="20" styleId="discountId" property="discountId" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
-                </c:if>
-                <c:if test="${!editMode}">
-                    <html:text maxlength="20" styleId="discountId" property="discountId" style="width: 100px; ime-mode: disabled;"  tabindex="100"/>
-                </c:if>
-                </td>
-				<th>割引有効</th>
-				<td><html:checkbox tabindex="101" styleId="useFlag" property="useFlag" value="1"/></td>
-			</tr>
-			<tr>
-				<th>割引名<bean:message key='labels.must'/></th>
-				<td colspan="3"><html:text maxlength="60" styleId="discountName" property="discountName" style="width: 230px"  tabindex="102"/></td>
-			</tr>
-			<tr>
-				<th>備考</th>
-				<td colspan="3"><html:text maxlength="120" styleId="remarks" property="remarks" style="width: 450px" tabindex="103"/></td>
-			</tr>
-		</table>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>割引情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="order_section" class="section_body">
+					<table id="discount_info" class="forms" summary="割引パターン情報" style="width: 600px">
+						<tr>
+							<th><div class="col_title_right">割引コード<bean:message key='labels.must'/></div></th>
+							<td>
+			                <c:if test="${editMode}">
+			                    <html:text maxlength="20" styleId="discountId" property="discountId" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
+			                </c:if>
+			                <c:if test="${!editMode}">
+			                    <html:text maxlength="20" styleId="discountId" property="discountId" style="width: 100px; ime-mode: disabled;"  tabindex="100"/>
+			                </c:if>
+			                </td>
+							<th><div class="col_title_right">割引有効</div></th>
+							<td><html:checkbox tabindex="101" styleId="useFlag" property="useFlag" value="1"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">割引名<bean:message key='labels.must'/></div></th>
+							<td colspan="3"><html:text maxlength="60" styleId="discountName" property="discountName" style="width: 230px"  tabindex="102"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">備考</div></th>
+							<td colspan="3"><html:text maxlength="120" styleId="remarks" property="remarks" style="width: 450px" tabindex="103"/></td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
 
-		<span><bean:message key="labels.discountTrn"/></span><br>
-		<table id="discountTrnList" class="forms" summary="<bean:message key="labels.discountTrn"/>" style="width: 600px;">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 60%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-			</colgroup>
-			<tr>
-				<th>no</th>
-				<th><bean:message key="labels.discountTrn.dataRange"/><bean:message key='labels.must'/></th>
-				<th><bean:message key="labels.discountTrn.discountRate"/><bean:message key='labels.must'/></th>
-				<th>&nbsp;</th>
-			</tr>
-			<tr id="discountTrnList_dummy" style="display:none;">
-				<td id="discountTrnList_dummy" style="text-align: center">0
-                </td>
-				<td style="text-align: center">
-                    <input type="hidden" id="dataId">
-                    <input type="hidden" id="lineNo">
-					<input type="text" maxlength="13" id="from" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
-					～
-					<input type="text" maxlength="13" id="to" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
-				<td style="text-align: center">
-					<input type="text" maxlength="7" id="rate" style="width:80px;ime-mode:disabled;text-align:right;" indexed="true" /> ％
-                </td>
-				<td style="text-align: center">
-                    <button id="deleteBtn">削除</button>
-                </td>
-			</tr>
-            <c:forEach var="discountTrnList" varStatus="s" items="${discountTrnList}">
-			<tr id="discountTrnList_${s.index}">
-				<td id="discountTrnList_${s.index}.no" style="text-align: center">${s.index+1}
-                </td>
-				<td style="text-align: center">
-                    <html:hidden styleId="discountTrnList_${s.index}.discountDataId" name="discountTrnList" property="discountDataId" indexed="true" />
-                    <html:hidden styleId="discountTrnList_${s.index}.lineNo" name="discountTrnList" property="lineNo" indexed="true"/>
-					<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataFrom" name="discountTrnList" property="dataFrom" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+200}" indexed="true" styleClass="numeral_commas style_quantity" />
-					～
-					<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataTo" name="discountTrnList" property="dataTo" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+201}" indexed="true" styleClass="numeral_commas style_quantity" />
-				<td style="text-align: center">
-					<html:text maxlength="7" styleId="discountTrnList_${s.index}.discountRate" name="discountTrnList" property="discountRate" style="width: 80px;ime-mode:disabled;text-align:right;" tabindex="${s.index*4+202}" indexed="true"/> ％
-                </td>
-				<td style="text-align: center">
-<c:if test="${!isUpdate}">
-                    <button disabled="disabled">削除</button>
-</c:if>
-<c:if test="${isUpdate}">
-                    <button id="discountTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
-</c:if>
-                </td>
-			</tr>
-            <script type="text/javascript">
-            <!--
-            maxRowCount++;
-            -->
-            </script>
-            </c:forEach>
-			<tr id="trAddLine">
-				<td style="text-align: right" colspan="4"><button onclick="addRow()">行追加</button></td>
-			</tr>
-		</table>
-
-		<div style="text-align: right; width: 600px">
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span><bean:message key="labels.discountTrn"/></span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="order_section" class="section_body">
+					<table id="discountTrnList" class="forms detail_info" summary="<bean:message key="labels.discountTrn"/>" style="width: 600px;">
+						<colgroup>
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 60%">
+							<col span="1" style="width: 20%">
+							<col span="1" style="width: 10%">
+						</colgroup>
+						<tr>
+							<th class="rd_top_left" style="height: 30px;">no</th>
+							<th class="xl64" style="height: 30px;"><bean:message key="labels.discountTrn.dataRange"/><bean:message key='labels.must'/></th>
+							<th class="xl64" style="height: 30px;"><bean:message key="labels.discountTrn.discountRate"/><bean:message key='labels.must'/></th>
+							<th class="rd_top_right" style="height: 30px;">&nbsp;</th>
+						</tr>
+						<tr id="discountTrnList_dummy" style="display:none;">
+							<td id="discountTrnList_dummy" style="text-align: center">0
+			                </td>
+							<td style="text-align: center">
+			                    <input type="hidden" id="dataId">
+			                    <input type="hidden" id="lineNo">
+								<input type="text" maxlength="13" id="from" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
+								～
+								<input type="text" maxlength="13" id="to" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
+							<td style="text-align: center">
+								<input type="text" maxlength="7" id="rate" style="width:80px;ime-mode:disabled;text-align:right;" indexed="true" /> ％
+			                </td>
+							<td style="text-align: center">
+			                    <button id="deleteBtn" class="btn_small">削除</button>
+			                </td>
+						</tr>
+			            <c:forEach var="discountTrnList" varStatus="s" items="${discountTrnList}">
+						<tr id="discountTrnList_${s.index}">
+							<td id="discountTrnList_${s.index}.no" style="text-align: center">${s.index+1}
+			                </td>
+							<td style="text-align: center">
+			                    <html:hidden styleId="discountTrnList_${s.index}.discountDataId" name="discountTrnList" property="discountDataId" indexed="true" />
+			                    <html:hidden styleId="discountTrnList_${s.index}.lineNo" name="discountTrnList" property="lineNo" indexed="true"/>
+								<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataFrom" name="discountTrnList" property="dataFrom" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+200}" indexed="true" styleClass="numeral_commas style_quantity" />
+								～
+								<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataTo" name="discountTrnList" property="dataTo" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+201}" indexed="true" styleClass="numeral_commas style_quantity" />
+							<td style="text-align: center">
+								<html:text maxlength="7" styleId="discountTrnList_${s.index}.discountRate" name="discountTrnList" property="discountRate" style="width: 80px;ime-mode:disabled;text-align:right;" tabindex="${s.index*4+202}" indexed="true"/> ％
+			                </td>
+							<td style="text-align: center">
+			<c:if test="${!isUpdate}">
+			                    <button disabled="disabled" class="btn_small">削除</button>
+			</c:if>
+			<c:if test="${isUpdate}">
+			                    <button id="discountTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_small">削除</button>
+			</c:if>
+			                </td>
+						</tr>
+			            <script type="text/javascript">
+			            <!--
+			            maxRowCount++;
+			            -->
+			            </script>
+			            </c:forEach>
+						<tr id="trAddLine">
+							<td style="text-align: right" colspan="4"><button onclick="addRow()" class="btn_small">行追加</button></td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+		
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
 <html:hidden property="creDatetm"/>
 <html:hidden property="creDatetmShow"/>
 <html:hidden property="updDatetm"/>
 <html:hidden property="updDatetmShow"/>
-			<button tabindex="301" onclick="initForm()">初期化</button>
+			<button tabindex="301" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
-            <button tabindex="302" disabled="true">更新</button>
+            <button tabindex="302" disabled="true" class="btn_medium">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="302" onclick="registerDiscount()">更新</button>
+            <button tabindex="302" onclick="registerDiscount()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="302" onclick="registerDiscount()">登録</button>
+            <button tabindex="302" onclick="registerDiscount()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="303" disabled="true">削除</button>
+		<button tabindex="303" disabled="true" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="303" onclick="deleteDiscount()">削除</button>
+		<button tabindex="303" onclick="deleteDiscount()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="303" disabled="true">削除</button>
+		<button tabindex="303" disabled="true" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>

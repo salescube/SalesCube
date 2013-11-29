@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class OutputStockListAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// 初期値設定
 		outputStockListForm.radioCond2 = "0";
 		rackCategoryList = outputStockListService.getRackCategoryList();
 		rackCategoryList = ListUtil.addEmptyLabelValue(rackCategoryList);

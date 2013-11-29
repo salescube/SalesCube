@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.math.BigDecimal;
@@ -43,7 +42,7 @@ public class OutputStockReportAjaxAction extends CommonAjaxResources {
 		public static final String EXCEL = "excel.jsp";
 	}
 
-	
+	// JSP側のEL式で使用する為に定数をコピー
 	public String CONST_SALES = Constants.SRC_FUNC.SALES;
 	public String CONST_PURCHASE = Constants.SRC_FUNC.PURCHASE;
 	public String CONST_STOCK = Constants.SRC_FUNC.STOCK;
@@ -82,7 +81,7 @@ public class OutputStockReportAjaxAction extends CommonAjaxResources {
 	@Execute(validator = true, validate = "validate", input = CommonAjaxResources.Mapping.ERROR_JSP)
 	public String search() throws Exception {
 
-		
+		// 委託入出庫日の未来日チェック
 		Boolean futureCheck = ValidateUtil.dateIsFuture( ValidateUtil.getLastDateOfMonthFromYmFormat(outputStockReportForm.targetYm) );
 		if( futureCheck != null && futureCheck == true ) {
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -91,7 +90,7 @@ public class OutputStockReportAjaxAction extends CommonAjaxResources {
 			return CommonAjaxResources.Mapping.ERROR_JSP;
 		}
 
-		
+		// 保存用検索条件にコピー
 		Beans.copy(outputStockReportForm, outputStockReportFormDto).execute();
 
 		return Mapping.RESULT;
@@ -105,17 +104,17 @@ public class OutputStockReportAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
+			// 検索条件の調整
 			Beans.copy(outputStockReportFormDto, outputStockReportForm).execute();
 
-			
+			// 検索を行う
 			List<ProductStockJoinDto> dtoList =
 				outputStockReportService.createProductStockDto(outputStockReportForm.targetYm);
-			
+			// 出力調整
 			outputStockReportForm.searchResultList = dtoList;
-			
+			// 出力日
 			outputStockReportForm.currentDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
-			
+			// 在庫高合計金額
 			BigDecimal sumStockPrice = BigDecimal.ZERO;
 			for(ProductStockJoinDto dto : dtoList) {
 				if(dto.stockPrice == null) {
@@ -130,7 +129,7 @@ public class OutputStockReportAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

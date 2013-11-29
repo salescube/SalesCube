@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -74,7 +73,7 @@ public class CustomerRelService extends AbstractService<CustomerRel> {
 					Param.CUST_REL_CATEGORY }, new Object[] { customerCode,
 					relCode, custRelCategory });
 
-			
+			// 削除
 			this.updateBySqlFile("customerrel/DeleteCustomerRel.sql", param)
 					.execute();
 		} catch (Exception e) {
@@ -91,7 +90,7 @@ public class CustomerRelService extends AbstractService<CustomerRel> {
 		try {
 			Map<String, Object> paramS = super.createSqlParam();
 
-			
+			// 納入先ＩＤの発番
 			BeanMap param = Beans.createAndCopy(BeanMap.class, customerRel).execute();
 			param.putAll(paramS);
 

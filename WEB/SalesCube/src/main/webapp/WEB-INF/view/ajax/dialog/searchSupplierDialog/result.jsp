@@ -1,6 +1,6 @@
 <table style="width: 620px;">
 	<tr>
-		<td style="text-align: left;">検索結果件数: ${searchResultCount}件</td>
+		<td style="text-align: left; color: #FFFFFF;">検索結果件数: ${searchResultCount}件</td>
 		<td style="text-align: right;">
 			<span style="color: red">
 			 	<html:messages id="resultThreshold" message="true">
@@ -11,19 +11,17 @@
 	</tr>
 </table>
 
-<div
-	style="padding: 0px; border: none; width: 620px; height: 240px; overflow: hidden;">
-<table id="${dialogId}List" summary="仕入先検索結果" style="width: 600px;">
+<div id="${dialogId}ListContainer"
+	style="border: none; width: 620px; height: 220px; overflow: hidden;">
+<table class="dialog_resultList"  id="${dialogId}List" summary="仕入先検索結果" style="width: 100%;">
 	<colgroup>
-		<col span="1" style="width: 10%">
-		<col span="1" style="width: 15%">
-		<col span="1" style="width: 25%">
+		<col span="1" style="width: 20%">
+		<col span="1" style="width: 30%">
 		<col span="1" style="width: 20%">
 		<col span="1" style="width: 15%">
 		<col span="1" style="width: 15%">
 	</colgroup>
 	<tr>
-		<th>&nbsp;</th>
 		<th>仕入先コード</th>
 		<th>仕入先名</th>
 		<th>担当者</th>
@@ -32,12 +30,10 @@
 	</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
-			<td style="text-align: center;"><input type="radio"
-				name="${dialogId}_selectedSupplier" value="${f:h(bean.supplierCode)}"
-				tabindex="7100"
-				onclick="$('#${dialogId}_selectButton').attr('disabled', false);">
+			<td>
+				<a href="javascript:void(0)"  tabindex="6100" style="color: #1D9CCC" onclick="_selectLinkSearchResult( '${dialogId}', '${f:h(bean.supplierCode)}');
+				$('#${dialogId}').dialog('close');" >${f:h(bean.supplierCode)}</a>
 			</td>
-			<td>${f:h(bean.supplierCode)}</td>
 			<td>${f:h(bean.supplierName)}</td>
 			<td>${f:h(bean.supplierPcName)}</td>
 			<td>${f:h(bean.supplierCmCategoryName)}</td>
@@ -48,7 +44,7 @@
 </div>
 
 <c:forEach var="bean" items="${searchResultList}" varStatus="status">
-	
+	<%-- 顧客マスタの属性値をhiddenに保持する --%>
 	<input type="hidden" id="${dialogId}_${f:h(bean.supplierCode)}_supplierCode" name="${dialogId}_${f:h(bean.supplierCode)}_supplierCode" value="${f:h(bean.supplierCode)}">
 	<input type="hidden" id="${dialogId}_${f:h(bean.supplierCode)}_supplierName" name="${dialogId}_${f:h(bean.supplierCode)}_supplierName" value="${f:h(bean.supplierName)}">
 	<input type="hidden" id="${dialogId}_${f:h(bean.supplierCode)}_supplierKana" name="${dialogId}_${f:h(bean.supplierCode)}_supplierKana" value="${f:h(bean.supplierKana)}">

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.deposit;
 
 import java.net.URLEncoder;
@@ -65,7 +64,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 	/**
 	 * 検索結果リスト
 	 */
-	public List<BeanMap> listExcel = null;		
+	public List<BeanMap> listExcel = null;		//EXCEL用検索結果リスト
 
 	/**
 	 * 検索結果列情報リスト
@@ -92,7 +91,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String search() throws Exception {
 		try {
-			
+			// 結果の取得
 			importBankDepositForm.searchResultList =
 				importBankDepositService.getImportResultList(
 					importBankDepositForm.sortColumn,
@@ -107,7 +106,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -129,7 +128,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -151,7 +150,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -173,7 +172,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -189,7 +188,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 		throws Exception
 	{
 		try {
-			
+			// 突合結果を取得
 			importBankDepositForm.sortColumn = "";
 			importBankDepositForm.sortOrderAsc = true;
 			importBankDepositForm.newDepositSlipIdStr = "";
@@ -217,20 +216,20 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 
 				if(resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_OLD)||
 					resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_NEW)){
-					
+					// 登録済み、新規登録　は、一致件数
 					if((importBankDepositForm.selectCount == 1)||(importBankDepositForm.selectCount == 0))
 						listExcel.add(resultMap);
 				}
 				else{
-					
+					// それ以外は、不一致件数
 					if((importBankDepositForm.selectCount == 2)||(importBankDepositForm.selectCount == 0))
 						listExcel.add(resultMap);
 				}
 			}
-			
+			// 添付ファイル名
 			attachFileName = AttachFileName.FILENAME01;
 
-			
+			// カラム定義
 			colInfoList = new ArrayList<DepositImportExcelDto>();
 			colInfoList.add(new DepositImportExcelDto("status",0,"labels.slipStatus.status"));
 			colInfoList.add(new DepositImportExcelDto("depositSlipId",0,"labels.depositSlipId"));
@@ -243,7 +242,7 @@ public class ImportBankDepositAjaxAction extends CommonAjaxResources {
 			colInfoList.add(new DepositImportExcelDto("changeName",0,"labels.changeName"));
 			colInfoList.add(new DepositImportExcelDto("afterChangeName",0,"labels.changeName"));
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 

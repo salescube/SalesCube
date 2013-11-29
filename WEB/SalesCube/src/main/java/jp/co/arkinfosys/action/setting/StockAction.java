@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.text.DecimalFormat;
@@ -54,7 +53,7 @@ public class StockAction extends CommonResources {
 	@Resource
     private CategoryService categoryService;
 
-	
+	//月平均出荷数の計算期間プルダルン
     public List<LabelValueBean> stockHoldTermCalcCategoryList = new ArrayList<LabelValueBean>();
 
     public boolean isUpdate;
@@ -80,8 +79,8 @@ public class StockAction extends CommonResources {
 	 */
 	@Execute(validate = "validate", validator = true, input = "init2")
 	public String update() throws Exception {
-		
-		
+		// 自社情報を更新する
+		// 排他制御
 		Mine mine = this.mineService.getMine();
 		if (mine != null) {
 			String nowUpdatetm = "";
@@ -133,7 +132,7 @@ public class StockAction extends CommonResources {
 	public String init2() throws Exception{
 		isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_STOCK );
 		try{
-			
+			// 月平均出荷数の計算期間プルダルン設定
 			stockHoldTermCalcCategoryList = categoryService.findCategoryLabelValueBeanListById(Categories.STOCK_HOLD_TERM_CALC);
 		} catch (ServiceException e) {
 			super.errorLog(e);
@@ -150,14 +149,14 @@ public class StockAction extends CommonResources {
 		isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_STOCK );
 
 		try{
-			
+			// 月平均出荷数の計算期間プルダルン設定
 			stockHoldTermCalcCategoryList = categoryService.findCategoryLabelValueBeanListById(Categories.STOCK_HOLD_TERM_CALC);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 			super.httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
-		
+		// 自社マスタの情報を取得する
 		Mine mine = this.mineService.getMine();
 		if (mine != null) {
 			stockForm.stockHoldTermCalcCategory="";

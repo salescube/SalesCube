@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.Iterator;
@@ -105,7 +104,7 @@ public class EditWarehouseAction extends
 	public String insert() throws Exception {
 		initList();
 		
-		
+		// 棚番のpkey違反を調べる
 		int index = 0;
 		for (EditRackForm editRackForm : editWarehouseForm.editRackList) {
 			index++;
@@ -117,7 +116,7 @@ public class EditWarehouseAction extends
 				}
 			}
 		}
-		
+		// エラーがあったら
 		if(super.messages.size() > 0) {
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 			super.messages.clear();
@@ -129,7 +128,7 @@ public class EditWarehouseAction extends
 	
 	@Override
 	public void doInsertAfter(WarehouseDto dto) throws Exception{
-		
+		// 棚番登録
 		for (EditRackForm editRackForm : editWarehouseForm.editRackList) {
 			RackDto rackDto = Beans.createAndCopy(RackDto.class, editRackForm).execute();
 			if(editRackForm.exist) {
@@ -150,7 +149,7 @@ public class EditWarehouseAction extends
 	 */
 	@Execute(validator = true, validate = "validate", input = "initEdit", stopOnValidationError = false)
 	public String update() throws Exception {
-		
+		// 棚番のpkey違反を調べる
 		int index = 0;
 		for (EditRackForm editRackForm : editWarehouseForm.editRackList) {
 			index++;
@@ -162,7 +161,7 @@ public class EditWarehouseAction extends
 				}
 			}
 		}
-		
+		// エラーがあったら
 		if(super.messages.size() > 0) {
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 			super.messages.clear();
@@ -179,11 +178,11 @@ public class EditWarehouseAction extends
 	 */
 	@Override
 	protected void doUpdateAfter(WarehouseDto dto) throws Exception {
-		
+		// 棚番削除
 		for (DeleteRackForm deleteRackForm : editWarehouseForm.rackCodesHist) {
 			RackDto rackDto = Beans.createAndCopy(RackDto.class, deleteRackForm).execute();
 			
-			
+			// 関連データの存在チェック
 			Map<String, Object> result = this.rackService
 					.countRelations(deleteRackForm.rackCode);
 
@@ -206,7 +205,7 @@ public class EditWarehouseAction extends
 				}
 			}
 		}
-		
+		// 棚番登録
 		for (EditRackForm editRackForm : editWarehouseForm.editRackList) {
 			RackDto rackDto = Beans.createAndCopy(RackDto.class, editRackForm).execute();
 			if(editRackForm.exist) {
@@ -216,7 +215,7 @@ public class EditWarehouseAction extends
 			}
 		}
 
-		
+		// エラーを記憶
 		if (super.messages.size() > 0) {
 
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -235,7 +234,7 @@ public class EditWarehouseAction extends
 		List<RackJoin> rackJoins = rackService
 				.findByWarehouseId(editWarehouseForm.warehouseCode);
 		for (RackJoin rackJoin : rackJoins) {
-			
+			// 関連データの存在チェック
 			Map<String, Object> result = this.rackService
 					.countRelations(rackJoin.rackCode);
 
@@ -257,7 +256,7 @@ public class EditWarehouseAction extends
 			}
 		}
 
-		
+		// エラーを記憶
 		if (super.messages.size() > 0) {
 
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -277,7 +276,7 @@ public class EditWarehouseAction extends
 		WarehouseDto dto = Beans.createAndCopy(getDtoClass(), getActionForm())
 				.execute();
 
-		
+		// 削除/更新処理
 		rackService.controlRackWithWarehouse(dto, true);
 
 		return delete();
@@ -300,7 +299,7 @@ public class EditWarehouseAction extends
 			WarehouseDto dto = Beans.createAndCopy(getDtoClass(),
 					getActionForm()).execute();
 
-			
+			// 削除/更新処理
 			rackService.controlRackWithWarehouse(dto, false);
 		} catch (UnabledLockException e) {
 			super.errorLog(e);

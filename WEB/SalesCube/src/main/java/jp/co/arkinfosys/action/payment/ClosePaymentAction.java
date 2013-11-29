@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.payment;
 
 import java.text.DateFormat;
@@ -56,7 +55,7 @@ public class ClosePaymentAction  extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception{
-		
+		// 初期化
 		init();
 
 		return ClosePaymentAction.Mapping.INPUT;
@@ -71,20 +70,20 @@ public class ClosePaymentAction  extends CommonResources {
 		Date closeDate = DateFormat.getDateInstance().parse(closePaymentForm.closeDate);
 
 		try{
-			
+			// 締年月日を渡して締処理を実行
 			closePaymentService.closePayment(closeDate);
 		}catch(ServiceException se){
 			super.errorLog(se);
 
 			throw se;
 		}
-		
+		// 締実行完了メッセージ表示
 		super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("infos.payment.close"));
 		ActionMessagesUtil.addMessages(super.httpSession, super.messages);
 
 
-		
+		// 初期化
 		init();
 
 		return ClosePaymentAction.Mapping.INPUT;
@@ -97,7 +96,7 @@ public class ClosePaymentAction  extends CommonResources {
 	 */
 	@Execute(validator = true,input="closePayment.jsp")
 	public String reopen() throws Exception{
-		
+		// 最終締日が空欄(買掛残高が存在しない)の場合はエラー
 		if("".equals(closePaymentForm.latestAptCutoffDate)){
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.closePayment.noData"));
@@ -106,7 +105,7 @@ public class ClosePaymentAction  extends CommonResources {
 		}
 
 		try{
-			
+			// 締解除処理
 			closePaymentService.reopenPayment();
 		}catch(ServiceException se){
 			super.errorLog(se);
@@ -114,12 +113,12 @@ public class ClosePaymentAction  extends CommonResources {
 			throw se;
 		}
 
-		
+		// 締解除実行完了メッセージ表示
 		super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("infos.payment.reopen"));
 		ActionMessagesUtil.addMessages(super.httpSession, super.messages);
 
-		
+		// 初期化
 		init();
 
 		return ClosePaymentAction.Mapping.INPUT;
@@ -131,18 +130,18 @@ public class ClosePaymentAction  extends CommonResources {
 	 * @throws Exception
 	 */
 	public void init() throws Exception{
-		
-		
+		// 締年月日に現在日を設定
+		//closePaymentForm.closeDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 
-		
+		// 最新の買掛締日を設定
 		Date cutoffDate = aptBalanceService.findLatestAptBalance();
 
-		
+		// 買掛残高が０件でない場合は最終締日を設定
 		if(cutoffDate!=null){
 			SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
 			closePaymentForm.latestAptCutoffDate = sdf.format(cutoffDate);
 		}else{
-			
+			// 買掛残高が０件の場合は設定しない
 			closePaymentForm.latestAptCutoffDate = "";
 		}
 	}
@@ -166,7 +165,7 @@ public class ClosePaymentAction  extends CommonResources {
 		if(StringUtil.hasLength(closePaymentForm.latestAptCutoffDate)){
 			Date latestAptCutoffDate = DateFormat.getDateInstance().parse(closePaymentForm.latestAptCutoffDate);
 
-			
+			// 「締年月日 <= 最終締日」の場合エラー
 			if(closeDate.before(latestAptCutoffDate) ||
 					closeDate.compareTo(latestAptCutoffDate) == 0){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,

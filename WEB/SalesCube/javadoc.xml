@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
-	<property name="TomcatDir" value="C:\user\local\bin\Apache Software Foundation\apache-tomcat-6.0.20" />
+	<property name="TomcatDir" value="C:\UserTool\Tomcat6" />
 	
     <target name="javadoc">
         <javadoc access="protected" 

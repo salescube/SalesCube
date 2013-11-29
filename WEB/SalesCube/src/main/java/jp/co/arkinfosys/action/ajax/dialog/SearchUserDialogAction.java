@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class SearchUserDialogAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 部門リストを取得
 		List<Dept> deptList = this.deptService.findAllDept();
 		for (Dept dept : deptList) {
 			LabelValueBean bean = new LabelValueBean();
@@ -73,7 +72,7 @@ public class SearchUserDialogAction extends
 		}
 		this.searchUserDialogForm.deptList.add(0, new LabelValueBean());
 
-		
+		// 権限リストを取得
 		List<Role> roleList = this.roleService.findAllRole();
 		for (Role role : roleList) {
 			LabelValueBean bean = new LabelValueBean();

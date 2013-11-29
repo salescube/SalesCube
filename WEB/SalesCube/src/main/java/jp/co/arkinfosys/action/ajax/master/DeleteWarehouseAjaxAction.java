@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.master;
 
 import java.util.Iterator;
@@ -68,7 +67,7 @@ public class DeleteWarehouseAjaxAction extends
 			List<RackJoin> rackJoins = rackService.findByWarehouseId(this
 					.getIdentifiedDto().warehouseCode);
 			for (RackJoin rackJoin : rackJoins) {
-				
+				// 関連データの存在チェック
 				Map<String, Object> result = this.rackService
 						.countRelations(rackJoin.rackCode);
 
@@ -91,7 +90,7 @@ public class DeleteWarehouseAjaxAction extends
 				}
 			}
 
-			
+			// エラーを記憶
 			if (super.messages.size() > 0) {
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.delete.warehouseRelRack"));
@@ -99,7 +98,7 @@ public class DeleteWarehouseAjaxAction extends
 
 				return Mapping.ERROR_JSP;
 			}
-			
+			// 削除/更新処理
 			rackService.controlRackWithWarehouse(this.getIdentifiedDto(), true);
 
 		} catch (UnabledLockException e) {
@@ -132,7 +131,7 @@ public class DeleteWarehouseAjaxAction extends
 
 			rackService.updateAudit(this.getIdentifiedDto().getKeys());
 
-			
+			// 削除/更新処理
 			rackService
 					.controlRackWithWarehouse(this.getIdentifiedDto(), false);
 		} catch (UnabledLockException e) {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.taglib;
 
 import jp.co.arkinfosys.common.StringUtil;
@@ -27,14 +26,14 @@ public final class Functions {
 	public static String pageLink(int resultRowSize, int pageRowSize,
 			int currentPage) {
 
-		
+		// 1ページ件数が設定されていない場合はリンクを表示しない
 		if (pageRowSize == 0) {
 			return "";
 		}
 
 		int maxPage = (resultRowSize - 1) / pageRowSize + 1;
 
-		
+		// 1ページしかない場合は、リンクを表示しない
 		if (maxPage == 1) {
 			return "";
 		}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public class InitMstService extends AbstractService<InitMst> {
 			Map<String, Object> param = super.createSqlParam();
 			param.put(InitMstService.Param.TABLE_NAME, tableName);
 
-			
+			// 0:未使用は検索にヒットさせないようにする
 			return this.selectBySqlFile(InitMstJoin.class,
 					"initmst/FindInitDataByTableNameWithCategory.sql", param)
 					.getResultList();
@@ -126,7 +125,7 @@ public class InitMstService extends AbstractService<InitMst> {
 		Map<String, Object> param = super.createSqlParam();
 		this.setEmptyCondition(param);
 
-		
+		// 先頭レコードでロックを取得する
 		for (InitMstDto dto : initMustDtoList) {
 			param.put(InitMstService.Param.TABLE_NAME, dto.tableName);
 			param.put(InitMstService.Param.COLUMN_NAME, dto.columnName);
@@ -166,7 +165,7 @@ public class InitMstService extends AbstractService<InitMst> {
 			Map<String, Object> param = super.createSqlParam();
 			param.put(InitMstService.Param.TABLE_NAME, tableName);
 
-			
+			// 0:未使用は検索にヒットさせないようにする
 			List<InitMst> list = this.selectBySqlFile(InitMst.class,
 					"initmst/FindInitDataByTableName.sql", param)
 					.getResultList();
@@ -235,7 +234,7 @@ public class InitMstService extends AbstractService<InitMst> {
 							.replace("_", ""));
 
 					if (prop.getPropertyType() == String.class) {
-						
+						// 文字列型であればtoString後に設定
 						prop.getField().set(bean, entry.getValue().toString());
 					} else {
 						prop.getField().set(bean, entry.getValue());

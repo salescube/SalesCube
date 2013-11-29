@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class CommonRackAction extends CommonAjaxResources {
 				map.put(RackService.Param.RACK_FAX, rack.rackFax==null?"":rack.rackFax);
 				map.put(RackService.Param.RACK_EMAIL, rack.rackEmail==null?"":rack.rackEmail);
 			} else {
-				
+				// 検索結果が空=Nullなら空文字列で返却する
 				ResponseUtil.write("", "text/javascript");
 				return null;
 			}

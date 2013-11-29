@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.estimate;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class SearchEstimateResultOutputAction extends
 	 */
 	@Override
 	protected int doCount(BeanMap params) throws ServiceException {
-		
+		// カウント不要
 		return 0;
 	}
 
@@ -144,7 +143,7 @@ public class SearchEstimateResultOutputAction extends
 	 */
 	@Override
 	protected MasterSearch<BeanMap> getService() {
-		
+		// 未使用
 		return null;
 	}
 
@@ -155,7 +154,7 @@ public class SearchEstimateResultOutputAction extends
 	 */
 	@Override
 	protected Class<List<Object>> getDtoClass() {
-		
+		// 未使用
 		return null;
 	}
 }

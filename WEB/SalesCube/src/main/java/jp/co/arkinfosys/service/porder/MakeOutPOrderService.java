@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
 import java.util.List;
@@ -116,21 +115,21 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 	 */
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
-		
+		// 伝票番号（開始）
 		if (conditions.containsKey(Param.PO_SLIP_ID_FROM)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_SLIP_ID_FROM))) {
 				param.put(Param.PO_SLIP_ID_FROM, conditions.get(Param.PO_SLIP_ID_FROM));
 			}
 		}
 
-		
+		// 伝票番号（終了）
 		if (conditions.containsKey(Param.PO_SLIP_ID_TO)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_SLIP_ID_TO))) {
 				param.put(Param.PO_SLIP_ID_TO, conditions.get(Param.PO_SLIP_ID_TO));
 			}
 		}
 
-		
+		// 発注日（開始）
 		if (conditions.containsKey(Param.PO_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PO_DATE_FROM))) {
@@ -139,7 +138,7 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 発注日（終了）
 		if (conditions.containsKey(Param.PO_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_DATE_TO))) {
 				param.put(Param.PO_DATE_TO, (String) conditions
@@ -147,7 +146,7 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_CODE))) {
@@ -157,7 +156,7 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_NAME))) {
@@ -167,7 +166,7 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 入力担当者名
 		if (conditions.containsKey(Param.USER_NAME)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_NAME))) {
 				param.put(Param.USER_NAME, super
@@ -176,14 +175,14 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 発行済みを除く
 		if (conditions.containsKey(Param.EXCEPT_ALREADY_OUTPUT)) {
 			if ((Boolean) conditions.get(Param.EXCEPT_ALREADY_OUTPUT)) {
-				param.put(Param.EXCEPT_ALREADY_OUTPUT, "true"); 
+				param.put(Param.EXCEPT_ALREADY_OUTPUT, "true"); // nullでなければなんでもよい
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.SORT_COLUMN))) {
@@ -192,7 +191,7 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 								.get(Param.SORT_COLUMN)));
 			}
 		}
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean) conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -200,13 +199,13 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			param.put(Param.SORT_ORDER, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}

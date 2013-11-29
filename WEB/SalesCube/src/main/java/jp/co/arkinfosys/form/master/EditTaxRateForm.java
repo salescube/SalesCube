@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class EditTaxRateForm extends AbstractEditForm {
 	 */
 	@Override
 	public void initialize() {
-		
+		// 削除がないので実装なし
 	}
 
 	/**
@@ -55,31 +54,33 @@ public class EditTaxRateForm extends AbstractEditForm {
 		if (taxRateList != null) {
 			Map<String, TaxRateDto> doubleCheck = new HashMap<String, TaxRateDto>();
 			for (TaxRateDto dto : taxRateList) {
-				
-				
-				
+				//
+				// 基本情報チェック
+				//
 
-				
+				// 開始年月日
 				if (checkRequired(index, dto.startDate, labelStartDate, errors)) {
 
-					
+					// 日付型
 					checkDate(index, dto.startDate, labelStartDate, errors);
 				}
 
-				
+				// 税率
 				if (checkRequired(index, dto.taxRate, labelTaxRate, errors)) {
 
-					
+					// 税率なので　０～１００の範囲で整数入力
 					checkIntegerRange(index, dto.taxRate, labelTaxRate, errors, 0, 100);
 				}
 
-				
-				if (doubleCheck.containsKey(dto.startDate)) {
-					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-							"errors.doubleTaxRate"));
-					break;
+				// 開始日重複チェック
+				if (dto.startDate!=""){
+					if (doubleCheck.containsKey(dto.startDate)) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+								"errors.doubleTaxRate"));
+						break;
+					}
+					doubleCheck.put(dto.startDate, dto);
 				}
-				doubleCheck.put(dto.startDate, dto);
 				index++;
 			}
 		}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.util.ArrayList;
@@ -177,34 +176,34 @@ public class OutputSalesReportSingleAction extends
 						.get(index))) {
 			beanMap = this.salesService
 					.findSalesSlipBySalesSlipIdSimpleAddDate(inputSalesReportForm.printId);
-			
+			// （帳票パラメータの名前付けに合わせて）salesCmCategoryの値をcategoryCodeNameに入れ替える
 			beanMap.put("salesCmCategory", beanMap.get("categoryCodeName")
 					.toString());
 		} else {
 			beanMap = this.salesService
 					.findSalesSlipBySalesSlipIdSimple(inputSalesReportForm.printId);
-			
+			// （帳票パラメータの名前付けに合わせて）salesCmCategoryの値をcategoryCodeNameに入れ替える
 			beanMap.put("salesCmCategory", beanMap.get("categoryCodeName")
 					.toString());
 		}
 		if (beanMap != null) {
-			
+			// 顧客を取得
 			Customer customer = super.customerService
 					.findCustomerByCode(beanMap.get("customerCode").toString());
 			if (customer == null) {
-				return null; 
+				return null; // このパターンはない
 			}
 
-			
+			// 日付表示フラグを設定する
 			if (CategoryTrns.BILL_DATE_PRINT_ON.equals(customer.billDatePrint)) {
 				beanMap.put(DISP_DATE_FLAG, true);
 			} else {
 				beanMap.put(DISP_DATE_FLAG, false);
 			}
-			
+			// 2010.04.23 add kaki 納品書兼領収書にて、クレジット決済の場合のみコメントを表示
 			if (Constants.REPORT_TEMPLATE.REPORT_ID_F.equals(outputTypeList
 					.get(index))) {
-				
+				// 取引区分＝「クレジット」の場合のみ
 				if (Constants.SALES_CM_CATEGORY_NAME.CATEGORY_CREDIT_CARD
 						.equals(beanMap.get("categoryCodeName"))) {
 					beanMap.put(DISP_CREDIT_CMT, true);
@@ -212,10 +211,10 @@ public class OutputSalesReportSingleAction extends
 					beanMap.put(DISP_CREDIT_CMT, false);
 				}
 			}
-			
+			// 納品書(D)にて、下部のコメント（【請求書発行】お客様締日～）を設定する。
 			if (Constants.REPORT_TEMPLATE.REPORT_ID_D.equals(outputTypeList
 					.get(index))) {
-				
+				// 請求書発行単位=請求締め単位の場合締日を設定する
 				if (CategoryTrns.BILL_PRINT_UNIT_BILL_CLOSE
 						.equals(customer.billPrintUnit)) {
 					if (beanMap.get("billCutoffGroup").equals("31")) {
@@ -236,16 +235,16 @@ public class OutputSalesReportSingleAction extends
 					.get(index)))
 					|| (Constants.REPORT_TEMPLATE.REPORT_ID_E
 							.equals(outputTypeList.get(index)))) {
-				
+				//出力帳票が納品書か仮納品書の場合
 				beanMap.put(ID_HEAD_CLM, "");
 
-				
+				// テンプレートDのフッタ部分(Page Footer)にある「納品書に消費税額が含まれていないので請求書で別途請求する」旨の注意書きを出力するかどうかを設定する
 				if (CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP
 						.equals(customer.billPrintUnit)) {
-					beanMap.put(REPORT_D_FOOTER, "0"); 
+					beanMap.put(REPORT_D_FOOTER, "0"); // 請求書発行単位が売上伝票単位の場合は出力しない
 				} else if (CategoryTrns.BILL_PRINT_UNIT_BILL_CLOSE
 						.equals(customer.billPrintUnit)) {
-					beanMap.put(REPORT_D_FOOTER, "1"); 
+					beanMap.put(REPORT_D_FOOTER, "1"); // 請求書発行単位が請求締め単位の場合は出力する
 				}
 			}
 
@@ -276,7 +275,7 @@ public class OutputSalesReportSingleAction extends
 
 			beanMapList = this.pickingLineService
 					.findPickingLineBySalesSlipIdSimple(inputSalesReportForm.printId);
-			
+			// 出荷指示明細行以外から取得するデータを設定
 			addPickingData(beanMapList);
 			PrintUtil.removeSpaceToExceptianalProductLine(beanMapList);
 

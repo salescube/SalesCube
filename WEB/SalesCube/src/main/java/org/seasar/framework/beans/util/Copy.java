@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package org.seasar.framework.beans.util;
 
 import java.util.Map;
@@ -99,7 +98,7 @@ public class Copy extends AbstractCopy<Copy> {
 			return value;
 		}
 		if (this.lrTrim && value instanceof String) {
-			
+			// トリム指定された文字列であればトリムする
 			return StringUtil.trimBlank((String) value);
 		}
 		return value;

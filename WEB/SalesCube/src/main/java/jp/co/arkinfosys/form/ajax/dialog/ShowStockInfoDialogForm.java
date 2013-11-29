@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.dialog;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class ShowStockInfoDialogForm {
 	 */
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
-		
+		// 検索条件の有無チェック
 		if (!StringUtil.hasLength(productCode)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.condition.insufficiency"));

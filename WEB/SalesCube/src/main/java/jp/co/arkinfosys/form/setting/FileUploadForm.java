@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.setting;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class FileUploadForm extends AbstractSearchForm<FileInfoDto> {
 		ActionMessages errors = new ActionMessages();
 
 		if (this.formFile.getFileSize() == 0) {
-			
+			// 0バイトファイル
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.upload.size.zero"));
 		}

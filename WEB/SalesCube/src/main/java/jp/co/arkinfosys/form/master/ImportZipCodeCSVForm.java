@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import org.apache.struts.action.ActionMessage;
@@ -33,7 +32,7 @@ public class ImportZipCodeCSVForm {
 		ActionMessages errors = new ActionMessages();
 
 		if (this.zipCodeCSV.getFileSize() == 0) {
-			
+			// 0バイトファイル
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.upload.size.zero"));
 		}

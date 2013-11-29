@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class EditCustomerRankAction extends
 	 */
 	@Override
 	protected String getAlreadyExistsErrorKey() {
-		
+		// 自動発番なので使わない
 		return null;
 	}
 
@@ -236,7 +235,7 @@ public class EditCustomerRankAction extends
 	 */
 	@Override
 	protected void doInsertAfter(CustomerRankDto dto) throws Exception {
-		
+		// 発番された番号を設定する
 		this.editCustomerRankForm.rankCode = dto.rankCode;
 	}
 
@@ -246,7 +245,7 @@ public class EditCustomerRankAction extends
 	 */
 	public ActionMessages validateRate() {
 		ActionMessages errors = new ActionMessages();
-		
+		// 割引率
 		String labelRankRate = MessageResourcesUtil.getMessage("labels.rankRate");
 		if (StringUtil.hasLength(this.editCustomerRankForm.rankRate)){
 			this.editCustomerRankForm.checkDecimal(this.editCustomerRankForm.rankRate, labelRankRate, 2, super.mineDto.statsDecAlignment, errors);

@@ -559,7 +559,7 @@ function ProductCodeChange(id){
 		//しかし、単価->金額の計算は行う
 		//指定行全計算(レート換算なし)
 		fullCalcLineWithoutRate(id);
-		CalcFromDolUnitPrice(id); 
+		CalcFromDolUnitPrice(id);
 	}else{
 	var data = new Object();
 	data["tempProductCode"] = $("#productCode_" + id).attr("value");
@@ -729,46 +729,51 @@ var cancel_quantity_refocus = false;
 //数量欄にフォーカスイン
 function quantity_focus(evt){
 	//キャンセル用に変更前の値を取っておく
-	if(!cancel_quantity_refocus){
-		$("#backup_" + $(evt.target).attr("id")).val(oBDCS($(evt.target).val()).value());
-	}
+//	if(!cancel_quantity_refocus){
+//		$("#backup_" + $(evt.target).attr("id")).val(oBDCS($(evt.target).val()).value());
+//	}
 }
 //数量欄からフォーカスアウト
 function quantity_blur(evt){
+
+	if(!_isNum($(evt.target).val())){
+		return;
+	}
+
 	cancel_quantity_refocus = true;
 	//行番号取得
 	var re4match = new RegExp("^quantity_(\\d{1,2})");
 	targetRowNum = $(evt.target).attr("id").replace(re4match,"$1");
 	//チェンジイベントを引き起こすか？
-	if($("#backup_quantity_"+targetRowNum).val() != oBDCS($(evt.target).val()).value()){
+	if($("#quantityDB_"+targetRowNum).val() != oBDCS($(evt.target).val()).value()){
 		//チェンジイベントを引き起こす
 		if(!quantityChange(targetRowNum)){
 			//ダイアログでキャンセルが押された場合
-			$("#quantity_"+targetRowNum).valueBDC($("#backup_quantity_"+targetRowNum).val());
+			$("#quantity_"+targetRowNum).valueBDC($("#quantityDB_"+targetRowNum).val());
 			$(evt.target).focus();
 			$(evt.target).select();
 		}
 	}
-	checkNowPurchasing(targetRowNum);
+//	checkNowPurchasing(targetRowNum);
 	cancel_quantity_refocus = false;
 }
 
-function checkNowPurchasing(id){
+//function checkNowPurchasing(id){
 	// 修正前数量
-	var beforeNum = _Number($("#backup_quantity_"+id).val());
+//	var beforeNum = _Number($("#backup_quantity_"+id).val());
 	// 修正後数量
-	var afterNum = _Number($("#quantity_"+id).val());
+//	var afterNum = _Number($("#quantity_"+id).val());
 	// 残数量
-	var restNum = _Number($("#restQuantity_"+id).val());
+//	var restNum = _Number($("#restQuantity_"+id).val());
 
 	// 数量が変わっていなければ何もしない
-	if( beforeNum == afterNum ){
-		return;
-	}
+//	if( beforeNum == afterNum ){
+//		return;
+//	}
 	// 該当明細行の残数調整
-	restNum = restNum - ( beforeNum - afterNum );
-	$("#restQuantity_"+id).val( restNum );
-}
+//	restNum = restNum - ( beforeNum - afterNum );
+//	$("#restQuantity_"+id).val( restNum );
+	//}
 
 //数量変更
 function quantityChange(id){
@@ -782,7 +787,7 @@ function quantityChange(id){
 		if( $("#lineStatus_"+id).val() == <%= Constants.STATUS_PORDER_LINE.NOWPURCHASING %> ){
 			if(_isNum($("#restQuantity_"+id).attr("value"))){
 				// 元の数量
-				var old = _Number($("#backup_quantity_"+id).val());
+				var old = _Number($("#quantityDB_"+id).val());
 				// 仕入済数
 				var exitNum = old - _Number($("#restQuantity_"+id).val());
 				// 新数量　＜　仕入済数はエラー
@@ -1197,6 +1202,7 @@ function unbindEnterToLine(id){
  		"productSupplierCode",	//外部
  		"supplierPcode",
  		"productAbstract",
+ 		"rackCodeDiv",
  		"rackCode",
  		"productRemarks",
  		"quantity",
@@ -1295,11 +1301,11 @@ function DelLine(id){
 
 	var tBodyLine = $("#tbodyLine");
 	var lineSize = $(tbodyLine).get(0).children.length;
+
 	if(lineSize <= 1) return false;
 	// 見積明細がある場合はHIDDENに追加する
 
 	var deletePoLineId = $("#poLineId_"+id).val();
-
 	if(deletePoLineId != null && deletePoLineId.length > 0){
 
 		var ids = $("#deleteLineIds").val();
@@ -1330,7 +1336,7 @@ function DelLine(id){
 		}
 	}
 	// 残り１行の場合、削除ボタンの不活性化
-	if(lineSize == 1) {
+	if(lineSize == 2) {
 		trId = $(tBodyLine).children(":first").attr("id");
 		id = trId.replace("row_", "");
 		$("#delButton_"+id).attr("disabled","true");
@@ -1419,11 +1425,13 @@ function AddLine(){
 		$(elemTr).find("[id^='copyButton_']").attr("disabled", false);
 
 		// 行番号設定
-		$(elemTr).find("[id^='poLineNo_']").val(lineSize+1);
-		$(elemTr).find("[id^='lineNo_']").html(lineSize+1);
+		//$(elemTr).find("[id^='poLineNo_']").val(lineSize+1);
+		//$(elemTr).find("[id^='lineNo_']").html(lineSize+1);
+		$(elemTr).find("[id^='poLineNo_']").val(lineSize);
+		$(elemTr).find("[id^='lineNo_']").html(lineSize);
 
 		// 行を追加
-		$("#tbodyLine").children(":last").after(elemTr);
+		$("#tbodyLine").children(":last").before(elemTr);
 		setLineEvent( maxIndex );
 
 		delAndCopyButtonDisabledControl();
@@ -1506,7 +1514,8 @@ function showProductInfos(id){
 						draggable: true,		//ドラッグできるよ
 						height: 'auto',			//高さ'auto'で自動
 						hide: null,				//閉じるときの効果 'slide'
-						modal: false,			//モーダル
+						//modal: false,			//モーダル
+						modal: true,			//モーダル
 						position: 'center',		//'center', 'left', 'right', 'top', 'bottom'
 						resizable: false,		//サイズ変更
 						show: null,				//開くときの効果'slide'
@@ -1531,10 +1540,10 @@ function showProductInfos(id){
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0007"/>
 		<jsp:param name="MENU_ID" value="0700"/>
@@ -1551,34 +1560,51 @@ function showProductInfos(id){
 <c:if test="${!newData}">
 
 <c:if test="${!lockMode}">
-		--><button onclick="onF2()" tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
-		--><button onclick="onF3()" tabindex="2002">F3<br><bean:message key='words.action.renew'/></button><!--更新
+		-->
+		<button onclick="onF2()" tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
+		-->
+		<button onclick="onF3()" tabindex="2002">F3<br><bean:message key='words.action.renew'/></button><!--更新
 </c:if>
 <c:if test="${lockMode}">
-		--><button disabled="disabled"   tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
-		--><button disabled="disabled"   tabindex="2002">F3<br><bean:message key='words.action.renew'/></button><!--更新
+		-->
+		<button disabled="disabled"   tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
+		-->
+		<button disabled="disabled"   tabindex="2002">F3<br><bean:message key='words.action.renew'/></button><!--更新
 </c:if>
-		--><button onclick="onF4()" tabindex="2003">F4<br><bean:message key='words.name.pdf'/></button><!--PDF
+		-->
+		<button onclick="onF4()" tabindex="2003">F4<br><bean:message key='words.name.pdf'/></button><!--PDF
 </c:if>
 <c:if test="${newData}">
-		--><button disabled="disabled"   tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
+		-->
+		<button disabled="disabled"   tabindex="2001">F2<br><bean:message key='words.action.delete'/></button><!--削除
 <c:if test="${!lockMode}">
-		--><button onclick="onF3()" tabindex="2002">F3<br><bean:message key='words.action.register'/></button><!--登録
+		-->
+		<button onclick="onF3()" tabindex="2002">F3<br><bean:message key='words.action.register'/></button><!--登録
 </c:if>
 <c:if test="${lockMode}">
-		--><button disabled="disabled"   tabindex="2002">F3<br><bean:message key='words.action.register'/></button><!--登録
+		-->
+		<button disabled="disabled"   tabindex="2002">F3<br><bean:message key='words.action.register'/></button><!--登録
 </c:if>
-		--><button disabled="disabled"   tabindex="2003">F4<br><bean:message key='words.name.pdf'/></button><!--PDF
+		-->
+		<button disabled="disabled"   tabindex="2003">F4<br><bean:message key='words.name.pdf'/></button><!--PDF
 </c:if>
-		--><button disabled="disabled"   tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!--伝票呼出
-		--><button disabled="disabled"   tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!--
-		--><button disabled="disabled"   tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
-	</div>
+		-->
+		<button disabled="disabled"   tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!--伝票呼出
+		-->
+		<button disabled="disabled"   tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!--
+		-->
+		<button disabled="disabled"   tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
+	</div><br><br><br>
 
 	<s:form onsubmit="return false;">
 
@@ -1594,27 +1620,46 @@ function showProductInfos(id){
 		</html:messages>
 	</div>
 	<!-- 発注伝票情報  -->
-		<span><bean:message key='labels.poSlipInfos'/></span><br>
+    <div class="form_section_wrap">
+    <div class="form_section">
+        <div class="section_title">
+			<span><bean:message key='labels.poSlipInfos'/></span><br>
+	        <button class="btn_toggle">
+	            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	        </button>
+        </div>
+        <div id="order_section" class="section_body">
 		<table class="forms" summary="poSlipInfos">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 18%">
-			</colgroup>
 			<tr>
-				<th><bean:message key='labels.poSlipId'/></th><!-- 発注番号 -->
+			<!-- 発注番号 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.poSlipId'/>
+				</div></th>
 				<td><html:text styleId="poSlipId" property="poSlipId" readonly="false" styleClass="" style="width:100px; ime-mode:disabled;" tabindex="100"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){ findSlip()}"/></td>
-				<th><bean:message key='labels.poDate'/><bean:message key='labels.must'/></th><!-- 発注日 -->
-				<td><html:text styleId="poDate" property="poDate" styleClass="date_input" maxlength="${f:h(ML_DATE)}" style="width:100px;" tabindex="101" onchange="ChangePODate()"/></td>
-				<th><bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/></th><!-- 納期 -->
-				<td><html:text styleId="deliveryDate" property="deliveryDate" maxlength="${f:h(ML_DATE)}" styleClass="date_input" style="width:100px;" tabindex="102"/></td>
-				<th><bean:message key='labels.userName'/></th><!-- 入力担当者 -->
-				<td><html:text styleId="userName" property="userName" readonly="true" styleClass="c_disable" style="width:100px;" tabindex="103"/>
+			<!-- 発注日 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.poDate'/><bean:message key='labels.must'/>
+				</div></th>
+				<td>
+					<div class="pos_r">
+						<html:text styleId="poDate" property="poDate" styleClass="date_input" maxlength="${f:h(ML_DATE)}"  style="text-align:center;ime-mode:disabled; width: 135px;"  tabindex="101" onchange="ChangePODate()" />
+					</div>
+				</td>
+			<!-- 納期 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/>
+				</div></th>
+				<td>
+					<div class="pos_r">
+						<html:text styleId="deliveryDate" property="deliveryDate" styleClass="date_input" maxlength="${f:h(ML_DATE)}"  style="text-align:center;ime-mode:disabled; width: 135px;"  tabindex="102"  />
+					</div>
+				</td>
+			<!-- 入力担当者 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.userName'/>
+				</div></th>
+				<td><html:text styleId="userName" property="userName" readonly="true" styleClass="c_disable" style="width:120px;" tabindex="103"/>
+			<!-- hiddenたち -->
 				<html:hidden property="userId"/></td>
 				<html:hidden property="menuUpdate"/>
 				<html:hidden property="newData"/>
@@ -1623,9 +1668,15 @@ function showProductInfos(id){
 				<html:hidden property="deleteLineIds"  styleId="deleteLineIds"/>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.memorandum'/></th><!-- 摘要 -->
+				<!-- 摘要 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.memorandum'/>
+				</div></th>
 				<td colspan="5"><html:text styleId="remarks" property="remarks" maxlength="${f:h(ML_REMARK)}" style="width: 550px" tabindex="105"/></td>
-				<th><bean:message key='labels.transportCategory'/></th><!-- 運送便区分 -->
+				<!-- 運送便区分 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.transportCategory'/>
+				</th>
 				<td>
 					<html:select styleId="transportCategory" property="transportCategory" tabindex="106">
 						<c:forEach var="bean" items="${transportCategoryList}">
@@ -1635,65 +1686,106 @@ function showProductInfos(id){
 				</td>
 			</tr>
 		</table>
+        </div><!-- /.section_body -->
 		<html:hidden property="status"/>
 		<html:hidden property="printCount"/>
+    </div><!-- /.form_section -->
+    </div><!-- /.form_section_wrap -->
+
 	<!-- 仕入先情報  -->
-		<span><bean:message key='labels.supplierInfos'/></span><br>
+    <div class="form_section_wrap">
+    <div class="form_section">
+        <div class="section_title">
+			<span><bean:message key='labels.supplierInfos'/></span><br>
+	        <button class="btn_toggle">
+	            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	        </button>
+        </div>
+        <div id="order_section" class="section_body">
 		<table class="forms" summary="supplierInfos">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 25%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 13%">
-			</colgroup>
 			<tr>
-				<th><bean:message key='labels.supplierCode'/><bean:message key='labels.must'/></th><!-- 仕入先コード -->
+			<!-- 仕入先コード -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.supplierCode'/><bean:message key='labels.must'/>
+				</div></th>
 				<td><html:text styleId="supplierCode" styleClass="c_ime_off" property="supplierCode" maxlength="${f:h(ML_SUPPLIERCODE)}" style="width: 100px" tabindex="200"
 						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeSupplierCode(); }"/>
 					<html:hidden styleId="supplierIsExist" property="supplierIsExist"/>
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="201" onclick="supplierSearch()"/></td>
-				<th><bean:message key='labels.supplierName'/></th><!-- 仕入先名 -->
+					<html:image src="${f:url('/images/customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="201" onclick="supplierSearch()"/></td>
+			<!-- 仕入先名 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.supplierName'/>
+				</div></th>
 				<td><html:text styleId="supplierName" property="supplierName" style="width: 250px" tabindex="202" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.supplierKana'/></th><!-- 仕入先名カナ -->
-				<td colspan="3"><html:text styleId="supplierKana" property="supplierKana" style="width: 250px" tabindex="203" readonly="true" styleClass="c_disable"/></td>
+			<!-- 仕入先名カナ -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.supplierKana'/>
+				</div></th>
+				<td colspan="3"><html:text styleId="supplierKana" property="supplierKana" style="width: 300px" tabindex="203" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.zipCode'/></th><!-- 郵便番号 -->
-				<td><html:text styleId="supplierZipCode" property="supplierZipCode" tabindex="204" style="width: 70px" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.address1'/></th><!-- 住所1 -->
+			<!-- 郵便番号 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.zipCode'/>
+				</div></th>
+				<td><html:text styleId="supplierZipCode" property="supplierZipCode" tabindex="204" style="width: 80px" readonly="true" styleClass="c_disable"/></td>
+			<!-- 住所1 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.address1'/>
+				</div></th>
 				<td><html:text styleId="supplierAddress1" property="supplierAddress1" tabindex="205" style="width: 250px" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.address2'/></th><!-- 住所2 -->
-				<td colspan="3"><html:text styleId="supplierAddress2" property="supplierAddress2" tabindex="206" style="width: 250px" readonly="true" styleClass="c_disable"/></td>
+			<!-- 住所2 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.address2'/>
+				</div></th>
+				<td colspan="3"><html:text styleId="supplierAddress2" property="supplierAddress2" tabindex="206" style="width: 300px" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.pcName'/></th><!-- 担当者 -->
+			<!-- 担当者 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.pcName'/>
+				</div></th>
 				<td><html:text styleId="supplierPcName" property="supplierPcName" style="width: 150px" tabindex="207" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.pcKana'/></th><!-- 担当者カナ -->
-				<td><html:text styleId="supplierPcKana" property="supplierPcKana" style="width: 150px" tabindex="208" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.pcPreCategory'/></th><!-- 敬称 -->
+			<!-- 担当者カナ -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.pcKana'/>
+				</div></th>
+				<td><html:text styleId="supplierPcKana" property="supplierPcKana" style="width: 250px" tabindex="208" readonly="true" styleClass="c_disable"/></td>
+			<!-- 敬称 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.pcPreCategory'/>
+				</div></th>
 				<td>
-					<html:select styleId="supplierPcPreCategory" property="supplierPcPreCategory" tabindex="209" styleClass="c_disable">
+					<html:select styleId="supplierPcPreCategory" property="supplierPcPreCategory" tabindex="209" styleClass="c_disable" style="width:55px">
 							<html:option value="-1">&nbsp;</html:option>
 						<c:forEach var="bean" items="${preTypeCategoryList}">
 							<html:option value="${bean.value}">${f:h(bean.label)}</html:option>
 						</c:forEach>
 					</html:select>
 				</td>
-				<th><bean:message key='labels.pcPost'/></th><!-- 役職 -->
-				<td><html:text styleId="supplierPcPost" property="supplierPcPost" tabindex="210" style="width: 80px" readonly="true" styleClass="c_disable"/></td>
+			<!-- 役職 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.pcPost'/>
+				</div></th>
+				<td><html:text styleId="supplierPcPost" property="supplierPcPost" tabindex="210" style="width: 130px" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.tel'/></th><!-- TEL -->
+			<!-- TEL -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.tel'/>
+				</div></th>
 				<td><html:text styleId="supplierTel" property="supplierTel" tabindex="211" style="width: 150px" readonly="true" styleClass="c_disable"/></td>
-				<th><bean:message key='labels.email'/></th><!-- E-MAIL -->
+			<!-- E-MAIL -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.email'/>
+				</div></th>
 				<td colspan="5"><html:text styleId="supplierEmail" property="supplierEmail" tabindex="212" style="width: 400px" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.fax'/></th><!-- FAX -->
+			<!-- FAX -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.fax'/>
+				</div></th>
 				<td><html:text styleId="supplierFax" property="supplierFax" tabindex="213" style="width: 150px" readonly="true" styleClass="c_disable"/></td>
 				<td colspan="6">
 					<html:hidden property="supplierRate" styleId="supplierRate"/>
@@ -1712,6 +1804,9 @@ function showProductInfos(id){
 				</td>
 			</tr>
 		</table>
+        </div><!-- /.section_body -->
+    </div><!-- /.form_section -->
+    </div><!-- /.form_section_wrap -->
 		<html:hidden property="taxFractCategory" styleId="taxFractCategory"/>
 		<html:hidden property="taxPriceDecAlignment" styleId="taxPriceDecAlignment"/>
 
@@ -1722,194 +1817,237 @@ function showProductInfos(id){
 		<html:hidden property="rateId" styleId="rateId"/>
 		<html:hidden property="taxShiftCategory" styleId="taxShiftCategory"/>
 	<!-- 支払状況 -->
+    <div class="form_section_wrap">
+    <div class="form_section">
+    <div class="section_title">
 		<span><bean:message key='labels.paymentStatus'/></span><br>
+        <button class="btn_toggle">
+            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+        </button>
+    </div>
+    <div id="order_section" class="section_body">
 		<table class="forms" style="width: 910px" summary="paymentStatus">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 60%">
-			</colgroup>
 			<tr>
-				<th><bean:message key='labels.paymentStatus'/></th><!-- 支払状況 -->
+			<!-- 支払状況 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.paymentStatus'/>
+				</div></th>
 				<td><span id="paymentStatus">${f:h(slipPaymentStatus)}</span>&nbsp;</td>
-				<th><bean:message key='labels.paymentDate'/></th><!-- 支払日 -->
+			<!-- 支払日 -->
+				<th><div class="col_title_right">
+					<bean:message key='labels.paymentDate'/>
+				</div></th>
 				<td><span id="paymentDate">${f:h(slipPaymentDate)}</span>&nbsp;</td>
 			</tr>
 		</table>
+    </div><!-- /.section_body -->
+    </div><!-- /.form_section -->
+    </div><!-- /.form_section_wrap -->
 	<!-- 発注伝票明細リスト -->
-		<table summary="poLines" class="forms" style="margin-top: 20px; margin-bottom: 0px; border-bottom: 0px;">
-			<colgroup>
-				<col span="1" style="width:  25px;">
-				<col span="1" style="width: 170px;">
-				<col span="1" style="">
-				<col span="1" style="width:  60px;">
-				<col span="1" style="width:  60px;">
-				<col span="1" style="width: 110px;">
-				<col span="1" style="width: 120px;">
-				<col span="1" style="width: 145px;">
-				<col span="1" style="width:  80px;">
-			</colgroup>
+    <div id="order_detail_info_wrap">
+		<table id="order_detail_info" summary="poLines" class="forms" style="margin-top: 20px; margin-bottom: 0px; border-bottom: 0px;">
 			<thead>
-			<tr>
-				<th rowspan="2"><bean:message key='labels.lineNo'/></th><!-- No. -->
-				<th><bean:message key='labels.productCode'/><bean:message key='labels.must'/></th><!-- 商品コード -->
-				<th><bean:message key='labels.rackCode'/></th><!-- 棚番 -->
-				<th><bean:message key='labels.poLot'/></th><!-- ロット -->
-				<th><bean:message key='labels.deliveryProcessCategory'/></th><!-- 完納区分 -->
-				<th><bean:message key='labels.unitPrice'/><span class="yenMust"><bean:message key='labels.must'/></span></th><!-- 円単価  -->
-				<th><bean:message key='labels.price'/><span class="yenMust"><bean:message key='labels.must'/></span></th><!-- 金額(円) -->
-				<th><bean:message key='labels.remarks'/></th><!-- 備考 -->
-				<th rowspan="2">&nbsp;</th>
+			<tr style="">
+				<th rowspan="2" class="rd_top_left"  style="width: 4%; height:60px;"><bean:message key='labels.lineNo'/></th><!-- No. -->
+				<th style="width: 15%; height: 30px;"><bean:message key='labels.productCode'/><bean:message key='labels.must'/></th><!-- 商品コード -->
+				<th style="width: 11%; height: 30px;"><bean:message key='labels.rackCode'/></th><!-- 棚番 -->
+				<th style="width: 11%; height: 30px;"><bean:message key='labels.poLot'/></th><!-- ロット -->
+				<th style="width: 11%; height: 30px;"><bean:message key='labels.deliveryProcessCategory'/></th><!-- 完納区分 -->
+				<th style="width: 11%; height: 30px;"><bean:message key='labels.unitPrice'/><span class="yenMust"><bean:message key='labels.must'/></span></th><!-- 円単価  -->
+				<th style="width: 11%; height: 30px;"><bean:message key='labels.price'/><span class="yenMust"><bean:message key='labels.must'/></span></th><!-- 金額(円) -->
+				<th style="width: 16%; height: 30px;"><bean:message key='labels.remarks'/></th><!-- 備考 -->
+				<th rowspan="2" class="rd_top_right" style="height: 60px;">&nbsp;</th>
 			</tr>
 			<tr>
-				<th><bean:message key='labels.purchasePcode'/></th><!-- 仕入先商品コード -->
-				<th><bean:message key='labels.productRemarks'/></th><!-- 商品備考 -->
-				<th><bean:message key='labels.quantity'/><bean:message key='labels.must'/></th><!-- 数量 -->
-				<th><bean:message key='labels.allRestQuantity'/></th><!-- 総発注残 -->
-				<th><bean:message key='labels.dolUnitPrice'/><span class="dolMust"><bean:message key='labels.must'/></span></th><!-- 外貨単価 -->
-				<th><bean:message key='labels.dolPrice'/><span class="dolMust"><bean:message key='labels.must'/></span></th><!-- 外貨金額 -->
-				<th><bean:message key='labels.deliveryDate'/></th><!-- 納期 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.purchasePcode'/></th><!-- 仕入先商品コード -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.productRemarks'/></th><!-- 商品備考 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.quantity'/><bean:message key='labels.must'/></th><!-- 数量 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.allRestQuantity'/></th><!-- 総発注残 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.dolUnitPrice'/><span class="dolMust"><bean:message key='labels.must'/></span></th><!-- 外貨単価 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.dolPrice'/><span class="dolMust"><bean:message key='labels.must'/></span></th><!-- 外貨金額 -->
+				<th class="top_dot" style="height: 30px; line-height: 30px; paddng: 0;"><bean:message key='labels.deliveryDate'/></th><!-- 納期 -->
 			</tr>
 			</thead>
 		<tbody id="tbodyLine">
 		<c:forEach var="poLineList" items="${poLineList}" varStatus="s">
 		<tr id="row_${f:h(s.index)}">
-				<td style="text-align:right;">
-					<html:hidden styleId="poLineId_${s.index}" name="poLineList" property="poLineId" indexed="true" /><!-- 行ID -->
-					<html:hidden styleId="poLineNo_${s.index}" name="poLineList" property="lineNo" indexed="true" value="${s.count}"/>
-					<span id="lineNo_${s.index}" >${f:h(s.count)}</span>
+				<td style="">
+					<div class="box_1of1">
+						<html:hidden styleId="poLineId_${s.index}" name="poLineList" property="poLineId" indexed="true" /><!-- 行ID -->
+						<html:hidden styleId="poLineNo_${s.index}" name="poLineList" property="lineNo" indexed="true" value="${s.count}"/>
+						<span id="lineNo_${s.index}" >${f:h(s.count)}</span>
+					</div>
 				</td>
 				<td>
-					<html:text styleId="productCode_${s.index}" styleClass="c_ime_off" name="poLineList" property="productCode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" style="width: 165px" tabindex="${f:h(s.index)*f:h(lineElementCount)+1000}" />
-						<html:image styleId="productSrhImg_${s.index}" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1002}"/><br>
-					<html:text styleId="supplierPcode_${s.index}" styleClass="c_ime_off" name="poLineList" property="supplierPcode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" style="width: 150px" tabindex="${f:h(s.index)*f:h(lineElementCount)+1001}"/>
-					<input type="hidden" id="productSupplierCode_${s.index}">
+                    <div style="border-bottom: 1px dotted #CCCCCC; height: 45px; line-height: 45px;">
+						<html:text styleId="productCode_${s.index}" styleClass="c_ime_off" name="poLineList" property="productCode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1000}" style="width:125px; height:25px;"/>
+						<html:image styleId="productSrhImg_${s.index}" src="${f:url('/images/customize/btn_search.png')}" style="cursor: pointer; width: auto; vertical-align: middle;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1002}"/>
+                    </div>
+                    <div class="box_2of2">
+						<html:text styleId="supplierPcode_${s.index}" styleClass="c_ime_off" name="poLineList" property="supplierPcode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1001}" style="width:90%; margin:10px;"/>
+						<input type="hidden" id="productSupplierCode_${s.index}">
+                    </div>
 				</td>
 				<td style="white-space: normal">
-					<div id="rackCodeDiv_${f:h(s.index)}" style="position: static; width:135px; height:50px; white-space: normal;">${f:h(poLineList.rackCode)}</div>
-					<html:hidden styleId="rackCode_${f:h(s.index)}" name="poLineList" property="rackCode" indexed="true" />
-					<html:textarea styleId="productRemarks_${s.index}" name="poLineList" property="productRemarks"  indexed="true" style="width: 135px; height: 50px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1003}" readonly="true" styleClass="c_disable"/>
-					<html:hidden styleId="productAbstract_${s.index}" name="poLineList" property="productAbstract" indexed="true" />
-					<html:hidden styleId="productIsExist_${s.index}" name="poLineList" property="productIsExist" indexed="true" />
-				</td>
-
-				<td><html:text styleId="poLot_${f:h(s.index)}" name="poLineList" property="poLot" indexed="true" style="width: 50px;" readonly="true" styleClass="c_disable numeral_commas BDCqua" tabindex="${f:h(s.index)*f:h(lineElementCount)+1004}"/><br>
-					<html:hidden styleId="maxPoNum_${f:h(s.index)}" name="poLineList" property="maxPoNum" indexed="true" /><!-- 発注限度数 -->
-					<html:hidden styleId="maxStockNum_${f:h(s.index)}" name="poLineList" property="maxStockNum" indexed="true" /><!-- 在庫限度数 -->
-					<html:hidden styleId="holdingStockNum_${f:h(s.index)}" name="poLineList" property="holdingStockNum" indexed="true" /><!-- 在庫限度数 -->
-					<html:text styleId="quantity_${s.index}" name="poLineList" property="quantity" indexed="true" maxlength="${f:h(ML_S_QUANTITY)}" styleClass="numeral_commas BDCqua" style="width: 50px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1005}"/><br>
-					<input type="hidden" id="backup_quantity_${s.index}" value=""/>
-					<button id="productInfBtn_${s.index}" style="width: 50px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1006}"><bean:message key='words.action.showProductInfos'/></button><!-- (商品)情報 -->
-					<button id="productStkBtn_${s.index}" style="width: 50px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1007}"><bean:message key='words.action.showStockInfos'/></button></td><!-- (商品)在庫 -->
-				<td>
-					<html:hidden styleId="lineStatus_${s.index}" name="poLineList" property="status" indexed="true" />
-					<span id="dispStatus_${s.index}" style="width: 55px; text-align:center;">${f:h(poLineList.dispStatus)}</span>
-<!--  					<html:text styleId="restQuantity_${s.index}" name="poLineList" property="restQuantity" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" readonly="true" styleClass="numeral_commas BDCqua" />  -->
- 					<html:hidden styleId="restQuantity_${s.index}" name="poLineList" property="restQuantity" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" styleClass="numeral_commas BDCqua" />
-					<html:text styleId="productRestQuantity_${s.index}" name="poLineList" property="productRestQuantity" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" readonly="true" styleClass="numeral_commas BDCqua" />
-				</td>
-				<td colspan="2">
-				<html:text styleId="unitPrice_${s.index}" name="poLineList" property="unitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 105px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1009}"/>
-				<html:text styleId="price_${s.index}" name="poLineList" property="price" indexed="true" maxlength="${f:h(ML_S_PRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 105px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1011}"/><br>
-				<html:hidden styleId="ctaxPrice_${s.index}" styleClass="BDC BDCtax" name="poLineList" property="ctaxPrice" indexed="true" />
-				<html:text styleId="dolUnitPrice_${s.index}" name="poLineList" property="dolUnitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas dollar_value BDCdol" style="width: 105px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1010}"/>
-				<html:text styleId="dolPrice_${s.index}" name="poLineList" property="dolPrice" indexed="true" styleClass="numeral_commas dollar_value BDCdol" maxlength="${f:h(ML_S_PRICE)}" style="width: 105px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1012}"/>
+                    <div class="box_1of2">
+						<span id="rackCodeDiv_${f:h(s.index)}" style="position: static; width:135px; height:50px; white-space: normal;">${f:h(poLineList.rackCode)}</span>
+					</div>
+                    <div class="box_2of2">
+						<html:hidden styleId="rackCode_${f:h(s.index)}" name="poLineList" property="rackCode" indexed="true" />
+						<html:textarea styleId="productRemarks_${s.index}" name="poLineList" property="productRemarks"  indexed="true" tabindex="${f:h(s.index)*f:h(lineElementCount)+1003}" readonly="true" styleClass="c_disable" style="width:94%; height: 80%; margin:5px;"/>
+						<html:hidden styleId="productAbstract_${s.index}" name="poLineList" property="productAbstract" indexed="true" />
+						<html:hidden styleId="productIsExist_${s.index}" name="poLineList" property="productIsExist" indexed="true" />
+					</div>
 				</td>
 
 				<td>
-					<html:textarea styleId="lineRemarks_${s.index}" name="poLineList" property="remarks" indexed="true" style="width: 140px; height: 70px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1013}"/><br><!-- 備考 -->
-					<html:text styleId="lineDeliveryDate_${s.index}" name="poLineList" property="deliveryDate" indexed="true" maxlength="${f:h(ML_DATE)}" style="width: 124px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1014}"/>
+                    <div class="box_1of2">
+						<html:text styleId="poLot_${f:h(s.index)}" name="poLineList" property="poLot" indexed="true" readonly="true" styleClass="c_disable numeral_commas BDCqua" tabindex="${f:h(s.index)*f:h(lineElementCount)+1004}"/><br>
+						<html:hidden styleId="maxPoNum_${f:h(s.index)}" name="poLineList" property="maxPoNum" indexed="true" /><!-- 発注限度数 -->
+						<html:hidden styleId="maxStockNum_${f:h(s.index)}" name="poLineList" property="maxStockNum" indexed="true" /><!-- 在庫限度数 -->
+						<html:hidden styleId="holdingStockNum_${f:h(s.index)}" name="poLineList" property="holdingStockNum" indexed="true" /><!-- 在庫限度数 -->
+					</div>
+                    <div style="height: 25px; line-height: 25px; margin: 10px 5px 10px 5px;">
+						<html:text styleId="quantity_${s.index}" name="poLineList" property="quantity" indexed="true" maxlength="${f:h(ML_S_QUANTITY)}" styleClass="numeral_commas BDCqua" tabindex="${f:h(s.index)*f:h(lineElementCount)+1005}" style="width:75px; height: 25px;"/>
+						<input type="hidden" id="backup_quantity_${s.index}" value=""/>
+	 					<html:hidden styleId="quantityDB_${s.index}" name="poLineList" property="quantityDB" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" styleClass="numeral_commas BDCqua" />
+						<button type="button" id="productStkBtn_${s.index}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1007}" class="btn_small" style="width:30px; margin:0; vertical-align: top;">在庫</button>
+					</div>
+				</td>
+				<td>
+                    <div class="box_1of2">
+						<html:hidden styleId="lineStatus_${s.index}" name="poLineList" property="status" indexed="true" />
+						<span id="dispStatus_${s.index}" style="width: 55px; text-align:center;">${f:h(poLineList.dispStatus)}</span>
+					</div>
+                    <div class="box_2of2">
+	 					<html:hidden styleId="restQuantity_${s.index}" name="poLineList" property="restQuantity" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" styleClass="numeral_commas BDCqua" />
+						<html:text styleId="productRestQuantity_${s.index}" name="poLineList" property="productRestQuantity" indexed="true" style="width: 85%; text-align:right; background-color: #FFFFFF; border-style: none;" readonly="true" styleClass="numeral_commas BDCqua" />
+					</div>
+				</td>
+				<td>
+                    <div class="box_1of2">
+						<html:text styleId="unitPrice_${s.index}" name="poLineList" property="unitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1009}"/>
+					</div>
+                    <div class="box_2of2">
+						<html:hidden styleId="ctaxPrice_${s.index}" styleClass="BDC BDCtax" name="poLineList" property="ctaxPrice" indexed="true" />
+						<html:text styleId="dolUnitPrice_${s.index}" name="poLineList" property="dolUnitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas dollar_value BDCdol" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1010}"/>
+					</div>
+				</td>
+				<td>
+                    <div class="box_1of2">
+						<html:text styleId="price_${s.index}" name="poLineList" property="price" indexed="true" maxlength="${f:h(ML_S_PRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1011}"/>
+					</div>
+                    <div class="box_2of2">
+						<html:text styleId="dolPrice_${s.index}" name="poLineList" property="dolPrice" indexed="true" styleClass="numeral_commas dollar_value BDCdol" maxlength="${f:h(ML_S_PRICE)}" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1012}"/>
+					</div>
+				</td>
+				<td>
+                    <div class="box_1of2">
+						<html:textarea styleId="lineRemarks_${s.index}" name="poLineList" property="remarks" indexed="true"  tabindex="${f:h(s.index)*f:h(lineElementCount)+1013}" style="width:94%; height: 80%; margin:5px;"/><br><!-- 備考 -->
+					</div>
+                    <div class="pos_r" style="height: 25px; line-height: 25px; margin: 5px 5px 15px 5px;">
+						<html:text styleId="lineDeliveryDate_${s.index}" name="poLineList" property="deliveryDate" indexed="true" maxlength="${f:h(ML_DATE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1014}" style="width: 125px; height: 25px;"/>
+					</div>
 				</td>
 				<td style="text-align:right;">
+	            <div class="box_1of2">
 <c:if test="${!lockMode}">
-					<button id="delButton_${s.index}" style="width: 80px" tabindex="${f:h(s.index)*f:h(lineElementCount)+1015}"><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
+					<button id="delButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1015}" class="btn_small" ><bean:message key='words.action.delLine'/></button><!-- (行)削除 -->
 </c:if>
 <c:if test="${lockMode}">
-					<button id="delButton_${s.index}" style="width: 80px" disabled="disabled"><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
+					<button id="delButton_${s.index}" style="width:80px;" disabled="disabled" class="btn_small" ><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
 </c:if>
+				</div>
+	            <div class="box_2of2">
 <c:if test="${!lockMode}">
 		<c:if test="${s.count == 1}">
-					<button id="copyButton_${s.index}" style="width: 80px" disabled="disabled"><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small" disabled="disabled" ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 		</c:if>
 		<c:if test="${s.count >  1}">
-					<button id="copyButton_${s.index}" style="width: 80px" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 		</c:if>
 </c:if>
 <c:if test="${lockMode}">
-					<button id="copyButton_${s.index}" style="width: 80px" disabled="disabled"><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small" disabled="disabled"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 </c:if>
+				</div>
 				</td>
 			</tr>
 		</c:forEach>
-			</tbody>
-	    </table>
-		<table summary="poLines" class="forms" style="margin-top: 0px; border-top: 1px gray solid;">
-			<tfoot>
 			<tr id="rowAddLine">
-				<td style="text-align: right;" colspan="9">
+				<td style="height: 60px; text-align: center" colspan="9" class="rd_bottom_left rd_bottom_right">
 					<html:hidden styleId="slipLineActive" property="slipLineActive"/>
 <c:if test="${!lockMode}">
-					<button tabindex="1800" style="width: 80px;" onClick="AddLine()"><bean:message key='words.action.addLine'/></button><!-- 行追加 -->
+					<button tabindex="1800" style="width: 80px;" onClick="AddLine()">
+						<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+					</button><!-- 行追加 -->
 </c:if>
 <c:if test="${lockMode}">
 					<button style="width: 80px;" disabled="disabled"><bean:message key='words.action.addLine'/></button><!-- 行追加 -->
 </c:if>
 				</td>
 			</tr>
-			</tfoot>
-		</table>
+			</tbody>
+	    </table>
+	 </div><!-- /.order_detail_info_wrap -->
 
 	<!-- 伝票金額情報 -->
-		<div id="poSlipPriseInfos" class="information" style="margin-top: 20px; height: 40px;">
-			<table class="forms" summary="poSlipPriseInfos" style="width: 450px; position: absolute; top: 0px; left: 460px;">
-				<colgroup>
-					<col span="4" style="width: 25%">
-				</colgroup>
+		<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
+        <div id="information" class="information" style="">
+			<table id="voucher_info" class="forms" summary="poSlipPriseInfos" style="">
 				<tr>
-					<th><bean:message key='labels.purePriceTotal'/></th><!-- 本体金額(円) -->
+					<th style="height: 60px;" class="rd_top_left"><bean:message key='labels.purePriceTotal'/></th><!-- 本体金額(円) -->
 					<th><bean:message key='labels.ctaxTotal'/></th><!-- 消費税 -->
 					<th><bean:message key='labels.priceTotal'/></th><!-- 伝票合計(円) -->
-					<th><bean:message key='labels.fePriceTotal'/></th><!-- 外貨伝票合計 -->
+					<th class="rd_top_right"><bean:message key='labels.fePriceTotal'/></th><!-- 外貨伝票合計 -->
 				</tr>
 				<tr>
-					<td style="text-align: right;" >
+					<td class="rd_bottom_left" style="height: 100px;" >
 						&nbsp;<span id="DISPpurePriceTotal" class="BDCyen yen_value"></span>
 					</td>
-					<td style="text-align: right;" >
+					<td style="" >
 						<span id="DISPctaxTotal" class="BDCtax yen_value"></span>
 						<html:hidden styleId="ctaxTotal" styleClass="BDC BDCtax" property="ctaxTotal"/>
 
 					</td>
-					<td style="text-align: right;" >
+					<td style="" >
 						<span id="DISPpriceTotal" class="BDCyen yen_value"></span>
 						<html:hidden styleId="priceTotal" styleClass="BDC BDCyen" property="priceTotal"/>
 					</td>
-					<td style="text-align: right;" >
+					<td class="rd_bottom_right" style="" >
 						<span id="DISPfePriceTotal" class="BDCdol dollar_value"></span>
 						<html:hidden styleId="fePriceTotal" styleClass="BDC BDCdol" property="fePriceTotal"/>
 					</td>
 				</tr>
 			</table>
 		</div>
-				<div style="text-align: right; width: 910px">
-					<c:if test="${!newData}">
-						<c:if test="${!lockMode}">
-							<button onclick="onF3()" tabindex="1999"><bean:message key='words.action.renew'/></button>
-						</c:if>
-						<c:if test="${lockMode}">
-							<button disabled="disabled"   tabindex="1999"><bean:message key='words.action.renew'/></button>
-						</c:if>
-					</c:if>
-					<c:if test="${newData}">
-						<c:if test="${!lockMode}">
-							<button onclick="onF3()" tabindex="1999"><bean:message key='words.action.register'/></button>
-						</c:if>
-						<c:if test="${lockMode}">
-							<button disabled="disabled"   tabindex="1999"><bean:message key='words.action.register'/></button>
-						</c:if>
-					</c:if>
-				</div>
+		</div>
+		<div style="width: 1160px; text-align: center; margin-top: 10px;">
+			<c:if test="${!newData}">
+				<c:if test="${!lockMode}">
+					<button onclick="onF3()" tabindex="1999">
+						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+				</c:if>
+				<c:if test="${lockMode}">
+					<button disabled="disabled"   tabindex="1999">
+						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+				</c:if>
+			</c:if>
+			<c:if test="${newData}">
+				<c:if test="${!lockMode}">
+					<button onclick="onF3()" tabindex="1999">
+						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+				</c:if>
+				<c:if test="${lockMode}">
+					<button disabled="disabled"   tabindex="1999">
+						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+				</c:if>
+			</c:if>
+		</div>
 
 	</div>
 </s:form>

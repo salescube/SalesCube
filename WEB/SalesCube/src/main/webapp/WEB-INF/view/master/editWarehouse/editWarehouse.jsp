@@ -277,10 +277,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1307"/>
@@ -327,6 +327,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 	
 	<div class="function_forms">
 		<div id="errors" style="color: red" style="padding-left: 20px"><html:errors/></div>
@@ -336,192 +337,213 @@
         	</html:messages>
     	</div>
 
-		<span>倉庫情報</span><br>
-		<table id="user_info" class="forms" style="width: 800px" summary="倉庫情報1">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-			</colgroup>
-			<tr>
-				<th>倉庫コード<bean:message key='labels.must'/></th>
-				<td>
-                <c:if test="${editMode}">
-                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
-                </c:if>
-                <c:if test="${!editMode}">
-                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100"/>
-                </c:if>
-                </td>
-				<th>倉庫名<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" tabindex="101"/></td>
-			</tr>
-			<tr>
-				<th>郵便番号</th>
-				<td colspan="3"><html:text style="width: 70px; ime-mode: disabled;" tabindex="102" property="warehouseZipCode" styleId="warehouseZipCode"  onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}"/>
-				<html:image src="${f:url('/images/icon_04_02.gif')}"  style="vertical-align: middle; cursor: pointer;" onclick="zipSearch($('#warehouseZipCode'));"/>
-				</td>
-			</tr>
-			<tr>
-				<th>住所１</th>
-				<td colspan="3"><html:text style="width: 500px;" tabindex="104" property="warehouseAddress1" styleId="warehouseAddress1"/></td>
-			</tr>
-			<tr>
-				<th>住所２</th>
-				<td colspan="3"><html:text style="width: 500px;" tabindex="105" property="warehouseAddress2" /></td>
-			</tr>
-			<tr>
-				<th>TEL</th>
-				<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="106" property="warehouseTel" /></td>
-				<th>FAX</th>
-				<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="107" property="warehouseFax" /></td>
-			</tr>
-		</table>
-		<table id="warehouse_info1" class="forms" style="width: 800px" summary="管理者情報1">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 35%">
-			</colgroup>
-			<tr>
-				<th>管理者名</th>
-				<td><html:text maxlength="60" styleId="managerName" property="managerName" style="width: 200px" tabindex="200"/></td>
-				<th>管理者カナ</th>
-				<td><html:text maxlength="60" styleId="managerKana" property="managerKana" style="width: 200px" tabindex="201"/></td>
-			</tr>
-			<tr>
-				<th>TEL</th>
-				<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="202" property="managerTel" /></td>
-				<th>FAX</th>
-				<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="203" property="managerFax" /></td>
-			</tr>
-			<tr>
-				<th>E-MAIL</th>
-				<td colspan="3"><html:text style="width: 500px; ime-mode: disabled;" tabindex="204" property="managerEmail" /></td>
-			</tr>
-		</table>
-		<table id="warehouse_info2" class="forms" style="width: 800px" summary="倉庫情報2">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 85%">
-			</colgroup>
-			<tr>
-				<th>倉庫状況<bean:message key='labels.must'/></th>
-				<td>
-                  <html:select styleId="warehouseState" property="warehouseState" style="width: 100px; ime-mode: disabled;"  tabindex="300">
-					<html:option value="運用中" />
-					<html:option value="棚卸中"/>
-					<html:option value="廃止" />
-                  </html:select>
-                </td>
-			</tr>
-		</table>
-		
-		<span>関連する棚番</span><br />
-		<table id="editRackList" class="forms" style="width: 600px" summary="棚番情報1">
-			<colgroup>
-                <col span="1" style="width: 5%">
-                <col span="1" style="width: 10%">
-                <col span="1" style="width: 75%">
-                <col span="1" style="width: 10%">
-			</colgroup>
-			<tr>
-				<th>No</th>
-				<th>棚番コード<bean:message key='labels.must'/></th>
-				<th>棚番名<bean:message key='labels.must'/></th>
-				<th>重複登録可能</th>
-				<th>&nbsp;</th>
-			</tr>
-			<tr id="editRackList_dummy" style="display:none;">
-				<td id="editRackList_dummy" style="text-align: center">0
-                </td>
-				<td>
-                    <input type="hidden" id="exist" value="false" />
-                    <input type="hidden" id="updDatetm" />
-					<input type="text" maxlength="10" id="rackCode" style="width:100px;ime-mode:disabled;" indexed="true">
-					<input type="image" src="${f:url('/images/icon_04_02.gif')}" id="rackCodeImg" indexed="true" />
-				</td>
-				<td>
-					<input type="text" maxlength="60" id="rackName" style="width:100%;" indexed="true" />
-				<td style="text-align: center">
-					<input type="checkbox" id="multi" value="1" indexed="true" />
-                </td>
-				<td style="text-align: center">
-                    <button id="deleteBtn">削除</button>
-                </td>
-			</tr>
-			<c:if test="${isUpdate}">
-				<c:forEach var="editRackList" items="${editRackList}" varStatus="s">
-					<tr id="editRackList_${s.index}">
-						<td id="editRackList_${s.index}.no" style="text-align: center">${s.index+1}</td>
-						<td>
-							<html:hidden styleId="editRackList_${s.index}.exist" name="editRackList" property="exist" indexed="true" />
-							<html:hidden styleId="editRackList_${s.index}.updDatetm" name="editRackList" property="updDatetm" indexed="true" />
-							<c:if test="${editRackList.exist}">
-							
-								<html:text maxlength="10" styleId="editRackList_${s.index}.rackCode" name="editRackList" property="rackCode" style="width: 100px;ime-mode:disabled;" tabindex="${s.index*4+300}" indexed="true" readonly="true" styleClass="c_disable" />
-							</c:if>
-							<c:if test="${!editRackList.exist}">
-								<html:text maxlength="10" styleId="editRackList_${s.index}.rackCode" name="editRackList" property="rackCode" style="width: 100px;ime-mode:disabled;" tabindex="${s.index*4+300}" indexed="true" />
-								<html:image src="${f:url('/images/icon_04_02.gif')}" styleId="editRackList_${s.index}.rackCodeImg" style="vertical-align: middle; cursor: pointer;" tabindex="${s.index*4+301}" indexed="true" />
-								
-							</c:if>
-						</td>
-						<td style="text-align: center">
-							<html:text maxlength="60" styleId="editRackList_${s.index}.rackName" name="editRackList" property="rackName" style="width: 100%;ime-mode:disabled;" tabindex="${s.index*4+302}" indexed="true" />
-						</td>
-						<td style="text-align: center">
-							<html:checkbox styleId="editRackList_${s.index}.multiFlag" name="editRackList" property="multiFlag" value="1" tabindex="${s.index*4+303}" indexed="true" />
-						</td>
-						<td>
-							<c:if test="${!isUpdate}">
-							     <button disabled="disabled">削除</button>
-							</c:if>
-							<c:if test="${isUpdate}">
-							     <button id="editRackList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
-							</c:if>
-						</td>
-					</tr>
-				<script type="text/javascript">
-	            <!--
-	            maxRowCount++;
-	            -->
-	            </script>
-	            </c:forEach>
-			</c:if>
-			<c:if test="${isUpdate}">
-			<tr id="trAddLine">
-				<td style="text-align: right" colspan="5"><button onclick="addRow()">行追加</button></td>
-			</tr>
-			</c:if>
-		</table>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>倉庫情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="order_section" class="section_body">
+					<table id="user_info" class="forms" style="width: 800px" summary="倉庫情報1">
+						<colgroup>
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 35%">
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 35%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">倉庫コード<bean:message key='labels.must'/></div></th>
+							<td>
+			                <c:if test="${editMode}">
+			                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
+			                </c:if>
+			                <c:if test="${!editMode}">
+			                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100"/>
+			                </c:if>
+			                </td>
+							<th><div class="col_title_right">倉庫名<bean:message key='labels.must'/></div></th>
+							<td><html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" tabindex="101"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">郵便番号</div></th>
+							<td colspan="3"><html:text style="width: 100px; ime-mode: disabled;" tabindex="102" property="warehouseZipCode" styleId="warehouseZipCode"  onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}"/>
+							<html:image src="${f:url('/images//customize/btn_search.png')}"  style="vertical-align: middle; cursor: pointer;" onclick="zipSearch($('#warehouseZipCode'));"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">住所１</div></th>
+							<td colspan="3"><html:text style="width: 500px;" tabindex="104" property="warehouseAddress1" styleId="warehouseAddress1"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">住所２</div></th>
+							<td colspan="3"><html:text style="width: 500px;" tabindex="105" property="warehouseAddress2" /></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">TEL</div></th>
+							<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="106" property="warehouseTel" /></td>
+							<th><div class="col_title_right">FAX</div></th>
+							<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="107" property="warehouseFax" /></td>
+						</tr>
+					</table>
+					<table id="warehouse_info1" class="forms" style="width: 800px" summary="管理者情報1">
+						<colgroup>
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 35%">
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 35%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">管理者名</div></th>
+							<td><html:text maxlength="60" styleId="managerName" property="managerName" style="width: 200px" tabindex="200"/></td>
+							<th><div class="col_title_right">管理者カナ</div></th>
+							<td><html:text maxlength="60" styleId="managerKana" property="managerKana" style="width: 200px" tabindex="201"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">TEL</div></th>
+							<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="202" property="managerTel" /></td>
+							<th><div class="col_title_right">FAX</div></th>
+							<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="203" property="managerFax" /></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">E-MAIL</div></th>
+							<td colspan="3"><html:text style="width: 500px; ime-mode: disabled;" tabindex="204" property="managerEmail" /></td>
+						</tr>
+					</table>
+					<table id="warehouse_info2" class="forms" style="width: 800px" summary="倉庫情報2">
+						<colgroup>
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 85%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">倉庫状況<bean:message key='labels.must'/></div></th>
+							<td>
+			                  <html:select styleId="warehouseState" property="warehouseState" style="width: 100px; ime-mode: disabled;"  tabindex="300">
+								<html:option value="運用中" />
+								<html:option value="棚卸中"/>
+								<html:option value="廃止" />
+			                  </html:select>
+			                </td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+					
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		        <div class="section_title">
+				<span>関連する棚番</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="order_section" class="section_body">
+					<table id="editRackList" class="forms detail_info" style="width: 600px" summary="棚番情報1">
+						<colgroup>
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 10%">
+			                <col span="1" style="width: 70%">
+			                <col span="1" style="width: 10%">
+						</colgroup>
+						<tr>
+							<th class="xl64 rd_top_left" style="height: 30px;">No</th>
+							<th class="xl64" style="height: 30px;">棚番コード<bean:message key='labels.must'/></th>
+							<th class="xl64" style="height: 30px;">棚番名<bean:message key='labels.must'/></th>
+							<th class="xl64" style="height: 30px;">&nbsp;重複登録可能&nbsp;</th>
+							<th class="xl64 rd_top_right" style="height: 30px;">&nbsp;</th>
+						</tr>
+						<tr id="editRackList_dummy" style="display:none;">
+							<td id="editRackList_dummy" style="text-align: center">0
+			                </td>
+							<td>
+			                    <input type="hidden" id="exist" value="false" />
+			                    <input type="hidden" id="updDatetm" />
+								<input type="text" maxlength="10" id="rackCode" style="width:100px;ime-mode:disabled;" indexed="true">
+								<input type="image" src="${f:url('/images//customize/btn_search.png')}" id="rackCodeImg" indexed="true" style="width: auto;"/>
+							</td>
+							<td>
+								<input type="text" maxlength="60" id="rackName" style="width:100%;" indexed="true" />
+							<td style="text-align: center">
+								<input type="checkbox" id="multi" value="1" indexed="true" />
+			                </td>
+							<td style="text-align: center">
+			                    <button id="deleteBtn" class="btn_small">削除</button>
+			                </td>
+						</tr>
+						<c:if test="${isUpdate}">
+							<c:forEach var="editRackList" items="${editRackList}" varStatus="s">
+								<tr id="editRackList_${s.index}">
+									<td id="editRackList_${s.index}.no" style="text-align: center">${s.index+1}</td>
+									<td>
+										<html:hidden styleId="editRackList_${s.index}.exist" name="editRackList" property="exist" indexed="true" />
+										<html:hidden styleId="editRackList_${s.index}.updDatetm" name="editRackList" property="updDatetm" indexed="true" />
+										<c:if test="${editRackList.exist}">
+											<html:text maxlength="10" styleId="editRackList_${s.index}.rackCode" name="editRackList" property="rackCode" style="width: 100px;ime-mode:disabled; margin: 3px;" tabindex="${s.index*4+300}" indexed="true" readonly="true" styleClass="c_disable" />
+										</c:if>
+										<c:if test="${!editRackList.exist}">
+											<html:text maxlength="10" styleId="editRackList_${s.index}.rackCode" name="editRackList" property="rackCode" style="width: 100px;ime-mode:disabled;" tabindex="${s.index*4+300}" indexed="true" />
+											<html:image src="${f:url('/images//customize/btn_search.png')}" styleId="editRackList_${s.index}.rackCodeImg" style="vertical-align: middle; cursor: pointer; width: auto;" tabindex="${s.index*4+301}" indexed="true" />
+										</c:if>
+									</td>
+									<td style="text-align: center">
+										<html:text maxlength="60" styleId="editRackList_${s.index}.rackName" name="editRackList" property="rackName" style="width: 98%;ime-mode:disabled; margin: 3px;" tabindex="${s.index*4+302}" indexed="true" />
+									</td>
+									<td style="text-align: center">
+										<html:checkbox styleId="editRackList_${s.index}.multiFlag" name="editRackList" property="multiFlag" value="1" tabindex="${s.index*4+303}" indexed="true" />
+									</td>
+									<td>
+										<c:if test="${!isUpdate}">
+										     <button disabled="disabled" class="btn_small">削除</button>
+										</c:if>
+										<c:if test="${isUpdate}">
+										     <button id="editRackList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_small">削除</button>
+										</c:if>
+									</td>
+								</tr>
+							<script type="text/javascript">
+				            <!--
+				            maxRowCount++;
+				            -->
+				            </script>
+				            </c:forEach>
+						</c:if>
+						<c:if test="${isUpdate}">
+						<tr id="trAddLine">
+							<td style="text-align: right" colspan="5"><button onclick="addRow()" class="btn_small">行追加</button></td>
+						</tr>
+						</c:if>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
 
-
-		<div style="text-align: right; width: 910px">
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日：${updDatetmShow}　</span>
-			<button tabindex="800" onclick="initForm()">初期化</button>
+			<button tabindex="800" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
-            <button tabindex="801" disabled="true">更新</button>
+            <button tabindex="801" disabled="true" class="btn_medium">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="801" onclick="registerWarehouse()">更新</button>
+            <button tabindex="801" onclick="registerWarehouse()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="801" onclick="registerWarehouse()">登録</button>
+            <button tabindex="801" onclick="registerWarehouse()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="802" disabled="true">削除</button>
+		<button tabindex="802" disabled="true" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="802" onclick="deleteWarehouse()">削除</button>
+		<button tabindex="802" onclick="deleteWarehouse()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="802" disabled="true">削除</button>
+		<button tabindex="802" disabled="true" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>

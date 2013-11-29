@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.HashMap;
@@ -97,7 +96,7 @@ public class EditProductAction extends
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// 初期化
 		this.init(null);
 		return EditProductAction.Mapping.INPUT;
 	}
@@ -112,7 +111,7 @@ public class EditProductAction extends
 	public String load() throws Exception {
 		super.doEdit(this.getKey());
 
-		
+		// 新規追加で不要な情報はクリアする
 		this.editProductForm.productCode = null;
 		this.editProductForm.editMode = false;
 		this.editProductForm.avgShipCount = null;
@@ -228,7 +227,7 @@ public class EditProductAction extends
 	 */
 	@Override
 	protected String doDelete() throws Exception {
-		
+		// 関連データの存在チェック
 		Map<String, Object> result = this.productService.countRelations(this
 				.getKey());
 
@@ -260,36 +259,36 @@ public class EditProductAction extends
 	 */
 	@Override
 	protected void init(String key) throws ServiceException {
-		
+		// チェックボックスの初期化
 		this.editProductForm.lotUpdFlag = Constants.FLAG.ON;
 		this.editProductForm.maxPoUpdFlag = Constants.FLAG.ON;
 		this.editProductForm.poUpdFlag = Constants.FLAG.ON;
 		this.editProductForm.stockUpdFlag = Constants.FLAG.ON;
 		this.editProductForm.mineSafetyStockUpdFlag = Constants.FLAG.ON;
 
-		
+		// 初期値マスタによるフォームの初期化を行う
 		this.initMstService.initBean(Product.TABLE_NAME,
 				this.editProductForm);
 
 		super.init(key);
 
-		
+		// 商品端数処理
 		this.editProductForm.fractCategory = super.mineDto.productFractCategory;
-		
+		// 課税区分
 		this.editProductForm.taxCategory = super.mineDto.taxCategory;
-		
+		// 商品端数処理
 		this.editProductForm.productFractCategory = super.mineDto.productFractCategory;
-		
+		// 数量小数桁
 		this.editProductForm.numDecAlignment = String
 				.valueOf(super.mineDto.numDecAlignment);
-		
+		// 単価端数処理コード
 		this.editProductForm.priceFractCategory = super.mineDto.priceFractCategory;
-		
+		// 円単価小数桁数
 		this.editProductForm.unitPriceDecAlignment = "0";
-		
+		// ドル単価小数桁数
 		this.editProductForm.dolUnitPriceDecAlignment = String
 				.valueOf(super.mineDto.unitPriceDecAlignment);
-		
+		// 統計小数桁
 		this.editProductForm.statsDecAlignment = String
 				.valueOf(super.mineDto.statsDecAlignment);
 	}
@@ -319,16 +318,16 @@ public class EditProductAction extends
 		if (record != null) {
 			ProductJoin productJoin = (ProductJoin) record;
 
-			
+			// 仕入先情報取得
 			if (StringUtil.hasLength(productJoin.supplierCode)) {
 				SupplierJoin supplierJoin = this.supplierService
 						.findById(productJoin.supplierCode);
 				if (supplierJoin != null) {
-					
+					// 商品端数処理
 					this.editProductForm.priceFractCategory = supplierJoin.priceFractCategory;
-					
+					// 単価端数処理
 					this.editProductForm.unitPriceDecAlignment = supplierJoin.unitPriceDecAlignment;
-					
+					// 単価端数処理
 					this.editProductForm.dolUnitPriceDecAlignment = supplierJoin.dolUnitPriceDecAlignment;
 
 					if (supplierJoin.rateId != null) {
@@ -338,20 +337,20 @@ public class EditProductAction extends
 										new java.sql.Date(productJoin.updDatetm
 												.getTime()));
 						if (supplier != null) {
-							
+							// 仕入先のレートを取得する
 							this.editProductForm.supplierRate = supplier.supplierRate;
 						}
 					}
 				}
 			}
 
-			
+			// 分類（中）
 			if (StringUtil.hasLength(this.editProductForm.product2)) {
 				this.editProductForm.product2List
 						.addAll(this.productClassService
 								.findAllProductClass2LabelValueBeanList(this.editProductForm.product1));
 
-				
+				// 分類（小）
 				if (StringUtil.hasLength(this.editProductForm.product3)) {
 					Map<String, Object> conditions = new HashMap<String, Object>();
 					conditions.put(ProductClassService.Param.CLASS_CODE_1,
@@ -377,52 +376,52 @@ public class EditProductAction extends
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#initList()
 	 */
 	protected void initList() throws ServiceException {
-		// 
-		
+		// // selectのリストを取得する
+		// 在庫管理
 		this.editProductForm.stockCtlCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STOCK_CTL);
 
-		
+		// セット分類
 		this.editProductForm.setTypeCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_SET_TYPE);
 		this.editProductForm.setTypeCategoryList.add(0, new LabelValueBean());
 
-		
+		// 標準化分類
 		this.editProductForm.standardCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STANDARD);
 		this.editProductForm.standardCategoryList.add(0, new LabelValueBean());
 
-		
+		// 分類状況
 		this.editProductForm.statusCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STATUS);
 		this.editProductForm.statusCategoryList.add(0, new LabelValueBean());
 
-		
+		// 分類保管
 		this.editProductForm.stockCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STOCK);
 		this.editProductForm.stockCategoryList.add(0, new LabelValueBean());
 
-		
+		// 調達
 		this.editProductForm.purvayCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_PURVAY);
 		this.editProductForm.purvayCategoryList.add(0, new LabelValueBean());
 
-		
+		// 単位
 		this.editProductForm.unitList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_UNIT);
 		this.editProductForm.unitList.add(0, new LabelValueBean());
 
-		
+		// 重さ
 		this.editProductForm.weightUnitList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_UNIT_WEIGHT);
 		this.editProductForm.weightUnitList.add(0, new LabelValueBean());
 
-		
+		// 長さ
 		this.editProductForm.lengthUnitList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_UNIT_SIZE);
 		this.editProductForm.lengthUnitList.add(0, new LabelValueBean());
 
-		
+		// 分類（大）
 		this.editProductForm.product1List = this.productClassService
 				.findAllProductClass1LabelValueBeanList();
 		this.editProductForm.product1List.add(0, new LabelValueBean());
@@ -439,7 +438,7 @@ public class EditProductAction extends
 	 */
 	public ActionMessages validateCode() throws ServiceException {
 		ActionMessages codeErrors = new ActionMessages();
-		
+		// 仕入先コード
 		if (StringUtil.hasLength(editProductForm.supplierCode)) {
 			SupplierJoin supplierJoin = this.supplierService
 					.findById(editProductForm.supplierCode);
@@ -451,7 +450,7 @@ public class EditProductAction extends
 			}
 		}
 
-		
+		// 棚番コード
 		if (StringUtil.hasLength(editProductForm.rackCode)) {
 			Rack rack = this.rackService.findById(editProductForm.rackCode);
 			if (rack == null) {
@@ -468,7 +467,7 @@ public class EditProductAction extends
 			}
 		}
 
-		
+		// 数量割引コード
 		if (StringUtil.hasLength(editProductForm.discountId)) {
 			Discount discount = this.discountService
 					.findById(editProductForm.discountId);

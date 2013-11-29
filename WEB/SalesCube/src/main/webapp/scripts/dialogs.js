@@ -21,7 +21,7 @@ Params.prototype.buttons = {};
 Params.prototype.close = function(event, ui) {
 	delete dialogIdToFunc[this.id];
 	$("#" + this.id).remove();
-}
+};
 
 /**
  * 商品検索画面のパラメータ
@@ -29,7 +29,7 @@ Params.prototype.close = function(event, ui) {
 var ProductParams = new Params();
 ProductParams.url = "/ajax/dialog/searchProductDialog";
 ProductParams.width = 800;
-ProductParams.height = 570;
+ProductParams.height = 630;
 
 /**
  * 顧客検索画面のパラメータ
@@ -37,7 +37,7 @@ ProductParams.height = 570;
 var CustomerParams = new Params();
 CustomerParams.url = "/ajax/dialog/searchCustomerDialog";
 CustomerParams.width = 750;
-CustomerParams.height = 540;
+CustomerParams.height = 600;
 
 /**
  * 仕入先検索画面のパラメータ
@@ -45,7 +45,7 @@ CustomerParams.height = 540;
 var SupplierParams = new Params();
 SupplierParams.url = "/ajax/dialog/searchSupplierDialog";
 SupplierParams.width = 660;
-SupplierParams.height = 500;
+SupplierParams.height = 540;
 
 /**
  * 郵便番号検索画面のパラメータ
@@ -53,7 +53,7 @@ SupplierParams.height = 500;
 var ZipParams = new Params();
 ZipParams.url = "/ajax/dialog/searchZipCodeDialog";
 ZipParams.width = 650;
-ZipParams.height = 540;
+ZipParams.height = 590;
 
 /**
  * 担当者検索画面のパラメータ
@@ -61,7 +61,7 @@ ZipParams.height = 540;
 var UserParams = new Params();
 UserParams.url = "/ajax/dialog/searchUserDialog";
 UserParams.width = 700;
-UserParams.height = 560;
+UserParams.height = 600;
 
 /**
  * 棚番検索画面のパラメータ
@@ -69,7 +69,7 @@ UserParams.height = 560;
 var RackParams = new Params();
 RackParams.url = "/ajax/dialog/searchRackDialog";
 RackParams.width = 700;
-RackParams.height = 480;
+RackParams.height = 540;
 
 
 /**
@@ -78,23 +78,23 @@ RackParams.height = 480;
 var WarehouseParams = new Params();
 WarehouseParams.url = "/ajax/dialog/searchWarehouseDialog";
 WarehouseParams.width = 600;
-WarehouseParams.height = 480;
+WarehouseParams.height = 540;
 
 /**
  * 商品在庫情報画面のパラメータ
  */
 var StockInfoParams = new Params();
 StockInfoParams.url = "/ajax/dialog/showStockInfoDialog";
-StockInfoParams.width = 750;
-StockInfoParams.height = 490;
+StockInfoParams.width = 940;
+StockInfoParams.height = 650;
 
 /**
  * ファイル参照画面のパラメータ
  */
 var ReferFilesParams = new Params();
 ReferFilesParams.url = "/ajax/dialog/referFilesDialog";
-ReferFilesParams.width = 600;
-ReferFilesParams.height = 350;
+ReferFilesParams.width = 650;
+ReferFilesParams.height = 370;
 
 /**
  * 検索結果設定画面のパラメータ
@@ -102,7 +102,7 @@ ReferFilesParams.height = 350;
 var DetailDispParams = new Params();
 DetailDispParams.url = "/ajax/dialog/detailDispSettingDialog";
 DetailDispParams.width = 520;
-DetailDispParams.height = 350;
+DetailDispParams.height = 400;
 
 /**
  * 数量割引検索画面のパラメータ
@@ -110,15 +110,15 @@ DetailDispParams.height = 350;
 var DiscountParams = new Params();
 DiscountParams.url = "/ajax/dialog/searchDiscountDialog";
 DiscountParams.width = 850;
-DiscountParams.height = 560;
+DiscountParams.height = 590;
 
 /**
  * 伝票複写画面のパラメータ
  */
 var CopySlipParams = new Params();
 CopySlipParams.url = "/ajax/dialog/copySlipDialog";
-CopySlipParams.width = 600;
-CopySlipParams.height = 550;
+CopySlipParams.width = 640;
+CopySlipParams.height = 720;
 
 /**
  * マスタ初期値設定画面のパラメータ
@@ -338,7 +338,31 @@ function _selectSearchResultAjax(dialogId, radioId, dialogParams, keyName ) {
 		}
   	);
 }
+/**
+ * 検索結果の選択処理
+ * リンク押下で決定しダイアログを閉じる
+ * @return
+ */
+	function _selectLinkSearchResultAjax(dialogId, selectVal, dialogParams, keyName ) {
+	  	// 選択された項目に関する情報をハッシュで作成する
+	  	var selectValue = selectVal;
+	  	var func = window.dialogIdToFunc[dialogId];
+	  	var data = new Object();
+	  	data[ keyName ] = selectValue;
 
+	  	asyncRequest(
+	  		contextRoot + dialogParams.url + "/select",
+	  		data,
+			function(data) {
+			  	// ダイアログの選択処理関数を取得する
+
+			  	if (func != null && func instanceof Function) {
+			  		// 呼び出し
+			  		func(dialogId, eval("(" + data + ")"));
+			  	}
+			}
+	  	);
+	}
 /**
  * 検索結果の選択処理
  * @return
@@ -357,6 +381,27 @@ function _selectSearchResult(dialogId, radioId) {
 		func(dialogId, data);
 	}
 }
+
+/**
+ * 検索結果の選択処理
+ *  リンク押下で決定しダイアログを閉じる
+ * @return
+ */
+function _selectLinkSearchResult(dialogId, selectVal) {
+	// 選択された項目に関する情報をハッシュで作成する
+	var prefix = dialogId + "_" + selectVal;
+
+	var data = _createData(prefix,
+			$("#" + dialogId).find("input[type='hidden'][name^='" + prefix + "_']"));
+
+	// ダイアログの選択処理関数を取得する
+	var func = dialogIdToFunc[dialogId];
+	if (func != null && func instanceof Function) {
+		// 呼び出し
+		func(dialogId, data);
+	}
+}
+
 
  /**
   * 検索結果の選択処理
@@ -864,6 +909,23 @@ function _copySlip(dialogId, slipName) {
 	}
 }
 
+/**
+ * 伝票複写ダイアログの複写ボタン処理
+ * @param dialogId
+ * @param slipName
+ * @return
+ */
+function _copyLinkSlip(dialogId, slipName,selectValue) {
+	//選択した値を取得する
+	var value = selectValue;
+
+	// ダイアログの選択処理関数を取得する
+	var func = dialogIdToFunc[dialogId];
+	if (func != null && func instanceof Function) {
+		// 呼び出し
+		func(dialogId, slipName, value);
+	}
+}
 /*
  * マスタ初期値設定画面の更新ボタン処理
  */

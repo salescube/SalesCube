@@ -1,13 +1,13 @@
-<div style="width: 910px; height: 25px;">
+<div style="width: 1010px; height: 25px;">
 		<input type="hidden" id="searchResultCount" value="${f:h(searchResultCount)}">
 		<div style="position:absolute; left: 0px;">検索結果件数： ${searchResultCount}件</div>
-		<div style="position:absolute; width: 910px; text-align: center;">
+		<div style="position:absolute; width: 1160px; text-align: center;">
 			${sw:pageLink(searchResultCount,rowCount,pageNo)}
 		</div>
         <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 </div>
 
-<table summary="商品検索結果" class="forms" style="width: 910px;">
+<table id="order_detail_info" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 	<colgroup>
 		<col span="1" style="width: 15%">
 		<col span="1" style="width: 20%">
@@ -17,59 +17,59 @@
 		<col span="1" style="width: 10%">
 	</colgroup>
 	<tr>
-		<th style="cursor: pointer" onclick="sort('productCode');">商品コード
+		<th class="xl64 rd_top_left" style="cursor: pointer; height: 30px;" onclick="sort('productCode');">商品コード
 			<c:if test="${sortColumn == 'productCode'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('productName');">商品名
+		<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('productName');">商品名
 			<c:if test="${sortColumn == 'productName'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('supplierCode');">仕入先
+		<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('supplierCode');">仕入先
 			<c:if test="${sortColumn == 'supplierCode'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th style="cursor: pointer" onclick="sort('PRODUCT_1');">分類（大）
+		<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('PRODUCT_1');">分類（大）
 			<c:if test="${sortColumn == 'PRODUCT_1'}">
 				<c:if test="${sortOrderAsc}">▲</c:if>
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
-		<th>備考</th>
-		<th>&nbsp;</th>
+		<th class="xl64" style="cursor: pointer; height: 30px;">備考</th>
+		<th class="xl64 rd_top_right" style="cursor: pointer; height: 30px;">&nbsp;</th>
 	</tr>
 
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 	<tr>
-		<td>${f:h(bean.productCode)}</td>
-		<td style="white-space: normal">${f:h(bean.productName)}</td>
-		<td style="white-space: normal">${f:h(bean.supplierName)}</td>
-		<td style="white-space: normal">${f:h(bean.className)}</td>
-		<td style="white-space: normal">${f:h(bean.remarks)}</td>
+		<td>&nbsp;${f:h(bean.productCode)}&nbsp;</td>
+		<td style="white-space: normal; text-align: left;">&nbsp;${f:h(bean.productName)}&nbsp;</td>
+		<td style="white-space: normal; text-align: left;">&nbsp;${f:h(bean.supplierName)}&nbsp;</td>
+		<td style="white-space: normal; text-align: left;">&nbsp;${f:h(bean.className)}&nbsp;</td>
+		<td style="white-space: normal; text-align: left;">&nbsp;${f:h(bean.remarks)}&nbsp;</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button onclick="editProduct('${f:h(bean.productCode)}');">編集</button>
-			<button onclick="deleteProduct('${f:h(bean.productCode)}', '${bean.updDatetm}', '${bean.discountUpdDatetm}');">削除</button>
+				<button type="button" class="btn_product_action" onclick="editProduct('${f:h(bean.productCode)}');">編集</button>
+				<button type="button" class="btn_product_action" onclick="deleteProduct('${f:h(bean.productCode)}', '${bean.updDatetm}', '${bean.discountUpdDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button onclick="editProduct('${f:h(bean.productCode)}');">参照</button>
+				<button type="button" class="btn_product_action" onclick="editProduct('${f:h(bean.productCode)}');">参照</button>
 			</c:if>
 		</td>
 	</tr>
 	</c:forEach>
 </table>
 
-<div style="position:absolute; width: 910px; text-align: center;">
+<div style="position:absolute; width: 1160px; text-align: center; margin-top: 20px;">
 	${sw:pageLink(searchResultCount,rowCount,pageNo)}
 </div>
 
-
+<%-- 今回の検索条件を保持 --%>
 <input type="hidden" id="prev_productCode" name="prev_productCode" value="${f:h(productCode)}">
 <input type="hidden" id="prev_productName" name="prev_productName" value="${f:h(productName)}">
 <input type="hidden" id="prev_productKana" name="prev_productKana" value="${f:h(productKana)}">
@@ -93,7 +93,7 @@
 
 
 <c:if test="${searchResultCount == 1}">
-
+<%-- 検索結果が1件の場合にはその部門IDをhiddenで配置する --%>
 <c:forEach var="bean" items="${searchResultList}" varStatus="status">
 <input type="hidden" id="singleProductCode" name="singleProductCode" value="${f:h(bean.productCode)}">
 </c:forEach>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -47,6 +46,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		public static final String DWB_TYPE = "dwbType";
 		public static final String DWB_NAME = "dwbName";
 		public static final String ACCOUNT_NUM = "accountNum";
+		public static final String VALID = "valid";
 		public static final String SORT_COLUMN_BANK = "sortColumnBank";
 		public static final String SORT_ORDER = "sortOrder";
 		public static final String ROW_COUNT = "rowCount";
@@ -62,6 +62,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	private static final String COLUMN_STORE_NAME = "STORE_NAME";
 	private static final String COLUMN_DWB_NAME = "DWB_NAME";
 	private static final String COLUMN_ACCOUNT_NUM = "ACCOUNT_NUM";
+	private static final String COLUMN_VALID = "VALID";
 
 	/**
 	 * 銀行マスタの一覧を返します.
@@ -69,15 +70,15 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	 * @return 銀行マスタリスト
 	 */
 	public List<Bank> selectBankList() {
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// Bankの情報を食わせる
 		Bank bank = new Bank();
 		BeanMap Eparam = Beans.createAndCopy(BeanMap.class, bank).execute();
 		param.putAll(Eparam);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -92,19 +93,19 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	 * @return 銀行マスタと区分データの結合リスト
 	 */
 	public List<BankDwb> selectBankDwbList() {
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		// Bankの情報を食わせる
 		BankDwb bank = new BankDwb();
 		BeanMap Eparam = Beans.createAndCopy(BeanMap.class, bank).execute();
 		param.putAll(Eparam);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// 預金種類の区分IDを指定
 		param.put(BankDwb.keyName, Categories.DWB_TYPE);
 
 		return this.selectBySqlFile(BankDwb.class,
@@ -147,6 +148,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		param.put(Param.STORE_NAME, null);
 		param.put(Param.DWB_TYPE, null);
 		param.put(Param.ACCOUNT_NUM, null);
+		param.put(Param.VALID, null);
 
 		param.put(Param.SORT_COLUMN_BANK, null);
 		param.put(Param.SORT_ORDER, null);
@@ -162,75 +164,82 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 銀行ID
 		if (conditions.containsKey(Param.BANK_ID)) {
 			param.put(Param.BANK_ID, super
 					.createPrefixSearchCondition((String) conditions
 							.get(Param.BANK_ID)));
 		}
 
-		
+		// 銀行コード
 		if (conditions.containsKey(Param.BANK_CODE)) {
 			param.put(Param.BANK_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(Param.BANK_CODE)));
 		}
 
-		
+		// 銀行名
 		if (conditions.containsKey(Param.BANK_NAME)) {
 			param.put(Param.BANK_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(Param.BANK_NAME)));
 		}
 
-		
+		// 店名
 		if (conditions.containsKey(Param.STORE_NAME)) {
 			param.put(Param.STORE_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(Param.STORE_NAME)));
 		}
 
-		
+		// 店番
 		if (conditions.containsKey(Param.STORE_CODE)) {
 			param.put(Param.STORE_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(Param.STORE_CODE)));
 		}
 
-		
+		// 科目
 		if (conditions.containsKey(Param.DWB_TYPE)) {
 			param.put(Param.DWB_TYPE, conditions.get(Param.DWB_TYPE));
 		}
-		
+		// 口座番号
 		if (conditions.containsKey(Param.ACCOUNT_NUM)) {
 			param.put(Param.ACCOUNT_NUM, conditions.get(Param.ACCOUNT_NUM));
 		}
-
-		
-		param.put(Param.CATEGORY_ID, Categories.DWB_TYPE);
-
-		
-		if (Param.BANK_CODE.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_BANK_CODE);
-		} else if (Param.BANK_NAME.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_BANK_NAME);
-		} else if (Param.STORE_CODE.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_STORE_CODE);
-		} else if (Param.STORE_NAME.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_STORE_NAME);
-		} else if (Param.DWB_NAME.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_DWB_NAME);
-		} else if (Param.ACCOUNT_NUM.equals(sortColumn)) {
-			
-			param.put(Param.SORT_COLUMN_BANK, COLUMN_ACCOUNT_NUM);
+		// 有効
+		if (conditions.containsKey(Param.VALID)) {
+			param.put(Param.VALID, conditions.get(Param.VALID));
 		}
 
-		
+		// 区分IDは「預金種類」固定
+		param.put(Param.CATEGORY_ID, Categories.DWB_TYPE);
+
+		// ソートカラムを設定する
+		if (Param.BANK_CODE.equals(sortColumn)) {
+			// 銀行コード
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_BANK_CODE);
+		} else if (Param.BANK_NAME.equals(sortColumn)) {
+			// 銀行名
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_BANK_NAME);
+		} else if (Param.STORE_CODE.equals(sortColumn)) {
+			// 店番
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_STORE_CODE);
+		} else if (Param.STORE_NAME.equals(sortColumn)) {
+			// 店名
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_STORE_NAME);
+		} else if (Param.DWB_NAME.equals(sortColumn)) {
+			// 科目
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_DWB_NAME);
+		} else if (Param.ACCOUNT_NUM.equals(sortColumn)) {
+			// 口座番号
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_ACCOUNT_NUM);
+		} else if (Param.VALID.equals(sortColumn)) {
+			// 有効
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_VALID);
+		}
+
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -311,7 +320,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -337,7 +346,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	public List<BankDwb> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
 		return new ArrayList<BankDwb>();
-		
+		// 未使用メソッド
 	}
 
 	/**
@@ -347,12 +356,12 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	 */
 	@Override
 	public void deleteRecord(BankDto dto) throws Exception {
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.BANK_ID, dto.bankId);
 		this.lockRecordBySqlFile("bank/LockBank.sql", param, dto.updDatetm);
 
-		
+		// 削除
 		param = super.createSqlParam();
 		param.put(Param.BANK_ID, dto.bankId);
 		this.updateBySqlFile("bank/DeleteBank.sql", param).execute();
@@ -363,7 +372,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	 * @return マスタコード
 	 * @throws Exception
 	 */
-	
+	// BankIDの発番
 	public String makeBankId() throws Exception {
 		long newBankId = seqMakerService.nextval(Bank.TABLE_NAME);
 		return String.valueOf(newBankId);
@@ -380,7 +389,7 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 			return;
 		}
 		try {
-			
+			// 登録
 			Map<String, Object> param = super.createSqlParam();
 
 			BeanMap bankInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -405,14 +414,14 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.BANK_ID, dto.bankId);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("bank/LockBank.sql", lockParam, dto.updDatetm);
 
-		
+		// 顧客情報の更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap bankInfo = Beans.createAndCopy(BeanMap.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(

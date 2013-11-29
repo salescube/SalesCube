@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 
@@ -47,7 +46,7 @@ public class CommonBulkRetailPriceAction extends CommonResources {
 	@Execute(validator = false, stopOnValidationError = true, urlPattern = "getPrice" )
 	public String getPrice() throws Exception {
 
-		
+		//受け取った商品コード
 		if( !StringUtil.hasLength(commonBulkForm.bulkProductCode)){
 			String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
 			if( super.messages.size() == 0 ){
@@ -62,14 +61,14 @@ public class CommonBulkRetailPriceAction extends CommonResources {
 		}
 
 		String result = "";
-		
+		//単価を取得し返す
 		try {
 			ProductJoin pj = productService.findById(commonBulkForm.bulkProductCode);
 			if( pj != null ){
 				if( pj.retailPrice != null ){
 					commonBulkForm.bulkUnitRetailPrice = pj.retailPrice.toString();
 				}else{
-					
+					// 上代未設定の時には０で計算
 					commonBulkForm.bulkUnitRetailPrice = "0";
 				}
 			}else{
@@ -95,14 +94,14 @@ public class CommonBulkRetailPriceAction extends CommonResources {
 	}
 
 	/**
-	 * 商品コードと数量から割引対象であるかを返します.
-	 * @return 割引対象の場合は商品コード、対象外の場合は空文字列
+	 * 商品コードから数量割引商品であるかを返します.
+	 * @return 数量割引商品の場合は商品コード、対象外の場合は空文字列
 	 * @throws Exception
 	 */
 	@Execute(validator = false, stopOnValidationError = true, urlPattern = "isDiscount" )
 	public String isDiscount() throws Exception {
 
-		
+		//受け取った商品コード
 		if( !StringUtil.hasLength(commonBulkForm.bulkProductCode)){
 			String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
 			if( super.messages.size() == 0 ){
@@ -117,14 +116,14 @@ public class CommonBulkRetailPriceAction extends CommonResources {
 		}
 
 		String result = "";
-		
+		//割引対象である場合、
 		try {
 			ProductJoin pj = productService.findById(commonBulkForm.bulkProductCode);
 			if( pj != null ){
 				if( pj.retailPrice != null ){
 					commonBulkForm.bulkUnitRetailPrice = pj.retailPrice.toString();
 				}else{
-					
+					// 上代未設定の時には０で計算
 					commonBulkForm.bulkUnitRetailPrice = "0";
 				}
 			}else{
@@ -137,9 +136,8 @@ public class CommonBulkRetailPriceAction extends CommonResources {
 				return CommonAjaxResources.Mapping.ERROR_JSP;
 			}
 
-			Double quantity = Double.valueOf(commonBulkForm.bulkQuantity.replaceAll(",", ""));
-			Double unitRetailPrice = Double.valueOf(commonBulkForm.bulkUnitRetailPrice.replaceAll(",", ""));
-			Boolean isDiscount = discountRelService.isBulkDiscountUnit(quantity, unitRetailPrice, commonBulkForm.bulkProductCode);
+			//数量割引商品であるか判断する
+			Boolean isDiscount = discountRelService.isDiscountMstByProduct(commonBulkForm.bulkProductCode);
 			if(isDiscount){
 				result = commonBulkForm.bulkProductCode;
 			}

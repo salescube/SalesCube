@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public class EditTaxRateAction extends AbstractEditAction<CategoryDto, Category>
 	 */
 	@Override
 	protected AuditInfo loadData(String key) throws ServiceException {
-		
+		// ベースとなる区分データを取得する
 		CategoryTrn category = categoryService.findCategoryTrnByIdAndCode(
 				Categories.TAX_TYPE_CATEGORY,
 				this.editTaxRateForm.taxTypeCategory);
@@ -79,7 +78,7 @@ public class EditTaxRateAction extends AbstractEditAction<CategoryDto, Category>
 			return null;
 		}
 
-		
+		// フォーム設定
 		this.editTaxRateForm.category = category;
 
 		List<TaxRate> taxRateList = taxRateService
@@ -106,7 +105,7 @@ public class EditTaxRateAction extends AbstractEditAction<CategoryDto, Category>
 	 */
 	@Execute(validator = true, validate = "validate", input = Mapping.INPUT, stopOnValidationError = false)
 	public String update() throws Exception {
-		
+		// ベースとなる区分データレコードを取得する
 		CategoryTrn category = categoryService.findCategoryTrnByIdAndCode(
 				Categories.TAX_TYPE_CATEGORY,
 				this.getKey());
@@ -117,7 +116,7 @@ public class EditTaxRateAction extends AbstractEditAction<CategoryDto, Category>
 			return this.getSearchURL();
 		}
 
-		
+		// 既存レコードを更新する
 		super.taxRateService.updateRecords(this.editTaxRateForm.taxRateList,
 				this.getKey(),
 				this.editTaxRateForm.updDatetm);
@@ -125,7 +124,7 @@ public class EditTaxRateAction extends AbstractEditAction<CategoryDto, Category>
 
 		super.init(this.getKey());
 
-		
+		// メッセージ設定
 		this.messages.add(ActionMessages.GLOBAL_MESSAGE,
 				new ActionMessage("infos.update"));
 		ActionMessagesUtil.addMessages(this.httpRequest, this.messages);

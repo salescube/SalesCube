@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
 import java.math.BigDecimal;
@@ -57,7 +56,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		private static final String PRODUCT_SET_TYPE_SINGLE = "productSetTypeSingle";
 		private static final String TRANSPORT_CATEGORY_NOT_ENTRUST = "transportCategoryNotEntrust";
 		private static final String TRANSPORT_CATEGORY_ENTRUST = "transportCategoryEntrust";
-		
+		//在庫管理区分	単体テスト懸念事項#63対応
 		private static final String STOCK_CTL_CATEGORY_NO = "stockCtlCategoryNo";
 
 		private static final String PRODUCT_STATUS_ONSALE = "productStatusOnsale";
@@ -89,11 +88,11 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * カラム定義クラスです.
 	 */
 	public static class Column {
-		
+		// 伝票
 		public static final String SRC_FUNC = "SRC_FUNC";
 	}
 
-	
+	//仕入先情報取得用
 	@Resource
 	protected SupplierService supplierService;
 
@@ -109,11 +108,11 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * @throws ServiceException
 	 */
 	public List<Supplier> findRecommendSuppliers() throws ServiceException {
-		
+		//ドメイン情報設定
 		Map<String, Object> param = super.createSqlParam();
-		
+		//残りの情報を設定
 		setDefaultCondition(param);
-		
+		//検索して結果を返す
 		return this.selectBySqlFile(Supplier.class,
 				"porder/FindRecommendSuppliers.sql", param).getResultList();
 	}
@@ -239,7 +238,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	public List<DetailDispItemDto> getColumnInfoList(Map<String, Object> param) {
 		List<DetailDispItemDto> columnInfoList =  this.getColumnInfoList();
 
-		
+		// 発注区分毎の検索条件を設定する
 		if (CategoryTrns.IMMEDIATELY_PORDER
 				.equals(param.get(Param.PO_CATEGORY))
 				&& CategoryTrns.MOVE_ENTRUST_STOCK.equals(param
@@ -269,40 +268,40 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	public List<OutputRecommendListFormDto> findRecommendByCondition(
 			Map<String, Object> param, String sortColumn, boolean sortOrderAsc, String [] productCodeInputArray, String [] checkInputArray, String [] orderInputArray) throws ServiceException {
 		try {
-			
+			//戻り値
 			List<OutputRecommendListFormDto> searchResultList = new ArrayList<OutputRecommendListFormDto>();
 
-			
+			// 検索条件の設定
 			Map<String, Object> map = new HashMap<String, Object>();
-			
-			map.put(ProductService.Param.SET_TYPE_CATEGORY, CategoryTrns.PRODUCT_SET_TYPE_SINGLE);		
-			map.put(ProductService.Param.PRODUCT_STATUS_CATEGORY, CategoryTrns.PRODUCT_STATUS_ONSALE);	
-			map.put(ProductService.Param.STOCK_CTL_CATEGORY, CategoryTrns.PRODUCT_STOCK_CTL_YES);		
-			map.put(ProductService.Param.PRODUCT_STOCK_CATEGORY, CategoryTrns.PRODUCT_STOCK_INSTOCK);	
-			map.put(ProductService.Param.PRODUCT_STANDARD_CATEGORY, CategoryTrns.PRODUCT_STANDARD_STD);		
+			// 固定設定項目
+			map.put(ProductService.Param.SET_TYPE_CATEGORY, CategoryTrns.PRODUCT_SET_TYPE_SINGLE);		//単品
+			map.put(ProductService.Param.PRODUCT_STATUS_CATEGORY, CategoryTrns.PRODUCT_STATUS_ONSALE);	//販売中商品
+			map.put(ProductService.Param.STOCK_CTL_CATEGORY, CategoryTrns.PRODUCT_STOCK_CTL_YES);		//在庫管理する商品
+			map.put(ProductService.Param.PRODUCT_STOCK_CATEGORY, CategoryTrns.PRODUCT_STOCK_INSTOCK);	//自社在庫品
+			map.put(ProductService.Param.PRODUCT_STANDARD_CATEGORY, CategoryTrns.PRODUCT_STANDARD_STD);		//標準品
 			map.putAll(param);
 
-			
+			// 発注区分毎の検索条件を設定する
 			if(CategoryTrns.IMMEDIATELY_PORDER.equals(param.get(Param.PO_CATEGORY))) {
-				
+				// 都度発注
 				map.put(ProductService.Param.HOLDING_STOCK_LESS_THAN_PO_NUM, true);
 
 				if(CategoryTrns.NORMAL_PORDER.equals(param.get(Param.IMMEDIATELY_PO_CATEGORY))) {
-					
+					// 通常発注
 					map.put(ProductService.Param.ENTRUST_STOCK_ZERO, true);
 				}
 				else if(CategoryTrns.MOVE_ENTRUST_STOCK.equals(param.get(Param.IMMEDIATELY_PO_CATEGORY))) {
-					
+					// 倉庫移動
 					map.put(ProductService.Param.ENTRUST_STOCK_LARGER_THAN_ZERO, true);
 					map.put(ProductService.Param.ADD_PORDER_INFO, true);
 				}
 			}
 			else if(CategoryTrns.ENTRUST_PORDER.equals(param.get(Param.PO_CATEGORY))) {
-				
+				// 委託発注
 				map.put(ProductService.Param.ENTRUST_PORDER_QUANTITY_LARGER_THAN_ZERO, true);
 			}
 
-			
+			//検索する
 			List<ProductStockInfoDto> stockInfoList = productService.aggregateProductStockInfoByCondition(map, sortColumn, sortOrderAsc);
 
 			for(ProductStockInfoDto productStockInfoDto: stockInfoList){
@@ -310,48 +309,48 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 				OutputRecommendListFormDto productStockJoinDto
 					= Beans.createAndCopy(
 							OutputRecommendListFormDto.class, productStockInfoDto).execute();
-				
-				productStockJoinDto.validRow = false;	
-				
-				productStockJoinDto.poLot = productStockInfoDto.poLot.toPlainString();
-				
+				//発注可否
+				productStockJoinDto.validRow = false;	// 初期状態はチェックボックスを未選択状態とする。
+				//発注ロット
+				productStockJoinDto.poLot = productStockInfoDto.poLot.toPlainString();// getPoLotStr();
+				//平均出庫数
 				productStockJoinDto.avgShipCount = nullToZero(productStockJoinDto.avgShipCount);
-				
-				productStockJoinDto.salesStandardDeviation = productStockInfoDto.salesStandardDeviation.toPlainString(); 
-				
-				productStockJoinDto.stockQuantity = productStockInfoDto.currentStockQuantity.toPlainString(); 
-				
-				productStockJoinDto.entrustQuantity = productStockInfoDto.stockQuantityEntrustEad.toPlainString(); 
-				
+				//出荷数標準偏差
+				productStockJoinDto.salesStandardDeviation = productStockInfoDto.salesStandardDeviation.toPlainString(); // getSalesStandardDeviationStr();
+				//現在庫数
+				productStockJoinDto.stockQuantity = productStockInfoDto.currentStockQuantity.toPlainString(); // getCurrentStockQuantityStr();
+				//委託在庫
+				productStockJoinDto.entrustQuantity = productStockInfoDto.stockQuantityEntrustEad.toPlainString(); // getStockQuantityEntrustEadStr();
+				//発注点
 				productStockJoinDto.poNum = nullToZero(productStockJoinDto.poNum);
-				
-				productStockJoinDto.poRestQuantity = productStockInfoDto.restQuantityPo.toPlainString(); 
-				
-				productStockJoinDto.entrustRestQuantity = productStockInfoDto.restQuantityEntrust.toPlainString(); 
-				
-				productStockJoinDto.roRestQuantity = productStockInfoDto.restQuantityRo.toPlainString(); 
-				
-				productStockJoinDto.entrustPoNum = productStockInfoDto.entrustPoNum.toPlainString(); 
-				
+				//発注残
+				productStockJoinDto.poRestQuantity = productStockInfoDto.restQuantityPo.toPlainString(); // getRestQuantityPoStr();
+				//委託残
+				productStockJoinDto.entrustRestQuantity = productStockInfoDto.restQuantityEntrust.toPlainString(); // getRestQuantityEntrustStr();
+				//受注残
+				productStockJoinDto.roRestQuantity = productStockInfoDto.restQuantityRo.toPlainString(); // getRestQuantityRoStr();
+				// 委託発注数
+				productStockJoinDto.entrustPoNum = productStockInfoDto.entrustPoNum.toPlainString(); // getEntrustPoNumStr();
+				// 発注伝票番号
 				if(productStockInfoDto.poSlipId != null) {
 					productStockJoinDto.poSlipId = productStockInfoDto.poSlipId.toString();
 				}
 
-				
-				productStockJoinDto.holdQuantity = productStockInfoDto.holdingStockQuantity.toPlainString(); 
-				
+				//保有数を計算
+				productStockJoinDto.holdQuantity = productStockInfoDto.holdingStockQuantity.toPlainString(); // getHoldingStockQuantityStr();
+				//保有月数を計算
 				productStockJoinDto.holdTerm = productStockInfoDto.getHoldingStockMonthStr();
 				if( "".equals(productStockJoinDto.holdTerm) ) {
-					productStockJoinDto.holdTerm="--";		
+					productStockJoinDto.holdTerm="--";		//保有月数が計算不能(平均出荷数=0の場合、0割りが発生して計算不能となる)の場合の表示値
 				}
 
-				
+				// 発注数量の初期化
 				if(CategoryTrns.ENTRUST_PORDER.equals(param.get(Param.PO_CATEGORY))) {
-					
+					// 委託在庫発注の場合は委託発注数を設定
 					productStockJoinDto.pOrderQuantity = productStockJoinDto.entrustPoNum;
 				}
 				else {
-					
+					// 発注数量(発注ロットと平均出荷数の大きい値の方で初期化する)
 					if( nullToZero(productStockInfoDto.poLot).compareTo( new BigDecimal( nullToZero(productStockInfoDto.avgShipCount) ) ) > 0 ) {
 						productStockJoinDto.pOrderQuantity = productStockJoinDto.poLot;
 					} else {
@@ -359,7 +358,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 					}
 				}
 
-				
+				// 入力された状態でソートされた場合、入力されていた値を元の商品の行へ復元する
 				if(productCodeInputArray != null){
 					List<String> productCodeInputList = Arrays.asList(productCodeInputArray);
 					int currentIndex = productCodeInputList.indexOf(productStockInfoDto.productCode);
@@ -373,7 +372,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 					}
 				}
 
-				
+				//リストに追加
 				searchResultList.add(productStockJoinDto);
 			}
 			return searchResultList;
@@ -390,7 +389,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * @param l_target 変換元の値
 	 * @return Nullを0に変換した値
 	 */
-	
+	//Nullをゼロに変換
 	private String nullToZero(String l_target){
 		return ((l_target == null || l_target.length() == 0)?"0":l_target);
 	}
@@ -400,7 +399,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * @param target 変換元の値
 	 * @return Nullを0に変換した値
 	 */
-	
+	//Nullをゼロに変換
 	private Integer nullToZero(Integer target){
 		if(target == null)
 			return 0;
@@ -413,7 +412,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * @param target 変換元の値
 	 * @return Nullを0に変換した値
 	 */
-	
+	//Nullをゼロに変換
 	private BigDecimal nullToZero(BigDecimal target){
 		if(target == null)
 			return new BigDecimal(0);
@@ -443,25 +442,25 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		transportCategoriesNE.add(CategoryTrns.TRANSPORT_CATEGORY_SHIP);
 		transportCategoriesNE.add(CategoryTrns.TRANSPORT_CATEGORY_DELIVERY);
 		param.put(Param.TRANSPORT_CATEGORY_NOT_ENTRUST, transportCategoriesNE);
-		
+		//在庫管理区分	単体テスト懸念事項#63対応
 		param.put(Param.STOCK_CTL_CATEGORY_NO, CategoryTrns.PRODUCT_STOCK_CTL_NO);
-		
+		//分類状況		単体テスト懸念事項#63追加対応
 		param.put(Param.PRODUCT_STATUS_ONSALE, CategoryTrns.PRODUCT_STATUS_ONSALE);
 		return param;
 	}
 
-	
+	//発番のため
 	public SeqMakerService seqMakerService;
 
-	
+	// 年月度取得のため
 	@Resource
 	protected YmService ymService;
 
-	
+	//発番エラー検出用初期値
 	public static final Long DEFAULT_ID = -1L;
-	
+	//発番エラー時の戻り値
 	public static final Long CANNOT_GET_ID = DEFAULT_ID;
-	
+	//伝票登録失敗時の戻り値
 	public static final Long CANNOT_CREATE_SLIP = -3L;
 
 	/**
@@ -469,7 +468,7 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * 伝票検索パラメータ定義クラスです.
 	 *
 	 */
-	
+	//独自に代入あるいはチェックすべきパラメータ(DB対応有)
 	public static class SlipParam {
 		public static final String PO_SLIP_ID = "poSlipId";
 		public static final String DELIVERY_DATE = "deliveryDate";
@@ -495,22 +494,22 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		public static final String TAX_FRACT_CATEGORY_ID = "taxFractCategoryId";
 	}
 
-	
+	//任意のタイミングでロールバックしたい
 	public UserTransaction userTransaction;
 
 	/**
 	 * 共通の検索パラメータを作成します.
 	 * @return 検索パラメータ
 	 */
-	
+	//共通変数取得
 	public Map<String, Object> createCommonParam(){
 		Map<String, Object> commonParam = super.createSqlParam();
 
-		
+		//発注日用に当日日付を取得
 		String poDate = this.selectBySqlFile(String.class, "porder/GetTodayForPODate.sql").getSingleResult();
 		commonParam.put(Param.PO_DATE, poDate);
 
-		
+		// 年度、月度、年月度を計算
 		YmDto ymDto;
 		try {
 			ymDto = ymService.getYm(poDate);
@@ -531,12 +530,12 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 	 * @throws Exception
 	 */
 	public long createSlipByParam(Map<String, Object> slipParam,List<Map<String, Object>> lineParam) throws Exception {
-		
+		//伝票番号発番
 		long slipId = DEFAULT_ID;
 		slipId = seqMakerService.nextval(PoSlipTrn.TABLE_NAME);
 		if(slipId == DEFAULT_ID){return CANNOT_GET_ID;}
 
-		
+		//明細行ID発番
 		Long lineId[] = new Long[lineParam.size()];
 		for(int i=0; i<lineParam.size(); i++){
 		lineId[i] = DEFAULT_ID;
@@ -544,20 +543,20 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 			if(lineId[i].equals(DEFAULT_ID)) {return CANNOT_GET_ID;}
 		}
 
-		
+		//ドメイン情報設定
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
-		
+		//定数パラメータ
+		//区分敬称
 		param.put(SupplierService.Param.PRE_TYPE_CATEGORY_ID, Categories.PRE_TYPE);
-		
+		//区分消費税
 		param.put(SlipParam.TAX_TYPE_CATEGORY, CategoryTrns.TAX_TYPE_CTAX);
-		
+		//税転嫁
 		List<String> taxShiftCategoryList = new ArrayList<String>();
 		taxShiftCategoryList.add(CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL);
 		taxShiftCategoryList.add(CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS);
 		param.put(SlipParam.TAX_SHIFT_CATEGORY_LIST, taxShiftCategoryList);
-		
+		//端数処理パラメータ
 		param.put(SlipParam.ROUND_DOWN_ID, CategoryTrns.FLACT_CATEGORY_DOWN);
 		param.put(SlipParam.HALF_UP_ID, CategoryTrns.FLACT_CATEGORY_HALF_UP);
 		param.put(SlipParam.ROUND_UP_ID, CategoryTrns.FLACT_CATEGORY_UP);
@@ -567,42 +566,42 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		param.put(SlipParam.PRICE_FRACT_CATEGORY_ID, Categories.PRICE_FRACT_CATEGORY);
 		param.put(SlipParam.TAX_FRACT_CATEGORY_ID, Categories.TAX_FRACT_CATEGORY);
 
-		
+		//伝票用パラメータ
 		param.putAll(slipParam);
 		param.put(SlipParam.PO_SLIP_ID, slipId);
-		
+		//伝票登録
 		if( ((this.updateBySqlFile("porder/InsertPOrderSlipWithAutoFill.sql", param).execute()) != 1) ){
-				
+				//意図的にrollback
 				userTransaction.setRollbackOnly();
 				return CANNOT_CREATE_SLIP;
 			}
 
-		
+		//明細行数
 		int SuccessedLinesCount = 0;
-		
+		//明細行登録
 		for(int i=0; i<lineParam.size(); i++){
 
-			
+			//明細行用パラメータ
 			Map<String, Object> lparam = param;
 			lparam.putAll(lineParam.get(i));
 			lparam.put(SlipParam.PO_LINE_ID, lineId[i]);
 			SuccessedLinesCount++;
 			lparam.put(SlipParam.LINE_NO, SuccessedLinesCount);
 
-			
+			//明細行登録 with レート、消費税取得
 			if( ((this.updateBySqlFile("porder/InsertPOrderLineWithAutoFill.sql", lparam).execute()) != 1) ||
 					((this.updateBySqlFile("porder/UpdatePOrderLineQuantitiesWithFract.sql", lparam).execute()) != 1) ){
-				
+				//意図的にrollback
 				userTransaction.setRollbackOnly();
 				return CANNOT_CREATE_SLIP;
 			}
 		}
 
-		
+		//伝票合計金額更新
 		if( ( (this.updateBySqlFile("porder/UpdatePOrderSlipTotalPrice.sql", param).execute()) != 1) ||
 				((this.updateBySqlFile("porder/UpdatePOrderSlipQuantitiesWithFract.sql", param).execute()) != 1)
 			){
-			
+			//意図的にrollback
 			userTransaction.setRollbackOnly();
 			return CANNOT_CREATE_SLIP;
 		}

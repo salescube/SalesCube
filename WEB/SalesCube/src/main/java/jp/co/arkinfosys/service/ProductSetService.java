@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			Map<String, Object> param = super.createSqlParam();
 			param = this.setEmptyCondition(param);
 
-			
+			// 親商品コード
 			param.put(ProductSetService.Param.SET_PRODUCT_CODE, setProductCode);
 
 			return this.selectBySqlFile(ProductSetJoin.class,
@@ -122,7 +121,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			Map<String, Object> param = super.createSqlParam();
 			param = this.setEmptyCondition(param);
 
-			
+			// 子商品コード
 			param.put(ProductSetService.Param.PRODUCT_CODE, productCode);
 
 			return this.selectBySqlFile(ProductSetJoin.class,
@@ -142,7 +141,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 	 */
 	@Override
 	public ProductSetJoin findById(String id) throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -163,7 +162,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -191,20 +190,20 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			boolean sortOrderAsc, int rowCount, int offset)
 			throws ServiceException {
 		try {
-			
+			// 条件作成
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
 			}
 
-			
+			// 検索を行う
 			return this.selectBySqlFile(ProductSetJoin.class,
 					"productset/FindProductSetByConditionLimit.sql", param)
 					.getResultList();
@@ -225,7 +224,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 	@Override
 	public List<ProductSetJoin> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -242,40 +241,40 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			return;
 		}
 
-		
+		// セット商品コード
 		if (conditions.containsKey(ProductSetService.Param.SET_PRODUCT_CODE)) {
 			param.put(ProductSetService.Param.SET_PRODUCT_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductSetService.Param.SET_PRODUCT_CODE)));
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(ProductSetService.Param.PRODUCT_CODE)) {
 			param.put(ProductSetService.Param.PRODUCT_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductSetService.Param.PRODUCT_CODE)));
 		}
 
-		
+		// セット商品名
 		if (conditions.containsKey(ProductSetService.Param.SET_PRODUCT_NAME)) {
 			param.put(ProductSetService.Param.SET_PRODUCT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductSetService.Param.SET_PRODUCT_NAME)));
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(ProductSetService.Param.PRODUCT_NAME)) {
 			param.put(ProductSetService.Param.PRODUCT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductSetService.Param.PRODUCT_NAME)));
 		}
 
-		
+		// ソートカラムを設定する
 		if (StringUtil.hasLength(sortColumn)) {
 			param.put(ProductSetService.Param.SORT_COLUMN, StringUtil
 					.convertColumnName(sortColumn));
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param
 						.put(ProductSetService.Param.SORT_ORDER,
@@ -326,7 +325,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 				.execute();
 		param.putAll(map);
 
-		
+		// 1行インサートする
 		super.updateBySqlFile("productset/InsertProductSet.sql", param)
 				.execute();
 	}
@@ -339,7 +338,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 	 */
 	@Override
 	public void deleteRecord(ProductSetDto dto) throws Exception {
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.SET_PRODUCT_CODE, dto.setProductCode);
 		param.put(Param.PRODUCT_CODE, dto.productCode);
@@ -368,7 +367,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 	@Override
 	public void updateRecord(ProductSetDto dto) throws Exception {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.SET_PRODUCT_CODE, dto.setProductCode);
 			param.put(Param.PRODUCT_CODE, dto.productCode);
@@ -382,7 +381,7 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 					Param.QUANTITY).execute();
 			param.putAll(map);
 
-			
+			// 1行更新する
 			super.updateBySqlFile(
 					"productset/UpdateProductSet.sql", param).execute();
 		} catch (UnabledLockException e) {

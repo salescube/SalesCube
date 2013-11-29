@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.deposit;
 
 
@@ -66,7 +65,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 	/**
 	 * 検索結果リスト
 	 */
-	public List<BeanMap> importResultList = null;		
+	public List<BeanMap> importResultList = null;		//EXCEL用検索結果リスト
 
 	/**
 	 * 検索結果列情報リスト
@@ -100,7 +99,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 														importDeliveryDepositForm.sortOrderAsc,
 														userDto.userId,
 														importDeliveryDepositForm.newDepositSlipIdStr);
-			
+			// 件数
 			importDeliveryDepositForm.searchResultCount = importDeliveryDepositForm.searchResultList.size();
 
 			importDeliveryDepositForm.linkInputDeposit = this.userDto.isMenuUpdate( Constants.MENU_ID.INPUT_DEPOSIT );
@@ -109,7 +108,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -131,7 +130,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -153,7 +152,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -175,7 +174,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -197,7 +196,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -213,7 +212,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 		throws Exception
 	{
 		try {
-			
+			// 突合結果を取得
 			importDeliveryDepositForm.sortColumn = "";
 			importDeliveryDepositForm.sortOrderAsc = true;
 			importDeliveryDepositForm.newDepositSlipIdStr = "";
@@ -232,7 +231,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 
 				boolean bPut = false;
 				if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_INVOICE_ONLY)){
-					
+					// 送り状データのみ
 					if((importDeliveryDepositForm.selectCount == 0)||(importDeliveryDepositForm.selectCount == 3)){
 						invoiceList = importDeliveryDepositService.getInvoiceDataList(resultList.deliverySlipId);
 						depositList.add(getInfoEmptyMap());
@@ -240,7 +239,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 					}
 				}
 				else if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_DEPOSIT_ONLY)){
-					
+					// 入金データのみ
 					if((importDeliveryDepositForm.selectCount == 0)||(importDeliveryDepositForm.selectCount == 2)){
 						invoiceList.add(getInvoiceEmptyMap());
 						depositList = importDeliveryDepositService.getDeliveryDepositList(resultList.deliverySlipId);
@@ -249,7 +248,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 				}
 				else if(resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_OLD)||
 						resultList.status.equals(Constants.DELIVERY_DEPOSIT_CSV.STATUS_NEW)){
-					// 
+					// // 登録済み（登録済み、新規登録）
 					if((importDeliveryDepositForm.selectCount == 0)||(importDeliveryDepositForm.selectCount == 1)){
 						invoiceList = importDeliveryDepositService.getInvoiceDataList(resultList.deliverySlipId);
 						depositList = importDeliveryDepositService.getDeliveryDepositList(resultList.deliverySlipId);
@@ -257,7 +256,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 					}
 				}
 				else{
-					
+					// 配送業者入金データのみ
 					if((importDeliveryDepositForm.selectCount == 0)||(importDeliveryDepositForm.selectCount == 2)){
 						invoiceList = importDeliveryDepositService.getInvoiceDataList(resultList.deliverySlipId);
 						depositList = importDeliveryDepositService.getDeliveryDepositList(resultList.deliverySlipId);
@@ -268,19 +267,19 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 				if(bPut){
 					BeanMap resultMap = new BeanMap();
 
-					
+					// 伝票情報　セット
 					resultMap.put("status", resultList.status);
 					resultMap.put("salesSlipId", resultList.salesSlipId);
 					resultMap.put("depositSlipId", resultList.depositSlipId);
 					resultMap.put("customer", resultList.customer);
 					resultMap.put("salesMoney", resultList.salesMoney);
 
-					
+					// 入金情報セット
 					if(depositList.size() > 0 ){
 						resultMap.putAll(depositList.get(0));
 					}
 
-					
+					// 送り状情報セット
 					if(invoiceList.size() > 0 ){
 						resultMap.putAll(invoiceList.get(0));
 					}
@@ -289,10 +288,10 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 				}
 			}
 
-			
+			// 添付ファイル名
 			attachFileName = AttachFileName.FILENAME01;
 
-			
+			// 伝票情報カラム定義
 			columnInfoList = new ArrayList<DepositImportExcelDto>();
 			columnInfoList.add(new DepositImportExcelDto("status",0,"labels.slipStatus.status"));
 			columnInfoList.add(new DepositImportExcelDto("salesSlipId",0,"labels.salesSlipId"));
@@ -300,7 +299,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 			columnInfoList.add(new DepositImportExcelDto("customer",0,"labels.customer"));
 			columnInfoList.add(new DepositImportExcelDto("salesMoney",2,"labels.salesMoney"));
 
-			
+			// 送り状情報カラム定義
 			columnInfoList.add(new DepositImportExcelDto("paymentCategory",0,"labels.deliverydeposit.Info1"));
 			columnInfoList.add(new DepositImportExcelDto("customerCode",0,"labels.deliverydeposit.Info2"));
 			columnInfoList.add(new DepositImportExcelDto("deliverySlipId",0,"labels.deliverydeposit.Info3"));
@@ -317,7 +316,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 			columnInfoList.add(new DepositImportExcelDto("rgDate",10,"labels.deliverydeposit.Info14"));
 			columnInfoList.add(new DepositImportExcelDto("rgSlipId",0,"labels.deliverydeposit.Info15"));
 
-			
+			// 配送業者入金データ情報カラム定義
 			columnInfoList.add(new DepositImportExcelDto("customerCode",0,"labels.deliverydeposit.invoice.1"));
 			columnInfoList.add(new DepositImportExcelDto("siType",0,"labels.deliverydeposit.invoice.2"));
 			columnInfoList.add(new DepositImportExcelDto("cool",0,"labels.deliverydeposit.invoice.3"));
@@ -392,7 +391,7 @@ public class ImportDeliveryDepositAjaxAction extends CommonAjaxResources {
 			columnInfoList.add(new DepositImportExcelDto("apsProductName",0,"labels.deliverydeposit.invoice.72"));
 			columnInfoList.add(new DepositImportExcelDto("apsRemark",0,"labels.deliverydeposit.invoice.73"));
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 

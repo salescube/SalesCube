@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.List;
@@ -78,10 +77,10 @@ public class InputStockLineService extends CommonInputStockLineService {
 				short i = 1;
 				for (EadLineTrnDto dto : lineList) {
 
-					
+					// 入出庫伝票番号を明細に設定する。
 					dto.eadSlipId = slipDto.getKeyValue();
 
-					
+					// 棚情報を取得する
 					Rack rack = rackService.findById(dto.rackCode);
 					dto.rackName = rack.rackName;
 
@@ -91,7 +90,7 @@ public class InputStockLineService extends CommonInputStockLineService {
 
 					entity.lineNo = i++;
 					if (dto.eadLineId == null || dto.eadLineId.length() == 0) {
-						
+						// 入出庫伝票明細番号を採番
 						dto.eadLineId = Long.toString(seqMakerService
 								.nextval(EadService.Table.EAD_LINE_TRN));
 						entity.eadLineId = Integer.parseInt(dto.eadLineId);

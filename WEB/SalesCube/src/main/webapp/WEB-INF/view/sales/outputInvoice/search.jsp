@@ -19,10 +19,6 @@
 
 		// 検索
 		function onF2(){
-			// 「この条件で検索しますか？」
-			if(!confirm('<bean:message key="confirm.search" />')){
-				return;
-			}
 
 			// 検索条件を設定する
 			data = createParamData();
@@ -298,16 +294,16 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0004"/>
 		<jsp:param name="MENU_ID" value="0403"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<!-- タイトル -->
@@ -315,20 +311,21 @@
 
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button type="button" id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/>
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3()" ${searchResultExist? "onclick='onF3()'" : "disabled='disabled'"}>F3<br><bean:message key='words.name.excel'/>
-			</button><button type="button" id="btnF4" tabindex="2003" disabled="disabled">F4<br>&nbsp;
-			</button><button type="button" id="btnF5" tabindex="2004" disabled="disabled">F5<br>&nbsp;
-			</button><button type="button" id="btnF6" tabindex="2005" disabled="disabled">F6<br>&nbsp;
-			</button><button type="button" id="btnF7" tabindex="2006" disabled="disabled">F7<br>&nbsp;
-			</button><button type="button" id="btnF8" tabindex="2007" disabled="disabled">F8<br>&nbsp;
-			</button><button type="button" id="btnF9" tabindex="2008" disabled="disabled">F9<br>&nbsp;
-			</button><button type="button" id="btnF10" tabindex="2009" disabled="disabled">F10<br>&nbsp;
-			</button><button type="button" id="btnF11" tabindex="2010" disabled="disabled">F11<br>&nbsp;
-			</button><button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button type="button" id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/></button>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3()" ${searchResultExist? "onclick='onF3()'" : "disabled='disabled'"}>F3<br><bean:message key='words.name.excel'/></button>
+			<button type="button" id="btnF4" tabindex="2003" disabled="disabled">F4<br>&nbsp;</button>
+			<button type="button" id="btnF5" tabindex="2004" disabled="disabled">F5<br>&nbsp;</button>
+			<button type="button" id="btnF6" tabindex="2005" disabled="disabled">F6<br>&nbsp;</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled="disabled">F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled="disabled">F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled="disabled">F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled="disabled">F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled="disabled">F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 
 		<html:hidden property="sortColumn" styleId="sortColumn" />
@@ -339,48 +336,54 @@
 				<html:errors/>
 			</div>
 
-			<span><bean:message key='labels.outputCondition'/></span><br>
-			<div id="search_info">
-				<table id="search_info1" class="forms" style="width: 400px" summary="出力条件">
-					<colgroup>
-						<col span="1" style="width: 40%">
-						<col span="1" style="width: 60%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.salesDate'/></th><!-- 売上日 -->
-						<td><html:text styleId="salesDate" property="salesDate" styleClass="date_input" tabindex="100" /></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.salesCmCategory'/></th><!-- 取引区分 -->
-						<td>
-							<html:select property="salesCmCategory" styleId="salesCmCategory">
-								<html:options collection="salesCategoryList" property="value" labelProperty="label"/>
-							</html:select><br>
-						</td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.dcCategory'/></th><!-- 配送業者 -->
-						<td>
-							<html:select property="dcCategory" styleId="dcCategory">
-								<html:options collection="dcCategoryList" property="value" labelProperty="label"/>
-							</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.excludingOutput'/></th><!-- 出力済を除く -->
-						<td><html:checkbox styleId="excludingOutput" property="excludingOutput" tabindex="103"/></td>
-					</tr>
-				</table>
+		    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span><bean:message key='labels.outputCondition'/></span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="search_info" class="section_body">
+					<table id="search_info1" class="forms" style="width: 400px" summary="出力条件">
+						<tr>
+							<th><div class="col_title_right"><bean:message key='labels.salesDate'/></div></th><!-- 売上日 -->
+							<td><html:text styleId="salesDate" property="salesDate" styleClass="date_input" tabindex="100" /></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right"><bean:message key='labels.salesCmCategory'/></div></th><!-- 取引区分 -->
+							<td>
+								<html:select property="salesCmCategory" styleId="salesCmCategory">
+									<html:options collection="salesCategoryList" property="value" labelProperty="label"/>
+								</html:select><br>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right"><bean:message key='labels.dcCategory'/></div></th><!-- 配送業者 -->
+							<td>
+								<html:select property="dcCategory" styleId="dcCategory">
+									<html:options collection="dcCategoryList" property="value" labelProperty="label"/>
+								</html:select>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right"><bean:message key='labels.excludingOutput'/></div></th><!-- 出力済を除く -->
+							<td><html:checkbox styleId="excludingOutput" property="excludingOutput" tabindex="103"/></td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    	</div><!-- /.form_section_wrap -->
+
+			<div style="width: 1160px; text-align :right;">
+				<button type="button" onclick="onF1()" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
+				<button type="button" onclick="onF2()" tabindex="151" class="btn_medium"><bean:message key='words.action.search'/></button><!-- 検索 -->
 			</div>
 
-			<div style="width: 400px; text-align :right;">
-				<button type="button" onclick="onF1()" tabindex="150"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
-				<button type="button" onclick="onF2()" tabindex="151"><bean:message key='words.action.search'/></button><!-- 検索 -->
-			</div>
-
-			<div style="width: 900px; text-align :left">
-				<button type="button" tabindex="1000" onclick="setCheckBox(true)"><bean:message key='words.action.selectAll'/></button>
-				<button type="button" tabindex="1001" onclick="setCheckBox(false)"><bean:message key='words.action.selectNone'/></button>
+			<div style="width: 1160px; text-align :left">
+				<button type="button" tabindex="1000" onclick="setCheckBox(true)" class="btn_small"><bean:message key='words.action.selectAll'/></button>
+				<button type="button" tabindex="1001" onclick="setCheckBox(false)" class="btn_small"><bean:message key='words.action.selectNone'/></button>
 			</div>
 		</div>
 		<!-- 検索結果表示エリア -->

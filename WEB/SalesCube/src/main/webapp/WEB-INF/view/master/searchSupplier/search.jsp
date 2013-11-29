@@ -8,7 +8,7 @@
 	<script type="text/javascript">
     <!--
     var paramDataTmp = null;
-    
+
 	$(
 		function() {
 			$("#supplierCode").focus();
@@ -43,9 +43,7 @@
 	 * 検索処理実行
 	 */
 	function searchSupplier(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
 	}
 
@@ -230,10 +228,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1303"/>
@@ -248,12 +246,12 @@
 	<div class="function_buttons">
 		<button tabindex="2000" onclick="initForm();">F1<br>初期化</button>
         <button tabindex="2001" onclick="searchSupplier()">F2<br>検索</button>
-<c:if test="${!isUpdate}">
-        <button disabled="disabled">F3<br>追加</button>
-</c:if>
-<c:if test="${isUpdate}">
-        <button tabindex="2002" onclick="addSupplier();">F3<br>追加</button>
-</c:if>
+		<c:if test="${!isUpdate}">
+			<button disabled="disabled">F3<br>追加</button>
+		</c:if>
+		<c:if test="${isUpdate}">
+			<button tabindex="2002" onclick="addSupplier();">F3<br>追加</button>
+		</c:if>
         <button disabled="disabled">F4<br>&nbsp;</button>
         <button disabled="disabled">F5<br>&nbsp;</button>
         <button disabled="disabled">F6<br>&nbsp;</button>
@@ -264,76 +262,80 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>仕入先情報</span><br>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="search_info" class="section_body">
+					<table id="supplier_info" class="forms" summary="仕入先情報">
+						<tr>
+							<th><div class="col_title_right">仕入先コード</div></th>
+							<td>
+								<html:text styleId="supplierCode" property="supplierCode" style="width: 120px;ime-mode:disabled;"  tabindex="100" maxlength="9"/>
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="supplierSearch($('#supplierCode'));" tabindex="101" />
+							</td>
+							<th><div class="col_title_right">仕入先名</div></th>
+							<td>
+								<html:text styleId="supplierName" property="supplierName" style="width: 200px" tabindex="102" maxlength="60"/>
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="supplierSearch($('#supplierName'));" tabindex="103"/>
+							</td>
+							<th><div class="col_title_right">仕入先名カナ</div></th>
+							<td><html:text styleId="supplierKana" property="supplierKana" style="width: 200px" tabindex="104" maxlength="60"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">備考</div></th>
+							<td colspan="5"><html:text styleId="remarks" property="remarks" tabindex="105" style="width: 600px" maxlength="120"/></td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    </div><!-- /.form_section_wrap -->
 
-		<span>仕入先情報</span><br>
-		<table id="supplier_info" class="forms" summary="仕入先情報">
-			<colgroup>
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-			</colgroup>
-			<tr>
-				<th>仕入先コード</th>
-				<td>
-					<html:text styleId="supplierCode" property="supplierCode" style="width: 120px;ime-mode:disabled;"  tabindex="100" maxlength="9"/>
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-						onclick="supplierSearch($('#supplierCode'));" tabindex="101" />
-				</td>
-				<th>仕入先名</th>
-				<td>
-					<html:text styleId="supplierName" property="supplierName" style="width: 200px" tabindex="102" maxlength="60"/>
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-						onclick="supplierSearch($('#supplierName'));" tabindex="103"/>
-				</td>
-				<th>仕入先名カナ</th>
-				<td><html:text styleId="supplierKana" property="supplierKana" style="width: 200px" tabindex="104" maxlength="60"/></td>
-			</tr>
-			<tr>
-				<th>備考</th>
-				<td colspan="5"><html:text styleId="remarks" property="remarks" tabindex="105" style="width: 600px" maxlength="120"/></td>
-			</tr>
-		</table>
-
-		<div style="width: 910px; text-align :right;">
-			<button tabindex="150" style="width:80px" onclick="initForm()">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchSupplier()">検索</button>
+		<div style="width: 1160px; text-align :right;">
+			<button type="button" tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
+			<button type="button" tabindex="151" style="width:80px" onclick="searchSupplier()" class="btn_medium">検索</button>
 		</div>
 
-
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
                     <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
-			<table id="List" summary="仕入先検索結果"  class="forms" style="width: 910px">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-			</colgroup>
-			<tr>
-				<th style="cursor: pointer">仕入先コード</th>
-				<th style="cursor: pointer">仕入先名</th>
-				<th style="cursor: pointer">担当者</th>
-				<th style="cursor: pointer">取引区分</th>
-				<th style="cursor: pointer">備考</th>
-				<th style="cursor: pointer">&nbsp;</th>
-			</tr>
-		</table>
+			<table id="search_result" summary="仕入先検索結果"  class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+				<colgroup>
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 20%">
+					<col span="1" style="width: 20%">
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 20%">
+					<col span="1" style="width: 10%">
+				</colgroup>
+				<tr>
+					<th class="rd_top_left" style="cursor: pointer; height: 30px;">仕入先コード</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">仕入先名</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">担当者</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">取引区分</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">備考</th>
+					<th class="xl64 rd_top_right" style="cursor: pointer; height: 30px;">&nbsp;</th>
+				</tr>
+			</table>
+		</div>
 	</div>
-</div>
 
-<html:hidden styleId="sortColumn" property="sortColumn" />
-<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
+	<html:hidden styleId="sortColumn" property="sortColumn" />
+	<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
 </s:form>
+</div>
 </body>
 
 </html>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class BillOldService extends AbstractService<Bill> {
 	 *
 	 */
 	public static class Param {
-		
+		// 請求書番号
 		private static final String BILL_ID = "billId";
 	}
 
@@ -44,18 +43,18 @@ public class BillOldService extends AbstractService<Bill> {
 	 */
 	private Map<String, Object> createParamMap(Bill bill){
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//基礎となるカラム名(空で)をエンティティからPUT
+//		BeanMap FoundationParam = Beans.createAndCopy(BeanMap.class,this.depositLine).execute();
+//		param.putAll(FoundationParam);
 
-
-
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class,bill).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -70,10 +69,10 @@ public class BillOldService extends AbstractService<Bill> {
 	 */
 	public int insert(Bill bill){
 		int SuccessedLineCount = 0;
-		
+		//MAPの生成
 		Map<String, Object> param = createParamMap(bill);
 
-		
+		//SQLクエリを投げる
 		SuccessedLineCount = this.updateBySqlFile("bill/InsertOldBill.sql", param).execute();
 
 		return SuccessedLineCount;
@@ -89,8 +88,8 @@ public class BillOldService extends AbstractService<Bill> {
 		LinkedHashMap<String, Object> conditions =
 			new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 年度、月が一致
 		conditions.put(	Param.BILL_ID,billId);
 
 		List<Bill> billList = findByCondition( conditions, params, "bill/FindBillOldById.sql" );

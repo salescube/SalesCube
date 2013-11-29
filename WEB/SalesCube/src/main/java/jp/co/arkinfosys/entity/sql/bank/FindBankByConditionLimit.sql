@@ -9,6 +9,7 @@ SELECT
 	B.DWB_TYPE,
 	C.CATEGORY_CODE_NAME DWB_NAME,
 	B.ACCOUNT_NUM,
+	B.VALID,
 	B.CRE_FUNC,
 	B.CRE_DATETM,
 	B.CRE_USER,
@@ -39,6 +40,9 @@ SELECT
     	/*END*/
     	/*IF accountNum != null*/
     	AND B.ACCOUNT_NUM = /*accountNum*/'%S%'
+    	/*END*/
+    	/*IF valid != null*/
+    	AND B.VALID = /*valid*/'%S%'
     	/*END*/
     /*END*/
    	/*BEGIN*/

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.setting;
 
 import java.io.Serializable;
@@ -57,7 +56,7 @@ public class DeptDto implements Serializable, MasterEditDto {
 		List<DeptDto> descDeptList = new ArrayList<DeptDto>();
 		for (DeptDto dto : childDeptList) {
 			descDeptList.add(dto);
-			
+			// 子供の子孫リストを全て追加する
 			descDeptList.addAll(dto.getDescDetp());
 		}
 		return descDeptList;

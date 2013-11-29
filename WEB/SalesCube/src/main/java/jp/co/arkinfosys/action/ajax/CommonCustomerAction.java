@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import javax.annotation.Resource;
@@ -44,7 +43,7 @@ public class CommonCustomerAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String getCustomerInfoByCustomerCode() throws Exception {
 
-		
+		// 顧客コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonCustomerForm.customerCode)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -78,7 +77,7 @@ public class CommonCustomerAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String searchByCustomerCode() throws Exception {
 		try {
-			
+			// 検索を行う
 			CustomerJoin customerJoin = customerService
 					.findById(this.commonCustomerForm.customerCode);
 

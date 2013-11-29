@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.bill;
 
 import java.text.ParseException;
@@ -52,7 +51,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 		public static final String INPUT = "closeBill.jsp";
 	}
 
-	
+	// 画面とAction間でデータをやり取りするオブジェクトを定義する
 	@ActionForm
 	@Resource
 	public CloseBillForm closeBillForm;
@@ -101,20 +100,20 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	public String close() {
 		try {
 
-			
+			// 区分情報を作成する
 			this.createList();
 
 			for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
 				if (cblf.closeCheck == true) {
-					
+					// 掛売でチェックした顧客
 					billService.closeBillArt(closeBillForm.cutOffDate,
 							cblf.customerCode);
 				}
 			}
-			
+			// 結果の再検索
 			find();
 
-			
+			// 完了メッセージ
 			addMessage("infos.closeBill.close");
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 		} catch (ServiceException e) {
@@ -152,12 +151,12 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	public String reopen() throws Exception {
 		try {
 
-			
+			// 区分情報を作成する
 			this.createList();
 
 			for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
 				if (cblf.closeCheck == true) {
-					
+					// 掛売でチェックした顧客
 					ActionMessage msg = billService.reOpenBillArt(
 							cblf.billCutoffDate, cblf.customerCode);
 					if (msg != null) {
@@ -165,10 +164,10 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 					}
 				}
 			}
-			
+			// 結果の再検索
 			find();
 
-			
+			// 完了メッセージ
 			addMessage("infos.closeBill.reopen");
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 		} catch (ServiceException e) {
@@ -189,7 +188,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errProc(e);
-			
+			//			throw e;
 			addMessage(e.getMessage());
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 		}
@@ -205,7 +204,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	public String init() {
 		try {
 
-			
+			// 区分情報を作成する
 			this.createList();
 
 		} catch (ServiceException e) {
@@ -232,7 +231,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	 */
 	private void addMessage(String... arg) {
 
-		
+		// 第一引数にerrors.が入っていない時には文言が入っている
 		if ((arg[0].indexOf("errors.") < 0) && (arg[0].indexOf("infos.") < 0)) {
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.none", arg[0]));
@@ -278,7 +277,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	public ActionErrors validateCheckClose() {
 		ActionErrors errors = new ActionErrors();
 
-		
+		// 締年度確定　値が変ならエラーで返す
 		YmDto ymDto;
 		try {
 			ymDto = ymService.getYm(closeBillForm.cutOffDate);
@@ -294,29 +293,31 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 			return errors;
 		}
 
-		
+		// チェック状態のチェック
 		boolean bCheckExist = false;
 		if (closeBillForm.otherUser.closeCheck == true) {
 			bCheckExist = true;
-			
+			// 売掛以外の締状態をチェック
 			if (checkYm(ymDto, closeBillForm.otherUser.billCutoffDate, null) == false) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.closeBill.exist", MessageResourcesUtil
 								.getMessage("labels.closeBill.other"), ""));
 			}
 		}
-		for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
-			if (cblf.closeCheck == true) {
-				bCheckExist = true;
-				
-				if (checkYm(ymDto, cblf.billCutoffDate, cblf.customerCode) == false) {
-					errors.add(ActionMessages.GLOBAL_MESSAGE,
-							new ActionMessage("errors.closeBill.exist",
-									cblf.customerCode, cblf.customerName));
+		if( closeBillForm.searchResultList != null ){
+			for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
+				if (cblf.closeCheck == true) {
+					bCheckExist = true;
+					// 売掛の締状態をチェック
+					if (checkYm(ymDto, cblf.billCutoffDate, cblf.customerCode) == false) {
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("errors.closeBill.exist",
+										cblf.customerCode, cblf.customerName));
+					}
 				}
 			}
 		}
-		
+		// チェック未入力の場合
 		if (bCheckExist == false) {
 			String strLabel = MessageResourcesUtil
 					.getMessage("words.action.cutoff");
@@ -343,23 +344,23 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 			String passLabel = MessageResourcesUtil
 					.getMessage("labels.billNoData");
 
-			
+			// 請求実績なしはOK
 			if (passLabel.equals(cutoffDate)) {
 				return true;
 			}
 			ymDto = ymService.getYm(cutoffDate);
 			if (ymDto == null) {
 				return true;
-			}
+			}//else{
 			if (ym.annual.equals(ymDto.annual)
 					&& ym.monthly.equals(ymDto.monthly)) {
-				
+				// 直近の請求書の日付が同月かどうかチェックする
 				if (customerCode != null) {
 					List<Bill> billList = billService
 							.findLastBillByCustomerCode(customerCode);
 					if (billList.size() != 0) {
 						Bill b = billList.get(0);
-						
+						// 同じ月に請求データがある場合には締めることはできない
 						if (ym.annual.equals(b.billYear.intValue())
 								&& ym.monthly.equals(b.billMonth.intValue())) {
 							return false;
@@ -370,11 +371,11 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 				}
 				return false;
 			}
-			
+			// 最終締日以前での締めはエラーとする
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					Constants.FORMAT.DATE);
 			Date lcd = dateFormat.parse(cutoffDate);
-			Date pcd = dateFormat.parse(this.closeBillForm.cutOffDate); 
+			Date pcd = dateFormat.parse(this.closeBillForm.cutOffDate); // 締め処理日
 			if (!pcd.after(lcd)) {
 				return false;
 			}
@@ -408,12 +409,14 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 		if (closeBillForm.otherUser.closeCheck == true) {
 			return errors;
 		}
-		for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
-			if (cblf.closeCheck == true) {
-				return errors;
+		if(closeBillForm.searchResultList != null){
+			for (CloseBillLineDto cblf : closeBillForm.searchResultList) {
+				if (cblf.closeCheck == true) {
+					return errors;
+				}
 			}
 		}
-		
+		// 検索条件未入力の場合
 		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 				"errors.closeBill.select", label));
 
@@ -429,7 +432,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 	 */
 	protected void find() throws ServiceException {
 
-		
+		// 掛売の請求書情報を検索する
 		closeBillForm.searchResultList.clear();
 		List<CustomerJoin> creditList = customerService
 				.findCustomerForCloseBill(
@@ -457,7 +460,7 @@ public class CloseBillAction extends AbstractSearchAction<CloseBillLineDto> {
 		this.closeBillForm.cutoffGroupCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUTOFF_GROUP);
 		this.closeBillForm.cutoffGroupCategoryList.add(0, new LabelValueBean());
-		
+		// カテゴリを作成済
 		this.closeBillForm.initCategory = false;
 	}
 

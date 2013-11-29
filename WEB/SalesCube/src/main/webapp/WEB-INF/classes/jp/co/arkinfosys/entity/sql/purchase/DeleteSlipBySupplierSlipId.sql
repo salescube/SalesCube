@@ -1,2 +1,0 @@
-DELETE FROM SUPPLIER_SLIP_TRN_/*$domainId*/'DEFAULT'
-WHERE SUPPLIER_SLIP_ID=/*supplierSlipId*/'default'

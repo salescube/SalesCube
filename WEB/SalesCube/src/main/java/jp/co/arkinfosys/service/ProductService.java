@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.OutputStream;
@@ -254,7 +253,7 @@ public class ProductService extends
 	@Override
 	public ProductJoin findById(String productCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 			param.put(ProductService.Param.PRODUCT_CODE, productCode);
@@ -285,7 +284,7 @@ public class ProductService extends
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -327,7 +326,7 @@ public class ProductService extends
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -385,62 +384,62 @@ public class ProductService extends
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 商品コード
 		if (conditions.containsKey(ProductService.Param.PRODUCT_CODE)) {
 			param.put(ProductService.Param.PRODUCT_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.PRODUCT_CODE)));
 		}
 
-		
+		// 仕入先商品コード
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_PCODE)) {
 			param.put(ProductService.Param.SUPPLIER_PCODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.SUPPLIER_PCODE)));
 		}
 
-		
+		// JANコード
 		if (conditions.containsKey(ProductService.Param.JAN_PCODE)) {
 			param.put(ProductService.Param.JAN_PCODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.JAN_PCODE)));
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(ProductService.Param.PRODUCT_NAME)) {
 			param.put(ProductService.Param.PRODUCT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.PRODUCT_NAME)));
 		}
 
-		
+		// 商品名カナ
 		if (conditions.containsKey(ProductService.Param.PRODUCT_KANA)) {
 			param.put(ProductService.Param.PRODUCT_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.PRODUCT_KANA)));
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_CODE)) {
 			param.put(ProductService.Param.SUPPLIER_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.SUPPLIER_CODE)));
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_NAME)) {
 			param.put(ProductService.Param.SUPPLIER_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.SUPPLIER_NAME)));
 		}
 
-		
+		// セット分類
 		if (conditions.containsKey(ProductService.Param.SET_TYPE_CATEGORY)) {
 			param.put(ProductService.Param.SET_TYPE_CATEGORY, conditions
 					.get(ProductService.Param.SET_TYPE_CATEGORY));
 		}
 
-		
+		// 標準化分類
 		if (conditions
 				.containsKey(ProductService.Param.PRODUCT_STANDARD_CATEGORY)) {
 			param
@@ -450,20 +449,20 @@ public class ProductService extends
 									.get(ProductService.Param.PRODUCT_STANDARD_CATEGORY));
 		}
 
-		
+		// 分類保管
 		if (conditions.containsKey(ProductService.Param.PRODUCT_STOCK_CATEGORY)) {
 			param.put(ProductService.Param.PRODUCT_STOCK_CATEGORY, conditions
 					.get(ProductService.Param.PRODUCT_STOCK_CATEGORY));
 		}
 
-		
+		// 分類状況
 		if (conditions
 				.containsKey(ProductService.Param.PRODUCT_STATUS_CATEGORY)) {
 			param.put(ProductService.Param.PRODUCT_STATUS_CATEGORY, conditions
 					.get(ProductService.Param.PRODUCT_STATUS_CATEGORY));
 		}
 
-		
+		// 在庫管理
 		if (conditions.containsKey(ProductService.Param.STOCK_CTL_CATEGORY)) {
 			param.put(ProductService.Param.STOCK_CTL_CATEGORY, conditions
 					.get(ProductService.Param.STOCK_CTL_CATEGORY));
@@ -474,45 +473,45 @@ public class ProductService extends
 					.get(ProductService.Param.RACK_MULTI_FLAG));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(ProductService.Param.REMARKS)) {
 			param.put(ProductService.Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.REMARKS)));
 		}
 
-		
+		// 商品分類（大）
 		if (conditions.containsKey(ProductService.Param.PRODUCT1)) {
 			param.put(ProductService.Param.PRODUCT1, conditions
 					.get(ProductService.Param.PRODUCT1));
 		}
 
-		
+		// 商品分類（中）
 		if (conditions.containsKey(ProductService.Param.PRODUCT2)) {
 			param.put(ProductService.Param.PRODUCT2, conditions
 					.get(ProductService.Param.PRODUCT2));
 		}
 
-		
+		// 商品分類（小）
 		if (conditions.containsKey(ProductService.Param.PRODUCT3)) {
 			param.put(ProductService.Param.PRODUCT3, conditions
 					.get(ProductService.Param.PRODUCT3));
 		}
 
-		
+		// ソートカラム
 		if (StringUtil.hasLength(sortColumn)) {
 			if (ProductService.Param.SUPPLIER_NAME.equals(sortColumn)) {
-				
+				// 仕入先マスタのカラムでソート
 				param.put(ProductService.Param.SORT_BY_SUPPLIER, true);
 			} else {
-				
+				// 商品マスタのカラムでソート
 				param.put(ProductService.Param.SORT_BY_PRODUCT, true);
 			}
 			param.put(ProductService.Param.SORT_COLUMN, StringUtil
 					.convertColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(ProductService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -529,60 +528,60 @@ public class ProductService extends
 	 */
 	private void setConditionAggregate(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 商品コード(完全一致)
 		if (conditions.containsKey(ProductService.Param.PRODUCT_CODE)) {
 			param.put(ProductService.Param.PRODUCT_CODE, conditions
 					.get(ProductService.Param.PRODUCT_CODE));
 		}
 
-		
+		// 仕入先商品コード
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_PCODE)) {
 			param.put(ProductService.Param.SUPPLIER_PCODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.SUPPLIER_PCODE)));
 		}
 
-		
+		// JANコード
 		if (conditions.containsKey(ProductService.Param.JAN_PCODE)) {
 			param.put(ProductService.Param.JAN_PCODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductService.Param.JAN_PCODE)));
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(ProductService.Param.PRODUCT_NAME)) {
 			param.put(ProductService.Param.PRODUCT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.PRODUCT_NAME)));
 		}
 
-		
+		// 商品名カナ
 		if (conditions.containsKey(ProductService.Param.PRODUCT_KANA)) {
 			param.put(ProductService.Param.PRODUCT_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.PRODUCT_KANA)));
 		}
 
-		
+		// 仕入先コード(完全一致)
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_CODE)) {
 			param.put(ProductService.Param.SUPPLIER_CODE, conditions
 					.get(ProductService.Param.SUPPLIER_CODE));
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(ProductService.Param.SUPPLIER_NAME)) {
 			param.put(ProductService.Param.SUPPLIER_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.SUPPLIER_NAME)));
 		}
 
-		
+		// セット分類
 		if (conditions.containsKey(ProductService.Param.SET_TYPE_CATEGORY)) {
 			param.put(ProductService.Param.SET_TYPE_CATEGORY, conditions
 					.get(ProductService.Param.SET_TYPE_CATEGORY));
 		}
 
-		
+		// 標準化分類
 		if (conditions
 				.containsKey(ProductService.Param.PRODUCT_STANDARD_CATEGORY)) {
 			param
@@ -592,20 +591,20 @@ public class ProductService extends
 									.get(ProductService.Param.PRODUCT_STANDARD_CATEGORY));
 		}
 
-		
+		// 分類保管
 		if (conditions.containsKey(ProductService.Param.PRODUCT_STOCK_CATEGORY)) {
 			param.put(ProductService.Param.PRODUCT_STOCK_CATEGORY, conditions
 					.get(ProductService.Param.PRODUCT_STOCK_CATEGORY));
 		}
 
-		
+		// 分類状況
 		if (conditions
 				.containsKey(ProductService.Param.PRODUCT_STATUS_CATEGORY)) {
 			param.put(ProductService.Param.PRODUCT_STATUS_CATEGORY, conditions
 					.get(ProductService.Param.PRODUCT_STATUS_CATEGORY));
 		}
 
-		
+		// 在庫管理
 		if (conditions.containsKey(ProductService.Param.STOCK_CTL_CATEGORY)) {
 			param.put(ProductService.Param.STOCK_CTL_CATEGORY, conditions
 					.get(ProductService.Param.STOCK_CTL_CATEGORY));
@@ -616,32 +615,32 @@ public class ProductService extends
 					.get(ProductService.Param.RACK_MULTI_FLAG));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(ProductService.Param.REMARKS)) {
 			param.put(ProductService.Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductService.Param.REMARKS)));
 		}
 
-		
+		// 商品分類（大）
 		if (conditions.containsKey(ProductService.Param.PRODUCT1)) {
 			param.put(ProductService.Param.PRODUCT1, conditions
 					.get(ProductService.Param.PRODUCT1));
 		}
 
-		
+		// 商品分類（中）
 		if (conditions.containsKey(ProductService.Param.PRODUCT2)) {
 			param.put(ProductService.Param.PRODUCT2, conditions
 					.get(ProductService.Param.PRODUCT2));
 		}
 
-		
+		// 商品分類（小）
 		if (conditions.containsKey(ProductService.Param.PRODUCT3)) {
 			param.put(ProductService.Param.PRODUCT3, conditions
 					.get(ProductService.Param.PRODUCT3));
 		}
 
-		
+		// 補充発注用の保有数＜＝発注点条件を付加するかどうか
 		if (conditions
 				.containsKey(ProductService.Param.HOLDING_STOCK_LESS_THAN_PO_NUM)) {
 			param
@@ -651,13 +650,13 @@ public class ProductService extends
 									.get(ProductService.Param.HOLDING_STOCK_LESS_THAN_PO_NUM));
 		}
 
-		
+		// 委託在庫数 ＝ 0
 		if (conditions.containsKey(ProductService.Param.ENTRUST_STOCK_ZERO)) {
 			param.put(ProductService.Param.ENTRUST_STOCK_ZERO, conditions
 					.get(ProductService.Param.ENTRUST_STOCK_ZERO));
 		}
 
-		
+		// 委託在庫数＞＝1
 		if (conditions
 				.containsKey(ProductService.Param.ENTRUST_STOCK_LARGER_THAN_ZERO)) {
 			param
@@ -667,7 +666,7 @@ public class ProductService extends
 									.get(ProductService.Param.ENTRUST_STOCK_LARGER_THAN_ZERO));
 		}
 
-		
+		// 委託在庫の発注量 > 0
 		if (conditions
 				.containsKey(ProductService.Param.ENTRUST_PORDER_QUANTITY_LARGER_THAN_ZERO)) {
 			param
@@ -677,7 +676,7 @@ public class ProductService extends
 									.get(ProductService.Param.ENTRUST_PORDER_QUANTITY_LARGER_THAN_ZERO));
 		}
 
-		
+		// 保有数0の商品は除く
 		if (conditions
 				.containsKey(ProductService.Param.EXCLUDES_HOLDING_STOCK_ZERO)) {
 			param
@@ -687,7 +686,7 @@ public class ProductService extends
 									.get(ProductService.Param.EXCLUDES_HOLDING_STOCK_ZERO));
 		}
 
-		
+		// 平均出荷数0の商品は除く
 		if (conditions
 				.containsKey(ProductService.Param.EXCLUDES_AVG_SHIP_COUNT_ZERO)) {
 			param
@@ -697,7 +696,7 @@ public class ProductService extends
 									.get(ProductService.Param.EXCLUDES_AVG_SHIP_COUNT_ZERO));
 		}
 
-		
+		// 保有数 > 平均出荷数 となる商品は除く
 		if (conditions
 				.containsKey(ProductService.Param.EXCLUDES_AVG_LESS_THAN_HOLDING_STOCK)) {
 			param
@@ -707,26 +706,26 @@ public class ProductService extends
 									.get(ProductService.Param.EXCLUDES_AVG_LESS_THAN_HOLDING_STOCK));
 		}
 
-		
+		// 検索結果に発注情報を追加する
 		if (conditions.containsKey(ProductService.Param.ADD_PORDER_INFO)) {
 			param.put(ProductService.Param.ADD_PORDER_INFO, conditions
 					.get(ProductService.Param.ADD_PORDER_INFO));
 		}
 
-		
+		// ソートカラム
 		if (StringUtil.hasLength(sortColumn)) {
 			if (ProductService.Param.SUPPLIER_NAME.equals(sortColumn)) {
-				
+				// 仕入先マスタのカラムでソート
 				param.put(ProductService.Param.SORT_BY_SUPPLIER, true);
 			} else {
-				
+				// 商品マスタのカラムでソート
 				param.put(ProductService.Param.SORT_BY_PRODUCT, true);
 			}
 			param.put(ProductService.Param.SORT_COLUMN, StringUtil
 					.convertColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(ProductService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -787,7 +786,7 @@ public class ProductService extends
 	public Map<String, Object> countRelations(String productCode)
 			throws ServiceException {
 		try {
-			
+			// 関連データの存在チェック
 			Map<String, Object> param = super.createSqlParam();
 			param.put(ProductService.Param.PRODUCT_CODE, productCode);
 			BeanMap result = this.selectBySqlFile(BeanMap.class,
@@ -815,21 +814,21 @@ public class ProductService extends
 	public void deleteRecord(ProductDto dto) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> params = super.createSqlParam();
 			params.put(ProductService.Param.PRODUCT_CODE, dto.productCode);
 			super.lockRecordBySqlFile("product/LockProductByCode.sql", params,
 					dto.updDatetm);
 
-			
+			// パラメータ作成
 			params = super.createSqlParam();
 			params.put(ProductService.Param.PRODUCT_CODE, dto.productCode);
 
-			
+			// 削除
 			this.updateBySqlFile("product/DeleteProductByCode.sql", params)
 					.execute();
 
-			
+			// 数量割引リレーションの削除
 			this.updateProductDiscount(dto.productCode, null,
 					dto.discountUpdDatetm);
 		} catch (UnabledLockException e) {
@@ -847,7 +846,7 @@ public class ProductService extends
 	 */
 	public void insertRecord(ProductDto dto) throws ServiceException {
 		try {
-			
+			// パラメータ作成
 			Map<String, Object> params = super.createSqlParam();
 
 			ProductJoin entity = Beans.createAndCopy(ProductJoin.class, dto)
@@ -862,7 +861,7 @@ public class ProductService extends
 							AbstractService.Param.UPD_USER).execute();
 			params.putAll(props);
 
-			
+			// 登録
 			this.updateBySqlFile("product/InsertProduct.sql", params).execute();
 
 			this.updateProductDiscount(dto.productCode, dto.discountId,
@@ -882,13 +881,13 @@ public class ProductService extends
 	public void updateRecord(ProductDto dto) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> params = super.createSqlParam();
 			params.put(Param.PRODUCT_CODE, dto.productCode);
 			super.lockRecordBySqlFile("product/LockProductByCode.sql", params,
 					dto.updDatetm);
 
-			
+			// パラメータ作成
 			params = super.createSqlParam();
 
 			ProductJoin entity = Beans.createAndCopy(ProductJoin.class, dto)
@@ -903,7 +902,7 @@ public class ProductService extends
 							AbstractService.Param.UPD_USER).execute();
 			params.putAll(props);
 
-			
+			// 更新
 			this.updateBySqlFile("product/UpdateProduct.sql", params).execute();
 
 			if (dto.discountIdChanged) {
@@ -928,17 +927,17 @@ public class ProductService extends
 			String updDatetm) throws Exception {
 		if (StringUtil.hasLength(updDatetm)) {
 			if (StringUtil.hasLength(discountId)) {
-				
+				// 更新
 				this.discountRelService.updateDiscountRel(productCode,
 						discountId, updDatetm);
 			} else if (!StringUtil.hasLength(discountId)) {
-				
+				// 削除
 				this.discountRelService.deleteDiscountRel(productCode, null,
 						updDatetm);
 			}
 		} else {
 			if (StringUtil.hasLength(discountId)) {
-				
+				// 追加
 				this.discountRelService.insertDiscountRel(productCode,
 						discountId);
 			}
@@ -954,7 +953,7 @@ public class ProductService extends
 	public Long findProductCntByCodeLike(String prefixCode)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(ProductService.Param.PRODUCT_CODE,
 					createPrefixSearchCondition(prefixCode));
@@ -979,7 +978,7 @@ public class ProductService extends
 	public List<Product> findProductByCodeLike(String productCode)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(ProductService.Param.PRODUCT_CODE,
 					createPrefixSearchCondition(productCode));
@@ -999,10 +998,10 @@ public class ProductService extends
 	public ProductJoin findProductInfosWithNamesByCode(String productCode)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(ProductService.Param.PRODUCT_CODE, productCode);
-			
+			// 各区分のコードをPUT
 			param.put(ProductService.Param.STOCK_CTL_CATEGORY_ID,
 					Categories.PRODUCT_STOCK_CTL);
 			param.put(ProductService.Param.PRODUCT_STATUS_CATEGORY_ID,
@@ -1041,7 +1040,7 @@ public class ProductService extends
 	public ProductJoin findProductByOnlinePCode(String onlinePcode)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 			param.put(ProductService.Param.ONLINE_PCODE, onlinePcode);
@@ -1061,19 +1060,19 @@ public class ProductService extends
 	 * @param param 検索条件のマップ
 	 */
 	private void setConditionCategoryId(Map<String, Object> param) {
-		
+		// セット分類ID
 		param.put(CategoryService.Param.CATEGORY_ID,
 				Categories.PRODUCT_SET_TYPE);
 
-		
+		// 単位コードID
 		param.put(ProductService.Param.UNIT_CATEGORY_ID,
 				Categories.PRODUCT_UNIT);
 
-		
+		// 分類状況ID
 		param.put(ProductService.Param.PRODUCT_STATUS_CATEGORY_ID,
 				Categories.PRODUCT_STATUS);
 
-		
+		// 分類保管ID
 		param.put(ProductService.Param.PRODUCT_STOCK_CATEGORY_ID,
 				Categories.PRODUCT_STOCK);
 	}
@@ -1098,11 +1097,11 @@ public class ProductService extends
 			HttpServletRequest httpRequest, HttpServletResponse httpResponse)
 			throws Exception {
 		try {
-			
+			// 商品マスタを検索
 			List<ProductJoin> productJoinList = this.findByCondition(
 					conditions, sortColumn, sortOrderAsc);
 
-			
+			// 検索結果をExcelデータオブジェクトに変換する
 			List<ProductExcelRowDto> productExcelDtoList = new ArrayList<ProductExcelRowDto>();
 			for (ProductJoin productJoin : productJoinList) {
 				ProductExcelRowDto dto = Beans.createAndCopy(
@@ -1112,7 +1111,7 @@ public class ProductService extends
 				productExcelDtoList.add(dto);
 			}
 
-			
+			// Excelファイルデータを構築
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet(MessageResourcesUtil
 					.getMessage("labels.product.csv.sheetName"));
@@ -1161,7 +1160,7 @@ public class ProductService extends
 				return 0;
 			}
 
-			
+			// Excelファイルの行データをDtoに変換する
 			int rowCounter = 1;
 			List<ProductExcelRowDto> productExcelDtoList = new ArrayList<ProductExcelRowDto>();
 			for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
@@ -1172,7 +1171,7 @@ public class ProductService extends
 				rowCounter++;
 			}
 
-			
+			// Dtoをエンティティクラスに変換する(Decimalは小数3桁で切り捨て)
 			NumberConverter conv = new NumberConverter("0", 3, false);
 
 			List<ProductJoin> productList = new ArrayList<ProductJoin>();
@@ -1182,11 +1181,11 @@ public class ProductService extends
 				}
 
 				if (dto.isEmptyRow()) {
-					
+					// 空行
 					continue;
 				}
 
-				
+				// 入力値チェック
 				e.addMessages(dto.validate());
 				if (e.getMessageCount() > 0) {
 					continue;
@@ -1194,7 +1193,7 @@ public class ProductService extends
 				dto.productCode = dto.productCode.toUpperCase();
 
 				try {
-					
+					// エンティティに変換
 					ProductJoin entity = Beans.createAndCopy(ProductJoin.class,
 							dto).lrTrim().dateConverter(Constants.FORMAT.DATE)
 							.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -1204,10 +1203,10 @@ public class ProductService extends
 									Param.PO_LOT).execute();
 					productList.add(entity);
 				} catch (ConverterRuntimeException ex) {
-					
+					// 変換エラー
 					e.addInvalidMessage(dto.lineNo, ex.getPropertyName());
 				} catch (IllegalPropertyRuntimeException ex) {
-					
+					// 変換エラー
 					e.addInvalidMessage(dto.lineNo, ex.getPropertyName());
 				}
 			}
@@ -1241,7 +1240,7 @@ public class ProductService extends
 		}
 
 		try {
-			
+			// 商品マスタ、商品マスタ履歴、数量割引関連、数量割引関連履歴テーブルをロックする
 			try {
 				super.updateBySqlFile("product/LockProductTable.sql",
 						super.createSqlParam()).execute();
@@ -1251,13 +1250,13 @@ public class ProductService extends
 
 			int count = 0;
 			for (ProductJoin product : productList) {
-				
+				// 商品
 				Map<String, Object> param = super.createSqlParam();
 				this.setEmptyCondition(param);
 				param.put(Param.PRODUCT_CODE, product.productCode);
 				this.setConditionCategoryId(param);
 
-				
+				// DBから既存の商品を取得する
 				ProductJoin p = super.selectBySqlFile(ProductJoin.class,
 						"product/FindProductByCodeAfterLock.sql", param)
 						.getSingleResult();
@@ -1272,25 +1271,25 @@ public class ProductService extends
 								AbstractService.Param.UPD_DATETM,
 								AbstractService.Param.UPD_USER).execute());
 				if (p == null) {
-					
+					// 新規
 					count += super.updateBySqlFile("product/InsertProduct.sql",
 							param).execute();
 				} else {
-					
+					// 更新
 					count += super.updateBySqlFile("product/UpdateProduct.sql",
 							param).execute();
 				}
 
-				
+				// 数量割引（ロック等不要なので履歴以外にDiscountRelServiceは使わない）
 				param = super.createSqlParam();
 				param.put(Param.PRODUCT_CODE, product.productCode);
 
 				if (StringUtil.hasLength(product.discountId)) {
 					if (StringUtil.hasLength(p.discountId)) {
 						if (!product.discountId.equals(p.discountId)) {
-							
+							// 数量割引リレーション更新
 
-							
+							// 一旦削除し、再投入する
 							param.put(DiscountRelService.Param.DISCOUNT_ID,
 									p.discountId);
 							super
@@ -1304,7 +1303,7 @@ public class ProductService extends
 									.execute();
 						}
 					} else {
-						
+						// 追加
 						param.put(DiscountRelService.Param.DISCOUNT_ID,
 								product.discountId);
 						super.updateBySqlFile("discount/InsertDiscountRel.sql",
@@ -1328,7 +1327,7 @@ public class ProductService extends
 			userTransaction.begin();
 			throw e;
 		} finally {
-			
+			// テーブルをアンロックする
 			super.updateBySqlFile("product/UnlockProductTable.sql",
 					super.createSqlParam()).execute();
 		}
@@ -1384,18 +1383,18 @@ public class ProductService extends
 			this.setEmptyCondition(param);
 			param.put(Param.PRODUCT_CODE_LIST, productCodeList);
 
-			
+			// コードによる検索を行う
 			List<BeanMap> rawCheckList = this.selectBySqlFile(BeanMap.class,
 					"product/FindProductsByCodeList.sql", param)
 					.getResultList();
 
-			
+			// 存在したコードをキーとするマップを作成する
 			Map<String, Object> existsCodeMap = new HashMap<String, Object>();
 			for (BeanMap map : rawCheckList) {
 				existsCodeMap.put((String) map.get(Param.PRODUCT_CODE), map);
 			}
 
-			
+			// それぞれのコードの存在をチェックする
 			List<ExistsCheckStateDto> resultList = new ArrayList<ExistsCheckStateDto>(
 					productCodeList.size());
 			for (String code : productCodeList) {
@@ -1449,10 +1448,10 @@ public class ProductService extends
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 集計期間
 			if (conditions.containsKey(Param.AGGREGATE_MONTHS_RANGE)) {
 				if (conditions.get(Param.AGGREGATE_MONTHS_RANGE) instanceof String) {
-					
+					// 期間条件を数値に変換
 					conditions.put(Param.AGGREGATE_MONTHS_RANGE, Integer
 							.parseInt((String) conditions
 									.get(Param.AGGREGATE_MONTHS_RANGE)));
@@ -1461,11 +1460,11 @@ public class ProductService extends
 				param.put(Param.AGGREGATE_MONTHS_RANGE, conditions
 						.get(Param.AGGREGATE_MONTHS_RANGE));
 			} else {
-				
+				// 指定がなければ期間集計は行わない
 				param.put(Param.AGGREGATE_MONTHS_RANGE, null);
 			}
 
-			
+			// 受注実績のある商品
 			if (conditions.containsKey(Param.RO_EXISTS)) {
 				param.put(Param.RO_EXISTS, conditions.get(Param.RO_EXISTS));
 			} else {
@@ -1477,14 +1476,14 @@ public class ProductService extends
 
 			List<BeanMap> productStdDevList = null;
 			if (conditions.containsKey(Param.AGGREGATE_MONTHS_RANGE)) {
-				
+				// 集計期間指定がある場合には期間中の出荷数標準偏差を求める
 
-				
+				// 同一セッションからの集計リクエストが重複する事もありえるのでセッションIDに現在のミリ秒を連結する
 				String uniqueId = super.httpSession.getId() + "-"
 						+ String.valueOf(System.currentTimeMillis());
 				param.put(Param.SESSION_ID, uniqueId);
 
-				
+				// 年月度一時テーブルに指定期間中の年月度データを登録する
 				Calendar cal = Calendar.getInstance();
 				for (int i = 0; i < (Integer) conditions
 						.get(Param.AGGREGATE_MONTHS_RANGE) + 1; i++) {
@@ -1496,23 +1495,23 @@ public class ProductService extends
 					cal.add(Calendar.MONTH, -1);
 				}
 
-				
+				// 年月度と商品コードの直積表を作成
 				this.updateBySqlFile("product/InsertStdDevAggregateYmWork.sql",
 						param).execute();
-				
+				// 年月度・商品コードごとの売上数量を集計
 				this.updateBySqlFile(
 						"product/InsertStdDevProductSalesYmWork.sql", param)
 						.execute();
-				
+				// 集計した数量で直積表を更新する
 				this.updateBySqlFile("product/UpdateStdDevAggregateYmWork.sql",
 						param).execute();
 
-				
+				// 出荷数偏差の計算結果を取得する
 				productStdDevList = this.selectBySqlFile(BeanMap.class,
 						"product/AggregateSalesStandardDeviation.sql", param)
 						.getResultList();
 
-				
+				// 一時テーブルをクリアする
 				this.updateBySqlFile("product/DeleteStdDevYmWork.sql", param)
 						.execute();
 				this.updateBySqlFile("product/DeleteStdDevAggregateYmWork.sql",
@@ -1533,7 +1532,7 @@ public class ProductService extends
 						ProductStockInfoDto.class, info).execute();
 				if (productStdDevList != null) {
 					dto.salesStandardDeviation = BigDecimal.ZERO;
-					
+					// 出荷数標準偏差を設定する
 					for (BeanMap stdDev : productStdDevList) {
 						if (dto.productCode.equals(stdDev
 								.get(Param.PRODUCT_CODE))) {

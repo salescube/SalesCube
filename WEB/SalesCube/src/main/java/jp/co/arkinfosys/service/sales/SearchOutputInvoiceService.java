@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.sales;
 
 import java.util.ArrayList;
@@ -29,13 +28,13 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 	 * パラメータ定義クラスです.
 	 */
 	public static class Param {
-		public static final String SALES_DATE = "salesDate";
-		public static final String SALES_CM_CATEGORY = "salesCmCategory";
-		public static final String DC_CATEGORY = "dcCategory";
-		public static final String EXCLUDING_OUTPUT = "excludingOutput";
-		public static final String SALES_SLIP_ID = "salesSlipId";
+		public static final String SALES_DATE = "salesDate";// 売上日
+		public static final String SALES_CM_CATEGORY = "salesCmCategory";// 取引区分
+		public static final String DC_CATEGORY = "dcCategory";// 配送業者
+		public static final String EXCLUDING_OUTPUT = "excludingOutput";// 出力済を除く
+		public static final String SALES_SLIP_ID = "salesSlipId";// 売上番号ID
 		public static final String SI_PRINT_COUNT = "siPrintCount";
-		public static final String ROW_COUNT = "rowCount";
+		public static final String ROW_COUNT = "rowCount";// 検索結果最大表示件数
 
 		public static final String SORT_COLUMN = "sortColumn";
 		public static final String SORT_ORDER_ASC = "sortOrderAsc";
@@ -95,10 +94,10 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 						OutputInvoiceSearchResultDto.class, resultMap)
 						.dateConverter(Constants.FORMAT.DATE).execute();
 
-				
+				// 送り状データ出力フラグ(出力済 or 未出力)
 				if (dto.siPrintCount != null
 						&& Integer.valueOf(dto.siPrintCount) > 0) {
-					
+					// 出力済
 					dto.isSiPrinted = true;
 				}
 
@@ -138,7 +137,7 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 売上日
 		if (conditions.containsKey(Param.SALES_DATE)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.SALES_DATE))) {
 				param.put(Param.SALES_DATE, (String) conditions
@@ -146,7 +145,7 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 取引区分
 		if (conditions.containsKey(Param.SALES_CM_CATEGORY)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SALES_CM_CATEGORY))) {
@@ -155,7 +154,7 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 配送業者
 		if (conditions.containsKey(Param.DC_CATEGORY)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.DC_CATEGORY))) {
@@ -164,14 +163,14 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 「出力済を除く」チェックボックス
 		if (conditions.containsKey(Param.EXCLUDING_OUTPUT)) {
 			if ((Boolean) conditions.get(Param.EXCLUDING_OUTPUT)) {
 				param.put(Param.EXCLUDING_OUTPUT, "true");
 			}
 		}
 
-		
+		// 売上番号
 		if (conditions.containsKey(Param.SALES_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SALES_SLIP_ID))) {
@@ -180,13 +179,13 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 取得件数制限
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.SORT_COLUMN))) {
@@ -196,7 +195,7 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean) conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc != null && sortOrderAsc) {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.ASC);
@@ -204,13 +203,13 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
@@ -247,12 +246,12 @@ public class SearchOutputInvoiceService extends AbstractService<SalesSlipTrn> {
 	public List<SalesSlipTrnJoin> getOutputInvoiceList(List<String> salesIdList)
 			throws ServiceException {
 		try {
-			
+			// パラメータ設定
 			Map<String, Object> param = super.createSqlParam();
 			setEmptyCondition(param);
 			param.put(Param.SALES_SLIP_ID, salesIdList);
 
-			
+			// 検索実行
 			return this.selectBySqlFile(SalesSlipTrnJoin.class,
 					"sales/FindInvoiceByConditions.sql", param).getResultList();
 		} catch (Exception e) {

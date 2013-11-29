@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.net.URLEncoder;
@@ -98,13 +97,13 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	public String prepare() {
 		ActionMessages errors = referenceHistoryForm.validate();
 		if (!errors.isEmpty()) {
-			
+			// 検索条件エラー
 			ActionMessagesUtil.addErrors(super.httpRequest, errors);
 			this.httpResponse.setStatus(450);
 			return "/ajax/errorResponse.jsp";
 		}
 
-		
+		// 保存用検索条件にコピー
 		Beans.copy(referenceHistoryForm, referenceHistoryFormDto).execute();
 
 		return null;
@@ -118,17 +117,17 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
+			// 保存用出力条件からコピー
 			Beans.copy(referenceHistoryFormDto, referenceHistoryForm).execute();
 
-			
+			// パラメータを作成する
 			BeanMap params = createParamMap();
 
-			
+			// 検索を行う
 			slipList = referenceHistoryService.getSlipListByCondition(params);
 			detailList = referenceHistoryService.getDetailListByCondition(params);
 
-			
+			// 出力タイプごとの設定
 			if (REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE.equals(referenceHistoryForm.outputTarget)) {
 				setup4Estimate();
 			}
@@ -166,13 +165,13 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 				setup4User();
 			}
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -186,18 +185,18 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	private BeanMap createParamMap() {
 		BeanMap map = new BeanMap();
 
-		
+		// 共通部
 		map.put(ReferenceHistoryService.Param.OUTPUT_TARGET, referenceHistoryForm.outputTarget);
 		map.put(ReferenceHistoryService.Param.REC_DATE_FROM, referenceHistoryForm.recDateFrom);
 		map.put(ReferenceHistoryService.Param.REC_DATE_TO, referenceHistoryForm.recDateTo);
 
-		
-		
+		// 出力タイプごとの設定
+		// 見積入力
 		if (REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.ESTIMATE_DATE_FROM, referenceHistoryForm.estimateDateFrom1);
 			map.put(ReferenceHistoryService.Param.ESTIMATE_DATE_TO, referenceHistoryForm.estimateDateTo1);
 		}
-		
+		// 受注入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_RORDER.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_FROM, referenceHistoryForm.customerCodeFrom2);
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_TO, referenceHistoryForm.customerCodeTo2);
@@ -206,26 +205,26 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 			map.put(ReferenceHistoryService.Param.SHIP_DATE_FROM, referenceHistoryForm.shipDateFrom2);
 			map.put(ReferenceHistoryService.Param.SHIP_DATE_TO, referenceHistoryForm.shipDateTo2);
 		}
-		
+		// 売上入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_SALES.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_FROM, referenceHistoryForm.customerCodeFrom3);
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_TO, referenceHistoryForm.customerCodeTo3);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_FROM, referenceHistoryForm.productCodeFrom3);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_TO, referenceHistoryForm.productCodeTo3);
 		}
-		
+		// 入金入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_DEPOSIT.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_FROM, referenceHistoryForm.customerCodeFrom4);
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_TO, referenceHistoryForm.customerCodeTo4);
 		}
-		
+		// 発注入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_PORDER.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_FROM, referenceHistoryForm.supplierCodeFrom5);
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_TO, referenceHistoryForm.supplierCodeTo5);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_FROM, referenceHistoryForm.productCodeFrom5);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_TO, referenceHistoryForm.productCodeTo5);
 		}
-		
+		// 仕入入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_PURCHASE.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_FROM, referenceHistoryForm.supplierCodeFrom6);
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_TO, referenceHistoryForm.supplierCodeTo6);
@@ -234,7 +233,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 			map.put(ReferenceHistoryService.Param.DELIVERY_DATE_FROM, referenceHistoryForm.deliveryDateFrom6);
 			map.put(ReferenceHistoryService.Param.DELIVERY_DATE_TO, referenceHistoryForm.deliveryDateTo6);
 		}
-		
+		// 支払入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_PAYMENT.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_FROM, referenceHistoryForm.supplierCodeFrom7);
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_TO, referenceHistoryForm.supplierCodeTo7);
@@ -243,27 +242,27 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_FROM, referenceHistoryForm.productCodeFrom7);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_TO, referenceHistoryForm.productCodeTo7);
 		}
-		
+		// 入出庫入力
 		else if (REFERENCE_HISTORY_TARGET.VALUE_STOCK.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_FROM, referenceHistoryForm.productCodeFrom8);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_TO, referenceHistoryForm.productCodeTo8);
 			map.put(ReferenceHistoryService.Param.EAD_SLIP_CATEGORY, referenceHistoryForm.eadSlipCategory8);
 		}
-		
+		// 顧客マスタ
 		else if (REFERENCE_HISTORY_TARGET.VALUE_CUSTOMER.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_FROM, referenceHistoryForm.customerCodeFrom9);
 			map.put(ReferenceHistoryService.Param.CUSTOMER_CODE_TO, referenceHistoryForm.customerCodeTo9);
 			map.put(ReferenceHistoryService.Param.CRE_DATE_FROM, referenceHistoryForm.creDateFrom9);
 			map.put(ReferenceHistoryService.Param.CRE_DATE_TO, referenceHistoryForm.creDateTo9);
 		}
-		
+		// 商品マスタ
 		else if (REFERENCE_HISTORY_TARGET.VALUE_PRODUCT.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_FROM, referenceHistoryForm.productCodeFrom10);
 			map.put(ReferenceHistoryService.Param.PRODUCT_CODE_TO, referenceHistoryForm.productCodeTo10);
 			map.put(ReferenceHistoryService.Param.CRE_DATE_FROM, referenceHistoryForm.creDateFrom10);
 			map.put(ReferenceHistoryService.Param.CRE_DATE_TO, referenceHistoryForm.creDateTo10);
 		}
-		
+		// 仕入先マスタ
 		else if (REFERENCE_HISTORY_TARGET.VALUE_SUPPLIER.equals(referenceHistoryForm.outputTarget)) {
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_FROM, referenceHistoryForm.supplierCodeFrom11);
 			map.put(ReferenceHistoryService.Param.SUPPLIER_CODE_TO, referenceHistoryForm.supplierCodeTo11);
@@ -282,10 +281,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 見積入力履歴出力の設定をします.
 	 */
 	private void setup4Estimate() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME01;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -339,7 +338,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -370,10 +369,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 受注入力履歴出力の設定をします.
 	 */
 	private void setup4Rorder() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME02;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -438,7 +437,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -483,10 +482,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 売上入力履歴出力の設定をします.
 	 */
 	private void setup4Sales() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME03;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -599,7 +598,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -645,10 +644,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 入金入力履歴出力の設定をします.
 	 */
 	private void setup4Deposit() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME04;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -707,7 +706,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -738,10 +737,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 発注入力履歴出力の設定をします.
 	 */
 	private void setup4Porder() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME05;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -792,7 +791,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -833,10 +832,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 仕入入力履歴出力の設定をします.
 	 */
 	private void setup4Purchase() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME06;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -876,7 +875,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -921,10 +920,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 支払履歴出力の設定をします.
 	 */
 	private void setup4Payment() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME07;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -961,7 +960,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -999,10 +998,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 入出庫入力履歴出力の設定をします.
 	 */
 	private void setup4Stock() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME08;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1031,7 +1030,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1061,10 +1060,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 顧客マスタ履歴出力の設定をします.
 	 */
 	private void setup4Customer() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME09;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1119,7 +1118,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義（明細なし）
 		detailColList = new ArrayList<ReportColumnInfoDto>();
 		detailColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		detailColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1159,10 +1158,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 商品マスタ履歴出力の設定をします.
 	 */
 	private void setup4Product() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME10;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1243,7 +1242,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 		slipColList.add(new ReportColumnInfoDto("discountId",0,"labels.report.hist.discountMst.discountName"));
 
-		
+		// 明細部カラム定義（明細なし）
 		detailColList = null;
 	}
 
@@ -1251,10 +1250,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 仕入先マスタ履歴出力の設定をします.
 	 */
 	private void setup4Supplier() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME11;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1299,7 +1298,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義（明細なし）
 		detailColList = null;
 	}
 
@@ -1307,10 +1306,10 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 	 * 社員マスタ履歴出力の設定をします.
 	 */
 	private void setup4User() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME12;
 
-		
+		// 伝票部カラム定義
 		slipColList = new ArrayList<ReportColumnInfoDto>();
 		slipColList.add(new ReportColumnInfoDto("histId",0,"labels.report.hist.common.histId"));
 		slipColList.add(new ReportColumnInfoDto("actionType",0,"labels.report.hist.common.actionType"));
@@ -1331,7 +1330,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 		slipColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.report.hist.common.updDatetm"));
 		slipColList.add(new ReportColumnInfoDto("updUser",0,"labels.report.hist.common.updUser"));
 
-		
+		// 明細部カラム定義（明細なし）
 		detailColList = null;
 	}
 }

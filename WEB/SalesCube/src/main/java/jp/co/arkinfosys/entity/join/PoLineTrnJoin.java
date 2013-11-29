@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity.join;
 
 import jp.co.arkinfosys.entity.PoLineTrn;
@@ -20,14 +19,14 @@ public class PoLineTrnJoin extends PoLineTrn {
 	 */
 	public String dispStatus;
 
-	
+	// 棚番
 	public String rackCode;
 
-	
+	// 発注ロット
 	public String poLot;
-	
+	// 発注限度数
 	public String maxPoNum;
-	
+	// 在庫限度数
 	public String maxStockNum;
 
 }

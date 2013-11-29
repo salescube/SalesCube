@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import javax.annotation.Resource;
@@ -54,19 +53,19 @@ public class SearchProductDialogAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// セット分類リストを取得
 		this.searchProductDialogForm.setTypeCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_SET_TYPE);
 		this.searchProductDialogForm.setTypeCategoryList.add(0,
 				new LabelValueBean());
 
-		
+		// 標準化分類リストを取得
 		this.searchProductDialogForm.standardCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STANDARD);
 		this.searchProductDialogForm.standardCategoryList.add(0,
 				new LabelValueBean());
 
-		
+		// 状況分類リストを取得
 		this.searchProductDialogForm.statusCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRODUCT_STATUS);
 		this.searchProductDialogForm.statusCategoryList.add(0,

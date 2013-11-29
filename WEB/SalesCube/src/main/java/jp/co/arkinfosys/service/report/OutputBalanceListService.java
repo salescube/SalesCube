@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
 package jp.co.arkinfosys.service.report;
 
@@ -72,10 +72,10 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 出力対象を取得する
 			String outputTarget = (String) params.get(Param.OUTPUT_TARGET);
 
-			
+			// 買掛残高一覧か売上残高一覧か
 			if (Constants.OUTPUT_BALANCE_TARGET.VALUE_PORDER
 					.equals(outputTarget)) {
 				count = findPOrderBalanceCntByCondition(params);
@@ -101,10 +101,10 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 	public List<BeanMap> getOutputResult(BeanMap params)
 			throws ServiceException {
 		try {
-			
+			// 出力対象を取得する
 			String outputTarget = (String) params.get(Param.OUTPUT_TARGET);
 
-			
+			// 買掛残高一覧か売上残高一覧か
 			if (Constants.OUTPUT_BALANCE_TARGET.VALUE_PORDER
 					.equals(outputTarget)) {
 				return findPOrderBalanceByCondition(params);
@@ -153,7 +153,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 	public Integer findROrderBalanceCntByCondition(
 			Map<String, Object> conditions) throws ServiceException {
 		try {
-			return 1; 
+			return 1; // この時点ではカウントしない。(対象年月に未来日は指定されないことから、ほぼ間違いないく件数0件はあり得ないため。)
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -195,13 +195,13 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 			setConditionParam(conditions, param);
 			param.put(Param.SALES_CM_CATEGORY, Categories.SALES_CM_CATEGORY);
 
-			
+			// 新システムの売掛残高を表示する場合
 			List<BeanMap> beanList = new ArrayList<BeanMap>();
 			if (conditions.containsKey(Param.TARGET_DATE)
 					&& conditions.containsKey(Param.CUSTOMER_CODE_FROM)
 					&& conditions.containsKey(Param.CUSTOMER_CODE_TO)) {
 
-				
+				// 売掛残高の出力対象年月度
 				String targetYmLastDate = ValidateUtil
 				.getLastDateOfMonthFromYmFormat((String) conditions
 						.get(Param.TARGET_DATE));
@@ -214,23 +214,23 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 						.get(Param.CUSTOMER_CODE_TO));
 				for (String targetCustomerCode : targetCustomerCodeList) {
 
-					
+					// 売掛残高の取得
 					ArtBalance artBalance = artBalanceService
 					.getArtBalanceByDate(targetYmLastDate,
 							targetCustomerCode);
-					
+					// 売掛残高一覧表に表示できる値が無い場合は売掛残高一覧表に出力しない
 					if (isZeroPriceArtBalance(artBalance)) {
 						continue;
 					}
 
 					BeanMap beanMap = Beans.createAndCopy(BeanMap.class,
 							artBalance).execute();
-					
+					// 当月売掛残高を計算する
 					beanMap.put(Param.THIS_SALES_PRICE,
 							artBalance.salesPrice.add(artBalance.dctPrice)
 							.add(artBalance.rguPrice).add(
 									artBalance.etcPrice));
-					
+					// 売上取引区分の表示名を取得する
 					String salesCmCategory = (String) beanMap
 					.get(Param.SALES_CM_CATEGORY);
 					beanMap.remove(Param.SALES_CM_CATEGORY);
@@ -238,13 +238,13 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 							.findCategoryTrnByIdAndCode(
 									Categories.SALES_CM_CATEGORY,
 									salesCmCategory).categoryCodeName);
-					
-					
+					// 入金額の補正
+					//						BigDecimal depositPrice = (BigDecimal)beanMap.get(Param.DEPOSIT_PRICE);
 					beanMap.remove(Param.DEPOSIT_PRICE);
 					beanMap.put(Param.DEPOSIT_PRICE,
 							artBalance.depositPrice
 							.add(artBalance.adjPrice));
-					
+					// 回収率
 					if (artBalance.lastArtPrice.compareTo(new BigDecimal(
 					"0")) != 0) {
 						beanMap.put(Param.DEPOSIT_RATE,
@@ -254,7 +254,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 												MathContext.DECIMAL64));
 					}
 
-					
+					// 最終売上日、最終入金日を取得
 					BeanMap latestSalesDeposit = findLatestSalesDepositDateByCustomerCode(
 							targetCustomerCode, targetYmLastDate);
 					beanMap.put(Param.LATEST_SALES_DATE, latestSalesDeposit
@@ -344,7 +344,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 出力対象
 		if (conditions.containsKey(Param.OUTPUT_TARGET)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.OUTPUT_TARGET))) {
@@ -353,7 +353,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 			}
 		}
 
-		
+		// 対象年月
 		if (conditions.containsKey(Param.TARGET_DATE)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.TARGET_DATE))) {
@@ -362,7 +362,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_CODE))) {
@@ -371,7 +371,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 			}
 		}
 
-		
+		// 顧客コードFrom
 		if (conditions.containsKey(Param.CUSTOMER_CODE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.CUSTOMER_CODE_FROM))) {
@@ -380,7 +380,7 @@ public class OutputBalanceListService extends AbstractService<BeanMap> {
 			}
 		}
 
-		
+		// 顧客コードTo
 		if (conditions.containsKey(Param.CUSTOMER_CODE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.CUSTOMER_CODE_TO))) {

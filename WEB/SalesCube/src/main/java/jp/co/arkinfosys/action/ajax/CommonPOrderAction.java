@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.text.SimpleDateFormat;
@@ -235,19 +234,19 @@ public class CommonPOrderAction extends CommonResources {
 	 */
 	public String lgetSupplierTaxRate(Integer lrateId,
 			String ltaxShiftCategory, String ltargetDate) throws Exception {
-		
+		// 受け取った日付
 		java.sql.Date sqlDate = new java.sql.Date(DF_YMD.parse(ltargetDate)
 				.getTime());
 		String result = "";
-		
+		// レートを持たない＝国内仕入先なら
 		if (lrateId == null) {
-			
+			// かつ、税転嫁が外税伝票計あるいは外税締単位であるなら
 			if (ltaxShiftCategory != null) {
 				if ((CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL)
 						.equals(ltaxShiftCategory)
 						|| (CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS)
 								.equals(ltaxShiftCategory)) {
-					
+					// レートを取得し返す
 					try {
 						TaxRate taxRate = taxRateService.findTaxRateById(
 								CategoryTrns.TAX_TYPE_CTAX, sqlDate.toString());
@@ -270,7 +269,7 @@ public class CommonPOrderAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String getSupplierTaxRate() throws Exception {
-		
+		// 仕入先情報取得
 		SupplierJoin supplier;
 		try {
 			supplier = supplierService
@@ -280,7 +279,7 @@ public class CommonPOrderAction extends CommonResources {
 			throw e;
 		}
 		String result = "";
-		
+		// 仕入先情報が取得できて
 		if (supplier != null) {
 			result = lgetSupplierTaxRate(supplier.rateId,
 					supplier.taxShiftCategory, inputPOrderForm.targetDate);

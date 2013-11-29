@@ -1,9 +1,0 @@
-SELECT
-	UPD_FUNC,
-	UPD_DATETM,
-	UPD_USER
-FROM
-	EAD_SLIP_TRN_/*$domainId*/'DEFAULT'
-WHERE
-	EAD_SLIP_ID=/*eadSlipId*/'default'
-FOR UPDATE

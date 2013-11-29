@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.rorder;
 
 import java.text.DateFormat;
@@ -185,8 +184,8 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 	/** 完納区分初期値 */
 	public String defaultStatusName;
 	public String defaultStatusCode;
-	public String nowPurchasingStatusName; 
-	public String finishStatusName; 
+	public String nowPurchasingStatusName; // 分納中
+	public String finishStatusName; // 完納
 
 	/** 通販サイト受注データかどうか */
 	public boolean isOnlineOrder;
@@ -197,10 +196,10 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 	/** オンライン受注ＩＤ */
 	public String onlineOrderId;
 
-	public String dcCategory; 
-	public String dcName; 
-	public String dcTimezoneCategory; 
-	public String dcTimezone; 
+	public String dcCategory; // L 配送業者コード
+	public String dcName; // S 配送業者名
+	public String dcTimezoneCategory; // L 配送時間帯コード
+	public String dcTimezone; // S 配送時間帯文字列
 
 	public CategoryService categoryService;
 
@@ -383,9 +382,9 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		onlineOrderId = "";
 
 		initDc();
-		dcName = ""; 
-		dcTimezoneCategory = ""; 
-		dcTimezone = ""; 
+		dcName = ""; // 配送業者名
+		dcTimezoneCategory = ""; // 配送時間帯コード
+		dcTimezone = ""; // 配送時間帯文字列
 
 	}
 
@@ -393,7 +392,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 	 *  配送業者コードの初期化を行います.
 	 */
 	public void initDc() {
-		dcCategory = CategoryTrns.DC_CATEGORY_1; 
+		dcCategory = CategoryTrns.DC_CATEGORY_1; // 配送業者コード
 	}
 
 	/**
@@ -406,71 +405,71 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 			return;
 		}
 
-		
+		// 1番目をヘッダ情報として扱う
 		OnlineOrderWork work = list.get(0);
 
-		
+		// 受注番号　→空欄
 		this.roSlipId = "";
 
-		
+		// 受注日　→　仕入日付
 		this.roDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 
-		
+		// 納期指定日　→空欄
 		this.deliveryDate = "";
 
-		
+		// 出荷日　→仕入日付
 		this.shipDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		;
 
-		
+		// 受付番号　→order_id
 		this.receptNo = work.onlineOrderId;
 
-		
+		// 客先伝票番号　→空欄
 		this.customerSlipNo = "";
 
-		
+		// 備考 →　納入先注意
 		this.remarks = work.deliveryInst;
 
-		
+		// 顧客コード　→固定値
 		this.customerCode = Constants.EXCEPTIANAL_CUSTOMER_CODE.ONLINE_ORDER;
 
-		
+		// 顧客名～取引区分は後でActionで設定する（顧客マスタを引く必要があるため）
 
-		
+		// 納入先名
 		this.deliveryName = work.address3;
 
-		
+		// 事業所名
 		this.deliveryOfficeName = "";
 		this.deliveryOfficeKana = "";
 
-		
+		// 部署名
 		this.deliveryDeptName = "";
 
-		
+		// 郵便番号
 		this.deliveryZipCode = work.zipCode;
 
-		
+		// 住所
 		this.deliveryAddress1 = work.state + work.address1;
 		this.deliveryAddress2 = work.address2;
 
-		
+		// 担当者
 		this.deliveryPcName = work.recipientName;
 		this.deliveryPcKana = "";
 
-		
+		// 敬称
 		this.deliveryPcPre = "";
 		this.deliveryPcPreCategory = CategoryTrns.PREFIX_SAMA;
 
-		
+		// TEL
 		this.deliveryTel = work.shipTel;
 
-		
+		// E-MAIL
 		this.deliveryEmail = "";
 
-		
+		// FAX
 		this.deliveryFax = "";
 
-		
+		// オンライン受注ID（hidden）
 		this.onlineOrderId = work.onlineOrderId;
 	}
 
@@ -507,31 +506,31 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		String labelProductRemarks = MessageResourcesUtil
 				.getMessage("labels.productRemarks");
 
-		
+		// 通販サイト受注の場合の必須条件
 		if (Constants.EXCEPTIANAL_CUSTOMER_CODE.ONLINE_ORDER
 				.equals(this.customerCode)) {
-			
+			// 納入先担当者名
 			if (!StringUtil.hasLength(this.deliveryPcName)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.onlineorder.required", MessageResourcesUtil
 								.getMessage("labels.deliveryPcName")));
 			}
 
-			
+			// 納入先郵便番号
 			if (!StringUtil.hasLength(this.deliveryZipCode)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.onlineorder.required", MessageResourcesUtil
 								.getMessage("labels.deliveryZipCode")));
 			}
 
-			
+			// 納入先住所1
 			if (!StringUtil.hasLength(this.deliveryAddress1)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.onlineorder.required", MessageResourcesUtil
 								.getMessage("labels.deliveryAddress1")));
 			}
 
-			
+			// 納入先電話番号
 			if (!StringUtil.hasLength(this.deliveryTel)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.onlineorder.required", MessageResourcesUtil
@@ -541,27 +540,27 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 		boolean inputLine = false;
 
-		
-		
+		// 長さチェック
+		// 受付番号
 		if (StringUtil.hasLength(this.receptNo) && this.receptNo.length() > 30) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.maxlength", labelReceptNo, "30"));
 		}
 
-		
+		// 客先伝票番号
 		if (StringUtil.hasLength(this.customerSlipNo)
 				&& this.customerSlipNo.length() > 30) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.maxlength", labelCustomerSlipNo, "20"));
 		}
 
-		
+		// 摘要
 		if (StringUtil.hasLength(this.remarks) && this.remarks.length() > 120) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.maxlength", labelMemorandum, "120"));
 		}
 
-		
+		// 顧客コード
 		if (StringUtil.hasLength(this.customerCode)
 				&& this.customerCode.length() > Constants.CODE_SIZE.CUSTOMER) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -569,13 +568,13 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 					Constants.CODE_SIZE.CUSTOMER));
 		}
 
-		
+		// 前後関係チェック
 		try {
 			Date dtRoDate = DateFormat.getDateInstance().parse(this.roDate);
 			Date dtShipDate = DateFormat.getDateInstance().parse(this.shipDate);
 			Date dtDeliveryDate = DateFormat.getDateInstance().parse(
 					this.deliveryDate);
-			
+			// 受注日＜＝出荷日
 			if (StringUtil.hasLength(this.roDate)
 					&& StringUtil.hasLength(this.shipDate)) {
 				if (dtRoDate.after(dtShipDate)) {
@@ -584,7 +583,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 				}
 			}
-			
+			// 受注日＜＝納期指定日
 			if (StringUtil.hasLength(this.roDate)
 					&& StringUtil.hasLength(this.deliveryDate)) {
 				if (dtRoDate.after(dtDeliveryDate)) {
@@ -593,7 +592,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 				}
 			}
-			
+			// 出荷日＜＝納期指定日
 			if (StringUtil.hasLength(this.shipDate)
 					&& StringUtil.hasLength(this.deliveryDate)) {
 				if (dtShipDate.after(dtDeliveryDate)) {
@@ -603,11 +602,11 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 				}
 			}
 		} catch (ParseException e) {
-			
+			// 型チェックは済んでいる
 		}
 
 		for (ROrderLineDto line : lineList) {
-			
+			// [商品コード][数量][売上単価][売価金額]のいずれも入力がない場合は無視
 			if (!StringUtil.hasLength(line.productCode)
 					&& !StringUtil.hasLength(line.quantity)
 					&& !StringUtil.hasLength(line.unitRetailPrice)
@@ -615,63 +614,63 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 				continue;
 			}
 
-			
+			// 明細行が1件以上、存在する
 			inputLine = true;
 
-			
-			
+			// 必須チェック
+			// 商品コード
 			if (!StringUtil.hasLength(line.productCode)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelProductCode));
 			}
 
-			
+			// 数量
 			if (!StringUtil.hasLength(line.quantity)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelQuantity));
 			}
 
-			
+			// 仕入単価
 			if (!StringUtil.hasLength(line.unitCost)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelUnitCost));
 			}
 
-			
+			// 仕入金額
 			if (!StringUtil.hasLength(line.cost)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelCost));
 			}
 
-			
+			// 売上単価
 			if (!StringUtil.hasLength(line.unitRetailPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo,
 						labelUnitRetailPrice));
 			}
 
-			
+			// 売価金額
 			if (!StringUtil.hasLength(line.retailPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelRetailPrice));
 			}
 
-			
-			
+			// 長さチェック
+			// 商品コード
 			if (StringUtil.hasLength(line.productCode)
 					&& line.productCode.length() > 20) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.maxlength", line.lineNo, labelProductCode,
 						"20"));
 			}
-			
+			// 備考
 			if (StringUtil.hasLength(line.remarks)
 					&& line.remarks.length() > 120) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.maxlength", line.lineNo, labelRemarks,
 						"120"));
 			}
-			
+			// ピッキング備考
 			if (StringUtil.hasLength(line.eadRemarks)
 					&& line.eadRemarks.length() > 120) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -679,7 +678,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 						"120"));
 			}
 
-			
+			// 商品備考
 			if (StringUtil.hasLength(line.productRemarks)
 					&& line.productRemarks.length() > 120) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -687,14 +686,14 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 						labelProductRemarks, "120"));
 			}
 
-			
-			
-			
+			// 型チェック
+			// Float型
+			// 数量
 			if (StringUtil.hasLength(line.quantity)) {
 				try {
-					
-					
-					
+					//Float.parseFloat(line.quantity);
+					// 2010.04.21 Add Kaki
+					// 数値０チェック
 					float fquantity = Float.parseFloat(line.quantity);
 					if (Double.compare(fquantity, 0) == 0) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -708,13 +707,13 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 				}
 			}
 
-			
+			// 仕入単価
 			if (StringUtil.hasLength(line.unitCost)) {
 				try {
 					float funitCost = Float.parseFloat(line.unitCost);
 
-					
-					
+					// 数値０チェック
+					// 特殊コード商品の場合は0チェックを行わない。
 					if (!DiscountUtil.isExceptianalProduct(line.productCode)) {
 						if (Double.compare(funitCost, 0) == 0) {
 							errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -728,13 +727,13 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 									labelUnitCost));
 				}
 			}
-			
+			// 仕入金額
 			if (StringUtil.hasLength(line.cost)) {
 				try {
 					float fcost = Float.parseFloat(line.cost);
-					
-					
-					
+					// 2010.04.21 Add Kaki
+					// 数値０チェック
+					// 特殊コード商品の場合は0チェックを行わない。
 					if (!DiscountUtil.isExceptianalProduct(line.productCode)) {
 						if (Double.compare(fcost, 0) == 0) {
 							errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -748,12 +747,12 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 									labelCost));
 				}
 			}
-			
+			// 売上単価
 			if (StringUtil.hasLength(line.unitRetailPrice)) {
 				try {
-					
-					
-					
+					//Float.parseFloat(line.unitRetailPrice);
+					// 2010.04.21 Add Kaki
+					// 数値０チェック
 					float funitRetailPrice = Float
 							.parseFloat(line.unitRetailPrice);
 					if (Double.compare(funitRetailPrice, 0) == 0) {
@@ -767,12 +766,12 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 									labelUnitRetailPrice));
 				}
 			}
-			
+			// 売価金額
 			if (StringUtil.hasLength(line.retailPrice)) {
 				try {
-					
-					
-					
+					//Float.parseFloat(line.retailPrice);
+					// 2010.04.21 Add Kaki
+					// 数値０チェック
 					float fretailPrice = Float.parseFloat(line.retailPrice);
 					if (Double.compare(fretailPrice, 0) == 0) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -786,7 +785,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 				}
 			}
 		}
-		
+		// 明細行が1行以上、存在するかどうか
 		if (!inputLine) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.noline"));
@@ -808,7 +807,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 	 */
 	@Override
 	public void initializeScreenInfo() {
-		
+		// 入力担当者の設定
 		this.userId = userDto.userId;
 		this.userName = userDto.nameKnj;
 	}
@@ -822,11 +821,11 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 			lineDto.status = this.defaultStatusCode;
 		}
 
-		
+		// 受注日
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
 		this.roDate = sdf.format(new Date());
 
-		
+		// 出荷日
 		this.shipDate = sdf.format(new Date());
 	}
 
@@ -865,7 +864,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 	@Override
 	public void initCopy() throws ServiceException {
-		
+		// キー項目の初期化
 		this.roSlipId = "";
 
 		for (int i = 0; i < this.lineList.size(); i++) {

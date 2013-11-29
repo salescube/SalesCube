@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class EditBankAction extends AbstractEditAction<BankDto, BankDwb> {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validator = false)
+	@Execute(validator = false, reset = "initialize")
 	public String index() throws Exception {
 		super.init(null);
 		this.initList();
@@ -72,7 +71,7 @@ public class EditBankAction extends AbstractEditAction<BankDto, BankDwb> {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validator = false, urlPattern = "edit/{bankId}")
+	@Execute(validator = false, urlPattern = "edit/{bankId}", reset = "initialize")
 	public String edit() throws Exception {
 		this.editBankForm.bankId = StringUtil.decodeSL(this.editBankForm.bankId);
 		return doEdit(getKey());
@@ -84,9 +83,9 @@ public class EditBankAction extends AbstractEditAction<BankDto, BankDwb> {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validator = true, validate = "validate", input = "index", stopOnValidationError = false)
+	@Execute(validator = true, validate = "validate", input = "index", stopOnValidationError = false , reset = "reset")
 	public String insert() throws Exception {
-		
+		//BankIDの発番
 		editBankForm.bankId = bankService.makeBankId();
 		return doInsert();
 	}
@@ -97,7 +96,7 @@ public class EditBankAction extends AbstractEditAction<BankDto, BankDwb> {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validator = true, validate = "validate", input = "initEdit", stopOnValidationError = false)
+	@Execute(validator = true, validate = "validate", input = "initEdit", stopOnValidationError = false , reset = "reset")
 	public String update() throws Exception {
 		return doUpdate();
 	}
@@ -108,7 +107,7 @@ public class EditBankAction extends AbstractEditAction<BankDto, BankDwb> {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validator = false)
+	@Execute(validator = false , reset = "initialize")
 	public String delete() throws Exception {
 		return doDelete();
 	}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -103,12 +102,12 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// 既存データの読み込みフラグをOFFにする
 		inputEntrustStockForm.isExistSlipRead = false;
 
 		super.index();
 
-		
+		//明細行を消去
 		inputEntrustStockForm.entrustEadLineTrnDtoList = null;
 
 		return this.getInputURIString();
@@ -147,31 +146,31 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 		try {
 			inputEntrustStockForm.copySlipId = StringUtil.decodeSL(inputEntrustStockForm.copySlipId);
 
-			
+			// 伝票複写ダイアログで選択された委託入出庫区分で、委託入出庫区分を初期化する
 			inputEntrustStockForm.entrustEadCategory = inputEntrustStockForm.copySlipFixedEntrustEadCategory;
 
-			
+			// copy元 発注伝票の取得
 			PoSlipTrn poSlipTrnSingle = poSlipService
 					.loadPOSlip(inputEntrustStockForm.copySlipId);
 			List<PoLineTrnJoin> poLineTrnList = poSlipService
 					.loadPOLine(inputEntrustStockForm.copySlipId);
 
-			
+			// 委託在庫発注の伝票ではない場合、複写しない
 			if(poSlipTrnSingle != null && ! CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) )  {
 				poSlipTrnSingle = null;
 			}
 
-			
+			// 委託入出庫番号はクリアする
 			inputEntrustStockForm.entrustEadSlipId = "";
 
-			
+			// 発注番号が存在しない
 			if(poSlipTrnSingle == null){
-				
+				// 発注番号をクリアする
 				inputEntrustStockForm.poSlipId = "";
-				
+				// 委託入出庫区分をクリアする
 				inputEntrustStockForm.entrustEadCategory = "";
 
-				
+				// ユーザの権限を設定
 				inputEntrustStockForm.menuUpdate = userDto
 						.isMenuUpdate(Constants.MENU_ID.INPUT_ENTRUST_STOCK);
 
@@ -179,18 +178,18 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 						new ActionMessage("errors.copy.notexist"));
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 
-				
+				// プルダウンの初期化
 				createList();
 
 				return Mapping.INPUT;
 			}
 
+//			this.inputEntrustStockForm.reset();
 
-
-			
+			// 複写対象の明細が存在しない場合エラーとする
 			boolean allZero = true;
 			for (PoLineTrnJoin poLine : poLineTrnList) {
-				
+				// 発注伝票明細が伝票複写対象でない場合伝票複写しない
 				if( ! isCopyTargetLine(inputEntrustStockForm.entrustEadCategory, poLine.status ) ){
 					continue;
 				}
@@ -198,12 +197,12 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 				break;
 			}
 			if( allZero ){
-				
+				// 発注番号をクリアする
 				inputEntrustStockForm.poSlipId = "";
-				
+				// 委託入出庫区分をクリアする
 				inputEntrustStockForm.entrustEadCategory = "";
 
-				
+				// ユーザの権限を設定
 				inputEntrustStockForm.menuUpdate = userDto
 						.isMenuUpdate(Constants.MENU_ID.INPUT_ENTRUST_STOCK);
 
@@ -212,34 +211,34 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 
-				
+				// プルダウンの初期化
 				createList();
 
 				return Mapping.INPUT;
 			}
 
-			
+			// 数量端数処理
 			Converter numConv = new NumberConverter(
 					super.mineDto.productFractCategory,
 					super.mineDto.numDecAlignment, true);
-			
+			// 円単価端数処理
 			Converter yenConv = new NumberConverter(
 					poSlipTrnSingle.priceFractCategory, 0, true);
-			
+			// 外貨単価端数処理
 			Converter dolConv = new NumberConverter(
 					poSlipTrnSingle.priceFractCategory,
 					super.mineDto.unitPriceDecAlignment, true);
 
-			
+			// 伝票
 			inputEntrustStockForm.poSlipId = String
 					.valueOf(poSlipTrnSingle.poSlipId);
 			inputEntrustStockForm.supplierDate = StringUtil
 					.getCurrentDateString(Constants.FORMAT.DATE);
 			inputEntrustStockForm.deliveryDate = StringUtil.getDateString(
 					Constants.FORMAT.DATE, poSlipTrnSingle.deliveryDate);
+//			inputEntrustStockForm.remarks = poSlipTrnSingle.remarks;
 
-
-			
+			// 仕入先情報
 			inputEntrustStockForm.supplierCode = poSlipTrnSingle.supplierCode;
 			inputEntrustStockForm.supplierName = poSlipTrnSingle.supplierName;
 			inputEntrustStockForm.priceFractCategory = poSlipTrnSingle.priceFractCategory;
@@ -247,12 +246,12 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			inputEntrustStockForm.taxFractCategory = poSlipTrnSingle.taxFractCategory;
 			inputEntrustStockForm.supplierCmCategory = poSlipTrnSingle.supplierCmCategory;
 
-			
+			// 明細
 			inputEntrustStockForm.entrustEadLineTrnDtoList = new ArrayList<EntrustEadLineTrnDto>();
 			int lineNo = 0;
 
 			for (PoLineTrnJoin poLineTrn : poLineTrnList) {
-				
+				// 発注伝票明細が伝票複写対象でない場合伝票複写しない
 				if( ! isCopyTargetLine(inputEntrustStockForm.entrustEadCategory, poLineTrn.status ) ){
 					continue;
 				}
@@ -274,13 +273,13 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 				lineNo++;
 				dto.lineNo = String.valueOf(lineNo);
 
-				
+				// 発注伝票の発注残数を数量にセットする
 				dto.quantity = numConv.getAsString(poLineTrn.restQuantity);
 
-				
+				// 備考は複写しない
 				dto.remarks = "";
 
-				
+				// 商品備考の取得
 				ProductJoin pj = inputEntrustStockService.findProductByCode(poLineTrn.productCode);
 				if( pj != null ) {
 					dto.productRemarks = pj.remarks;
@@ -289,13 +288,13 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 				inputEntrustStockForm.entrustEadLineTrnDtoList.add(dto);
 			}
 
-			
+			// リストを埋める
 			AbstractSlipDto<EntrustEadLineTrnDto> dto = inputEntrustStockForm.copyToDto();
 			dto.setLineDtoList(inputEntrustStockForm.getLineList());
 			dto.fillList();
 			inputEntrustStockForm.setLineList(dto.getLineDtoList());
 
-			
+			// ユーザの権限を設定
 			inputEntrustStockForm.userId = this.userDto.userId;
 			inputEntrustStockForm.userName = this.userDto.nameKnj;
 			inputEntrustStockForm.menuUpdate = userDto
@@ -306,13 +305,13 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			throw e;
 		}
 
-		
+		// 既存データの読み込みフラグをOFFにする
 		inputEntrustStockForm.isExistSlipRead = false;
 
-		
+		// プルダウンの初期化
 		createList();
 
-		
+		// 初期値を設定する
 		inputEntrustStockForm.initCopy();
 
 		return Mapping.INPUT;
@@ -327,7 +326,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 	private boolean isCopyTargetLine(String entrustEadCategory, String lineStatus) {
 
 		if( CategoryTrns.ENTRUST_EAD_CATEGORY_ENTER.equals(entrustEadCategory) ) {
-			
+			// 委託入庫の場合
 			if( Constants.STATUS_PORDER_LINE.ORDERED.equals(lineStatus) ) {
 				return true;
 			}
@@ -335,23 +334,23 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 		}
 
 		if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(entrustEadCategory) ) {
-			
+			// 委託出庫の場合
 			if( Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_MAKED.equals(lineStatus) ) {
 				return true;
 			}
 			return false;
 		}
 
-		return false;	
+		return false;	// 委託入庫でも委託出庫でもない場合、falseにしてしまう。(通常ありえない)
 	}
 
     /**
      * アクションフォームを初期化します.
      */
     protected void initForm() {
-		
+		// Formを初期化
 		inputEntrustStockForm.reset();
-		
+		//inputEntrustStockForm.eadDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		inputEntrustStockForm.menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_STOCK);
 		inputEntrustStockForm.entrustEadCategory = "";
 		inputEntrustStockForm.userId = this.userDto.userId;
@@ -475,7 +474,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 	protected void createList() throws Exception {
 	   	categoryList = inputEntrustStockService.getCategoryList();
 
-    	
+    	// 明細行が複数行ある時は、委託入出庫区分の選択を変更できないようにする(選択中の区分以外の要素を削除する)
     	if(inputEntrustStockForm.entrustEadLineTrnDtoList != null && inputEntrustStockForm.entrustEadLineTrnDtoList.size() > 0 ) {
 
     		List<LabelValueBean> removeLabelList = new ArrayList<LabelValueBean>();
@@ -488,7 +487,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
     			categoryList.remove(removelabelValueBean);
     		}
     	}else{
-    		
+    		// 先頭に空白行を挿入
 			LabelValueBean bean = new LabelValueBean();
 			bean.setValue("");
 			bean.setLabel("");
@@ -505,39 +504,39 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
 		try {
-			
+			// 権限の取得
 			inputEntrustStockForm.menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_ENTRUST_STOCK);
 
-			
+			// DTOの取得
 			EntrustEadSlipTrnDto entrustEadSlipTrnDto = (EntrustEadSlipTrnDto)inputEntrustStockService.loadBySlipId(inputEntrustStockForm.entrustEadSlipId);
-			
+			// 存在する委託入出庫伝票のみ参照
 			if( entrustEadSlipTrnDto == null ){
-				
+				// 存在なしメッセージ表示
 				String strLabel = MessageResourcesUtil.getMessage("erroes.db.eadSlip");
 
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.notExist",strLabel));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 
-				
+				// 検索画面へ戻る
 				return true;
 			}
 
-			
+			// DTOの値をFormへコピー
 			Beans.copy(entrustEadSlipTrnDto, inputEntrustStockForm).execute();
 
-			
+			// 明細情報をロード
 			List<EntrustEadLineTrnDto> lineList =entrustEadSlipTrnDto.getLineDtoList();
 			inputEntrustStockForm.setLineList(lineList);
 
-			
+			// 委託出庫の場合は、印刷済みかどうかのメッセージを表示する
 			if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(inputEntrustStockForm.entrustEadCategory) ) {
 				if(entrustEadSlipTrnDto.dispatchOrderPrintCount == null || "0".equals(entrustEadSlipTrnDto.dispatchOrderPrintCount) ) {
-					
+					//印刷未実施の伝票
 					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("infos.entrustDispatchPrint.yet"));
 				} else {
-					
+					//印刷済み伝票
 					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("infos.entrustDispatchPrint.already"));
 				}
@@ -547,17 +546,17 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
 
-		
+		// 既存データの読み込みフラグをONにする
 		inputEntrustStockForm.isExistSlipRead = true;
 
-		
+		// 委託出庫の場合、委託出庫フラグをONにする
 		if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(inputEntrustStockForm.entrustEadCategory) ) {
 			inputEntrustStockForm.isEntrustDispatch = true;
 		}
@@ -581,7 +580,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 		String labelQuantity = MessageResourcesUtil.getMessage("labels.quantity");
 		String labelRemarks = MessageResourcesUtil.getMessage("labels.remarks");
 
-		
+		// 委託入出庫日の未来日チェック
 		Boolean resultEadDateFutureCheck = ValidateUtil.dateIsFuture(inputEntrustStockForm.entrustEadDate);
 		if( resultEadDateFutureCheck != null && resultEadDateFutureCheck == true ) {
 			err = new ActionMessage("errors.dateFuture", MessageResourcesUtil.getMessage("labels.entrustEadDate"));
@@ -592,44 +591,44 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 
 		if(inputEntrustStockForm.entrustEadLineTrnDtoList != null) {
 			for(EntrustEadLineTrnDto entrustEadLineTrnDto : inputEntrustStockForm.entrustEadLineTrnDtoList) {
-				
+				// チェックされていない行は処理しない(但し更新時はチェックしない)
 				if ( ! inputEntrustStockForm.isExistSlipRead && entrustEadLineTrnDto.checkEadLine == null ) {
 					continue;
 				}
 
-				
+				// 商品コード
 				if(!StringUtil.hasLength(entrustEadLineTrnDto.productCode)) {
 					continue;
 				}
 
-				
+				// 明細行が1件以上、存在する
 				inputLine = true;
 
-				
+				// 必須チェック
 
-				
+				// 数量
 				err = ValidateUtil.required(entrustEadLineTrnDto.quantity, "errors.line.required",
 						new Object[] { entrustEadLineTrnDto.lineNo, labelQuantity });
 				addError(errors, err);
 
-				
+				// 長さチェック
 
-				
+				// 商品コード
 				if(StringUtil.hasLength(entrustEadLineTrnDto.productCode)) {
 					err = ValidateUtil.maxlength(entrustEadLineTrnDto.productCode, CODE_SIZE.PRODUCT, "errors.line.maxlength",
 							new Object[] { entrustEadLineTrnDto.lineNo, labelProductCode, Integer.toString( CODE_SIZE.PRODUCT ) });
 					addError(errors, err);
 				}
-				
+				// 備考
 				if(StringUtil.hasLength(entrustEadLineTrnDto.remarks)) {
 					err = ValidateUtil.maxlength(entrustEadLineTrnDto.remarks, 120, "errors.line.maxlength",
 							new Object[] { entrustEadLineTrnDto.lineNo, labelRemarks, "120" });
 					addError(errors, err);
 				}
 
-				
+				// 型チェック
 
-				
+				// 数量
 				boolean quantityType = false;
 				if(StringUtil.hasLength(entrustEadLineTrnDto.quantity)) {
 					err = ValidateUtil.intRange(entrustEadLineTrnDto.quantity, 1, null, labelQuantity);
@@ -642,9 +641,9 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 					}
 				}
 
-				
+				// 値チェック（マスタ存在確認）
 
-				
+				// 商品コード
 				if(StringUtil.hasLength(entrustEadLineTrnDto.productCode)) {
 					Product product = inputEntrustStockService.findProductByCode(entrustEadLineTrnDto.productCode);
 					if(product == null) {
@@ -657,7 +656,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			}
 		}
 
-		
+		// 明細行が1行以上、存在するかどうか
 		if(!inputLine) {
 			err = new ActionMessage("errors.nocheck");
 			addError(errors, err);
@@ -681,20 +680,20 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 	@Override
 	public ActionMessages validateAtDeleteSlip() throws ServiceException {
 
-		
-		
-		
+		// DTOの取得
+		//EntrustEadSlipTrnDto entrustEadSlipTrnDto = Beans.createAndCopy(EntrustEadSlipTrnDto.class, inputEntrustStockForm).execute();
+		// DTOの取得
 		EntrustEadSlipTrnDto entrustEadSlipTrnDto = inputEntrustStockService.createEntrustEadSlipTrnDto(inputEntrustStockForm.entrustEadSlipId);
 
-		int errRowNo=1;	
-		boolean hasError = false;	
+		int errRowNo=1;	// エラー箇所の行番号格納用
+		boolean hasError = false;	//伝票状態のエラーチェックで、削除エラーの明細が見つかったかどうか
 
-		
+		// 委託出庫伝票削除の場合、明細が1件以上仕入されていた場合削除不可
 		if( CategoryTrns.ENTRUST_EAD_CATEGORY_DISPATCH.equals(entrustEadSlipTrnDto.entrustEadCategory) ) {
 			for(EntrustEadLineTrnDto entrustEadLineTrnDto : entrustEadSlipTrnDto.getLineDtoList()) {
 				PoLineTrn poLineTrn = poSlipService.getPOLineTrnByPoLineId(entrustEadLineTrnDto.poLineId);
 				if(Constants.STATUS_PORDER_LINE.NOWPURCHASING.equals(poLineTrn.status) || Constants.STATUS_PORDER_LINE.PURCHASED.equals(poLineTrn.status)) {
-					
+					// 削除不可メッセージ表示
 					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 										new ActionMessage("errors.delete.entrustPurchased", errRowNo));
 					hasError = true;
@@ -703,12 +702,12 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			}
 		}
 
-		errRowNo=1;	
-		
+		errRowNo=1;	// エラー箇所の行番号格納用
+		// 委託入庫伝票削除の場合、明細が1件以上委託出庫されていた場合削除不可
 		if( CategoryTrns.ENTRUST_EAD_CATEGORY_ENTER.equals(entrustEadSlipTrnDto.entrustEadCategory) ) {
 			for(EntrustEadLineTrnDto entrustEadLineTrnDto : entrustEadSlipTrnDto.getLineDtoList()) {
 				if( StringUtil.hasLength(entrustEadLineTrnDto.relEntrustEadLineId) ) {
-					
+					// 削除不可メッセージ表示
 					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 										new ActionMessage("errors.delete.entrustDelivered", errRowNo));
 					hasError = true;
@@ -717,7 +716,7 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			errRowNo++;
 		}
 
-		
+		// 伝票状態チェック処理でエラーが1件以上あった場合、エラー表示をする
 		if(hasError) {
 			ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 		}

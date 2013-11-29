@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.text.SimpleDateFormat;
@@ -197,7 +196,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -222,7 +221,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 	@Override
 	public List<RateJoin> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
-		
+		// 未使用メソッド
 		return new ArrayList<RateJoin>();
 	}
 
@@ -254,56 +253,56 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
 
-		
+		// レートID
 		if (conditions.containsKey(Param.RATE_ID)) {
 			param.put(Param.RATE_ID, conditions.get(Param.RATE_ID));
 		}
 
-		
+		// レートタイプ名称
 		if (conditions.containsKey(Param.NAME)) {
 			param.put(Param.NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(Param.NAME)));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(Param.REMARKS)) {
 			param.put(Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(Param.REMARKS)));
 		}
 
-		
+		// 検索期間（開始）
 		if (conditions.containsKey(Param.START_DATE_1)) {
 			param.put(Param.START_DATE_1, (String) conditions
 					.get(Param.START_DATE_1));
 		}
 
-		
+		// 検索期間（終了）
 		if (conditions.containsKey(Param.START_DATE_2)) {
 			param.put(Param.START_DATE_2, (String) conditions
 					.get(Param.START_DATE_2));
 		}
 
-		
+		// ソートカラムを設定する
 		if (Param.RATE_ID.equals(sortColumn)) {
-			
+			// レートタイプID
 			param.put(Param.SORT_COLUMN_RATE, COLUMN_RATE_ID);
 		} else if (Param.NAME.equals(sortColumn)) {
-			
+			// レートタイプ名称
 			param.put(Param.SORT_COLUMN_RATE, COLUMN_NAME);
 		} else if (Param.RATE.equals(sortColumn)) {
-			
+			// レート
 			param.put(Param.SORT_COLUMN_RATE, COLUMN_RATE);
 		} else if (Param.START_DATE.equals(sortColumn)) {
-			
+			// 適用開始日
 			param.put(Param.SORT_COLUMN_RATE, COLUMN_START_DATE);
 		} else if (Param.REMARKS.equals(sortColumn)) {
-			
+			// 備考
 			param.put(Param.SORT_COLUMN_RATE, COLUMN_REMARKS);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -356,18 +355,18 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 	 */
 	@Override
 	public void deleteRecord(RateDto dto) throws Exception {
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.RATE_ID, dto.rateId);
 		this.lockRecordBySqlFile("rate/LockRateByRateId.sql", param,
 				dto.updDatetm);
 
-		
+		// レートデータを処理
 		param.put(Param.START_DATE, null);
 		List<RateTrn> list = this.selectBySqlFile(RateTrn.class,
 				"rate/FindRateTrnsByRateId.sql", param).getResultList();
 		for (RateTrn rateTrn : list) {
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(Param.RATE_ID, rateTrn.rateId);
 			param.put(Param.START_DATE, rateTrn.startDate);
@@ -378,7 +377,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 			this.updateBySqlFile("rate/DeleteRateTrn.sql", param).execute();
 		}
 
-		
+		// 削除
 		param = super.createSqlParam();
 		param.put(Param.RATE_ID, dto.rateId);
 		this.updateBySqlFile("rate/DeleteRate.sql", param).execute();
@@ -396,10 +395,10 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 			return;
 		}
 
-		
+		// 登録
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// 自動発番
 		long newRateId = seqMakerService.nextval(Rate.TABLE_NAME);
 		dto.rateId = String.valueOf(newRateId);
 
@@ -411,7 +410,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 
 		this.updateBySqlFile("rate/InsertRate.sql", param).execute();
 
-		
+		// レートデータを登録する
 		if (dto.rateTrnList != null) {
 			for (RateTrnDto trn : dto.rateTrnList) {
 				param = super.createSqlParam();
@@ -437,13 +436,13 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.RATE_ID, dto.rateId);
 		this.lockRecordBySqlFile("rate/LockRateByRateId.sql", param,
 				dto.updDatetm);
 
-		
+		// 更新
 		param = super.createSqlParam();
 
 		BeanMap rateInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -453,9 +452,9 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 		param.putAll(rateInfo);
 		this.updateBySqlFile("rate/UpdateRate.sql", param).execute();
 
-		
+		// レートデータを更新する
 
-		
+		// 削除済みデータをまず削除する
 		String[] values = dto.deletedRateId.split(",");
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
 		if (values != null) {
@@ -478,7 +477,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 
 				param.putAll(trnInfo);
 
-				
+				// 削除
 				super.updateAudit(RateTrn.TABLE_NAME, new String[] {
 						Param.RATE_ID, Param.START_DATE }, new Object[] {
 						trn.rateId, trn.startDate });
@@ -493,7 +492,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 					isNew = true;
 					trn.rateId = dto.rateId;
 				}
-				
+				// 更新
 				param = super.createSqlParam();
 				BeanMap trnInfo = Beans.createAndCopy(BeanMap.class, trn)
 						.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -505,7 +504,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 							param).execute();
 				}
 				if (sqlResult == 0) {
-					
+					// レコードがなかったから追加
 					this.updateBySqlFile("rate/InsertRateTrn.sql", param)
 							.execute();
 				}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.Serializable;
@@ -89,7 +88,7 @@ public class MenuService extends AbstractService<MenuJoin> {
 			return new ArrayList<MenuDto>();
 		}
 
-		
+		// メニューIDとMenuDtoのマップを作成
 		Map<String, MenuDto> tempMap = new HashMap<String, MenuDto>();
 		if (menuJoinList == null || menuJoinList.size() == 0) {
 			return new ArrayList<MenuDto>();
@@ -100,13 +99,13 @@ public class MenuService extends AbstractService<MenuJoin> {
 			tempMap.put(menuRoleJoin.menuId, menuDto);
 		}
 
-		
+		// 子メニューを親メニューに従属させ、階層構造を作成する
 		for (Entry<String, MenuDto> entry : tempMap.entrySet()) {
 			MenuDto menuDto = entry.getValue();
 			if (menuDto.parentId == null) {
 				continue;
 			}
-			
+			// 子メニューの場合
 			MenuDto parentMenuDto = tempMap.get(menuDto.parentId);
 			menuDto.parent = parentMenuDto;
 
@@ -116,17 +115,17 @@ public class MenuService extends AbstractService<MenuJoin> {
 			parentMenuDto.subMenuDtoList.add(menuDto);
 		}
 
-		
+		// 親メニューのリストを作成する
 		List<MenuDto> menuDtoList = new ArrayList<MenuDto>();
 		for (Entry<String, MenuDto> entry : tempMap.entrySet()) {
 			MenuDto menuDto = entry.getValue();
 			if (menuDto.parentId != null) {
-				
+				// 子メニュー
 				continue;
 			}
 
 			if (menuDto.subMenuDtoList == null) {
-				
+				// 子メニューを持たない親メニュー
 				continue;
 			}
 			Collections.sort(menuDto.subMenuDtoList, new MenuComparator());

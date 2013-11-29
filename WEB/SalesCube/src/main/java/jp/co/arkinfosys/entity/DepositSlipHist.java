@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.math.BigDecimal;
@@ -25,7 +24,7 @@ import javax.persistence.Transient;
 @Entity
 public class DepositSlipHist {
 	@Transient
-	static final public String TABLE_NAME = "DEPOSIT_SLIP_TRN_HIST";	
+	static final public String TABLE_NAME = "DEPOSIT_SLIP_TRN_HIST";	// 入金伝票履歴
 
 	/**
 	 *

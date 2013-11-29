@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -42,16 +41,16 @@ public class SearchProductClassAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 分類（大）
 		this.searchProductClassForm.classCode1List = productClassService
 				.findAllProductClass1LabelValueBeanList();
 		this.searchProductClassForm.classCode1List.add(0, new LabelValueBean());
 
-		
+		// 分類（中）
 		this.searchProductClassForm.classCode2List = new ArrayList<LabelValueBean>();
 		this.searchProductClassForm.classCode2List.add(new LabelValueBean());
 
-		
+		// 分類（小）
 		this.searchProductClassForm.classCode3List = new ArrayList<LabelValueBean>();
 		this.searchProductClassForm.classCode3List.add(new LabelValueBean());
 	}

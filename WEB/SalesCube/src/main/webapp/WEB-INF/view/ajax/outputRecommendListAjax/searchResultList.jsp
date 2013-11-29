@@ -51,7 +51,7 @@
 	<bean:define id="PO_QUANTITY_WIDTH" value="60px"/>
 </c:if>
 
-			<table class="forms" style="width: ${TABLE_WIDTH};">
+			<table class="forms detail_info" style="width: ${TABLE_WIDTH};">
 				<colgroup>
 <c:if test='${!isOutputExcel && ((searchPOCategory == IMMEDIATELY_PORDER && searchImmediatelyPOCategory == NORMAL_PORDER) || searchPOCategory == ENTRUST_PORDER)}'>
 					<col span="1" style="width: 35px;">
@@ -81,10 +81,10 @@
 				<thead>
 				<tr>
 <c:if test='${!isOutputExcel && ((searchPOCategory == IMMEDIATELY_PORDER && searchImmediatelyPOCategory == NORMAL_PORDER) || searchPOCategory == ENTRUST_PORDER)}'>
-					<th class="xl64" rowspan="2"><bean:message key='words.action.select'/></th><!-- 選択 -->
+					<th class="xl64 rd_top_left" rowspan="2" style="height: 30px;"><bean:message key='words.action.select'/></th><!-- 選択 -->
 </c:if>
 <c:if test='${searchPOCategory == IMMEDIATELY_PORDER && searchImmediatelyPOCategory == MOVE_ENTRUST_STOCK}'>
-					<th class="xl65" rowspan="2" style='cursor: pointer;' onclick="sort('poSlipId')">
+					<th class="xl65 rd_top_left" rowspan="2" style='cursor: pointer; height: 30px;"' onclick="sort('poSlipId')">
 						発注伝票番号
 						<c:if test='${!isOutputExcel}'>
 							<span id="sortStatus_poSlipId" style="color: blue">
@@ -100,11 +100,14 @@
 						</c:if>
 					</th>
 </c:if>
-					<th class="xl65" colspan="${INFO_COLSPAN}" ><bean:message key='titles.productInfos'/></th><!-- 商品 -->
+					<th class="xl65 rd_top_left rd_top_right" colspan="${INFO_COLSPAN}" style="height: 30px; border-bottom: 1px solid #555555;">
+						<bean:message key='titles.productInfos'/>
+					</th><!-- 商品 -->
+
 				</tr>
 				<tr>
 					<c:forEach var="colInfo" items="${columnInfoList}" varStatus="status">
-						<th class="xl64" id='result_${f:h(colInfo.itemId)}'
+						<th class="xl64" style="height: 30px;" id='result_${f:h(colInfo.itemId)}'
 							<c:if test='${colInfo.sortFlag=="1"}'>
 								style='cursor: pointer;' onclick="sort('${f:h(colInfo.itemId)}')"
 							</c:if>
@@ -137,18 +140,18 @@
 
 <c:if test='${searchPOCategory == IMMEDIATELY_PORDER && searchImmediatelyPOCategory == MOVE_ENTRUST_STOCK}'>
 					<td class="xl70"  style="text-align:center;">
-						${f:h(rowData.poSlipId)}
+						&nbsp;${f:h(rowData.poSlipId)}&nbsp;
 					</td>
 </c:if>
 
 					<td class="xl70"  style="text-align:left;">
-						${f:h(rowData.productCode)}
+						&nbsp;${f:h(rowData.productCode)}&nbsp;
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].productCode" id="searchResultList[${f:h(s.index)}].productCode"
 						value="${rowData.productCode}"/>
 </c:if>
 					</td>
-					<td class="xl67"  style="text-align: right">
+					<td class="xl67"  style="text-align: right">&nbsp;
 <c:if test='${searchPOCategory == IMMEDIATELY_PORDER && searchImmediatelyPOCategory == MOVE_ENTRUST_STOCK}'>
 					<span class="num" >
 						${rowData.entrustQuantity}
@@ -164,11 +167,11 @@
 						<input type="text" name="searchResultList[${f:h(s.index)}].pOrderQuantity" id="searchResultList[${f:h(s.index)}].pOrderQuantity" style="width:53px;"  tabindex="${f:h(s.index)*2+1001}"
 						value="${rowData.pOrderQuantity}" maxlength="${f:h(ML_QUANTITY)}" class="EnableTabindex BDCexecTarget numeral_commas num"/>
 						</c:if>
-</c:if>
+</c:if>&nbsp;
 					</td>
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.poLot)}
+						&nbsp;${f:h(rowData.poLot)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].poLot"
@@ -178,7 +181,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.leadTime)}
+						&nbsp;${f:h(rowData.leadTime)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].leadTime"
@@ -188,7 +191,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.avgShipCount)}
+						&nbsp;${f:h(rowData.avgShipCount)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].avgShipCount"
@@ -198,7 +201,7 @@
 
 					<td class="xl66"  style="text-align: right">
 						<span class="per" >
-						${f:h(rowData.salesStandardDeviation)}
+						&nbsp;${f:h(rowData.salesStandardDeviation)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].salesStandardDeviation"
@@ -208,7 +211,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.stockQuantity)}
+						&nbsp;${f:h(rowData.stockQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].stockQuantity"
@@ -218,7 +221,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.mineSafetyStock)}
+						&nbsp;${f:h(rowData.mineSafetyStock)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].mineSafetyStock"
@@ -228,7 +231,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.poNum)}
+						&nbsp;${f:h(rowData.poNum)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].poNum"
@@ -238,7 +241,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.entrustQuantity)}
+						&nbsp;${f:h(rowData.entrustQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].entrustQuantity"
@@ -248,7 +251,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.entrustSafetyStock)}
+						&nbsp;${f:h(rowData.entrustSafetyStock)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].entrustSafetyStock"
@@ -258,7 +261,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.entrustPoNum)}
+						&nbsp;${f:h(rowData.entrustPoNum)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].entrustPoNum"
@@ -268,7 +271,7 @@
 
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.holdTerm)}
+						&nbsp;${f:h(rowData.holdTerm)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].holdTerm"
@@ -277,7 +280,7 @@
 					</td>
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.holdQuantity)}
+						&nbsp;${f:h(rowData.holdQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].holdQuantity"
@@ -286,7 +289,7 @@
 					</td>
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.poRestQuantity)}
+						&nbsp;${f:h(rowData.poRestQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].poRestQuantity"
@@ -295,7 +298,7 @@
 					</td>
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.entrustRestQuantity)}
+						&nbsp;${f:h(rowData.entrustRestQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].entrustRestQuantity"
@@ -304,7 +307,7 @@
 					</td>
 					<td class="xl67"  style="text-align: right">
 						<span class="num" >
-						${f:h(rowData.roRestQuantity)}
+						&nbsp;${f:h(rowData.roRestQuantity)}&nbsp;
 						</span>
 <c:if test='${!isOutputExcel}'>
 						<input type="hidden" name="searchResultList[${f:h(s.index)}].roRestQuantity"

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import jp.co.arkinfosys.form.AbstractSearchForm;
@@ -50,10 +49,10 @@ public abstract class AbstractSearchAction<DTOCLASS> extends CommonResources {
 
 			AbstractSearchForm<DTOCLASS> form = this.getActionForm();
 
-			
+			// 検索画面の権限を取得する
 			form.isUpdate = super.userDto.isMenuUpdate(this.getSearchMenuID());
 
-			
+			// 入力画面の表示権限を取得する
 			form.isInputValid = super.userDto
 					.isMenuValid(this.getInputMenuID());
 

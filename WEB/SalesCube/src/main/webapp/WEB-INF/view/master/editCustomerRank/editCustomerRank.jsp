@@ -64,10 +64,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1314"/>
@@ -115,7 +115,8 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
     	<div style="padding-left: 20px;color: blue;">
@@ -124,77 +125,100 @@
         	</html:messages>
     	</div>
 
-		<span>顧客ランク情報</span><br>
-		<table id="user_info" class="forms" summary="顧客ランク情報" style="width: 600px">
-			<colgroup>
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 60%">
-			</colgroup>
-			<tr>
-				<th colspan="2">顧客ランクコード</th>
-				<td><html:text styleId="rankCode" property="rankCode" style="width: 100px"  tabindex="100" readonly="true" styleClass="c_disable"/></td>
-			</tr>
-			<tr>
-				<th colspan="2">顧客ランク名<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="60" styleId="rankName" property="rankName" style="width: 100px" tabindex="101"/></td>
-			</tr>
-			<tr>
-				<th colspan="2">値引率<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="${(3 + mineDto.statsDecAlignment)}" styleId="rankRate" property="rankRate"
-					onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ applyStatsAlignment($(this)); }"
-					style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas BDCrate" tabindex="102"/> ％</td>
-			</tr>
-			<tr>
-				<th colspan="2">送料区分<bean:message key='labels.must'/></th>
-				<td>
-    				<html:select styleId="postageType" property="postageType" tabindex="104">
-    					<html:options collection="postageTypeList" property="value" labelProperty="label"/>
-    				</html:select>
-                </td>
-			</tr>
-			<tr>
-				<th rowspan="4">基準</th>
-				<th>売上回数</th>
-				<td><html:text maxlength="10" styleId="roCountFrom" property="roCountFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="105"/> 回以上 <html:text maxlength="10" styleId="roCountTo" property="roCountTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="106"/> 回未満</td>
-			</tr>
-			<tr>
-				<th>在籍期間</th>
-				<td><html:text maxlength="10" styleId="enrollTermFrom" property="enrollTermFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="107"/> 日以上 <html:text maxlength="10" styleId="enrollTermTo" property="enrollTermTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="108"/> 日未満</td>
-			</tr>
-			<tr>
-				<th>離脱期間</th>
-				<td><html:text maxlength="10" styleId="defectTermFrom" property="defectTermFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="109"/> 日以上 <html:text maxlength="10" styleId="defectTermTo" property="defectTermTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="110"/> 日未満</td>
-			</tr>
-			<tr>
-				<th>月平均売上額</th>
-				<td><html:text maxlength="10" styleId="roMonthlyAvgFrom" property="roMonthlyAvgFrom" style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas style_quantity" tabindex="111"/> 円以上 <html:text maxlength="10" styleId="roMonthlyAvgTo" property="roMonthlyAvgTo" style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas style_quantity" tabindex="112"/> 円未満</td>
-			</tr>
-		</table>
 
-		<div style="text-align: right; width: 600px">
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>顧客ランク情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="order_section" class="section_body">
+					<table id="user_info" class="forms" summary="顧客ランク情報" style="width: 600px">
+						<tr>
+							<th colspan="2"><div class="col_title_right">顧客ランクコード</div></th>
+							<td><html:text styleId="rankCode" property="rankCode" style="width: 100px"  tabindex="100" readonly="true" styleClass="c_disable"/></td>
+						</tr>
+						<tr>
+							<th colspan="2"><div class="col_title_right">顧客ランク名<bean:message key='labels.must'/></div></th>
+							<td><html:text maxlength="60" styleId="rankName" property="rankName" style="width: 100px" tabindex="101"/></td>
+						</tr>
+						<tr>
+							<th colspan="2"><div class="col_title_right">値引率<bean:message key='labels.must'/></div></th>
+							<td><html:text maxlength="${(3 + mineDto.statsDecAlignment)}" styleId="rankRate" property="rankRate"
+								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ applyStatsAlignment($(this)); }"
+								style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas BDCrate" tabindex="102"/> ％</td>
+						</tr>
+						<tr>
+							<th colspan="2"><div class="col_title_right">送料区分<bean:message key='labels.must'/></div></th>
+							<td>
+			    				<html:select styleId="postageType" property="postageType" tabindex="104">
+			    					<html:options collection="postageTypeList" property="value" labelProperty="label"/>
+			    				</html:select>
+			                </td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>基準</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="order_section" class="section_body">
+					<table id="user_info" class="forms" summary="顧客ランク情報" style="width: 600px">
+						<tr>
+							<th><div class="col_title_right">売上回数</div></th>
+							<td><html:text maxlength="10" styleId="roCountFrom" property="roCountFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="105"/> 回以上 <html:text maxlength="10" styleId="roCountTo" property="roCountTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="106"/> 回未満</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">在籍期間</div></th>
+							<td><html:text maxlength="10" styleId="enrollTermFrom" property="enrollTermFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="107"/> 日以上 <html:text maxlength="10" styleId="enrollTermTo" property="enrollTermTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="108"/> 日未満</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">離脱期間</div></th>
+							<td><html:text maxlength="10" styleId="defectTermFrom" property="defectTermFrom" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="109"/> 日以上 <html:text maxlength="10" styleId="defectTermTo" property="defectTermTo" style="width: 100px;ime-mode:disabled;text-align:right;" tabindex="110"/> 日未満</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">月平均売上額</div></th>
+							<td><html:text maxlength="10" styleId="roMonthlyAvgFrom" property="roMonthlyAvgFrom" style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas style_quantity" tabindex="111"/> 円以上 <html:text maxlength="10" styleId="roMonthlyAvgTo" property="roMonthlyAvgTo" style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas style_quantity" tabindex="112"/> 円未満</td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+		
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}<html:hidden property="creDatetmShow"/>　更新日:${updDatetmShow}<html:hidden property="updDatetmShow"/>　</span>
-			<button tabindex="800" onclick="initForm()">初期化</button>
+			<button tabindex="800" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
             <button tabindex="801" disabled="disabled">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="801" onclick="registerCustomerRank()">更新</button>
+            <button tabindex="801" onclick="registerCustomerRank()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="801" onclick="registerCustomerRank()">登録</button>
+            <button tabindex="801" onclick="registerCustomerRank()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="802" disabled="disabled">削除</button>
+		<button tabindex="802" disabled="disabled" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="802" onclick="deleteCustomerRank()">削除</button>
+		<button tabindex="802" onclick="deleteCustomerRank()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="802" disabled="disabled">削除</button>
+		<button tabindex="802" disabled="disabled" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -134,7 +133,7 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 
 			setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -203,58 +202,58 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 倉庫コード
 		if (conditions.containsKey(WarehouseService.Param.WAREHOUSE_CODE)) {
 			param.put(WarehouseService.Param.WAREHOUSE_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(WarehouseService.Param.WAREHOUSE_CODE)));
 		}
 
-		
+		// 倉庫名
 		if (conditions.containsKey(WarehouseService.Param.WAREHOUSE_NAME)) {
 			param.put(WarehouseService.Param.WAREHOUSE_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(WarehouseService.Param.WAREHOUSE_NAME)));
 		}
 
-		
+		// 倉庫状態
 		if (conditions.containsKey(WarehouseService.Param.WAREHOUSE_STATE)) {
 			param.put(WarehouseService.Param.WAREHOUSE_STATE, conditions
 					.get(WarehouseService.Param.WAREHOUSE_STATE));
 		}
 
-		
+		// ソートカラムを設定する
 		if (WarehouseService.Param.WAREHOUSE_CODE.equals(sortColumn)) {
-			
+			// 倉庫コード
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_CODE);
 		} else if (WarehouseService.Param.WAREHOUSE_NAME.equals(sortColumn)) {
-			
+			// 倉庫名
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_NAME);
 		} else if (WarehouseService.Param.WAREHOUSE_STATE.equals(sortColumn)) {
-			
+			// 倉庫状態
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_STATE);
 		} else if (WarehouseService.Param.WAREHOUSE_ZIP_CODE.equals(sortColumn)) {
-			
+			// 郵便番号
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_ZIP_CODE);
 		} else if (WarehouseService.Param.WAREHOUSE_ADDRESS1.equals(sortColumn)) {
-			
+			// 住所１
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_ADDRESS1);
 		} else if (WarehouseService.Param.WAREHOUSE_ADDRESS2.equals(sortColumn)) {
-			
+			// 住所２
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_WAREHOUSE_ADDRESS2);
 		} else if (WarehouseService.Param.MANAGER_NAME.equals(sortColumn)) {
-			
+			// 担当者
 			param.put(WarehouseService.Param.SORT_COLUMN_WAREHOUSE,
 					WarehouseService.COLUMN_MANAGER_NAME);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(WarehouseService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -271,7 +270,7 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 	@Override
 	public WarehouseJoin findById(String warehouseCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(WarehouseService.Param.WAREHOUSE_CODE, warehouseCode);
 
@@ -288,7 +287,7 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 			return;
 		}
 
-		
+		// 登録
 		Map<String, Object> param = super.createSqlParam();
 
 		BeanMap warehouseInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -310,15 +309,15 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.WAREHOUSE_CODE, dto.warehouseCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("warehouse/LockWarehouseByWarehouseCode.sql", lockParam,
 				dto.updDatetm);
 
-		
+		// 更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap warehouseInfo = Beans.createAndCopy(BeanMap.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
@@ -337,13 +336,13 @@ public class WarehouseService extends AbstractMasterEditService<WarehouseDto, Wa
 	@Override
 	public void deleteRecord(WarehouseDto dto) throws Exception {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.WAREHOUSE_CODE, dto.warehouseCode);
 			this.lockRecordBySqlFile("warehouse/LockWarehouseByWarehouseCode.sql", param,
 					dto.updDatetm);
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(Param.WAREHOUSE_CODE, dto.warehouseCode);
 			this.updateBySqlFile("warehouse/DeleteWarehouseByWarehouseCode.sql", param)

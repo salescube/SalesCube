@@ -32,10 +32,6 @@
 
 	// 検索ボタンによる検索処理
 	function onF2() {
-		// この条件で検索しますか？
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
 
 		paramData = createParamData();
 		paramData["pageNo"] = 1;
@@ -108,13 +104,6 @@
 			hidden.val(temp[i].billId);
 			$("#printForm").append(hidden);
 		}
-
-		// 振り込み先銀行設定
-		var hidden = $(document.createElement("input"));
-		hidden.attr("type", "hidden");
-		hidden.attr("name", "bankId");
-		hidden.val("1");
-		$("#printForm").append(hidden);
 
 		return temp.length;
 	}
@@ -432,36 +421,37 @@
 	</script>
 </head>
 <body onload="init()" onhelp="return false;" >
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0005"/>
 		<jsp:param name="MENU_ID" value="0502"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<!-- タイトル -->
 		<span class="title"><bean:message key='titles.makeOutBill'/></span>
 
 		<div class="function_buttons">
-				<button id="btnF1" type="button" onclick="onF1();" tabindex="2000">F1<br><bean:message key='words.action.initialize'/>
-				</button><button id="btnF2" type="button" onclick="onF2();" tabindex="2001">F2<br><bean:message key='words.action.search'/>
-				</button><button id="btnF3" type="button" onclick="onF3();" disabled="disabled" tabindex="2002">F3<br><bean:message key='words.name.pdf'/>
-				</button><button type="button" disabled="disabled">F4<br>&nbsp;
-				</button><button type="button" disabled="disabled">F5<br>&nbsp;
-				</button><button type="button" disabled="disabled">F6<br>&nbsp;
-				</button><button type="button" disabled="disabled">F7<br>&nbsp;
-				</button><button type="button" disabled="disabled">F8<br>&nbsp;
-				</button><button type="button" disabled="disabled">F9<br>&nbsp;
-				</button><button type="button" disabled="disabled">F10<br>&nbsp;
-				</button><button type="button" disabled="disabled">F11<br>&nbsp;
-				</button><button type="button" disabled="disabled">F12<br>&nbsp;</button>
+				<button id="btnF1" type="button" onclick="onF1();" tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button>
+				<button id="btnF2" type="button" onclick="onF2();" tabindex="2001">F2<br><bean:message key='words.action.search'/></button>
+				<button id="btnF3" type="button" onclick="onF3();" disabled="disabled" tabindex="2002">F3<br><bean:message key='words.name.pdf'/></button>
+				<button type="button" disabled="disabled">F4<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F5<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F8<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 
 			<div class="function_forms">
@@ -473,73 +463,91 @@
 					<html:messages id="msg" message="true"><bean:write name="msg" ignore="true"/><br></html:messages>
 				</div>
 
-				<span><bean:message key='labels.searchCondition'/></span><br>
-				<div id="search_info">
-					<table id="order_info" class="forms" summary="請求検索情報">
-						<colgroup>
-							<col span="1" style="width: 10%">
-							<col span="1" style="width: 25%">
-							<col span="1" style="width: 10%">
-							<col span="1" style="width: 15%">
-							<col span="1" style="width: 10%">
-							<col span="1" style="width: 25%">
-						</colgroup>
-						<tr>
-							<th ><bean:message key='labels.billId'/></th> <!-- 請求書番号 -->
-							<td><html:text property="billId" styleId="billId" tabindex="100" style="width: 100px; ime-mode:disabled;" /></td>
-							<th><bean:message key='labels.cutoffGroupCategory'/></th> <!-- 支払条件 -->
-							<td>
-								<html:select tabindex="102" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" >
-									<c:forEach var="dcl" items="${cutoffGroupCategoryList}">
-										<html:option value="${dcl.value}">${dcl.label}</html:option>
-									</c:forEach>
-								</html:select>
-							</td>
-							<th><bean:message key='labels.billCutOffDate'/></th> <!-- 請求締日 -->
-							<td><html:text property="billCutoffDateFrom" styleId="billCutoffDateFrom"  styleClass="date_input" style="width: 85px; ime-mode:disabled;" tabindex="103" />
-									<bean:message key='labels.betweenSign'/>
-								<html:text property="billCutoffDateTo" styleId="billCutoffDateTo" styleClass="date_input"  style="width: 85px; ime-mode:disabled;" tabindex="104" />
-							</td>
-						</tr>
-						<tr>
-								<th><bean:message key='labels.customerCode'/></th> <!-- 顧客コード -->
-							<td ><html:text property="customerCode" styleId="customerCode" style="width: 100px;ime-mode:disabled;" tabindex="105" />
-								<img src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="106"></td>
-								<th><bean:message key='labels.customerName'/></th> <!-- 顧客名 -->
-							<td  colspan="3">
-								<html:text property="customerName" styleId="customerName" style="width: 500px;" tabindex="107" />
-								<img src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="108"></td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.covPrice'/></th> <!-- 繰越金額-->
-							<td>
-								<html:checkbox property="covPriceZero" styleId="covPriceZero" value="<%=Constants.SEARCH_BILL.CARRY_OVER_ZERO %>"  tabindex="109"  /><label for="covPriceZero"><bean:message key='labels.notexist'/></label>&nbsp;&nbsp;
-								<html:checkbox property="covPriceMinus" styleId="covPriceMinus" value="<%=Constants.SEARCH_BILL.CARRY_OVER_MINUS %>"  tabindex="110"  /><label for="covPriceMinus"><bean:message key='labels.over'/></label>&nbsp;&nbsp;
-								<html:checkbox property="covPricePlus" styleId="covPricePlus" value="<%=Constants.SEARCH_BILL.CARRY_OVER_PLUS %>"  tabindex="111"  /><label for="covPricePlus"><bean:message key='labels.less'/></label>&nbsp;&nbsp;
-							</td>
-							<th><bean:message key='labels.thisBillPrice'/></th> <!-- 今回請求金額 -->
-							<td>
-								<html:checkbox property="thisBillPricePlus" styleId="thisBillPricePlus" value="<%=Constants.SEARCH_BILL.BILL_PRICE_PLUS %>"  tabindex="112" /><label for="thisBillPricePlus"><bean:message key='labels.exist'/></label>&nbsp;&nbsp;
-								<html:checkbox property="thisBillPriceZero" styleId="thisBillPriceZero" value="<%=Constants.SEARCH_BILL.BILL_PRICE_ZERO %>"  tabindex="113" /><label for="thisBillPriceZero"><bean:message key='labels.notexist'/></label>&nbsp;&nbsp;
-								<html:checkbox property="thisBillPriceMinus" styleId="thisBillPriceMinus" value="<%=Constants.SEARCH_BILL.BILL_PRICE_MINUS %>"  tabindex="114" /><label for="thisBillPriceMinus"><bean:message key='labels.over'/></label>&nbsp;&nbsp;
-							</td>
-							<th ><bean:message key='labels.exceptAlreadyOutput'/></th> <!-- 発行済を除く -->
-							<td style="text-align: left"><html:checkbox property="excludePrint" styleId="excludePrint" tabindex="115" style="ime-mode:disabled; width: 120px; " />&nbsp;&nbsp;</td>
-						</tr>
-					</table>
-				</div>
+
+				<div class="form_section_wrap">
+					<div class="form_section">
+						<div class="section_title">
+							<span><bean:message key='labels.searchCondition'/></span><br>
+							<button class="btn_toggle">
+							    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+							</button>
+						</div><!-- /.section_title -->
+										
+						<div id="search_info" class="section_body">
+						<table id="order_info" class="forms" summary="請求検索情報" style="width: auto;">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.billId'/></div></th> <!-- 請求書番号 -->
+								<td><html:text property="billId" styleId="billId" tabindex="100" style="width: 100px; ime-mode:disabled;" /></td>
+								<th><div class="col_title_right"><bean:message key='labels.cutoffGroupCategory'/></div></th> <!-- 支払条件 -->
+								<td>
+									<html:select tabindex="102" property="cutoffGroupCategory"  styleId="cutoffGroupCategory" >
+										<c:forEach var="dcl" items="${cutoffGroupCategoryList}">
+											<html:option value="${dcl.value}">${dcl.label}</html:option>
+										</c:forEach>
+									</html:select>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.billCutOffDate'/></div></th> <!-- 請求締日 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="billCutoffDateFrom" styleId="billCutoffDateFrom"  styleClass="date_input" style="width: 135px; ime-mode:disabled;" tabindex="103" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/><!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="billCutoffDateTo" styleId="billCutoffDateTo" styleClass="date_input"  style="width: 135px; ime-mode:disabled;" tabindex="104" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.customerCode'/></div></th> <!-- 顧客コード -->
+								<td ><html:text property="customerCode" styleId="customerCode" style="width: 100px;ime-mode:disabled;" tabindex="105" />
+									<img src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="106">
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.customerName'/></div></th> <!-- 顧客名 -->
+								<td  colspan="3" style="padding-right: 0;">
+									<html:text property="customerName" styleId="customerName" style="width: 430px;" tabindex="107" />
+									<img src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="108">
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.covPrice'/></div></th> <!-- 繰越金額-->
+								<td>
+									<html:checkbox property="covPriceZero" styleId="covPriceZero" value="<%=Constants.SEARCH_BILL.CARRY_OVER_ZERO %>"  tabindex="109"  /><label for="covPriceZero"><bean:message key='labels.notexist'/></label>&nbsp;&nbsp;
+									<html:checkbox property="covPriceMinus" styleId="covPriceMinus" value="<%=Constants.SEARCH_BILL.CARRY_OVER_MINUS %>"  tabindex="110"  /><label for="covPriceMinus"><bean:message key='labels.over'/></label>&nbsp;&nbsp;
+									<html:checkbox property="covPricePlus" styleId="covPricePlus" value="<%=Constants.SEARCH_BILL.CARRY_OVER_PLUS %>"  tabindex="111"  /><label for="covPricePlus"><bean:message key='labels.less'/></label>&nbsp;&nbsp;
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.thisBillPrice'/></div></th> <!-- 今回請求金額 -->
+								<td>
+									<html:checkbox property="thisBillPricePlus" styleId="thisBillPricePlus" value="<%=Constants.SEARCH_BILL.BILL_PRICE_PLUS %>"  tabindex="112" /><label for="thisBillPricePlus"><bean:message key='labels.exist'/></label>&nbsp;&nbsp;
+									<html:checkbox property="thisBillPriceZero" styleId="thisBillPriceZero" value="<%=Constants.SEARCH_BILL.BILL_PRICE_ZERO %>"  tabindex="113" /><label for="thisBillPriceZero"><bean:message key='labels.notexist'/></label>&nbsp;&nbsp;
+									<html:checkbox property="thisBillPriceMinus" styleId="thisBillPriceMinus" value="<%=Constants.SEARCH_BILL.BILL_PRICE_MINUS %>"  tabindex="114" /><label for="thisBillPriceMinus"><bean:message key='labels.over'/></label>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.exceptAlreadyOutput'/></div></th> <!-- 発行済を除く -->
+								<td style="text-align: left"><html:checkbox property="excludePrint" styleId="excludePrint" tabindex="115" style="ime-mode:disabled; width: 120px; " />&nbsp;&nbsp;</td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+						</div>
+					</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
 
 				<html:hidden property="sortColumn" styleId="sortColumn" />
 				<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 
-				<div style="width: 910px; text-align: right">
-					<button type="button" onclick="onF1();" tabindex="250"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
-					<button type="button" onclick="onF2();" tabindex="251"><bean:message key='words.action.search'/></button> <!-- 検索 -->
+				<div style="width: 1160px; text-align: right">
+					<button type="button" onclick="onF1();" tabindex="250" class="btn_medium"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
+					<button type="button" onclick="onF2();" tabindex="251" class="btn_medium"><bean:message key='words.action.search'/></button> <!-- 検索 -->
 				</div>
 			</div>
 
-			<html:button tabindex="300" property="allCheck" onclick="checkAll(true);">全て選択</html:button>
-			<html:button tabindex="301" property="allUnCheck" onclick="checkAll(false);">全て解除</html:button>
+			<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
+			<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
 
 			<span id="ListContainer">
 				<%@ include file="/WEB-INF/view/ajax/bill/makeOutBillAjax/result.jsp" %>

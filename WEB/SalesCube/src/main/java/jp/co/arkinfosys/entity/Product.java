@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.lang.reflect.Field;
@@ -267,7 +266,7 @@ public class Product extends AuditInfo {
 
 	@Override
 	public int hashCode() {
-		
+		// とりあえずequalsとhashCodeの要件は満たすが必要に応じてちゃんと実装する必要がある
 		return 0;
 	}
 }

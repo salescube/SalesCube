@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.report;
 
 import jp.co.arkinfosys.common.StringUtil;
@@ -34,7 +33,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String recDateTo;
 
-    ////////
+    ////////// 見積入力
     /**
      * 見積日From
      */
@@ -47,7 +46,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String estimateDateTo1;
 
-    ////////
+    ////////// 受注入力
     /**
      * 顧客コードFrom
      */
@@ -80,7 +79,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String shipDateTo2;
 
-    ////////
+    ////////// 売上入力
     /**
      * 顧客コードFrom
      */
@@ -101,7 +100,7 @@ public class ReferenceHistoryForm {
      */
     public String productCodeTo3;
 
-    ////////
+    ////////// 入金入力
     /**
      * 顧客コードFrom
      */
@@ -112,7 +111,7 @@ public class ReferenceHistoryForm {
      */
     public String customerCodeTo4;
 
-    ////////
+    ////////// 発注入力
     /**
      * 仕入先コードFrom
      */
@@ -133,7 +132,7 @@ public class ReferenceHistoryForm {
      */
     public String productCodeTo5;
 
-    ////////
+    ////////// 仕入入力
     /**
      * 仕入先コードFrom
      */
@@ -166,7 +165,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String deliveryDateTo6;
 
-    ////////
+    ////////// 支払入力
     /**
      * 仕入先コードFrom
      */
@@ -199,7 +198,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String paymentDateTo7;
 
-    ////////
+    ////////// 入出庫入力
     /**
      * 商品コードFrom
      */
@@ -215,7 +214,7 @@ public class ReferenceHistoryForm {
      */
     public String[] eadSlipCategory8;
 
-    ////////
+    ////////// 顧客マスタ
     /**
      * 顧客コードFrom
      */
@@ -238,7 +237,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo9;
 
-    ////////
+    ////////// 商品マスタ
     /**
      * 商品コードFrom
      */
@@ -261,7 +260,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo10;
 
-    ////////
+    ////////// 仕入先マスタ
     /**
      * 仕入先コードFrom
      */
@@ -284,7 +283,7 @@ public class ReferenceHistoryForm {
     @DateType(datePatternStrict = "yyyy/MM/dd")
     public String creDateTo11;
 
-    ////////
+    ////////// 社員マスタ
     /**
      * 登録日From
      */
@@ -369,7 +368,7 @@ public class ReferenceHistoryForm {
 	 * @return 表示するメッセージ
 	 */
 	public ActionErrors validate() {
-		
+		// 数値項目，日付項目のトリム
 		recDateFrom = StringUtil.trimBlank(recDateFrom);
 		recDateTo = StringUtil.trimBlank(recDateTo);
 		estimateDateFrom1 = StringUtil.trimBlank(estimateDateFrom1);
@@ -392,7 +391,7 @@ public class ReferenceHistoryForm {
 		ActionErrors errors = new ActionErrors();
 
 		if(!StringUtil.hasLength(recDateFrom) && !StringUtil.hasLength(recDateTo)) {
-			
+			// 検索条件未入力の場合
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.report.needRecDateRange"));
 		}

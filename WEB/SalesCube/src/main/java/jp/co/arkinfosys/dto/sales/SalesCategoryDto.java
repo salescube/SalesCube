@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 
@@ -14,9 +13,9 @@ import org.apache.struts.util.LabelValueBean;
  *
  */
 public class SalesCategoryDto {
-	
-    public LabelValueBean salesCategory;
+	// 取引区分リスト
+    public LabelValueBean salesCategory;// 取引区分
 
-    
+    // 取引区分選択
     public boolean salesCategorySel;
 }

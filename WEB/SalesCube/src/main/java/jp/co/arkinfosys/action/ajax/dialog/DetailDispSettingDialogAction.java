@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.ArrayList;
@@ -55,13 +54,13 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// ユーザーの表示設定を取得する
 		List<DetailDispItemDto> userCfgList = this.detailDispItemService
 				.findDetailDispItemCfgByCondition(
 						this.detailDispSettingDialogForm.menuId,
 						this.detailDispSettingDialogForm.target);
 
-		
+		// ユーザー設定がある場合には全て表示項目リストに入れる
 		boolean existsUserCfg = false;
 		Map<String, Object> userCfgMap = new HashMap<String, Object>();
 		if (userCfgList.size() > 0) {
@@ -70,7 +69,7 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 			for (int i = 0; i < userCfgList.size(); i++) {
 				DetailDispItemDto cfgItem = userCfgList.get(i);
 				if (i == 0) {
-					
+					// 先頭項目は排他制御用情報として記憶
 					this.detailDispSettingDialogForm.lockItemId = cfgItem.itemId;
 					this.detailDispSettingDialogForm.lockUpdDatetm = cfgItem.updDatetm;
 				}
@@ -80,32 +79,32 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 				bean.setValue(cfgItem.itemId);
 				this.detailDispSettingDialogForm.enabledItemList.add(bean);
 
-				
+				// 同時に非表示項目リストで差分を取るためのマップを作成
 				userCfgMap.put(bean.getValue(), bean);
 			}
 		}
 
-		
+		// デフォルト設定内容を取得する
 		List<DetailDispItemDto> defaultList = this.detailDispItemService
 				.findDetailDispItemByCondition(
 						this.detailDispSettingDialogForm.menuId,
 						this.detailDispSettingDialogForm.target, false);
 
-		
+		// 表示項目リストの差分から非表示項目リストと必須項目リストを作成する
 		List<LabelValueBean> requiredList = new ArrayList<LabelValueBean>();
 		for (DetailDispItemDto defaultItem : defaultList) {
 			LabelValueBean bean = new LabelValueBean();
 			bean.setLabel(defaultItem.getPrefixItemName());
 			bean.setValue(defaultItem.itemId);
 
-			
+			// 必須項目である
 			if (Constants.FLAG.ON.equals(defaultItem.esslFlag)) {
 				requiredList.add(bean);
 			}
 
-			
+			// ユーザー設定なし
 			if (!existsUserCfg) {
-				
+				// 全てデフォルトにする
 				if (Constants.FLAG.ON.equals(defaultItem.dispFlag)) {
 					this.detailDispSettingDialogForm.enabledItemList.add(bean);
 				} else if (Constants.FLAG.OFF.equals(defaultItem.dispFlag)) {
@@ -114,14 +113,14 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 				continue;
 			}
 
-			
+			// ユーザー設定あり
 			if (!userCfgMap.containsKey(defaultItem.itemId)) {
-				
+				// 表示項目以外を非表示にする
 				this.detailDispSettingDialogForm.disabledItemList.add(bean);
 			}
 		}
 
-		
+		// 検索対象の表示名称
 		if (Constants.SEARCH_TARGET.VALUE_SLIP
 				.equals(this.detailDispSettingDialogForm.target)) {
 			this.detailDispSettingDialogForm.targetName = Constants.SEARCH_TARGET.LABEL_SLIP;
@@ -130,13 +129,13 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 			this.detailDispSettingDialogForm.targetName = Constants.SEARCH_TARGET.LABEL_LINE;
 		}
 
-		
+		// 表示項目リストのJSON表現
 		this.detailDispSettingDialogForm.originalEnabledItemList = JSON
 				.encode(this.detailDispSettingDialogForm.enabledItemList);
-		
+		// 非表示項目リストのJSON表現
 		this.detailDispSettingDialogForm.originalDisabledItemList = JSON
 				.encode(this.detailDispSettingDialogForm.disabledItemList);
-		
+		// 必須項目リストのJSON表現
 		this.detailDispSettingDialogForm.requiredDispItemIdList = JSON
 				.encode(requiredList);
 	}
@@ -159,7 +158,7 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 		} catch (UnabledLockException e) {
 			super.errorLog(e);
 
-			
+			// ロックエラー
 			ActionMessages errors = new ActionMessages();
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e
 					.getKey()));
@@ -169,7 +168,7 @@ public class DetailDispSettingDialogAction extends AbstractDialogAction {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 		}
 		return null;

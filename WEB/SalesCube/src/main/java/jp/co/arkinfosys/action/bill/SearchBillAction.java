@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.bill;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class SearchBillAction extends AbstractSearchAction<BeanMap> {
 	 */
 	@Override
 	protected void doAfterIndex() throws Exception {
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), Constants.SEARCH_TARGET.VALUE_SLIP);
 	}
@@ -86,11 +85,11 @@ public class SearchBillAction extends AbstractSearchAction<BeanMap> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 請求書作成区分リストの作成
 		this.searchBillForm.billCrtCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.BILL_CRT_CATEGORY);
 
-		
+		// 支払条件リストの作成
 		this.searchBillForm.cutoffGroupCategoryList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUTOFF_GROUP);
 		this.searchBillForm.cutoffGroupCategoryList

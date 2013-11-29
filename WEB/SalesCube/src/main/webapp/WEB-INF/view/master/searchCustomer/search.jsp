@@ -40,9 +40,7 @@
 	 * 検索処理実行
 	 */
 	function searchCustomer(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
 	}
 
@@ -293,10 +291,10 @@
 </head>
 <body onhelp="return false;">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1302"/>
@@ -312,12 +310,12 @@
 	<div class="function_buttons">
 		<button tabindex="2000" onclick="initForm()"> F1<br>初期化</button>
 		<button tabindex="2001" onclick="searchCustomer()">F2<br>検索</button>
-<c:if test="${!isUpdate}">
-		<button tabindex="2002" disabled="disabled">F3<br>追加</button>
-</c:if>
-<c:if test="${isUpdate}">
-		<button tabindex="2002" onclick="addCustomer()">F3<br>追加</button>
-</c:if>
+		<c:if test="${!isUpdate}">
+			<button tabindex="2002" disabled="disabled">F3<br>追加</button>
+		</c:if>
+		<c:if test="${isUpdate}">
+			<button tabindex="2002" onclick="addCustomer()">F3<br>追加</button>
+		</c:if>
 		<button disabled="disabled">F4<br>&nbsp;</button>
 		<button disabled="disabled">F5<br>&nbsp;</button>
 		<button disabled="disabled">F6<br>&nbsp;</button>
@@ -328,137 +326,145 @@
 		<button disabled="disabled">F11<br>&nbsp;</button>
 		<button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
-
 		<div style="padding-left: 20px">
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
-		<span>顧客情報</span><br>
-		<table id="user_info" class="forms" summary="顧客情報">
-			<colgroup>
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-			</colgroup>
-			<tr>
-				<th>顧客コード</th>
-				<td>
-					<html:text property="customerCode" styleId="customerCode" style="width: 180px;ime-mode:disabled;" tabindex="100"/>
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="customerSearch($('#customerCode'));" tabindex="101"/>
-				</td>
-				<th>顧客名</th>
-				<td><html:text property="customerName" styleId="customerName" style="width: 200px" tabindex="102" maxlength="60"/>
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="customerSearch($('#customerName'));" tabindex="103"/>
-				</td>
-				<th>顧客名カナ</th>
-				<td><html:text property="customerKana"  styleId="customerKana" style="width: 200px" tabindex="104" maxlength="60"/></td>
-			</tr>
-			<tr>
-				<th>事業所名</th>
-				<td>
-				<html:text property="customerOfficeName" styleId="customerOfficeName" style="width: 180px;" tabindex="105"/>
-				</td>
-				<th>事業所名カナ</th>
-				<td>
-				<html:text property="customerOfficeKana" styleId="customerOfficeKana" style="width: 180px;" tabindex="106"/>
-				</td>
-				<th>TEL</th>
-				<td>
-				<html:text property="customerTel" styleId="customerTel" style="width: 180px;ime-mode:disabled;" tabindex="107"/>
-				</td>
-			</tr>
-			<tr>
-				<th>担当者</th>
-				<td>
-				<html:text property="customerPcName" styleId="customerPcName" style="width: 180px;" tabindex="108"/>
-				</td>
-				<th>担当者カナ</th>
-				<td>
-				<html:text property="customerPcKana" styleId="customerPcKana" style="width: 180px;" tabindex="109"/>
-				</td>
-				<th>FAX</th>
-				<td>
-				<html:text property="customerFax" styleId="customerFax" style="width: 180px;ime-mode:disabled;" tabindex="110"/>
-				</td>
-			</tr>
-			<tr>
-				<th>顧客ランク</th>
-				<td>
-				<html:select styleId="customerRankCategory" property="customerRankCategory" tabindex="111">
-					<html:options collection="customerRankList" property="value" labelProperty="label"/>
-				</html:select>
-				</td>
-				<th>支払条件</th>
-				<td colspan="3">
-				<html:select styleId="cutoffGroup" property="cutoffGroup" tabindex="112">
-					<html:options collection="cutoffGroupList" property="value" labelProperty="label"/>
-				</html:select>
-				</td>
-			</tr>
-		</table>
+		
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>顧客情報</span><br>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+			
+				<div id="search_info" class="section_body">
+					<table id="user_info" class="forms" summary="顧客情報">
+					
+						<!-- 
+						<colgroup>
+							<col span="1" style="width: 13%">
+							<col span="1" style="width: 20%">
+							<col span="1" style="width: 13%">
+							<col span="1" style="width: 20%">
+							<col span="1" style="width: 13%">
+							<col span="1" style="width: 20%">
+						</colgroup>
+						 -->
+						<tr>
+							<th><div class="col_title_right">顧客コード</div></th>
+							<td>
+								<html:text property="customerCode" styleId="customerCode" style="width: 180px;ime-mode:disabled;" tabindex="100"/>
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="customerSearch($('#customerCode'));" tabindex="101"/>
+							</td>
+							<th><div class="col_title_right">顧客名</div></th>
+							<td>
+								<html:text property="customerName" styleId="customerName" style="width: 180px" tabindex="102" maxlength="60"/>
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="customerSearch($('#customerName'));" tabindex="103"/>
+							</td>
+							<th><div class="col_title_right">顧客名カナ</div></th>
+							<td><html:text property="customerKana"  styleId="customerKana" style="width: 180px" tabindex="104" maxlength="60"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">事業所名</div></th>
+							<td><html:text property="customerOfficeName" styleId="customerOfficeName" style="width: 180px;" tabindex="105"/></td>
+							<th><div class="col_title_right">事業所名カナ</div></th>
+							<td><html:text property="customerOfficeKana" styleId="customerOfficeKana" style="width: 180px;" tabindex="106"/></td>
+							<th><div class="col_title_right">TEL</div></th>
+							<td><html:text property="customerTel" styleId="customerTel" style="width: 180px;ime-mode:disabled;" tabindex="107"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">担当者</div></th>
+							<td><html:text property="customerPcName" styleId="customerPcName" style="width: 180px;" tabindex="108"/></td>
+							<th><div class="col_title_right">担当者カナ</div></th>
+							<td><html:text property="customerPcKana" styleId="customerPcKana" style="width: 180px;" tabindex="109"/></td>
+							<th><div class="col_title_right">FAX</div></th>
+							<td><html:text property="customerFax" styleId="customerFax" style="width: 180px;ime-mode:disabled;" tabindex="110"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">顧客ランク</div></th>
+							<td>
+								<html:select styleId="customerRankCategory" property="customerRankCategory" tabindex="111">
+									<html:options collection="customerRankList" property="value" labelProperty="label"/>
+								</html:select>
+							</td>
+							<th><div class="col_title_right">支払条件</div></th>
+							<td colspan="3">
+								<html:select styleId="cutoffGroup" property="cutoffGroup" tabindex="112">
+									<html:options collection="cutoffGroupList" property="value" labelProperty="label"/>
+								</html:select>
+							</td>
+						</tr>
+					</table>
+			
+					<table class="forms" style="width: 910px" summary="自社情報3">
+						<!-- 
+						<colgroup>
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 40%">
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 40%">
+						</colgroup>
+						 -->
+						<tr>
+							<th><div class="col_title_right">振込名義</div></th>
+							<td><html:text styleId="paymentName" property="paymentName" tabindex="200" style="width: 250px" maxlength="60"/></td>
+							<th><div class="col_title_right">備考</div></th>
+							<td><html:text styleId="remarks" property="remarks" tabindex="201" style="width: 250px" maxlength="120"/></td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    </div><!-- /.form_section_wrap -->
 
-		<table class="forms" style="width: 910px" summary="自社情報3">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 40%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 40%">
-			</colgroup>
-			<tr>
-				<th>振込名義</th>
-				<td><html:text styleId="paymentName" property="paymentName" tabindex="200" style="width: 250px" maxlength="60"/></td>
-				<th>備考</th>
-				<td><html:text styleId="remarks" property="remarks" tabindex="201" style="width: 250px" maxlength="120"/></td>
-			</tr>
-		</table>
-
-		<div style="text-align: right; width: 910px">
-			<button type="button" tabindex="202" style="width: 80px;"  onclick="initForm();">初期化</button>
-			<button type="button" tabindex="203" style="width: 80px;" onclick="searchCustomer();">検索</button>
+		<div style="text-align: right; width: 1160px">
+			<button type="button" tabindex="202" style="width: 80px;" onclick="initForm();" class="btn_medium">初期化</button>
+			<button type="button" tabindex="203" style="width: 80px;" onclick="searchCustomer();" class="btn_medium">検索</button>
 		</div>
 
-
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
-					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
-                    <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
+			<div style="width: 1010px; height: 25px;">
+				<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
+				<jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
 
-			<table id="List" summary="顧客検索結果"  class="forms" style="width: 910px">
-				<colgroup>
-					<col span="1" style="width: 9%">
-					<col span="1" style="width: 20%">
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 8%">
-					<col span="1" style="width: 13%">
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 10%">
-				</colgroup>
-				<tr>
-					<th style="cursor: pointer">顧客コード</th>
-					<th style="cursor: pointer">顧客名</th>
-					<th style="cursor: pointer">TEL</th>
-					<th style="cursor: pointer">担当者</th>
-					<th style="cursor: pointer">取引区分</th>
-					<th style="cursor: pointer">支払条件</th>
-					<th style="cursor: pointer">事業所名</th>
-					<th style="cursor: pointer">部署名</th>
-					<th>&nbsp;</th>
-				</tr>
-			</table>
+			<span id="searchResultList">
+				<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+					<colgroup>
+						<col span="1" style="width: 9%">
+						<col span="1" style="width: 20%">
+						<col span="1" style="width: 10%">
+						<col span="1" style="width: 10%">
+						<col span="1" style="width: 8%">
+						<col span="1" style="width: 13%">
+						<col span="1" style="width: 10%">
+						<col span="1" style="width: 10%">
+						<col span="1" style="width: 10%">
+					</colgroup>
+					<tr>
+						<th class="rd_top_left" style="cursor: pointer; height: 30px;">顧客コード</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">顧客名</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">TEL</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">担当者</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">取引区分</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">支払条件</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">事業所名</th>
+						<th class="xl64" style="cursor: pointer; height: 30px;">部署名</th>
+						<th class="xl64 rd_top_right" style="cursor: pointer; height: 30px;">&nbsp;</th>
+					</tr>
+				</table>
+			</span>
 		</div>
 	</div>
 <html:hidden styleId="sortColumn" property="sortColumn" />
-<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
+<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
 </s:form>
 
 <s:form styleId="editForm" action="/master/editCustomer/edit" >
@@ -466,8 +472,5 @@
 </s:form>
 
 </div>
-
-
 </body>
-
 </html>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.payment;
 
 import java.math.BigDecimal;
@@ -170,13 +169,13 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 			param.put(InputPaymentLineService.Param.PAYMENT_SLIP_ID, dto.paymentSlipId);
 			List<PaymentSlipLineJoin> resultList = this.selectBySqlFile(PaymentSlipLineJoin.class, "payment/FindPaymentSlipLineBySlipId.sql", param).getResultList();
 
-			
+			// 数量端数処理
 			Converter numConv = new NumberConverter(super.mineDto.productFractCategory, super.mineDto.numDecAlignment, true);
 
-			
+			// 円単価端数処理
 			Converter yenConv = new NumberConverter(dto.priceFractCategory, 0, true);
 
-			
+			// 外貨単価端数処理
 			Converter dolConv = new NumberConverter(dto.priceFractCategory, super.mineDto.unitPriceDecAlignment, true);
 
 			List<InputPaymentLineDto> dtoList = new ArrayList<InputPaymentLineDto>();
@@ -187,7 +186,7 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 			}
 
 			if(dtoList.size() > 0) {
-				
+				// 先頭の明細行の消費税率を伝票にセットする
 				dto.supplierTaxRate = dtoList.get(0).ctaxRate;
 			}
 
@@ -215,45 +214,45 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 				short i = 1;
 
 				for(InputPaymentLineDto dto : lineList) {
-					
+					// Entityに変換する
 					PaymentLineTrn entity = Beans.createAndCopy(PaymentLineTrn.class, dto).execute();
 
 					entity.status = Constants.STATUS_PAYMENT_LINE.PAID;
 					entity.paymentSlipId = Integer.parseInt(slipDto.paymentSlipId);
 					entity.ctaxRate = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX, StringUtil.getCurrentDateString(Constants.FORMAT.DATE)).taxRate;
 
-					
-					
-					
+					// 以下の２つの条件を満たす場合のみ、消費税を設定する
+					// 1.【仕入先マスタ】レートタイプが空欄でない
+					// 2.【仕入先マスタ】税転嫁が「外税伝票計」or「外税締単位」である
 					if("".equals(slipDto.rateId)) {
 						if(CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL.equals(slipDto.taxShiftCategory) || CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(slipDto.taxShiftCategory)) {
-							
+							// 金額 * (レート / 100.0)
 							entity.ctaxPrice = entity.price.multiply((entity.ctaxRate.divide(new BigDecimal(100.0))));
 						}
 					}
 
 					if(dto.paymentLineId == null || dto.paymentLineId.length() == 0) {
-						
+						// チェックされていない明細行の登録はしない
 						if(!dto.checkPayLine) {
 							continue;
 						}
 
-						
+						// 明細IDを採番する
 						dto.paymentLineId = Long.toString(seqMakerService.nextval(InputPaymentLineService.Table.LINE_TABLE_NAME));
 						entity.paymentLineId = Integer.parseInt(dto.paymentLineId);
 
-						
+						// 明細行番を採番する(登録しない行に対しては行番号を発行しないためここで設定)
 						entity.lineNo = i++;
 						dto.paymentLineNo = Short.toString(entity.lineNo);
 
-						
+						// レコードを追加する
 						insertRecord(entity);
 
 					} else {
 						entity.lineNo = i++;
 						dto.paymentLineNo = Short.toString(entity.lineNo);
 
-						
+						// レコードを更新する
 						updateRecord(entity);
 					}
 				}
@@ -278,61 +277,61 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 	private Map<String, Object> setEntityToParam(PaymentLineTrn entity) {
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// 支払伝票行ID
 		param.put(InputPaymentLineService.Param.PAYMENT_LINE_ID, entity.paymentLineId);
 
-		
+		// 状態フラグ
 		param.put(InputPaymentLineService.Param.STATUS, entity.status);
 
-		
+		// 支払伝票番号
 		param.put(InputPaymentLineService.Param.PAYMENT_SLIP_ID, entity.paymentSlipId);
 
-		
+		// 支払伝票行番
 		param.put(InputPaymentLineService.Param.PAYMENT_LINE_NO, entity.lineNo);
 
-		
+		// 支払区分コード
 		param.put(InputPaymentLineService.Param.PAYMENT_CATEGORY, entity.paymentCategory);
 
-		
+		// 商品コード
 		param.put(InputPaymentLineService.Param.PRODUCT_CODE, entity.productCode);
 
-		
+		// 商品名
 		param.put(InputPaymentLineService.Param.PRODUCT_ABSTRACT, entity.productAbstract);
 
-		
+		// 数量
 		param.put(InputPaymentLineService.Param.QUANTITY, entity.quantity);
 
-		
+		// 単価
 		param.put(InputPaymentLineService.Param.UNIT_PRICE, entity.unitPrice);
 
-		
+		// 金額
 		param.put(InputPaymentLineService.Param.PRICE, entity.price);
 
-		
+		// ドル単価
 		param.put(InputPaymentLineService.Param.DOL_UNIT_PRICE, entity.dolUnitPrice);
 
-		
+		// ドル金額
 		param.put(InputPaymentLineService.Param.DOL_PRICE, entity.dolPrice);
 
-		
+		// レート
 		param.put(InputPaymentLineService.Param.RATE, entity.rate);
 
-		
+		// 消費税率
 		param.put(InputPaymentLineService.Param.CTAX_RATE, entity.ctaxRate);
 
-		
+		// 消費税
 		param.put(InputPaymentLineService.Param.CTAX_PRICE, entity.ctaxPrice);
 
-		
+		// 発注伝票行ID
 		param.put(InputPaymentLineService.Param.PO_LINE_ID, entity.poLineId);
 
-		
+		// 仕入伝票行ID
 		param.put(InputPaymentLineService.Param.SUPPLIER_LINE_ID, entity.supplierLineId);
 
-		
+		// 備考
 		param.put(InputPaymentLineService.Param.REMARKS, entity.remarks);
 
-		
+		// 仕入日
 		param.put(InputPaymentLineService.Param.SUPPLIER_DATE, entity.supplierDate);
 
 		return param;

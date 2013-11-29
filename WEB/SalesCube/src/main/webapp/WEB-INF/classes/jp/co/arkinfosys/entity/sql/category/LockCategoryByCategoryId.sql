@@ -1,1 +1,0 @@
-SELECT * FROM CATEGORY_MST_/*$domainId*/ WHERE CATEGORY_ID=/*categoryId*/ FOR UPDATE

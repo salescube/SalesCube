@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class SearchCustomerAction extends AbstractSearchAction<CustomerDto> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 顧客ランクリストを取得
 		List<CustomerRank> customerRankList = this.customerRankService
 				.findAllCustomerRank();
 		for (CustomerRank customerRank : customerRankList) {
@@ -76,7 +75,7 @@ public class SearchCustomerAction extends AbstractSearchAction<CustomerDto> {
 		}
 		this.searchCustomerForm.customerRankList.add(0, new LabelValueBean());
 
-		
+		// 支払条件リストを取得
 		List<CategoryJoin> categoryJoinList = this.categoryService
 				.findCategoryJoinById(Categories.CUTOFF_GROUP);
 		for (CategoryJoin categoryJoin : categoryJoinList) {

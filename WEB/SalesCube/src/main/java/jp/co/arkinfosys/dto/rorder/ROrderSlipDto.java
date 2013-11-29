@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.rorder;
 
 import jp.co.arkinfosys.common.SlipStatusCategoryTrns;
@@ -154,10 +153,10 @@ public class ROrderSlipDto extends AbstractSlipDto<ROrderLineDto> {
 	/** 代引き手数料 */
 	public String codSc;
 
-	public String dcCategory;				
-	public String dcName;					
-	public String dcTimezoneCategory;		
-	public String dcTimezone;				
+	public String dcCategory;				// L 配送業者コード
+	public String dcName;					// S 配送業者名
+	public String dcTimezoneCategory;		// L 配送時間帯コード
+	public String dcTimezone;				// S 配送時間帯文字列
 
 	/**
 	 * 受注伝票明細行を作成します.

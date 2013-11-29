@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.payment;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class SearchPaymentResultAjaxAction extends
 	 */
 	@Override
 	protected void doBeforeSearch() throws Exception {
-		
+		// 各画面の参照権限
 		this.searchPaymentForm.isInputPOrderValid = super.userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_PORDER);
 		this.searchPaymentForm.isInputPurchaseValid = super.userDto

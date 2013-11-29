@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class OutputEntrustStockOrderAction extends AbstractReportWriterAction {
 		entrustEadSlipTrnDto = this.inputEntrustStockService
 				.createEntrustEadSlipTrnDto(inputEntrustStockForm.entrustEadSlipId);
 
-		
+		// 出庫指示書印刷回数をインクリメントする
 		inputEntrustStockService
 				.incrementDispatchOrderPrintCount(entrustEadSlipTrnDto.entrustEadSlipId);
 

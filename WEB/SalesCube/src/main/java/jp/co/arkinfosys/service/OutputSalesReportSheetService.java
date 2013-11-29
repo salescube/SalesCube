@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.Map;
@@ -23,7 +22,7 @@ public class OutputSalesReportSheetService extends AbstractService<SalesSlipTrn>
 	 *
 	 */
 	public static class Param {
-		public static final String SALES_SLIP_ID = "salesSlipId";
+		public static final String SALES_SLIP_ID = "salesSlipId";// 売上伝票番号
 		public static final String SALES_DATE = "salesDate";
 		public static final String CUSTOMER_CODE = "customerCode";
 		public static final String SORT_COLUMN_SALES_DATE = "sortColumnSalesDate";
@@ -109,14 +108,14 @@ public class OutputSalesReportSheetService extends AbstractService<SalesSlipTrn>
 	 */
 	private void setConditionParam(Map<String, Object> conditions,
 			Map<String, Object> param) {
-		
+		// 売上伝票番号
 		if (conditions.containsKey(Param.SALES_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_SLIP_ID))) {
 				param.put(Param.SALES_SLIP_ID,new Long((String)conditions.get(Param.SALES_SLIP_ID)));
 			}
 		}
 
-		
+		// 取引区分
 		param.put(Param.SALES_CM_CATEGORY,Categories.SALES_CM_CATEGORY);
 	}
 }

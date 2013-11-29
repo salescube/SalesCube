@@ -1,9 +1,8 @@
-/*
- *  Copyright 2009-2010 Ark Information Systems.
- */
 package jp.co.arkinfosys.action.ajax.master;
 
-
+/*
+ * Copyright 2009-2010 Ark Information Systems.
+ */
 import javax.annotation.Resource;
 
 import jp.co.arkinfosys.action.ajax.AbstractSearchResultAjaxAction;

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.math.BigDecimal;
@@ -89,11 +88,11 @@ public class CommonPurchaseAction extends CommonResources {
 
 		SupplierJoin supplier;
 
-		
+		// 受け取った日付
 		java.sql.Date sqlDate = new java.sql.Date(DF_YMD.parse(
 				inputPurchaseForm.targetDate).getTime());
 
-		
+		// 仕入先情報取得
 		try {
 			supplier = supplierService
 					.findById(inputPurchaseForm.tempSupplierCode);
@@ -102,15 +101,15 @@ public class CommonPurchaseAction extends CommonResources {
 			throw e;
 		}
 		String result = "";
-		
+		// 仕入先情報が取得できて
 		if (supplier != null) {
-			
+			// 税転嫁が外税伝票計あるいは外税締単位であるなら
 			if (supplier.taxShiftCategory != null) {
 				if (CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL
 						.equals(supplier.taxShiftCategory)
 						|| CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS
 								.equals(supplier.taxShiftCategory)) {
-					
+					// レートを取得し返す
 					TaxRate taxRate = taxRateService.findTaxRateById(
 							CategoryTrns.TAX_TYPE_CTAX, sqlDate.toString());
 					result = ((taxRate != null) ? taxRate.taxRate.toString()
@@ -129,7 +128,7 @@ public class CommonPurchaseAction extends CommonResources {
 	@Execute(validator = true, urlPattern = "getRestQuantityByPoLineId/{tempPoLineId}", input = CommonAjaxResources.Mapping.ERROR_JSP)
 	public String getRestQuantityByPoLineId() throws Exception {
 
-		
+		// 発注伝票行IDを指定しない場合は検索しません
 		if (!StringUtil.hasLength(inputPurchaseForm.tempPoLineId)) {
 			ResponseUtil.write("");
 			return null;

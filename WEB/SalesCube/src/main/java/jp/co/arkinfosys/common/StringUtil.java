@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.text.SimpleDateFormat;
@@ -113,7 +112,7 @@ public final class StringUtil {
 	 * @return 年月形式であるか否か
 	 */
 	public static boolean isYmString(String arg) {
-		
+		// 日にちは1日固定にして、日付型チェックを行う
 		StringBuffer sb = new StringBuffer(arg);
 		sb.append("/01");
 
@@ -192,16 +191,16 @@ public final class StringUtil {
 	public static String convertPaymentName(String str) {
 		String result = str;
 
-		
+		// 前後の空白を削除する
 		result = trimBlank(result);
 
-		
+		// nullの場合、処理しない
 		if (result == null) {
 			return null;
 		}
 
 
-		
+		// 変換定義に従って変換する
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < result.length(); i++) {
 			char c = result.charAt(i);
@@ -214,7 +213,7 @@ public final class StringUtil {
 		}
 		result =  sb.toString();
 
-		
+		// 削除文字列定義に従って文字列削除する
 		for (int i = 0; i < PAYMENT_NAME_DEL.length; i++) {
 			result = result.replace(PAYMENT_NAME_DEL[i], "");
 		}

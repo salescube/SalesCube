@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public abstract class AbstractSearchResultAction<DTOCLASS, ENTITY> extends
 		public static final String EXCEL = "excel.jsp";
 	}
 
-	
+	// Excel出力フラグ
 	public boolean outputExcel = false;
 
 	@Resource
@@ -77,36 +76,36 @@ public abstract class AbstractSearchResultAction<DTOCLASS, ENTITY> extends
 		try {
 			this.doBeforeSearch();
 
-			
+			// アクションフォームを取得
 			AbstractSearchForm<DTOCLASS> actionForm = this.getActionForm();
 
-			
+			// 検索画面の権限を取得する
 			actionForm.isUpdate = super.userDto.isMenuUpdate(this
 					.getSearchMenuID());
 
-			
+			// 入力画面の表示権限を取得する
 			actionForm.isInputValid = super.userDto.isMenuValid(this
 					.getInputMenuID());
 
-			
+			// 検索結果表示項目の取得
 			this.columnInfoList = detailDispItemService.createResult(null,
 					null, this.getSearchMenuID(), actionForm.searchTarget);
 
-			
+			// ページ繰り情報を取得
 			int pageNo = actionForm.pageNo;
 			int rowCount = actionForm.rowCount;
 			int offset = rowCount * (pageNo - 1);
 			String sortColumn = actionForm.sortColumn;
 			boolean sortOrderAsc = actionForm.sortOrderAsc;
 
-			
+			// 検索条件を取得
 			BeanMap params = Beans.createAndCopy(BeanMap.class, actionForm)
 					.excludesWhitespace().lrTrim().execute();
 
-			
+			// 検索結果件数を取得する
 			actionForm.searchResultCount = this.doCount(params);
 
-			
+			// 検索する
 			List<ENTITY> resultList = this.execSearch(params, sortColumn,
 					sortOrderAsc, rowCount, offset);
 

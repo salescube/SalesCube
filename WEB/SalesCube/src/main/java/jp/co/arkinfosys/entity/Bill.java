@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.math.BigDecimal;
@@ -20,9 +19,9 @@ import javax.persistence.Id;
 @Entity
 public class Bill {
 
-	public static final String TABLE_NAME = "BILL_TRN"; 
+	public static final String TABLE_NAME = "BILL_TRN"; // 請求書
 
-	public static final String STATUS_INIT = "0"; 
+	public static final String STATUS_INIT = "0"; // 請求完了
 
 	@Id
 	public Integer billId;

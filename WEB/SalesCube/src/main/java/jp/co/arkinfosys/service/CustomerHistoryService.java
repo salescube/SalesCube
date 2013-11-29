@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.Serializable;
@@ -65,22 +64,22 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			/**
 			 * 顧客
 			 */
-			
+			//SQLの結果リストから、それぞれの差分を取得する
 			List<CustomerHist>result = this.selectBySqlFile(
 					CustomerHist.class, "customer/FindCustomerHistByCode.sql",
 					param).getResultList();
 
 			List<BeanMap>compList = new ArrayList<BeanMap>();
 
-			
+			// 1レコードづつ比較する
 			CustomerHist oldHist = null;
 			boolean flgFirst = true;
 			for (CustomerHist newHist : result) {
-				
+				// INSERT
 				if (AbstractService.ActionType.INSERT.equals(newHist.actionType)){
 					flgFirst = false;
 					oldHist = newHist;
-
+//					addCompList(compList, 0, newHist.updDatetm,"顧客","追加","","" );
 					try {
 						addCustomerHist( compList, null, newHist );
 					} catch (Exception e) {
@@ -89,7 +88,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 					}
 					continue;
 				}
-				
+				// 先頭
 				if( flgFirst){
 					flgFirst = false;
 					oldHist = newHist;
@@ -116,20 +115,20 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			/**
 			 * 納品先
 			 */
-			
+			//SQLの結果リストから、それぞれの差分を取得する
 			List<DeliveryHist> resultDelivery = this.selectBySqlFile(
 					DeliveryHist.class, "customer/FindDeliveryHistByCode.sql",
 					param).getResultList();
 
-			
+			// 1レコードづつ比較する
 			DeliveryHist oldDeliHist = null;
 			flgFirst = true;
 			for (DeliveryHist newDelyHist : resultDelivery) {
-				
+				// INSERT
 				if (AbstractService.ActionType.INSERT.equals(newDelyHist.actionType)){
 					flgFirst = false;
 					oldDeliHist = newDelyHist;
-
+//					addCompList(compList, 1000, newDelyHist.updDatetm,newDelyHist.deliverDeliveryName,"納入先情報追加","","" );
 					try {
 						addDeliveryHist( compList, null, newDelyHist );
 					} catch (Exception e) {
@@ -141,7 +140,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 					addCompList(compList, 2000, newDelyHist.updDatetm,newDelyHist.deliverDeliveryName,"** 納入先情報 **","","** 削除  **" );
 					continue;
 				}
-				
+				// 先頭
 				if( flgFirst){
 					flgFirst = false;
 					oldDeliHist = newDelyHist;
@@ -168,20 +167,20 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			/**
 			 * 請求先
 			 */
-			
+			//SQLの結果リストから、それぞれの差分を取得する
 			List<DeliveryBillHist> resultBill = this.selectBySqlFile(
 					DeliveryBillHist.class, "customer/FindBillHistByCode.sql",
 					param).getResultList();
 
-			
+			// 1レコードづつ比較する
 			DeliveryBillHist oldBillHist = null;
 			flgFirst = true;
 			for (DeliveryBillHist newBillHist : resultBill) {
-				
+				// INSERT
 				if (AbstractService.ActionType.INSERT.equals(newBillHist.actionType)){
 					flgFirst = false;
 					oldBillHist = newBillHist;
-
+//					addCompList(compList, 3000, newBillHist.updDatetm, "請求先", "追加","","" );
 					try {
 						addBillHist( compList, null, newBillHist );
 					} catch (Exception e) {
@@ -193,7 +192,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 					addCompList(compList, 4000,newBillHist.updDatetm, CustomerHistoryService.KIND_BILL, "削除","","" );
 					continue;
 				}
-				
+				// 先頭
 				if( flgFirst){
 					flgFirst = false;
 					oldBillHist = newBillHist;
@@ -213,7 +212,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 				oldBillHist = newBillHist;
 			}
 
-			
+			// 更新日順にソート
 			BeanMap[] array=(BeanMap[])compList.toArray(new BeanMap[0]);
 			java.util.Arrays.sort( array, new MyComparator());
 
@@ -244,16 +243,16 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			Field f2 = newHist.getClass().getField(fs[i].getName());
 			String columnName = fs[i].getName();
 
-			
+			// 比較処理
 			Object o1 = (oldHist == null ) ? null : fs[i].get(oldHist);
 			Object o2 = f2.get(newHist);
 
 			if(o1 == null || o2 == null) {
 				if(o1 == null && o2 == null) {
-					
+					// nullで一致
 				}
 				else {
-					
+					// 不一致
 					if( columnName.indexOf("Cdx")!=-1 ){
 						i++;
 						columnName = fs[i].getName();
@@ -272,11 +271,11 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			}
 
 			if(o1.equals(o2)) {
-				
+				// 一致
 			}
 			else {
-				
-				
+				// 不一致
+				// コードで不一致なら、名称を出力する
 				if( columnName.indexOf("Cdx")!=-1 ){
 					i++;
 					columnName = fs[i].getName();
@@ -288,7 +287,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 						MessageResourcesUtil.getMessage("labels.report.mst.customermst." + columnName),
 						o1,o2 );
 			}
-			
+			// コードなら、名称を飛ばす
 			if( columnName.indexOf("Cdx")!=-1 ){
 				i++;
 			}
@@ -313,16 +312,16 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			Field f2 = newDelyHist.getClass().getField(fs[i].getName());
 			String columnName = fs[i].getName();
 
-			
+			// 比較処理
 			Object o1 = ( oldDeliHist == null ) ? null : fs[i].get(oldDeliHist);
 			Object o2 = f2.get(newDelyHist);
 
 			if(o1 == null || o2 == null) {
 				if(o1 == null && o2 == null) {
-					
+					// nullで一致
 				}
 				else {
-					
+					// 不一致
 					if( columnName.indexOf("Cdx")!=-1 ){
 						i++;
 						columnName = fs[i].getName();
@@ -341,11 +340,11 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			}
 
 			if(o1.equals(o2)) {
-				
+				// 一致
 			}
 			else {
-				
-				
+				// 不一致
+				// コードで不一致なら、名称を出力する
 				if( columnName.indexOf("Cdx")!=-1 ){
 					i++;
 					columnName = fs[i].getName();
@@ -357,7 +356,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 						MessageResourcesUtil.getMessage("labels.report.mst.customermst." + columnName),
 						o1,o2 );
 			}
-			
+			// コードなら、名称を飛ばす
 			if( columnName.indexOf("Cdx")!=-1 ){
 				i++;
 			}
@@ -381,16 +380,16 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			Field f2 = newBillHist.getClass().getField(fs[i].getName());
 			String columnName = fs[i].getName();
 
-			
+			// 比較処理
 			Object o1 = ( oldBillHist == null ) ? null : fs[i].get(oldBillHist);
 			Object o2 = f2.get(newBillHist);
 
 			if(o1 == null || o2 == null) {
 				if(o1 == null && o2 == null) {
-					
+					// nullで一致
 				}
 				else {
-					
+					// 不一致
 					if( columnName.indexOf("Cdx")!=-1 ){
 						i++;
 						columnName = fs[i].getName();
@@ -409,11 +408,11 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 			}
 
 			if(o1.equals(o2)) {
-				
+				// 一致
 			}
 			else {
-				
-				
+				// 不一致
+				// コードで不一致なら、名称を出力する
 				if( columnName.indexOf("Cdx")!=-1 ){
 					i++;
 					columnName = fs[i].getName();
@@ -425,7 +424,7 @@ public class CustomerHistoryService extends AbstractService<BeanMap> {
 						MessageResourcesUtil.getMessage("labels.report.mst.customermst." + columnName),
 						o1,o2 );
 			}
-			
+			// コードなら、名称を飛ばす
 			if( columnName.indexOf("Cdx")!=-1 ){
 				i++;
 			}

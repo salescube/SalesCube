@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.math.BigDecimal;
@@ -29,19 +28,19 @@ public class EditProductSetForm extends AbstractEditForm {
 
 	@Required
 	@Mask(mask = Constants.CODE_MASK.PRODUCT_MASK)
-	public String setProductCode; 
+	public String setProductCode; // セット商品コード
 
-	public String setProductName; 
+	public String setProductName; // セット商品名
 
-	public List<ProductSetDto> childProductList; 
+	public List<ProductSetDto> childProductList; // 子商品リスト
 
 	public int childProductCount;
 
-	public String productCode; 
+	public String productCode; // 商品コード(排他制御用)
 
-	public int initLineNum; 
+	public int initLineNum; // 初期表示の行数
 
-	public int maxLineNum; 
+	public int maxLineNum; // 最大行数
 
 	public String productFractCategory;
 
@@ -55,21 +54,21 @@ public class EditProductSetForm extends AbstractEditForm {
 
 		ActionMessages err = new ActionMessages();
 
-		
+		// 商品コード重複チェック
 		if (this.childProductList != null && this.childProductList.size() > 1) {
 			Map<String, String> map = new HashMap<String, String>();
 			for (ProductSetDto dto : this.childProductList) {
 				if (!StringUtil.hasLength(dto.productCode)) {
-					
+					// 商品コードが入力されていない行はチェックしない
 					continue;
 				}
 				if (dto.deleted) {
-					
+					// 削除行は重複チェックしない
 					continue;
 				}
 
 				if (map.containsKey(dto.productCode)) {
-					
+					// 商品コード重複
 					err.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 							"errors.doubleProductCode"));
 					break;
@@ -78,13 +77,13 @@ public class EditProductSetForm extends AbstractEditForm {
 			}
 		}
 
-		
+		// 必須チェック
 		for (ProductSetDto dto : this.childProductList) {
 			if (!StringUtil.hasLength(dto.productCode)) {
 				continue;
 			}
 
-			
+			// 数量必須
 			if (!StringUtil.hasLength(dto.quantity)) {
 				err.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.required", MessageResourcesUtil
@@ -92,7 +91,7 @@ public class EditProductSetForm extends AbstractEditForm {
 				break;
 			}
 
-			
+			// 数量型
 			try {
 				new BigDecimal(dto.quantity);
 			} catch (NumberFormatException e) {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -184,19 +183,19 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 		try {
 			Map<String, Object> params = super.createSqlParam();
 
-			
+			// 棚区分コード
 			if (conditions.containsKey(ProductStockService.Param.RACK_CATEGORY)) {
 				params.put(ProductStockService.Param.RACK_CATEGORY, conditions
 						.get(ProductStockService.Param.RACK_CATEGORY));
 			}
 
-			
+			// 棚コード
 			if (conditions.containsKey(ProductStockService.Param.RACK_CODE)) {
 				params.put(ProductStockService.Param.RACK_CODE, conditions
 						.get(ProductStockService.Param.RACK_CODE));
 			}
 
-			
+			// 商品コード
 			if (conditions.containsKey(ProductStockService.Param.PRODUCT_CODE)) {
 				params.put(ProductStockService.Param.PRODUCT_CODE, conditions
 						.get(ProductStockService.Param.PRODUCT_CODE));
@@ -227,7 +226,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 		}
 
 		try {
-			
+			// 商品情報を取得する
 			ProductJoin product = this.productService
 					.findById(productCode);
 			if (product == null) {
@@ -236,61 +235,61 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 			}
 			Beans.copy(product, result).execute();
 
-			
+			// 単品
 			if (CategoryTrns.PRODUCT_SET_TYPE_SINGLE
 					.equals(product.setTypeCategory)) {
 
-				
+				// 自社倉庫への当月入出庫分
 				int currentMonthStock = this.eadService
 						.countUnclosedQuantityByProductCode(productCode);
 
-				
+				// 自社倉庫の前回締め時点での在庫数
 				int prevMonthStock = this
 						.countClosedQuantityByProductCode(productCode);
 
-				
+				// 現在庫総数
 				result.currentTotalQuantity = currentMonthStock
 						+ prevMonthStock;
 
-				
+				// 委託在庫数
 				result.entrustStockQuantity = this.eadService
 						.countEntrustQuantityByProductCode(productCode);
 
-				
+				// 受注残数
 				result.rorderRestQuantity = this.roSlipService
 						.countRestQuantityByProductCode(productCode);
 
-				
+				// 発注残数
 				result.porderRestQuantity = this.poSlipService
 						.countRestQuantityByProductCode(productCode, false);
 
-				
+				// 船便発注残数
 				result.porderRestQuantityShip = this.poSlipService
 						.countRestQuantityByProductCode(productCode,
 								CategoryTrns.TRANSPORT_CATEGORY_SHIP);
 
-				
+				// AIR便発注残数
 				result.porderRestQuantityAir = this.poSlipService
 						.countRestQuantityByProductCode(productCode,
 								CategoryTrns.TRANSPORT_CATEGORY_AIR);
 
-				
+				// 宅配便発注残数
 				result.porderRestQuantityDerivary = this.poSlipService
 						.countRestQuantityByProductCode(productCode,
 								CategoryTrns.TRANSPORT_CATEGORY_DELIVERY);
 
-				
+				// 委託残数
 				result.entrustRestQuantity = this.poSlipService
 						.countRestQuantityByProductCode(productCode, true);
 
-				
+				// 引当可能数
 				result.possibleDrawQuantity = result.currentTotalQuantity
 						- result.rorderRestQuantity;
 			}
-			
+			// セット品
 			else if (CategoryTrns.PRODUCT_SET_TYPE_SET
 					.equals(product.setTypeCategory)) {
-				
+				// セット商品の内訳商品を全て取得する
 				List<ProductSetJoin> productSetList = this.productSetService
 						.findProductSetByProductCode(productCode);
 				if (productSetList != null && productSetList.size() > 0) {
@@ -301,7 +300,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 						productCodeArray[i] = productSetList.get(i).productCode;
 					}
 
-					
+					// 各商品の自社倉庫への当月入出庫分
 					List<StockQuantity> stockQuantityList = this.eadService
 							.countUnclosedQuantityByProductCode(productCodeArray);
 					Map<String, BigDecimal> productQuantityMap = new HashMap<String, BigDecimal>();
@@ -312,7 +311,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 						}
 					}
 
-					
+					// 各商品の自社倉庫の前回締め時点での在庫数
 					stockQuantityList = this
 							.countClosedQuantityByProductCode(productCodeArray);
 					for (StockQuantity stockQuantity : stockQuantityList) {
@@ -331,7 +330,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 						}
 					}
 
-					
+					// 在庫数量をセット数で割った場合に、最も小さい値となる商品の値を採用
 					BigDecimal minQuantity = null;
 					for (ProductSetJoin productSet : productSetList) {
 						if (productQuantityMap
@@ -349,22 +348,22 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 							}
 							continue;
 						}
-						
+						// 数量が存在しない商品があった時点で終了（セット品としての在庫が不成立）
 						minQuantity = new BigDecimal(0);
 						break;
 					}
 
-					
+					// 現在庫総数
 					result.currentTotalQuantity = minQuantity.intValue();
 
 
-					
+					// 子商品の受注残数を加味して引当可能数を算出する
 					Iterator<Entry<String, BigDecimal>> entryIterator = productQuantityMap
 							.entrySet().iterator();
 					while (entryIterator.hasNext()) {
 						Entry<String, BigDecimal> entry = entryIterator.next();
 						String key = entry.getKey();
-						
+						// 受注残数
 						int rest = this.roSlipService
 								.countRestQuantityByProductCode(key);
 						if (rest != 0) {
@@ -373,7 +372,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 						}
 					}
 
-					
+					// 在庫数量をセット数で割った場合に、最も小さい値となる商品の値を採用
 					minQuantity = null;
 					for (ProductSetJoin productSet : productSetList) {
 						if (productQuantityMap
@@ -391,21 +390,21 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 							}
 							continue;
 						}
-						
+						// 数量が存在しない商品があった時点で終了（セット品としての在庫が不成立）
 						minQuantity = new BigDecimal(0);
 						break;
 					}
 
-					
+					// 引当可能数
 					result.possibleDrawQuantity = minQuantity.intValue();
 				}
 
-				
+				// 受注残数
 				result.rorderRestQuantity = this.roSlipService
 						.countRestQuantityByProductCode(productCode);
 			}
 
-			
+			// 保有数
 			result.holdingStockQuantity = result.currentTotalQuantity
 					+ result.entrustStockQuantity + result.porderRestQuantity
 					+ result.entrustRestQuantity - result.rorderRestQuantity;
@@ -518,7 +517,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 	public int insertProductStock(ProductStockTrn productStockTrn)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSqlParam(productStockTrn);
 			return this.updateBySqlFile("productstock/InsertProductStock.sql",
 					param).execute();
@@ -538,7 +537,7 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 	public int deleteProductStockByCode(ProductStockTrn productStockTrn)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.RACK_CODE, productStockTrn.rackCode);
 			param.put(Param.PRODUCT_CODE, productStockTrn.productCode);
@@ -627,10 +626,10 @@ public class ProductStockService extends AbstractService<ProductStockTrn> {
 				param.put(Param.PRODUCT_CODE, productCode);
 			}
 
-			
+			// 指定商品コードの全親品番を取得する
 			List<ProductSetJoin> setProductList = productSetService.findProductSetByChildProductCode(productCode);
 
-			
+			// 親品番を設定
 			List<String> setProductCode = null;
 			Iterator<ProductSetJoin> it = setProductList.iterator();
 			while (it.hasNext()) {

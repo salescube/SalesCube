@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.BufferedInputStream;
@@ -105,16 +104,16 @@ public class FileDownloadService<ENTITY> extends AbstractService<ENTITY> {
 		boolean deflate = false;
 		if (StringUtil.hasLength(acceptEncoding)
 				&& acceptEncoding.contains(FileDownloadService.GZIP)) {
-			
+			// 圧縮可能であれば圧縮する
 			httpResponse.setHeader(
 					FileDownloadService.HTTP_HEADER.CONTENT_ENCODING,
 					FileDownloadService.GZIP);
 			deflate = true;
 		}
 
-		
+		// Content-Type設定
 		httpResponse.setContentType(Constants.MIME.BIN);
-		
+		// Content-Disposition設定
 		httpResponse.setHeader(
 				FileDownloadService.HTTP_HEADER.CONTENT_DISPOSITION,
 				"attachment; filename=\""
@@ -122,7 +121,7 @@ public class FileDownloadService<ENTITY> extends AbstractService<ENTITY> {
 								.getBytes(Constants.CHARSET.WINDOWS31J),
 								Constants.CHARSET.LATIN1) + "\"");
 
-		
+		// OutputStreamを返す
 		if (deflate) {
 			return new GZIPOutputStream(new BufferedOutputStream(httpResponse
 					.getOutputStream()));
@@ -156,7 +155,7 @@ public class FileDownloadService<ENTITY> extends AbstractService<ENTITY> {
 
 		} catch (SocketException e) {
 			if (!e.getMessage().contains("ClientAbortException")) {
-				
+				// ClientAbortExceptionはユーザキャンセルなので正常と判断
 				throw e;
 			}
 		} finally {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class SearchDeptAction extends AbstractSearchAction<DeptDto> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 親部門リストを作成
 		List<Dept> deptList = this.deptService.findAllDept();
 		for (Dept dept : deptList) {
 			this.searchDeptForm.parentList.add(new LabelValueBean(dept.name,

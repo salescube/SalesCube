@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.text.SimpleDateFormat;
@@ -106,12 +105,12 @@ public class CommonProductAction extends CommonAjaxResources {
 			this.stockInfoDto = this.productStockService
 					.calcStockQuantityByProductCode(commonProductForm.productCode);
 
-			
+			// 棚番コードの指定がない時は標準棚を設定
 			if (product != null
 					&& !StringUtil.hasLength(commonProductForm.rackCode)) {
 				commonProductForm.rackCode = product.rackCode;
 			}
-			
+			// 移動可能数(棚在庫数)を計算
 			int unclosedQuantity = eadService
 					.countUnclosedQuantityByProductCode(
 							commonProductForm.productCode,
@@ -151,64 +150,64 @@ public class CommonProductAction extends CommonAjaxResources {
 			map.put(Param.RACK_CODE, (product.rackCode == null ? ""
 					: product.rackCode));
 
-			
+			// 上代
 			map.put(Param.RETAIL_PRICE, (product.retailPrice == null ? ""
 					: product.retailPrice.toString()));
-			
+			// 受注限度数
 			map.put(Param.RO_MAX_NUM, (product.roMaxNum == null ? ""
 					: product.roMaxNum.toString()));
-			
+			// セット商品フラグ
 			map.put(Param.SET_TYPE_CATEGORY,
 					(product.setTypeCategory == null ? ""
 							: product.setTypeCategory));
 
-			
+			// 廃棄されている場合1（廃棄日が現在日以下）　その他の場合0
 			map.put(Param.DISCARDED, (product.discarded == null ? ""
 					: product.discarded));
 
-			
+			// 課税区分
 			map.put(Param.TAX_CATEGORY, (product.taxCategory == null ? ""
 					: product.taxCategory));
-			
+			// 備考
 			map.put(Param.REMARKS, (product.remarks == null ? ""
 					: product.remarks));
-			
+			// ピッキング備考
 			map.put(Param.EAD_REMARKS, (product.eadRemarks == null ? ""
 					: product.eadRemarks));
-			
+			// 単位コード
 			map.put(Param.UNIT_CATEGORY, (product.unitCategory == null ? ""
 					: product.unitCategory));
-			
+			// 単位名
 			map.put(Param.UNIT_CATEGORY_NAME,
 					(product.unitCategoryName == null ? ""
 							: product.unitCategoryName));
-			
+			// オンライン品番
 			map.put(Param.ONLINE_PCODE, (product.onlinePcode == null ? ""
 					: product.onlinePcode));
-			
+			// 入り数
 			map.put(Param.PACK_QUANTITY, (product.packQuantity == null ? ""
 					: product.packQuantity.toString()));
 
-			
+			// 長さ
 			map.put(Param.LENGTH, (product.length == null ? "" : product.length
 					.toString()));
 
-			
+			// 特注品掛率
 			map.put(Param.SO_RATE, (product.soRate == null ? ""
 					: product.soRate.toString()));
 
-			
+			// 在庫管理区分
 			map.put(Param.STOCK_CTL_CATEGORY,
 					(product.stockCtlCategory == null ? ""
 							: product.stockCtlCategory));
 		}
-		
+		//検索結果が空=Nullなら空文字列で返却する
 		else {
 			ResponseUtil.write("", "text/javascript");
 			return null;
 		}
 
-		
+		// 商品在庫情報
 		map.put(ShowStockInfoDialogAction.Param.PRODUCT_CODE,
 				(stockInfoDto.productCode == null ? ""
 						: stockInfoDto.productCode));
@@ -225,7 +224,7 @@ public class CommonProductAction extends CommonAjaxResources {
 		map.put(ShowStockInfoDialogAction.Param.HOLDING_STOCK_QUANTITY, (String
 				.valueOf(stockInfoDto.holdingStockQuantity)));
 
-		
+		// 移動可能数を設定
 		if (StringUtil.hasLength(commonProductForm.rackCode)) {
 			map.put(Param.MOVABLE_QUANTITY, String.valueOf(movableQuantity));
 		} else {
@@ -246,14 +245,14 @@ public class CommonProductAction extends CommonAjaxResources {
 	public String getProductByCodeLike() throws Exception {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		try {
-			
+			// 該当件数を取得する（商品コードの前方一致）
 			List<Product> productList = productService
 					.findProductByCodeLike(commonProductForm.productCode);
 			if (productList == null || productList.size() == 0) {
 				map.put(Param.PRODUCT_COUNT, String.valueOf("0"));
 				ResponseUtil.write(JSON.encode(map), "text/javascript");
 			} else {
-				
+				// 1つに特定できたら、商品情報を設定する。
 				if (productList.size() == 1) {
 					Product product = productList.get(0);
 					BeanMap bmap = super.createBeanMapWithNullToEmpty(product);

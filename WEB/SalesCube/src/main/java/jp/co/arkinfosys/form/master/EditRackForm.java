@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import jp.co.arkinfosys.common.Constants.CODE_SIZE;
@@ -111,31 +110,31 @@ public class EditRackForm extends AbstractEditForm {
 
 		ActionMessages errors = new ActionMessages();
 
-		
+		// 必須チェックは@Requiredで済んでいる
 
-		
-		
+		// 長さチェック
+		// 棚番コード　7文字
 		checkMaxLength(rackCode, CODE_SIZE.RACK, labelRackCode, errors);
-		
+		// 棚番名　60文字
 		checkMaxLength(rackName, 60, labelRackName, errors);
-		
+		// 倉庫コード　10文字
 		checkMaxLength(warehouseCode, CODE_SIZE.WAREHOUSE, labelWarehouseCode, errors);
-		
+		// 倉庫名　60文字
 		checkMaxLength(warehouseName, 60, labelWarehouseName, errors);
-		
+		// 住所１　50文字
 		checkMaxLength(address1, 50, labelAddress1, errors);
-		
+		// 住所２　50文字
 		checkMaxLength(address2, 50, labelAddress2, errors);
-		
+		// TEL　15文字
 		checkMaxLength(rackTel, 15, labelTel, errors);
-		
+		// FAX　15文字
 		checkMaxLength(rackFax, 15, labelFax, errors);
-		
+		// E-MAIL　255文字
 		checkMaxLength(rackEmail, 255, labelEmail, errors);
-		
+		// 担当者名　60文字
 		checkMaxLength(rackPcName, 60, labelPcName, errors);
 
-		
+		// 郵便番号チェック
 		checkMaxLength(zipCode, 8, labelZipCode, errors);
 
 		return errors;

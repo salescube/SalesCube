@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.sql.SQLException;
@@ -42,15 +41,15 @@ public class SeqMakerService extends AbstractService<SeqMaker> {
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public long nextval(String tableName) throws ServiceException {
 		try {
-			
+			// 発番テーブルの該当するレコードをロックする
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SeqMakerService.Param.TABLE_NAME, tableName);
 			SeqMaker seq = this.selectBySqlFile(SeqMaker.class,
 					"seqmaker/LockSequence.sql", param).getSingleResult();
 
-			
+			// 発番処理
 			if (seq != null) {
-				
+				// ロック成功
 				param = super.createSqlParam();
 				param.put(SeqMakerService.Param.TABLE_NAME, tableName);
 				param.put(SeqMakerService.Param.ID, seq.id + 1);
@@ -59,7 +58,7 @@ public class SeqMakerService extends AbstractService<SeqMaker> {
 				return seq.id + 1;
 			}
 
-			
+			// レコードなし
 			param = super.createSqlParam();
 			param.put(SeqMakerService.Param.TABLE_NAME, tableName);
 			param.put(SeqMakerService.Param.ID, 1);

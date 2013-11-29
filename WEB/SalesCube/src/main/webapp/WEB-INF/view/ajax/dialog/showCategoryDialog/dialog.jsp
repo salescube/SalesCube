@@ -24,7 +24,7 @@ function onClose(){
 </script>
 
 <div id="${dialogId}" title="区分情報" style="display: none;">
-
+<div style="padding: 20px 20px 0 20px;">
 		<c:forEach var="a" items="${categoryDtoList}" varStatus="status">
 			<input type="${formType}" name="category" value="${a.categoryCodeName}">
 			${a.categoryCodeName}
@@ -35,4 +35,5 @@ function onClose(){
 		<button type="button" style="width: 70px" tabindex="11000"
 			onclick="onClose()">閉じる</button>
 	</div>
+</div>
 </div>

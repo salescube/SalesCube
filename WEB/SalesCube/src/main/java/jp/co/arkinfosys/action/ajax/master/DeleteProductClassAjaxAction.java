@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.master;
 
 import javax.annotation.Resource;
@@ -44,7 +43,7 @@ public class DeleteProductClassAjaxAction extends
 	protected ActionMessages checkRecord() throws Exception {
 		ActionMessages messages = new ActionMessages();
 
-		
+		// 子分類の有無をチェック
 		BeanMap params = Beans.createAndCopy(BeanMap.class,
 				this.deleteProductClassAjaxForm).excludesWhitespace().execute();
 

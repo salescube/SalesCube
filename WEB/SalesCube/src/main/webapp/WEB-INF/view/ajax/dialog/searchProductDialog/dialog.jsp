@@ -2,23 +2,16 @@
 	<span id="${dialogId}_errors" style="color: red">
 	</span>
 	<form onsubmit="return false;">
+	<div style="padding: 20px 20px 0 20px;">
 		<table class="forms" summary="商品検索条件" style="width: 730px;">
-			<colgroup>
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 16%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 20%">
-			</colgroup>
 			<tr>
 				<th>商品コード</th>
-				<td><input id="${dialogId}_productCode" name="${dialogId}_productCode" type="text" value="" style="width: 120px; ime-mode: disabled;" tabindex="5000"
+				<td><input id="${dialogId}_productCode" name="${dialogId}_productCode" type="text" value="" style="width: 140px; ime-mode: disabled;" tabindex="5000"
 						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"></td>
 				<th>仕入先商品コード</th>
-				<td><input id="${dialogId}_supplierPcode" name="${dialogId}_supplierPcode" type="text" value="" style="width: 120px; ime-mode: disabled;" tabindex="5001"></td>
+				<td><input id="${dialogId}_supplierPcode" name="${dialogId}_supplierPcode" type="text" value="" style="width: 140px; ime-mode: disabled;" tabindex="5001"></td>
 				<th>JANコード</th>
-				<td><input id="${dialogId}_janPcode" name="${dialogId}_janPcode" type="text" value="" style="width: 120px; ime-mode: disabled;" tabindex="5002"></td>
+				<td><input id="${dialogId}_janPcode" name="${dialogId}_janPcode" type="text" value="" style="width: 140px; ime-mode: disabled;" tabindex="5002"></td>
 			</tr>
 			<tr>
 				<th>セット分類</th>
@@ -61,19 +54,10 @@
 				<th>商品名カナ</th>
 				<td><input id="${dialogId}_productKana" name="${dialogId}_productKana" type="text" value="" style="width: 250px" tabindex="5007"></td>
 			</tr>
-		</table>
-
-		<table class="forms" summary="商品検索条件" style="width: 730px;">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 25%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 45%">
-			</colgroup>
 			<tr>
 				<th>仕入先コード</th>
 				<td><input id="${dialogId}_supplierCode" name="${dialogId}_supplierCode" type="text" value="" style="width: 120px; ime-mode: disabled;" tabindex="5008">
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="5009"
+					<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="5009"
 						onclick="
 							openSearchSupplierDialog('${dialogId}_supplierCodeSearchDialog', _searchSupplierCallBack);
 							$('#${dialogId}_supplierCodeSearchDialog_supplierCode').val( $('#${dialogId}_supplierCode').val() );
@@ -81,7 +65,7 @@
 				</td>
 				<th>仕入先名</th>
 				<td><input id="${dialogId}_supplierName" name="${dialogId}_supplierName" type="text" value="" style="width: 250px" tabindex="5010">
-					<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="5011"
+					<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="5011"
 						onclick="
 							openSearchSupplierDialog('${dialogId}_supplierNameSearchDialog', _searchSupplierCallBack);
 							$('#${dialogId}_supplierNameSearchDialog_supplierName').val( $('#${dialogId}_supplierName').val() );
@@ -96,21 +80,17 @@
 				onclick="$('#${dialogId}_selectButton').attr('disabled', true);
 					_searchProduct( '${dialogId}');">検索</button>
 		</div>
-
+	</div>
 	</form>
 
-	<div id="${dialogId}ListContainer">
-		検索結果件数： 0件
-		<div style="padding: 0px; border: none; width: 750px; height: 220px; overflow: hidden;">
-			<table id="${dialogId}List" summary="商品検索結果" style="width: 740px;">
-				<colgroup>
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 25%">
-					<col span="1" style="width: 45%">
-					<col span="1" style="width: 20%">
-				</colgroup>
+	<div id="${dialogId}ListContainer"  style="padding: 0 20px;">
+		<div style=" color: #FFFFFF;">検索結果件数： 0件</div>
+		<div style="border: none; width: 100%; height: 220px; overflow: hidden;">
+			<table class="dialog_resultList" id="${dialogId}List" summary="商品検索結果" style="width: 100%;">
+				<col span="1" style="width: 30%">
+				<col span="1" style="width: 50%">
+				<col span="1" style="width: 20%">
 				<tr>
-					<th>&nbsp;</th>
 					<th>商品コード</th>
 					<th>商品名</th>
 					<th>長さ</th>
@@ -119,14 +99,8 @@
 		</div>
 	</div>
 
-	<br>
-
-	<div style="width: 730px; text-align: right">
-		<button id="${dialogId}_selectButton" type="button" style="width: 70px" tabindex="5150"
-			onclick="_selectSearchResultAjax( '${dialogId}', 'selectedProduct', ProductParams, 'productCode' );
-					$('#${dialogId}').dialog('close');" disabled>選択</button>
+	<div style="width: 96%; text-align: right; margin-top: 15px;">
 		<button id="" type="button" style="width: 70px" tabindex="5151"
 			onclick="$('#${dialogId}').dialog('close');">閉じる</button>
 	</div>
-
 </div>

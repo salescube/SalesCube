@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class EditRateAction extends AbstractEditAction<RateDto, RateJoin> {
 	public String index() throws Exception {
 		super.init(null);
 		
-		
+		// 新規のときは１つだけRateTrnを追加しておく
 		this.editRateForm.rateTrnList.add(new RateTrnDto());
 		
 		return getInputURL();
@@ -98,7 +97,7 @@ public class EditRateAction extends AbstractEditAction<RateDto, RateJoin> {
 	 */
 	@Override
 	public void doInsertAfter(RateDto dto) throws Exception {
-		
+		// IDを引き取る
 		editRateForm.rateId = dto.rateId;
 	}
 
@@ -113,7 +112,7 @@ public class EditRateAction extends AbstractEditAction<RateDto, RateJoin> {
 	@Execute(validator = true, validate = "validate", input = "initEdit", stopOnValidationError = false)
 	public String update() throws Exception {
 		String result = doUpdate();
-		
+		// 削除済みデータをクリア
 		this.editRateForm.deletedRateId = "";
 		return result;
 	}
@@ -129,7 +128,7 @@ public class EditRateAction extends AbstractEditAction<RateDto, RateJoin> {
 		String result = doDelete();
 		this.editRateForm.initialize();
 		this.editRateForm.editMode = false;
-		
+		// 新規のときは１つだけRateTrnを追加しておく
 		this.editRateForm.rateTrnList.add(new RateTrnDto());
 		return result;
 
@@ -241,10 +240,10 @@ public class EditRateAction extends AbstractEditAction<RateDto, RateJoin> {
 		try {
 			super.setForm(record);
 
-			
+			// 一旦クリア
 			this.editRateForm.rateTrnList = new ArrayList<RateTrnDto>();
 
-			
+			// レートデータを取得
 			Rate rate = (Rate) record;
 			List<RateTrn> resultList = rateService.findRateTrnsByRateId(rate.rateId.toString());
 			for (RateTrn entity : resultList) {

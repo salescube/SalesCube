@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
 import java.util.ArrayList;
@@ -41,9 +40,9 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 	 */
 	public static class Param {
 
-		
+		// 検索条件
 		public static final String SEARCH_TARGET = "searchTarget";
-		
+		// 伝票
 		public static final String PO_SLIP_ID = "poSlipId";
 		public static final String STATUS = "status";
 		public static final String USER_NAME = "userName";
@@ -58,7 +57,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		public static final String SUPPLIER_CODE = "supplierCode";
 		public static final String SUPPLIER_NAME = "supplierName";
 		public static final String SUPPLIER_PC_NAME = "supplierPcName";
-		
+		// 明細行
 		public static final String PRODUCT_CODE = "productCode";
 		public static final String PRODUCT_ABSTRACT = "productAbstract";
 		public static final String PRODUCT1 = "product1";
@@ -66,12 +65,12 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		public static final String PRODUCT3 = "product3";
 		public static final String SORT_ORDER = "sortOrder";
 
-		public static final String ENTRUST_PO_REST = "entrustPoRest";	
-		public static final String ENTRUST_PO_MAKED = "entrustPoMaked";	
-		public static final String ENTRUST_PO_DELIVERED = "entrustPoDelivered";	
-		public static final String NORMAL_PO_REST = "normalPoRest";		
+		public static final String ENTRUST_PO_REST = "entrustPoRest";	// 委託発注伝票(委託入庫)の検索時の条件
+		public static final String ENTRUST_PO_MAKED = "entrustPoMaked";	// 委託発注伝票(委託出庫)の検索時の条件
+		public static final String ENTRUST_PO_DELIVERED = "entrustPoDelivered";	// 委託発注伝票(仕入からの伝票呼出)の検索時の条件
+		public static final String NORMAL_PO_REST = "normalPoRest";		// 委託発注伝票以外の発注伝票
 
-		
+		// 検索結果表示
 		public static final String ROW_COUNT = "rowCount";
 		public static final String OFFSET_ROW = "offsetRow";
 
@@ -81,26 +80,26 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		public static final String SORT_COLUMN_SLIP = "sortColumnSlip";
 		public static final String SORT_COLUMN_LINE = "sortColumnLine";
 
-		
-		
+		// 検索結果
+		// 伝票
 		private static final String PAYMENT_STATUS = "paymentStatus";
 
-		
+		// private static final String PO_SLIP_ID = "poSlipId";
 		public static final String PO_DATE = "poDate";
 		private static final String DELIVERY_DATE = "deliveryDate";
 		private static final String USER_ID = "userId";
-		
-		
-		
-		
+		// private static final String USER_NAME = "userName";
+		// private static final String SUPPLIER_CODE = "supplierCode";
+		// private static final String SUPPLIER_NAME = "supplierName";
+		// private static final String TRANSPORT_CATEGORY = "transportCategory";
 
 		private static final String PURE_PRICE_TOTAL = "purePriceTotal";
 		private static final String PRICE_TOTAL = "priceTotal";
 		private static final String CTAX_TOTAL = "ctaxTotal";
 		private static final String FE_PRICE_TOTAL = "fePriceTotal";
-		
-		
-		
+		// 明細
+		// private static final String PRODUCT_CODE = "productCode";
+		// private static final String PRODUCT_ABSTRACT = "productAbstract";
 		private static final String QUANTITY = "quantity";
 		private static final String UNIT_PRICE = "unitPrice";
 		private static final String PRICE = "price";
@@ -132,7 +131,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 	 */
 	public static class Column {
 
-		
+		// 伝票
 		private static final String PAYMENT_STATUS = "PAYMENT_STATUS";
 
 		private static final String PO_SLIP_ID = "PO_SLIP_ID";
@@ -148,7 +147,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		private static final String PRICE_TOTAL = "PRICE_TOTAL";
 		private static final String CTAX_TOTAL = "CTAX_TOTAL";
 		private static final String FE_PRICE_TOTAL = "FE_PRICE_TOTAL";
-		
+		// 明細
 		private static final String PRODUCT_CODE = "PRODUCT_CODE";
 		private static final String PRODUCT_ABSTRACT = "PRODUCT_ABSTRACT";
 		private static final String QUANTITY = "QUANTITY";
@@ -183,7 +182,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			List<List<Object>> searchResultList, String searchTarget)
 			throws ServiceException {
 		try {
-			
+			// パラメータを作成する
 			List<BeanMap> resultMapList = new ArrayList<BeanMap>();
 			if (porderSlipLineJoinDtoList != null) {
 				for (POrderSlipLineJoinDto porderSlipLineJoinDto : porderSlipLineJoinDtoList) {
@@ -195,7 +194,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 				}
 			}
 
-			
+			// 検索結果に表示する列を取得する
 			List<DetailDispItemDto> columnInfoList = detailDispItemService
 					.createResult(resultMapList, searchResultList,
 							Constants.MENU_ID.SEARCH_PORDER, searchTarget);
@@ -219,10 +218,10 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if (Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				count = findPOrderSlipCntByCondition(params);
 			} else if (Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -279,27 +278,27 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
-		
+		// 各種置き換え文字列、区分
+		// 未払い
 		param.put(ParamLocal.UNPAID, MessageResourcesUtil
 				.getMessage("labels.slipPaymentStatus.unpaid"));
-		
+		// 済
 		param.put(ParamLocal.PAID, MessageResourcesUtil
 				.getMessage("labels.slipPaymentStatus.paid"));
-		
+		// 発注伝票状態 仕入完了：Constants.STATUS_PORDER_SLIP.PURCHASED
 		param.put(ParamLocal.STATUS_PORDER_SLIP_PURCHASED,
 				Constants.STATUS_PORDER_SLIP.PURCHASED);
-		
+		// 仕入伝票状態 未払い：Constants.STATUS_SUPPLIER_SLIP.UNPAID
 		param.put(ParamLocal.STATUS_SUPPLIER_SLIP_UNPAID,
 				Constants.STATUS_SUPPLIER_SLIP.UNPAID);
-		
+		// 運送便区分のコード
 		param.put(ParamLocal.TRANSPORT_CATEGORY_CODE,
 				Categories.TRANSPORT_CATEGORY);
-		
+		// 明細行の状態(表示上：完納区分)
 		param.put(ParamLocal.PO_LINE_STATUS,
 				SlipStatusCategories.PO_LINE_STATUS);
 
-		
+		// 伝票番号
 		if (conditions.containsKey(Param.PO_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_SLIP_ID))) {
 				param.put(Param.PO_SLIP_ID, new Integer((String) conditions
@@ -307,7 +306,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 入力担当者名
 		if (conditions.containsKey(Param.USER_NAME)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_NAME))) {
 				param.put(Param.USER_NAME, super
@@ -316,7 +315,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 発注日（開始）
 		if (conditions.containsKey(Param.PO_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PO_DATE_FROM))) {
@@ -325,7 +324,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 発注日（終了）
 		if (conditions.containsKey(Param.PO_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_DATE_TO))) {
 				param.put(Param.PO_DATE_TO, (String) conditions
@@ -333,7 +332,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 納期（開始）
 		if (conditions.containsKey(Param.DELIVERY_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DELIVERY_DATE_FROM))) {
@@ -342,7 +341,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 納期（終了）
 		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DELIVERY_DATE_TO))) {
@@ -351,7 +350,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 摘要
 		if (conditions.containsKey(Param.REMARKS)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.REMARKS))) {
 				param.put(Param.REMARKS, super
@@ -360,7 +359,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 運送便区分
 		if (conditions.containsKey(Param.TRANSPORT_CATEGORY)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.TRANSPORT_CATEGORY))) {
@@ -369,21 +368,21 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 発注残のみ
 		if (conditions.containsKey(Param.ONLY_REST_QUANTITY_EXIST)) {
 			if ((Boolean) conditions.get(Param.ONLY_REST_QUANTITY_EXIST)) {
-				param.put(Param.ONLY_REST_QUANTITY_EXIST, "true"); 
+				param.put(Param.ONLY_REST_QUANTITY_EXIST, "true"); // nullでなければなんでもよい
 			}
 		}
 
-		
+		// 未払いのみ
 		if (conditions.containsKey(Param.ONLY_UNPAID)) {
 			if ((Boolean) conditions.get(Param.ONLY_UNPAID)) {
-				param.put(Param.ONLY_UNPAID, "true"); 
+				param.put(Param.ONLY_UNPAID, "true"); // nullでなければなんでもよい
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_CODE))) {
@@ -393,7 +392,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_NAME))) {
@@ -403,7 +402,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先担当者名
 		if (conditions.containsKey(Param.SUPPLIER_PC_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_PC_NAME))) {
@@ -413,7 +412,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(Param.PRODUCT_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_CODE))) {
@@ -423,7 +422,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(Param.PRODUCT_ABSTRACT)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_ABSTRACT))) {
@@ -432,7 +431,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 分類（大）
 		if (conditions.containsKey(Param.PRODUCT1)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT1))) {
 				param.put(Param.PRODUCT1, (String) conditions
@@ -440,7 +439,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 分類（中）
 		if (conditions.containsKey(Param.PRODUCT2)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT2))) {
 				param.put(Param.PRODUCT2, (String) conditions
@@ -448,7 +447,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 分類（小）
 		if (conditions.containsKey(Param.PRODUCT3)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT3))) {
 				param.put(Param.PRODUCT3, (String) conditions
@@ -456,33 +455,33 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
 
-		
+		// 委託発注残(未入庫)を検索するときの条件セット
 		if (conditions.containsKey(Param.ENTRUST_PO_REST)) {
 			param.put(Param.ENTRUST_PO_REST, conditions.get(Param.ENTRUST_PO_REST));
 		}
 
-		
+		// 委託発注残(入庫済み)を検索するときの条件セット
 		if (conditions.containsKey(Param.ENTRUST_PO_MAKED)) {
 			param.put(Param.ENTRUST_PO_MAKED, conditions.get(Param.ENTRUST_PO_MAKED));
 		}
 
-		
+		// 委託発注残(出庫済み)を検索するときの条件セット
 		if (conditions.containsKey(Param.ENTRUST_PO_DELIVERED)) {
 			param.put(Param.ENTRUST_PO_DELIVERED, conditions.get(Param.ENTRUST_PO_DELIVERED));
 		}
 
-		
+		// 委託発注残以外の通常発注伝票を検索するときの条件セット
 		if (conditions.containsKey(Param.NORMAL_PO_REST)) {
 			param.put(Param.NORMAL_PO_REST, conditions.get(Param.NORMAL_PO_REST));
 		}
@@ -551,7 +550,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// ソートカラムを設定する
 			if (Param.PAYMENT_STATUS.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SLIP, Column.PAYMENT_STATUS);
 			} else if (Param.PO_SLIP_ID.equals(sortColumn)) {
@@ -598,7 +597,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 				param.put(Param.SORT_COLUMN_LINE, Column.LINE_STATUS);
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -629,12 +628,12 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// ソートカラムを設定する
 			if (Param.PAYMENT_STATUS.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SLIP, Column.PAYMENT_STATUS);
 			} else if (Param.PO_SLIP_ID.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SLIP, Column.PO_SLIP_ID);
-				
+				// 明細行のときだけ特別です。
 				param.put(Param.SORT_COLUMN_LINE, Column.LINE_NO);
 			} else if (Param.PO_DATE.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SLIP, Column.PO_DATE);
@@ -680,7 +679,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 				param.put(Param.SORT_COLUMN_LINE, Column.LINE_DELIVERY_DATE);
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -704,36 +703,36 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 	public List<POrderSlipLineJoinDto> createPOrderSlipJoinDtoList(
 			BeanMap params) throws ServiceException {
 		try {
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(Param.SEARCH_TARGET);
 
-			
+			// ソートカラムを設定
 			String sortColumn = (String) params.get(Param.SORT_COLUMN);
 
-			
+			// ソート順を設定
 			boolean sortOrderAsc = (Boolean) params.get(Param.SORT_ORDER_ASC);
 
-			
+			// 伝票単位か明細単位か
 			List<POrderSlipLineJoin> porderSlipLineJoinList = new ArrayList<POrderSlipLineJoin>();
 			if (Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
-				
+				// 検索を行う
 				porderSlipLineJoinList = findPOrderSlipByCondition(params,
 						sortColumn, sortOrderAsc);
 			} else if (Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
-				
+				// 検索を行う
 				porderSlipLineJoinList = findPOrderSlipLineByCondition(params,
 						sortColumn, sortOrderAsc);
 			}
 
-			
+			// POrderSlipLineJoinDtoリストを生成する
 			List<POrderSlipLineJoinDto> porderSlipLineJoinDtoList = new ArrayList<POrderSlipLineJoinDto>();
 			for (POrderSlipLineJoin porderSlipLineJoin : porderSlipLineJoinList) {
-				
+				// Dtoを生成
 				POrderSlipLineJoinDto porderSlipLineJoinDto = Beans
 						.createAndCopy(POrderSlipLineJoinDto.class,
 								porderSlipLineJoin).execute();
 
-				
+				// 明細検索の場合
 				if (Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
 
 					porderSlipLineJoinDto.poSlipIdShow = porderSlipLineJoinDto.poSlipId
@@ -743,7 +742,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 					porderSlipLineJoinDto.poSlipIdShow = porderSlipLineJoinDto.poSlipId;
 				}
 
-				
+				// リストに追加
 				porderSlipLineJoinDtoList.add(porderSlipLineJoinDto);
 			}
 

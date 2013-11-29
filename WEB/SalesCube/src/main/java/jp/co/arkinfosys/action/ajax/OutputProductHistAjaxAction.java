@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.net.URLEncoder;
@@ -77,8 +76,8 @@ public class OutputProductHistAjaxAction extends CommonAjaxResources {
 	 */
 	@Execute(validator = true, input="/ajax/errorResponse.jsp")
 	public String prepare() {
-		
-		
+		// 保存用検索条件にコピー
+		//Beans.copy(outputProductHistForm, ProductDto).execute();
 
 		return null;
 	}
@@ -91,13 +90,13 @@ public class OutputProductHistAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
-			
+			// 保存用出力条件からコピー
+			//Beans.copy(ProductDto, outputProductHistForm).execute();
 
-			
+			// パラメータを作成する
 			BeanMap params = createParamMap();
 
-			
+			// 検索を行う
 			BeanMap codeName = new BeanMap();
 			codeName.put("ProductCode",outputProductHistForm.productCode);
 			codeName.put("ProductName",outputProductHistForm.productName);
@@ -105,16 +104,16 @@ public class OutputProductHistAjaxAction extends CommonAjaxResources {
 
 			historyList = productHistoryService.getHistroyList(params);
 
-			
+			// 出力の設定
 			setup4Product();
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -136,15 +135,15 @@ public class OutputProductHistAjaxAction extends CommonAjaxResources {
 	 * 商品マスタ変更履歴出力の設定をします.
 	 */
 	private void setup4Product() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME;
 
-		
+		// 名称 カラム定義
 		nameColList = new ArrayList<ReportColumnInfoDto>();
 		nameColList.add(new ReportColumnInfoDto("ProductCode",0,"labels.product.productCode"));
 		nameColList.add(new ReportColumnInfoDto("ProductName",0,"labels.product.productName"));
 
-		
+		// 変更履歴 カラム定義
 		historyColList = new ArrayList<ReportColumnInfoDto>();
 		historyColList.add(new ReportColumnInfoDto("updDatetm",11,"labels.customer.hist.updDatetm"));
 		historyColList.add(new ReportColumnInfoDto("colName",0,"labels.customer.hist.colName"));

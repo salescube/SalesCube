@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.purchase;
 
 import java.util.ArrayList;
@@ -142,11 +141,11 @@ public class InputPurchaseForm extends AbstractSlipEditForm<PurchaseLineDto>{
 	public String targetDate;
 	public String tempPoLineId;
 
-	public String copySlipId; 
+	public String copySlipId; // 複写伝票番号
 
 	public boolean initCalc = false;
 
-	
+	// 明細行のタブ移動可能項目数
 	public int lineElementCount = 15;
 
 	/**

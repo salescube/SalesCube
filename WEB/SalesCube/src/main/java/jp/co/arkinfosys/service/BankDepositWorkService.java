@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class BankDepositWorkService extends AbstractService<BankDepositWork>{
 			BeanMap bankDepositWorkMap = Beans.createAndCopy(BeanMap.class, bankDepositWorkDto).execute();
 			param.putAll(bankDepositWorkMap);
 
-			
+			// データ登録
 			this.updateBySqlFile("bankdepositwork/InsertBankDepositWork.sql", param).execute();
 
 		} catch (Exception e) {

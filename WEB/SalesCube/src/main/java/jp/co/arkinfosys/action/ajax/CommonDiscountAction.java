@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.HashMap;
@@ -49,7 +48,7 @@ public class CommonDiscountAction extends CommonAjaxResources {
 				map.put(DiscountService.Param.USE_FLAG,discount.useFlag==null?"":discount.useFlag);
 				map.put(DiscountService.Param.REMARKS,discount.remarks==null?"":discount.remarks);
 			} else {
-				
+				// 検索結果が空=Nullなら空文字列で返却する
 				ResponseUtil.write("", "text/javascript");
 				return null;
 			}

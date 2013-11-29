@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.setting;
 
 import java.util.ArrayList;
@@ -155,7 +154,7 @@ public class EditUserForm {
 	 */
 	public ActionMessages validateForInsert() {
 		ActionMessages errors = new ActionMessages();
-		
+		// パスワード必須チェック
 		if (!StringUtil.hasLength(this.password)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.required", MessageResourcesUtil
@@ -184,7 +183,7 @@ public class EditUserForm {
 	 */
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
-		
+		// パスワード違い
 		if (!this.password.equals(this.passwordConfirm)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.password.difference"));

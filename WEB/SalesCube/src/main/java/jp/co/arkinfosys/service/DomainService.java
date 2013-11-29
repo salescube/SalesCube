@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.Map;
@@ -33,7 +32,7 @@ public class DomainService extends AbstractService<Domain> {
 	 */
 	public Domain findById(String userId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(DomainService.Param.DOMAIN_ID, userId);
 

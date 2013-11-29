@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 	@Override
 	public DeptJoin findById(String deptId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(DeptService.Param.DEPT_ID, deptId);
 
@@ -92,7 +91,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 	 */
 	public List<Dept> findByParentId(String parentId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(DeptService.Param.PARENT_ID, parentId);
 
@@ -120,7 +119,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -153,7 +152,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 
 			setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -179,7 +178,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 	public List<DeptJoin> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
 		return new ArrayList<DeptJoin>();
-		
+		// 未使用メソッド
 	}
 
 	/**
@@ -194,13 +193,13 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			UnabledLockException {
 
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(DeptService.Param.DEPT_ID, dto.deptId);
 			this.lockRecordBySqlFile("dept/LockDeptByDeptId.sql", param,
 					dto.updDatetm);
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(DeptService.Param.DEPT_ID, dto.deptId);
 			this.updateBySqlFile("dept/DeleteDeptByDeptId.sql", param)
@@ -224,7 +223,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			return;
 		}
 		try {
-			
+			// ユーザーの登録
 			Map<String, Object> param = super.createSqlParam();
 			BeanMap deptInfo = Beans
 					.createAndCopy(BeanMap.class, dto)
@@ -255,13 +254,13 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			return;
 		}
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(DeptService.Param.DEPT_ID, dto.deptId);
 			this.lockRecordBySqlFile("dept/LockDeptByDeptId.sql", param,
 					dto.updDatetm);
 
-			
+			// ユーザーの登録
 			param = super.createSqlParam();
 			BeanMap deptInfo = Beans
 					.createAndCopy(BeanMap.class, dto)
@@ -287,33 +286,33 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 部門ID
 		if (conditions.containsKey(DeptService.Param.DEPT_ID)) {
 			param.put(DeptService.Param.DEPT_ID, super
 					.createPrefixSearchCondition((String) conditions
 							.get(DeptService.Param.DEPT_ID)));
 		}
 
-		
+		// 親部門ID
 		if (conditions.containsKey(DeptService.Param.PARENT_ID)) {
 			param.put(DeptService.Param.PARENT_ID, conditions
 					.get(DeptService.Param.PARENT_ID));
 		}
 
-		
+		// 部門名
 		if (conditions.containsKey(DeptService.Param.NAME)) {
 			param.put(DeptService.Param.NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(DeptService.Param.NAME)));
 		}
 
-		
+		// ソートカラム名を設定する
 		if (StringUtil.hasLength(sortColumn)) {
 			param.put(DeptService.Param.SORT_COLUMN, StringUtil
 					.convertColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(DeptService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -342,7 +341,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			return deptDtoList;
 		}
 
-		
+		// 一時マップに格納する
 		Map<String, DeptDto> temp = new HashMap<String, DeptDto>(0);
 		for (Dept deptJoin : deptJoinList) {
 			DeptDto dto = Beans.createAndCopy(DeptDto.class, deptJoin)
@@ -351,7 +350,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 			temp.put(deptJoin.deptId, dto);
 		}
 
-		
+		// 親子関係を構築する
 		for (Dept deptJoin : deptJoinList) {
 			if (StringUtil.hasLength(deptJoin.parentId)) {
 				DeptDto parent = temp.get(deptJoin.parentId);
@@ -359,7 +358,7 @@ public class DeptService extends AbstractMasterEditService<DeptDto, DeptJoin> im
 					continue;
 				}
 
-				
+				// 親の子供として追加する
 				if (parent.childDeptList == null) {
 					parent.childDeptList = new ArrayList<DeptDto>(0);
 				}

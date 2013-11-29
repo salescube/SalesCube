@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import org.seasar.struts.annotation.Execute;
 public class SearchStockResultOutputAction extends
 		AbstractSearchResultAjaxAction<List<Object>, EadSlipLineJoinDto> {
 
-	
+	// JSP側のEL式で使用する為に定数をコピー
 	public String CONST_SALES = Constants.SRC_FUNC.SALES;
 	public String CONST_PURCHASE = Constants.SRC_FUNC.PURCHASE;
 	public String CONST_STOCK = Constants.SRC_FUNC.STOCK;
@@ -144,7 +143,7 @@ public class SearchStockResultOutputAction extends
 	 */
 	@Override
 	protected MasterSearch<EadSlipLineJoinDto> getService() {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -155,7 +154,7 @@ public class SearchStockResultOutputAction extends
 	 */
 	@Override
 	protected Class<List<Object>> getDtoClass() {
-		
+		// 未使用メソッド
 		return null;
 	}
 }

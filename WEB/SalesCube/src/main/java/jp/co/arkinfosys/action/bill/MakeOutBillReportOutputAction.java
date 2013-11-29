@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.bill;
 
 import java.util.List;
@@ -210,7 +209,7 @@ public class MakeOutBillReportOutputAction extends AbstractReportWriterAction {
 		BeanMap beanMapBill = this.billService
 				.findBillByIdSimple(this.makeOutBillPrintForm.rowDataPrint
 						.get(index).billId);
-		
+		// 常にマスタの請求先を使う
 		String customerCode = beanMapBill.get("customerCode").toString();
 
 		List<DeliveryAndPre> billList = this.deliveryService
@@ -274,12 +273,5 @@ public class MakeOutBillReportOutputAction extends AbstractReportWriterAction {
 		return lbm;
 	}
 
-	/**
-	 * アクションフォームに保持している銀行マスタIDを返します.<br>
-	 * @return 銀行マスタID
-	 */
-	@Override
-	public String getBankId() {
-		return this.makeOutBillPrintForm.bankId;
-	}
+
 }

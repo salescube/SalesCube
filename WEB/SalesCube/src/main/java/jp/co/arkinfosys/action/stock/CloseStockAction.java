@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.Date;
@@ -52,7 +51,7 @@ public class CloseStockAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// 最終締年月日
 		Date lastCutoffDate = closeStockService.findMaxStockPDateDate();
 		closeStockForm.lastCutoffDate = StringUtil.getDateString(Constants.FORMAT.DATE, lastCutoffDate);
 
@@ -66,16 +65,16 @@ public class CloseStockAction extends CommonResources {
 	@Execute(validator = true, stopOnValidationError = true, validate = "validate", input = Mapping.INDEX)
 	public String close() throws Exception {
 		try {
-			
+			// 締実行
 			Integer resultCount = closeStockService.close(closeStockForm.cutoffDate);
 
 			if(resultCount == 0) {
-				
+				// 締実行完了メッセージ表示（処理対象なし）
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 									new ActionMessage("infos.stock.close.noData"));
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 			} else {
-				
+				// 締実行完了メッセージ表示
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 									new ActionMessage("infos.stock.close"));
 				ActionMessagesUtil.addMessages(super.httpSession, super.messages);
@@ -83,9 +82,9 @@ public class CloseStockAction extends CommonResources {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -101,19 +100,19 @@ public class CloseStockAction extends CommonResources {
 	@Execute(validator = false, input = Mapping.INPUT)
 	public String reopen() throws Exception {
 		try {
-			
+			// 締解除
 			closeStockService.reopen();
 
-			
+			// 締実行完了メッセージ表示
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("infos.stock.reopen"));
 			ActionMessagesUtil.addMessages(super.httpSession, super.messages);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -130,18 +129,18 @@ public class CloseStockAction extends CommonResources {
 		ActionMessages errors = new ActionMessages();
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
 
-		
+		// 最終締年月日を再取得する
 		Date lastCutoffDate = closeStockService.findMaxStockPDateDate();
 
-		
+		// 値チェック
 
-		
+		// 在庫締処理日
 		if(StringUtil.hasLength(closeStockForm.cutoffDate) && lastCutoffDate != null) {
 			try {
 				boolean err = false;
 				Date cutoffDate = sdf.parse(closeStockForm.cutoffDate);
 				if(lastCutoffDate.compareTo(cutoffDate) >= 0) {
-					
+					// 在庫締処理日が最終締処理日以前の場合はエラー
 					err = true;
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("errors.cutoffDate.eq.less"));
@@ -151,14 +150,14 @@ public class CloseStockAction extends CommonResources {
 					YmDto cutoffDto = closeStockService.getYm(cutoffDate);
 					YmDto lastCutoffDto = closeStockService.getYm(lastCutoffDate);
 					if(cutoffDto.ym.equals(lastCutoffDto.ym)) {
-						
+						// 在庫締処理日が最終締処理日と同じ年月の場合はエラー
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("errors.cutoffDate.eq"));
 					}
 				}
 			} catch (ParseException e) {
-				
-				
+				// パースエラーの場合はフォーマットチェックエラーが
+				// 既に表示されているので何もしない
 			}
 		}
 

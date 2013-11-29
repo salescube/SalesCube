@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.report;
 
 import java.text.ParseException;
@@ -76,16 +75,20 @@ public class OutputBalanceListForm {
 		ActionErrors errors = new ActionErrors();
 
 		if(!StringUtil.hasLength(targetDate)) {
-			
+			// 検索条件未入力の場合
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.required","targetDate"));
 		}
 
-		
 		try {
+			//未来日チェック
 			if( ValidateUtil.dateIsFuture(ValidateUtil.getLastDateOfMonthFromYmFormat(targetDate)) ) {
-				errors.add(ActionMessages.GLOBAL_MESSAGE,
+				//未来日の場合、当月かどうかチェック
+				if( ValidateUtil.dateIsNotThisMoon (targetDate)) {
+						//当月出ない場合、未来日エラーとする
+						errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.dateFuture", MessageResourcesUtil.getMessage("labels.targetDate")));
+				}
 			}
 		} catch(ParseException e) {
 		}

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TemplateL" language="groovy" pageWidth="595" pageHeight="842" columnWidth="520" leftMargin="40" rightMargin="35" topMargin="10" bottomMargin="50">
 	<property name="ireport.zoom" value="1.771561000000001"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="128"/>
+	<property name="ireport.y" value="296"/>
 	<style name="DefaultStyle" isDefault="true" forecolor="#010101" backcolor="#010101"/>
 	<parameter name="poSlipId" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="poDate" class="java.util.Date" isForPrompting="false"/>
@@ -20,6 +20,7 @@
 	<parameter name="companyTel" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="companyFax" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="companyCeoName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="companyCeoTitle" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="deliveryDate" class="java.util.Date" isForPrompting="false"/>
 	<parameter name="remarks" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="fePriceTotal" class="java.math.BigDecimal" isForPrompting="false"/>
@@ -92,7 +93,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA[$P{poDate}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{poDate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="323" y="2" width="108" height="15"/>
@@ -106,7 +107,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Long"><![CDATA[$P{poSlipId}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{poSlipId}]]></textFieldExpression>
 				</textField>
 				<textField pattern="">
 					<reportElement x="323" y="45" width="197" height="15"/>
@@ -259,7 +260,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA[$P{deliveryDate}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{deliveryDate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="95" y="180" width="113" height="15"/>
@@ -289,13 +290,6 @@
 					</textElement>
 					<text><![CDATA[T/T]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="323" y="135" width="197" height="15"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
-					</textElement>
-					<text><![CDATA[代表取締役社長]]></text>
-				</staticText>
 				<textField>
 					<reportElement x="371" y="150" width="149" height="15"/>
 					<textElement verticalAlignment="Middle">
@@ -317,6 +311,13 @@
 					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="323" y="135" width="197" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{companyCeoTitle}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -335,22 +336,8 @@
 					</textElement>
 					<text><![CDATA[合計]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="431" y="0" width="89" height="12"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
-					</textElement>
-					<text><![CDATA[]]></text>
-				</staticText>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement x="431" y="12" width="89" height="12"/>
+					<reportElement x="431" y="0" width="89" height="24"/>
 					<box rightPadding="2">
 						<leftPen lineWidth="0.5"/>
 						<bottomPen lineWidth="0.5"/>
@@ -359,7 +346,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{fePriceTotal}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{fePriceTotal}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -546,7 +533,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ROW_NUM}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{ROW_NUM}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="31" y="0" width="135" height="12"/>
@@ -588,7 +575,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{quantity}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="362" y="0" width="69" height="24"/>
@@ -602,7 +589,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{dolUnitPrice}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dolUnitPrice}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="431" y="0" width="89" height="24"/>
@@ -616,7 +603,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{dolPrice}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dolPrice}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="95" y="24" width="425" height="12"/>
@@ -658,7 +645,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{deliveryDate}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

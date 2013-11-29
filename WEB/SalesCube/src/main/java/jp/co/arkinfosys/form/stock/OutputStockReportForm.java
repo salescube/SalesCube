@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.stock;
 
 import java.util.List;
@@ -67,7 +66,7 @@ public class OutputStockReportForm {
 		ActionErrors errors = new ActionErrors();
 		String labelTargetYm = MessageResourcesUtil.getMessage("labels.targetYm");
 
-		
+		// 年月チェック
 		if(StringUtil.hasLength(targetYm)) {
 			if(!StringUtil.isYmString(targetYm)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE,

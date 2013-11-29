@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 import jp.co.arkinfosys.common.CategoryTrns;
@@ -149,38 +148,38 @@ public class SalesLineDto extends AbstractLineDto {
 	 * @param rolDto 受注伝票明細行情報
 	 */
 	public void initialize( ROrderLineDto rolDto ) {
-		salesLineId = "";						
-		status = SalesLineTrn.STATUS_INIT;		
-		salesSlipId = "";						
-		lineNo = rolDto.lineNo;			
-		roLineId = rolDto.roLineId;				
-		salesDetailCategory = "";				
-		productCode = rolDto.productCode;		
-		productAbstract = rolDto.productAbstract;
-		quantity = rolDto.restQuantity;			
-												
+		salesLineId = "";						// H 売上伝票行ID
+		status = SalesLineTrn.STATUS_INIT;		// H 状態フラグ　
+		salesSlipId = "";						// H 売上伝票番号
+		lineNo = rolDto.lineNo;			// H 売上伝票行番
+		roLineId = rolDto.roLineId;				// H 受注伝票行ID
+		salesDetailCategory = "";				// H 売上明細区分
+		productCode = rolDto.productCode;		// T 商品コード
+		productAbstract = rolDto.productAbstract;// H 商品名・摘要
+		quantity = rolDto.restQuantity;			// T 残数量
+												// L 完納区分
 		deliveryProcessCategory = CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL;
-		unitRetailPrice = rolDto.unitRetailPrice;	
-		retailPrice = rolDto.retailPrice;	
-		unitCost = rolDto.unitCost;			
-		cost = rolDto.cost;					
-		taxCategory = rolDto.taxCategory;	
-		ctaxRate = rolDto.ctaxRate;			
-		ctaxPrice = rolDto.ctaxPrice;		
-		gm = "";							
-		remarks = rolDto.remarks;			
-		eadRemarks = rolDto.eadRemarks;		
-		productRemarks = rolDto.productRemarks;		
-		rackCodeSrc = rolDto.rackCodeSrc;	
-		creFunc = "";						
-		creDatetm = "";						
-		creUser = "";						
-		updFunc = "";						
-		updDatetm = "";						
-		updUser = "";						
+		unitRetailPrice = rolDto.unitRetailPrice;	// T 上代単価
+		retailPrice = rolDto.retailPrice;	// T 上代金額
+		unitCost = rolDto.unitCost;			// T 原価単価
+		cost = rolDto.cost;					// T 原価金額
+		taxCategory = rolDto.taxCategory;	// H 課税区分
+		ctaxRate = rolDto.ctaxRate;			// H 消費税率
+		ctaxPrice = rolDto.ctaxPrice;		// H 消費税
+		gm = "";							// H 粗利益
+		remarks = rolDto.remarks;			// T 備考
+		eadRemarks = rolDto.eadRemarks;		// T ピッキング備考
+		productRemarks = rolDto.productRemarks;		// T 商品備考
+		rackCodeSrc = rolDto.rackCodeSrc;	// T 出荷元棚番コード
+		creFunc = "";						// 作成機能
+		creDatetm = "";						// 作成日時
+		creUser = "";						// 作成者
+		updFunc = "";						// 更新機能
+		updDatetm = "";						// 更新日時
+		updUser = "";						// 更新者
 
-		roQuantity = rolDto.restQuantity;		
-		bkQuantity = quantity.replaceAll(",", "");				
+		roQuantity = rolDto.restQuantity;		// H 受注数量保持
+		bkQuantity = quantity.replaceAll(",", "");				// H 変更前数量保持
 	}
 
 }

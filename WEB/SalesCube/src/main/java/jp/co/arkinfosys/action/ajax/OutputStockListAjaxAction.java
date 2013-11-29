@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class OutputStockListAjaxAction extends CommonAjaxResources {
 	 */
 	@Execute(validator = true, stopOnValidationError = false, validate = "validate", input = CommonAjaxResources.Mapping.ERROR_JSP)
 	public String search() throws Exception {
-		
+		// 保存用検索条件にコピー
 		Beans.copy(outputStockListForm, outputStockListFormDto).execute();
 
 		return Mapping.RESULT;
@@ -83,21 +82,21 @@ public class OutputStockListAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
+			// 検索条件の調整
 			Beans.copy(outputStockListFormDto, outputStockListForm).execute();
 
-			
+			// 検索を行う
 			List<ProductStockInfoDto> dtoList =
 				outputStockListService.createOutputStockListDtoList(outputStockListFormDto);
-			
+			// 検索結果設定
 			outputStockListForm.searchResultList = dtoList;
 
-			
+			// 出力日
 			outputStockListForm.currentDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

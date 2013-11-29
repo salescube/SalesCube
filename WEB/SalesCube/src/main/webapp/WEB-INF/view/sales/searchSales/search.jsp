@@ -108,10 +108,6 @@
 
 		// 検索
 		function onF2(){
-			// この条件で検索しますか？
-			if(!confirm('<bean:message key="confirm.search" />')){
-				return;
-			}
 
 			// 検索条件を設定する
 			if (targetTmp!=null) {
@@ -143,21 +139,12 @@
 						(typeof paramDataTmp[key].length != undefined && paramDataTmp[key].length == 0)) {
 					continue;
 				}
-				if (paramDataTmp[key] instanceof Array) {
-					   for (i=0; i<paramDataTmp[key].length; i++) {
-							var hidden = $(document.createElement("input"));
-							hidden.attr("type", "hidden");
-							hidden.attr("name", key);
-							hidden.val(paramDataTmp[key][i]);
-							form.append(hidden);
-						}
-				}else{
+
 				var hidden = $(document.createElement("input"));
 				hidden.attr("type", "hidden");
 				hidden.attr("name", key);
 				hidden.val(paramDataTmp[key]);
 				form.append(hidden);
-				}
 			}
 
 			form.submit();
@@ -319,20 +306,21 @@
 
 		<!-- ファンクションボタン -->
 		<div class="function_buttons">
-			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/>
-			</button><button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/>
-			</button><button id="btnF4" tabindex="2003" onclick="onF4()">F4<br><bean:message key='words.action.setting'/>
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;</button>
+			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/></button>
+			<button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/></button>
+			<button id="btnF4" tabindex="2003" onclick="onF4()">F4<br><bean:message key='words.action.setting'/></button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 			<!-- 検索条件 -->
 			<div class="function_forms">
@@ -340,168 +328,170 @@
 					<html:errors/>
 				</div>
 
-				<bean:message key='labels.searchCondition'/><br>
-				<div id="search_info">
-					<table id="search_target" class="forms" summary="searchTarget">
-						<colgroup>
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 13%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.searchTarget'/></th> <!-- 検索対象 -->
-							<td>
-								<html:select property="searchTarget" styleId="searchTarget" tabindex="100">
-									<html:options collection="searchTargetList" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-							<th><bean:message key='labels.salesSlipId'/></th> <!-- 売上番号 -->
-							<td><html:text property="salesSlipId" styleId="salesSlipId" style="width: 100px; ime-mode: disabled;" tabindex="101" /></td>
-							<th><bean:message key='labels.roSlipId'/></th> <!-- 受注番号 -->
-							<td><html:text property="roSlipId" styleId="roSlipId" style="width: 100px; ime-mode: disabled;" tabindex="102" /></td>
-							<th><bean:message key='labels.receptNo'/></th> <!-- 受付番号 -->
-							<td><html:text property="receptNo" styleId="receptNo" style="width: 100px; ime-mode: disabled;" tabindex="103" /></td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.salesDate'/></th> <!-- 売上日 -->
-							<td colspan="3">
-								<html:text property="salesDateFrom" styleId="salesDateFrom" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="104" />
-								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="salesDateTo" styleId="salesDateTo" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="105" />
-							</td>
-							<th><bean:message key='labels.deliveryDate2'/></th> <!-- 納期指定日 -->
-							<td colspan="3">
-								<html:text property="deliveryDateFrom" styleId="deliveryDateFrom" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="106" />
-								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="deliveryDateTo" styleId="deliveryDateTo" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="107" />
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.dcCategory'/></th> <!-- 配送業者 -->
-							<td>
-								<html:select property="dcCategory" styleId="dcCategory" tabindex="108">
-									<html:options collection="dcCategoryList" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-							<th><bean:message key='labels.dcTimezoneCategory'/></th> <!-- 配達時間帯 -->
-							<td>
-								<html:select property="dcTimezoneCategory" styleId="dcTimezoneCategory" tabindex="109">
-									<html:options collection="dcTimezoneCategoryList" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-							<th><bean:message key='labels.eadRemarks'/></th> <!-- ピッキング備考 -->
-							<td colspan="3"><html:text property="pickingRemarks" styleId="pickingRemarks" style="width: 300px;" tabindex="110" /></td>
-						</tr>
-					</table>
-
-					<table id="customer_info" class="forms" summary="customerInfo">
-						<colgroup>
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 31%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 13%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.customerCode'/></th> <!-- 顧客コード -->
-							<td>
-								<html:text property="customerCode" styleId="customerCode" style="width: 150px; ime-mode: disabled;" tabindex="200" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="201" />
-							</td>
-							<th><bean:message key='labels.customerName'/></th> <!-- 顧客名 -->
-							<td>
-								<html:text property="customerName" styleId="customerName" style="width: 250px; ime-mode: auto;" tabindex="202" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="203" />
-							</td>
-							<th><bean:message key='labels.customerPcName2'/></th> <!-- 顧客担当者名 -->
-							<td>
-								<html:text property="customerPcName" styleId="customerPcName" style="width: 100px; ime-mode: auto;" tabindex="204" />
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.salesCmCategory'/></th> <!-- 顧客コード -->
-							<td colspan="5">
-								<c:forEach var="salesCmCategory" varStatus="s" items="${salesCmCategoryList}">
-									<input id="salesCmCategory${s.index}" type="checkbox" name="salesCmCategory" value="${salesCmCategory.value}" tabindex="205">
-									<label for="salesCmCategory${s.index}">${salesCmCategory.label}</label>
-								</c:forEach>
-							</td>
-						</tr>
-					</table>
-
-					<table id="product_info" class="forms" summary="productInfo">
-						<colgroup>
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 56%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.productCode'/></th><!-- 商品コード -->
-							<td>
-								<html:text property="productCode" styleId="productCode" style="width: 165px; ime-mode: disabled;" tabindex="300"
-									onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog(1)" tabindex="301" />
-							</td>
-							<th><bean:message key='labels.productName'/></th> <!-- 商品名 -->
-							<td>
-								<html:text property="productAbstract" styleId="productAbstract" style="width: 450px;" tabindex="302" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog(2)" tabindex="303" />
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.product1'/></th><!-- 分類(大) -->
-							<td colspan="3">
-								<html:select property="product1" styleId="product1" styleClass="ProductClass1_TopEmpty" style="width: 500px;" tabindex="304">
-									<html:options collection="product1List" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.product2'/></th> <!-- 分類(中) -->
-							<td colspan="3">
-								<html:select property="product2" styleId="product2" styleClass="ProductClass2_TopEmpty" style="width: 500px;" tabindex="305">
-									<html:options collection="product2List" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.product3'/></th> <!-- 分類(小) -->
-							<td colspan="3">
-								<html:select property="product3" styleId="product3" styleClass="ProductClass3_TopEmpty" style="width: 500px;" tabindex="306">
-									<html:options collection="product3List" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-						</tr>
-					</table>
-
-					<table id="supplier_info" class="forms" summary="supplierInfo">
-						<colgroup>
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 12%">
-							<col span="1" style="width: 56%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.supplierCode'/></th> <!-- 仕入先コード -->
-							<td>
-								<html:text property="supplierCode" styleId="supplierCode" style="width: 150px; ime-mode: disabled;" tabindex="400" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(1)" tabindex="401" />
-							</td>
-							<th><bean:message key='labels.supplierName'/></th> <!-- 仕入先名 -->
-							<td colspan="3">
-								<html:text property="supplierName" styleId="supplierName" style="width: 450px;" tabindex="402" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(2)" tabindex="403" />
-							</td>
-						</tr>
-					</table>
-				</div>
+			    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span><bean:message key='labels.searchCondition'/></span>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
+					
+					<div id="search_info"  class="section_body">
+						<table id="search_target1" class="forms" summary="searchTarget1">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.searchTarget'/></div></th> <!-- 検索対象 -->
+								<td>
+									<html:select property="searchTarget" styleId="searchTarget" tabindex="100">
+										<html:options collection="searchTargetList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.salesSlipId'/></div></th> <!-- 売上番号 -->
+								<td><html:text property="salesSlipId" styleId="salesSlipId" style="width: 100px; ime-mode: disabled;" tabindex="101" /></td>
+								<th><div class="col_title_right"><bean:message key='labels.roSlipId'/></div></th> <!-- 受注番号 -->
+								<td><html:text property="roSlipId" styleId="roSlipId" style="width: 100px; ime-mode: disabled;" tabindex="102" /></td>
+								<th><div class="col_title_right"><bean:message key='labels.receptNo'/></div></th> <!-- 受付番号 -->
+								<td><html:text property="receptNo" styleId="receptNo" style="width: 100px; ime-mode: disabled;" tabindex="103" /></td>
+							</tr>
+						</table>
+						
+						<table id="search_target2" class="forms" summary="searchTarget2" style="width: auto;">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.salesDate'/></div></th> <!-- 売上日 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="salesDateFrom" styleId="salesDateFrom" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="104" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/> <!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="salesDateTo" styleId="salesDateTo" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="105" />
+									</div>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.deliveryDate2'/></div></th> <!-- 納期指定日 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="deliveryDateFrom" styleId="deliveryDateFrom" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="106" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/> <!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="deliveryDateTo" styleId="deliveryDateTo" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="107" />
+									</div>
+								</td>
+							</tr>
+						</table>
+						
+						<table id="search_target3" class="forms" summary="searchTarget3">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.dcCategory'/></div></th> <!-- 配送業者 -->
+								<td>
+									<html:select property="dcCategory" styleId="dcCategory" tabindex="108">
+										<html:options collection="dcCategoryList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.dcTimezoneCategory'/></div></th> <!-- 配達時間帯 -->
+								<td>
+									<html:select property="dcTimezoneCategory" styleId="dcTimezoneCategory" tabindex="109">
+										<html:options collection="dcTimezoneCategoryList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.eadRemarks'/></div></th> <!-- ピッキング備考 -->
+								<td colspan="3"><html:text property="pickingRemarks" styleId="pickingRemarks" style="width: 300px;" tabindex="110" /></td>
+							</tr>
+						</table>
+	
+						<table id="customer_info" class="forms" summary="customerInfo">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.customerCode'/></div></th> <!-- 顧客コード -->
+								<td>
+									<html:text property="customerCode" styleId="customerCode" style="width: 150px; ime-mode: disabled;" tabindex="200" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="201" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.customerName'/></div></th> <!-- 顧客名 -->
+								<td>
+									<html:text property="customerName" styleId="customerName" style="width: 250px; ime-mode: auto;" tabindex="202" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="203" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.customerPcName2'/></div></th> <!-- 顧客担当者名 -->
+								<td>
+									<html:text property="customerPcName" styleId="customerPcName" style="width: 100px; ime-mode: auto;" tabindex="204" />
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.salesCmCategory'/></div></th> <!-- 顧客コード -->
+								<td colspan="5">
+									<c:forEach var="salesCmCategory" varStatus="s" items="${salesCmCategoryList}">
+										<input id="salesCmCategory${s.index}" type="checkbox" name="salesCmCategory" value="${salesCmCategory.value}" tabindex="205">
+										<label for="salesCmCategory${s.index}">${salesCmCategory.label}</label>
+									</c:forEach>
+								</td>
+							</tr>
+						</table>
+	
+						<table id="product_info" class="forms" summary="productInfo">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.productCode'/></div></th><!-- 商品コード -->
+								<td>
+									<html:text property="productCode" styleId="productCode" style="width: 165px; ime-mode: disabled;" tabindex="300"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog(1)" tabindex="301" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.productName'/></div></th> <!-- 商品名 -->
+								<td>
+									<html:text property="productAbstract" styleId="productAbstract" style="width: 450px;" tabindex="302" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog(2)" tabindex="303" />
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.product1'/></div></th><!-- 分類(大) -->
+								<td colspan="3">
+									<html:select property="product1" styleId="product1" styleClass="ProductClass1_TopEmpty" style="width: 500px;" tabindex="304">
+										<html:options collection="product1List" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.product2'/></div></th> <!-- 分類(中) -->
+								<td colspan="3">
+									<html:select property="product2" styleId="product2" styleClass="ProductClass2_TopEmpty" style="width: 500px;" tabindex="305">
+										<html:options collection="product2List" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.product3'/></div></th> <!-- 分類(小) -->
+								<td colspan="3">
+									<html:select property="product3" styleId="product3" styleClass="ProductClass3_TopEmpty" style="width: 500px;" tabindex="306">
+										<html:options collection="product3List" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+							</tr>
+						</table>
+	
+						<table id="supplier_info" class="forms" summary="supplierInfo">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.supplierCode'/></div></th> <!-- 仕入先コード -->
+								<td>
+									<html:text property="supplierCode" styleId="supplierCode" style="width: 150px; ime-mode: disabled;" tabindex="400" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(1)" tabindex="401" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.supplierName'/></div></th> <!-- 仕入先名 -->
+								<td colspan="3">
+									<html:text property="supplierName" styleId="supplierName" style="width: 450px;" tabindex="402" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSupplierSearchDialog(2)" tabindex="403" />
+								</td>
+							</tr>
+						</table>
+					</div>
+		    	</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
 				<html:hidden property="sortColumn" styleId="sortColumn" />
 				<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 			</div>
@@ -510,9 +500,9 @@
 		<form name="OutputForm" action="${f:url('/sales/searchSalesResultOutput/excel')}" target="_blank" style="display: none;" method="POST">
 		</form>
 
-		<div style="width: 910px; text-align: right">
-			<button type="button" tabindex="450" onclick="onF1();"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
-			<button type="button" tabindex="451" onclick="onF2();"><bean:message key='words.action.search'/></button> <!-- 検索 -->
+		<div style="width: 1160px; text-align: right">
+			<button type="button" tabindex="450" onclick="onF1();" class="btn_medium"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
+			<button type="button" tabindex="451" onclick="onF2();" class="btn_medium"><bean:message key='words.action.search'/></button> <!-- 検索 -->
 		</div>
 		<span id="listContainer">
 			<%@ include file="/WEB-INF/view/ajax/sales/searchSalesResultAjax/result.jsp" %>

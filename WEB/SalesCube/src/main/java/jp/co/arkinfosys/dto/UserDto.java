@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto;
 
 import java.io.Serializable;
@@ -82,7 +81,7 @@ public class UserDto implements Serializable, MasterEditDto {
 	 */
 	public boolean isPasswordExpired() throws ParseException {
 		if (this.expireDate == null) {
-			
+			// NULLの場合は期限管理しない
 			return false;
 		}
 		DateFormat df = new SimpleDateFormat(Constants.FORMAT.DATE);
@@ -92,7 +91,7 @@ public class UserDto implements Serializable, MasterEditDto {
 		Calendar expire = Calendar.getInstance();
 		expire.setTime(dt);
 
-		
+		// 本日0時との比較を行う
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 0);
 		today.set(Calendar.MINUTE, 0);
@@ -113,7 +112,7 @@ public class UserDto implements Serializable, MasterEditDto {
 			return false;
 		}
 
-		
+		// 親メニューから検索
 		for (MenuDto menuDto : this.menuDtoList) {
 			if (menuId.equals(menuDto.menuId)) {
 				return true;
@@ -122,7 +121,7 @@ public class UserDto implements Serializable, MasterEditDto {
 				return false;
 			}
 
-			
+			// サブメニューを検索
 			for (MenuDto subMenuDto : menuDto.subMenuDtoList) {
 				if (menuId.equals(subMenuDto.menuId)) {
 					return true;
@@ -143,22 +142,22 @@ public class UserDto implements Serializable, MasterEditDto {
 			return false;
 		}
 
-		
+		// 親メニューから検索
 		for (MenuDto menuDto : this.menuDtoList) {
 			if (menuDto.subMenuDtoList == null) {
 				return false;
 			}
 
-			
+			// サブメニューを検索
 			for (MenuDto subMenuDto : menuDto.subMenuDtoList) {
 				if (menuId.equals(subMenuDto.menuId)) {
 					if (Constants.MENU_VALID_LEVEL.VALID_FULL
 							.equals(subMenuDto.validFlag)) {
-						
+						// 2：有効
 						return true;
 					} else if (Constants.MENU_VALID_LEVEL.VALID_LIMITATION
 							.equals(subMenuDto.validFlag)) {
-						
+						// 1：閲覧のみ
 						return false;
 					}
 				}

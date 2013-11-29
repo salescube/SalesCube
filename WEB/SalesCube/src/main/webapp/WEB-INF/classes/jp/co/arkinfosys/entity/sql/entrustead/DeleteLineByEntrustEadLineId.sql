@@ -1,2 +1,0 @@
-DELETE FROM ENTRUST_EAD_LINE_TRN_/*$domainId*/'DEFAULT'
-WHERE ENTRUST_EAD_LINE_ID=/*entrustEadLineId*/'default'

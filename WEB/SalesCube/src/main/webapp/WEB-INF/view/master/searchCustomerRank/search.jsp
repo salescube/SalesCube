@@ -39,9 +39,7 @@
 	}
 
     function searchCustomerRank() {
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
     }
 
@@ -229,10 +227,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1314"/>
@@ -266,81 +264,87 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
 
-		<span>顧客ランク条件</span><br>
-		<table id="user_info" class="forms" summary="顧客ランク情報" style="width: 600px">
-			<colgroup>
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-			</colgroup>
-			<tr>
-				<th colspan="2">顧客ランクコード</th>
-				<td colspan="3"><html:text styleId="rankCode" property="rankCode" style="width: 100px; ime-mode: disabled;"  tabindex="100"/></td>
-			</tr>
-			<tr>
-				<th colspan="2">顧客ランク名</th>
-				<td colspan="3"><html:text styleId="rankName" property="rankName" style="width: 300px;" tabindex="101"/></td>
-			</tr>
-			<tr>
-				<th colspan="2">値引率</th>
-				<td><html:text styleId="rankRate1" property="rankRate1" style="width: 100px; text-align:right; ime-mode: disabled;" tabindex="102"/> ％ ～ <html:text styleId="rankRate2" property="rankRate2" style="width: 100px; text-align:right; ime-mode: disabled;" tabindex="103"/> ％</td>
-                <th>送料区分</th>
-                <td>
-				<html:select styleId="postageType" property="postageType" tabindex="104">
-					<html:options collection="postageTypeList" property="value" labelProperty="label"/>
-				</html:select>
-                </td>
-			</tr>
-		</table>
-
-		<div style="text-align: right; width: 600px">
-			<button tabindex="150" style="width:80px" onclick="initForm()">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchCustomerRank()">検索</button>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>顧客ランク条件</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+		
+				<div id="search_info" class="section_body">
+					<table id="user_info" class="forms" summary="顧客ランク情報" style="width: 600px">
+						<tr>
+							<th><div class="col_title_right">顧客ランクコード</div></th>
+							<td><html:text styleId="rankCode" property="rankCode" style="width: 100px; ime-mode: disabled;"  tabindex="100"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">顧客ランク名</div></th>
+							<td><html:text styleId="rankName" property="rankName" style="width: 300px;" tabindex="101"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">値引率</div></th>
+							<td><html:text styleId="rankRate1" property="rankRate1" style="width: 100px; text-align:right; ime-mode: disabled;" tabindex="102"/> ％ ～ <html:text styleId="rankRate2" property="rankRate2" style="width: 100px; text-align:right; ime-mode: disabled;" tabindex="103"/> ％</td>
+			                <th><div class="col_title_right">送料区分</div></th>
+			                <td>
+							<html:select styleId="postageType" property="postageType" tabindex="104" style="width: 120px;">
+								<html:options collection="postageTypeList" property="value" labelProperty="label"/>
+							</html:select>
+			                </td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    </div><!-- /.form_section_wrap -->
+	    
+		<div style="text-align: right; width: 1160px">
+			<button tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="151" style="width:80px" onclick="searchCustomerRank()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
                     <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
 
-		<table id="search_result" summary="検索結果" class="forms" style="width: 910px">
-			<colgroup>
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 11%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 5%">
-			</colgroup>
-			<tr>
-				<th style="cursor: pointer" rowspan="2">顧客ランク<br>コード</th>
-				<th style="cursor: pointer" rowspan="2">顧客ランク名</th>
-				<th style="cursor: pointer" rowspan="2">値引率</th>
-				<th style="cursor: pointer" colspan="4">基準</th>
-				<th style="cursor: pointer" rowspan="2">&nbsp;</th>
-			</tr>
-			<tr>
-				<th style="cursor: pointer">受注回数</th>
-				<th style="cursor: pointer">在籍期間</th>
-				<th style="cursor: pointer">離脱期間</th>
-				<th style="cursor: pointer">月平均受注額</th>
-			</tr>
-		</table>
-	</div>
-<html:hidden styleId="sortColumn" property="sortColumn" />
-<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
+			<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+				<colgroup>
+					<col span="1" style="width: 12%">
+					<col span="1" style="width: 12%">
+					<col span="1" style="width: 11%">
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 5%">
+				</colgroup>
+				<tr>
+					<th class="rd_top_left" style="cursor: pointer; height: 30px;" rowspan="2">顧客ランク<br>コード</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;" rowspan="2">顧客ランク名</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;" rowspan="2">値引率</th>
+					<th class="xl64" style="cursor: pointer; height: 15px;" colspan="4">基準</th>
+					<th class="rd_top_right" style="cursor: pointer" rowspan="2">&nbsp;</th>
+				</tr>
+				<tr>
+					<th class="xl64" style="cursor: pointer; height: 15px;">受注回数</th>
+					<th class="xl64" style="cursor: pointer; height: 15px;">在籍期間</th>
+					<th class="xl64" style="cursor: pointer; height: 15px;">離脱期間</th>
+					<th class="xl64" style="cursor: pointer; height: 15px;">月平均受注額</th>
+				</tr>
+			</table>
+		</div>
+	<html:hidden styleId="sortColumn" property="sortColumn" />
+	<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
 </s:form>
 </div>
 </body>

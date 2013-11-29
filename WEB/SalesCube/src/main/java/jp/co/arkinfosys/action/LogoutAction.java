@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import org.seasar.struts.annotation.Execute;
@@ -30,7 +29,7 @@ public class LogoutAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String logout() throws Exception {
-		
+		// セッション情報を全て破棄する
 		super.httpSession.invalidate();
 
 		return LogoutAction.Mapping.SUCCESS + "/" + super.domainDto.domainId;

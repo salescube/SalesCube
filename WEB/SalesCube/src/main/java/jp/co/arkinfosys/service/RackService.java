@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	@Override
 	public RackJoin findById(String rackCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(RackService.Param.RACK_CODE, rackCode);
 
@@ -127,7 +126,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	 */
 	public List<RackJoin> findByWarehouseId(String warehouseCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(RackService.Param.WAREHOUSE_CODE, warehouseCode);
 
@@ -181,7 +180,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -215,7 +214,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 
 			setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -238,99 +237,99 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 棚コード
 		if (conditions.containsKey(RackService.Param.RACK_CODE)) {
 			param.put(RackService.Param.RACK_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(RackService.Param.RACK_CODE)));
 		}
 
-		
+		// 棚名
 		if (conditions.containsKey(RackService.Param.RACK_NAME)) {
 			param.put(RackService.Param.RACK_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(RackService.Param.RACK_NAME)));
 		}
 
-		
+		// 棚区分
 		if (conditions.containsKey(RackService.Param.RACK_CATEGORY)) {
 			param.put(RackService.Param.RACK_CATEGORY, conditions
 					.get(RackService.Param.RACK_CATEGORY));
 		}
 
-		
+		// 空き棚
 		if (conditions.containsKey(RackService.Param.EMPTY_RACK)) {
 			param.put(RackService.Param.EMPTY_RACK, conditions
 					.get(RackService.Param.EMPTY_RACK));
 		}
 		
-		
+		// 倉庫コード
 		if (conditions.containsKey(RackService.Param.WAREHOUSE_CODE)) {
 			param.put(RackService.Param.WAREHOUSE_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(RackService.Param.WAREHOUSE_CODE)));
 		}
 
-		
+		// 倉庫名
 		if (conditions.containsKey(RackService.Param.WAREHOUSE_NAME)) {
 			param.put(RackService.Param.WAREHOUSE_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(RackService.Param.WAREHOUSE_NAME)));
 		}
 
-		
+		// 倉庫状態
 		if (conditions.containsKey(RackService.Param.WAREHOUSE_STATE)) {
 			param.put(RackService.Param.WAREHOUSE_STATE, conditions
 					.get(RackService.Param.WAREHOUSE_STATE));
 		}
 		
-		
+		// 区分IDは固定で棚分類を指定する
 		param.put(RackService.Param.CATEGORY_ID, Categories.RACK_CATEGORY);
 
-		
+		// ソートカラムを設定する
 		if (RackService.Param.WAREHOUSE_CODE.equals(sortColumn)) {
-			
+			// 倉庫コード
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_WAREHOUSE_CODE);
 		} else if (RackService.Param.WAREHOUSE_NAME.equals(sortColumn)) {
-			
+			// 倉庫名
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_WAREHOUSE_NAME);
 		} else if (RackService.Param.WAREHOUSE_STATE.equals(sortColumn)) {
-			
+			// 倉庫状態
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_WAREHOUSE_STATE);
 		} else if (RackService.Param.RACK_CODE.equals(sortColumn)) {
-			
+			// 棚コード
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_RACK_CODE);
 		} else if (RackService.Param.RACK_NAME.equals(sortColumn)) {
-			
+			// 棚名
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_RACK_NAME);
 		} else if (RackService.Param.RACK_CATEGORY.equals(sortColumn)) {
-			
+			// 棚分類
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_RACK_CATEGORY);
 		} else if (RackService.Param.ZIP_CODE.equals(sortColumn)) {
-			
+			// 郵便番号
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_ZIP_CODE);
 		} else if (RackService.Param.ADDRESS_1.equals(sortColumn)) {
-			
+			// 住所１
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_ADDRESS_1);
 		} else if (RackService.Param.ADDRESS_2.equals(sortColumn)) {
-			
+			// 住所２
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_ADDRESS_2);
 		} else if (RackService.Param.RACK_PC_NAME.equals(sortColumn)) {
-			
+			// 担当者
 			param.put(RackService.Param.SORT_COLUMN_RACK,
 					RackService.COLUMN_RACK_PC_NAME);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(RackService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -369,7 +368,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			return;
 		}
 
-		
+		// 登録
 		Map<String, Object> param = super.createSqlParam();
 
 		BeanMap rackInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -391,15 +390,15 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.RACK_CODE, dto.rackCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("rack/LockRackByRackCode.sql", lockParam,
 				dto.updDatetm);
 
-		
+		// 更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap rackInfo = Beans.createAndCopy(BeanMap.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
@@ -421,16 +420,16 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			return;
 		}
 
-		
+		// パラメータ設定
 		Map<String, Object> param = createSqlParam();
 		param.put(Param.WAREHOUSE_CODE, dto.warehouseCode);
 
 		if(deleteFlag) {
-			
+			// 削除
 			this.updateBySqlFile("rack/DeleteRackByWarehouseCode.sql", param)
 					.execute();
 		} else {
-			
+			// 更新
 			BeanMap rackInfo = Beans.createAndCopy(BeanMap.class, dto)
 					.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
 							Constants.FORMAT.DATE).execute();
@@ -448,13 +447,13 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	@Override
 	public void deleteRecord(RackDto dto) throws Exception {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.RACK_CODE, dto.rackCode);
 			this.lockRecordBySqlFile("rack/LockRackByRackCode.sql", param,
 					dto.updDatetm);
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(Param.RACK_CODE, dto.rackCode);
 			this.updateBySqlFile("rack/DeleteRackByRackCode.sql", param)
@@ -478,7 +477,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			return;
 		}
 
-		
+		// 棚番コードの配列を作成する
 		String[] rackCodes = new String[dtoList.size()];
 		int i = 0;
 		for (RackDto dto : dtoList) {
@@ -494,7 +493,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 					"rack/FindProductsByRackCode.sql", param).getResultList();
 			for (RackDto dto : dtoList) {
 				if (Constants.FLAG.ON.equals(dto.multiFlag)) {
-					
+					// 重複許可棚の場合は「重複許可」を設定
 					dto.productCodeList = new ArrayList<String>();
 					dto.productCodeList.add(Constants.RACK_NAME.MULTI_ON);
 					continue;
@@ -550,7 +549,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	public Map<String, Object> countRelations(String rackCode)
 			throws ServiceException {
 		try {
-			
+			// 関連データの存在チェック
 			Map<String, Object> param = super.createSqlParam();
 			param.put(RackService.Param.RACK_CODE, rackCode);
 			BeanMap result = this.selectBySqlFile(BeanMap.class,

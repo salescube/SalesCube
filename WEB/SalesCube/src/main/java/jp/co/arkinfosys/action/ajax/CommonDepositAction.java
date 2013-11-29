@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.Date;
@@ -56,7 +55,7 @@ public class CommonDepositAction extends CommonAjaxResources {
 	@Resource
 	protected DeliveryService deliveryService;
 
-	
+	// 直近の請求締日
 	private Date startDate;
 
 	/**
@@ -67,23 +66,23 @@ public class CommonDepositAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String getDeliveryInfosByCustomerCode() throws Exception {
 
-		
+		// 納入先コードを指定しない場合は検索しません
 		if("".equals(commonDepositForm.customerCode)){
 			ResponseUtil.write("", "text/javascript");
 			return null;
 		}
 
-		
+		// 請求先情報
 		List<DeliveryAndPre> deliveryList;
 
 		try {
 
-			
+			// 請求先情報を取得する
 			deliveryList =
 				deliveryService.searchDeliveryByCompleteCustomerCode(
 					commonDepositForm.customerCode );
 
-			
+			// 納入先コードを指定した検索なので複数はかえらない
 			if (deliveryList.size() == 1) {
 				DeliveryAndPre dap = deliveryList.get(0);
 				commonDepositForm.deliveryCode = dap.deliveryCode;
@@ -117,34 +116,36 @@ public class CommonDepositAction extends CommonAjaxResources {
 				commonDepositForm.customerCommentData = dap.customerCommentData;
 				commonDepositForm.customerPcPreCategoryName = dap.customerPcPreCategoryName;
 				commonDepositForm.salesSlipCategory = dap.salesSlipCategory;
+				commonDepositForm.billPrintUnit = dap.billPrintUnit;
+				
 			} else {
 				ResponseUtil.write("", "text/javascript");
 				return null;
 			}
 
-			
+			// 直近の請求書情報から請求書日付を取得する
 			searchBill();
 
-			
+			// 指定した入金伝票番号以外入金情報を取得する
 			commonDepositForm.nowPaybackPrice =
 				depositSlipService.getDepositTotalPrice(
 						commonDepositForm.customerCode,
 						startDate, commonDepositForm.depositSlipId).toString();
 
-			
+			// 売上情報を取得する
 			commonDepositForm.nowSalesPrice =
 				salesService.getSalesTotalPrice(
 						commonDepositForm.customerCode,
 					startDate, null ).toString();
 
-			
+			//
 			if( StringUtil.hasLength( commonDepositForm.nowSalesPrice ) == false ){
 				commonDepositForm.nowSalesPrice = "0";
 			}
-			
+			// アクションフォームの内容（計算結果）をマップに展開
 			BeanMap bmap = super.createBeanMapWithNullToEmpty(commonDepositForm);
 
-			
+			// 値を返す
 			ResponseUtil.write(JSON.encode(bmap), "text/javascript");
 
 		} catch (ServiceException e) {
@@ -167,7 +168,7 @@ public class CommonDepositAction extends CommonAjaxResources {
 	 */
 	protected void searchBill() throws ServiceException {
 
-		
+		// 顧客コードを指定して直近の請求書データを取得する
 		List<Bill> billList =
 			billService.findLastBillByCustomerCode(commonDepositForm.customerCode);
 

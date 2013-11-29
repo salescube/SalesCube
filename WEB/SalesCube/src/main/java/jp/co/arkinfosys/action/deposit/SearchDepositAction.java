@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.deposit;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class SearchDepositAction extends AbstractSearchAction<List<Object>> {
 	protected void doAfterIndex() throws Exception {
 		this.searchDepositForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), Constants.SEARCH_TARGET.VALUE_SLIP);
 	}

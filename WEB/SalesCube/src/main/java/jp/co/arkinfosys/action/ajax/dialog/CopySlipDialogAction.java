@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.lang.reflect.ParameterizedType;
@@ -191,15 +190,15 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 			}
 
 			if (helper != null) {
-				
+				// 検索する
 				this.copySlipDialogForm.searchResultList = helper.search();
-				
+				// 検索結果を表示用に処理する
 				this.copySlipDialogForm.searchResultCount = this.copySlipDialogForm.searchResultList.size();
 			}
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -232,7 +231,7 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 		 */
 		@SuppressWarnings("unchecked")
 		protected List<DTO> entytyToDto(List<ENTITY> rawList) {
-			
+			// 検索結果の最大表示件数を取得する
 			int threshold = 100;
 			Integer thresholdObj = (Integer) ConfigUtil
 					.getConfigValue("SearchResultThreshold");
@@ -242,17 +241,17 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 
 			List<ENTITY> tempList = rawList;
 			if (tempList.size() > threshold) {
-				
+				// 検索結果件数の最大数をオーバー
 				messages.add("resultThreshold", new ActionMessage(
 						CommonAjaxResources.SEARCH_THRESHOLD_OVER, tempList
 								.size(), threshold));
 				ActionMessagesUtil.saveMessages(httpRequest, messages);
 
-				
+				// 表示件数を絞る
 				tempList = rawList.subList(0, threshold);
 			}
 
-			
+			// 表示用オブジェクトに変換
 			List<DTO> resultList = new ArrayList<DTO>();
 			Class<DTO> c = (Class<DTO>) this.getGenericDTOClass();
 			for (ENTITY entity : tempList) {
@@ -299,7 +298,7 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 					EstimateSheetService.COLUMN_ESTIMATE_DATE);
 			conditions = new HashMap<String, Object>(conditions);
 
-			
+			// 検索する
 			List<BeanMap> rawList = estimateSheetService
 					.findEstimateSheetByCondition(conditions);
 			return super.entytyToDto(rawList);
@@ -321,7 +320,7 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 					ROrderService.Param.RO_DATE);
 			conditions = new HashMap<String, Object>(conditions);
 
-			
+			// 検索する
 			List<BeanMap> rawList = rorderService
 					.findSlipByCondition(conditions);
 			return super.entytyToDto(rawList);
@@ -414,19 +413,19 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 			String targetPoLineStatus = (String) conditions
 					.get("targetPoLineStatus");
 
-			
+			// メイン画面の委託入出庫区分が入庫か出庫かによって、検索する委託発注伝票の条件を変える
 			if (Constants.STATUS_PORDER_LINE.ORDERED.equals(targetPoLineStatus)) {
-				
+				// 委託入庫の場合は、委託発注残(仕入もされていない委託在庫発注伝票)を検索する
 				conditions.put(SearchPOrderService.Param.ENTRUST_PO_REST,
 						Boolean.TRUE);
 			} else if (Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_MAKED
 					.equals(targetPoLineStatus)) {
-				
+				// 委託出庫の場合は、委託入庫済みの委託在庫発注伝票を検索する
 				conditions.put(SearchPOrderService.Param.ENTRUST_PO_MAKED,
 						Boolean.TRUE);
 			} else if (Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED
 					.equals(targetPoLineStatus)) {
-				
+				// 仕入入力からの呼出の場合は、委託出庫済みの委託在庫発注伝票を検索する
 				conditions.put(SearchPOrderService.Param.ENTRUST_PO_DELIVERED,
 						Boolean.TRUE);
 			} else {
@@ -468,7 +467,7 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 					SearchPurchaseService.Param.SUPPLIER_DATE);
 
 			if (copySlipDialogForm.supplierCondition.unPaidFlag) {
-				
+				// 未払いのみ
 				List<String> statusList = new ArrayList<String>();
 				statusList.add(SlipStatusCategoryTrns.SUPPLIER_SLIP_UNPAID);
 				conditions.put(SearchPurchaseService.Param.STATUS, statusList);

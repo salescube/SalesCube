@@ -1,9 +1,9 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.porder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.transaction.UserTransaction;
 
 import jp.co.arkinfosys.action.ajax.CommonPOrderAction;
+import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
@@ -25,9 +26,11 @@ import jp.co.arkinfosys.entity.join.PoLineTrnJoin;
 import jp.co.arkinfosys.form.porder.InputPOrderForm;
 import jp.co.arkinfosys.service.AbstractLineService;
 import jp.co.arkinfosys.service.AbstractService;
+import jp.co.arkinfosys.service.PoSlipService;
 import jp.co.arkinfosys.service.ProductService;
 import jp.co.arkinfosys.service.ProductStockService;
 import jp.co.arkinfosys.service.SeqMakerService;
+import jp.co.arkinfosys.service.SupplierLineService;
 import jp.co.arkinfosys.service.YmService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
@@ -43,15 +46,15 @@ import org.seasar.framework.beans.util.Beans;
 public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputPOrderLineDto,InputPOrderSlipDto> {
 
 
-	
-	
-	
-	
+	//public static class Table {
+	//	/** 発注伝票明細行テーブル名 */
+	//	public static final String LINE_TABLE_NAME = "PORDER_LINE_TRN";
+	//}
 
 	/**
 	 * パラメータ定義クラスです.
 	 */
-	
+	// 独自に代入あるいはチェックすべきパラメータ(DB対応有)
 	public static class Param {
 		public static final String PO_SLIP_ID = "poSlipId";
 		public static final String PO_DATE = "poDate";
@@ -65,7 +68,7 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 		public static final String REST_QUANTITY = "restQuantity";
 		public static final String CRE_DATETM = "creDatetm";
 		public static final String UPD_DATETM = "updDatetm";
-		
+		// public static final String LINE_UPD_DATETM = "lineUpdDatetm";
 		public static final String RATE = "rate";
 		public static final String SUPPLIER_RATE = "supplierRate";
 		public static final String CTAX_RATE = "ctaxRate";
@@ -80,7 +83,7 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 	 * ローカルのみで使用するパラメータ定義クラスです.
 	 *
 	 */
-	
+	// その他ローカルでしか使わないパラメータ(DB対応無)
 	public static class ParamLocal {
 		public static final String productIsExist = "productIsExist";
 		public static final String PO_LINE_STATUS = "poLineStatusCategory";
@@ -88,47 +91,55 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 
 	}
 
-	
+	// 発番エラー検出用初期値
 	public static final Long DEFAULT_ID = -1L;
-	
+	// 有効明細行無しの場合の戻り値
 	public static final Long NO_VALID_LINE = -2L;
-	
+	// 発番エラー時の戻り値
 	public static final Long CANNOT_GET_ID = DEFAULT_ID;
-	
+	// 伝票登録失敗時の戻り値
 	public static final Long CANNOT_CREATE_SLIP = -3L;
 	public static final Long CANNOT_UPDATE_SLIP = CANNOT_CREATE_SLIP;
 	public static final Long CANNOT_DELETE_SLIP = CANNOT_CREATE_SLIP;
-	
+	// アクションフォームに対応する値がないです
 	public static final Long LACK_OF_VALUES = -4L;
 
-	
+	// 任意のタイミングでロールバックしたい
 	public UserTransaction userTransaction;
 
-	
+	// アクションフォーム
 	@Resource
 	protected InputPOrderForm inputPOrderForm;
 
-	
+	//
 	protected CommonPOrderAction commonPOrderAction;
 
-	
+	// 伝票と明細行のエンティティ(カラム名がほしいだけ)
 	public PoSlipTrn poSlipTrn = new PoSlipTrn();
 	public PoLineTrn poLineTrn = new PoLineTrn();
 
-	
+	// 発番のため
 	@Resource
 	private SeqMakerService seqMakerService;
 
 	@Resource
 	private ProductService productService;
 
-	
+	// 年月度取得のため
 	@Resource
 	protected YmService ymService;
 
 	@Resource
 	private ProductStockService productStockService;
 
+	@Resource
+	private SupplierLineService supplierLineService;
+	
+	@Resource
+	private PoSlipService poSlipService;
+
+
+	
 	/**
 	 * 発注伝票番号を指定して発注伝票明細行を削除します.
 	 * @param id 発注伝票番号
@@ -174,14 +185,14 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 	 */
 	private Map<String, Object> setEntityToParam(PoLineTrn entity){
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class,entity).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -232,19 +243,22 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 				InputPOrderLineDto lineDto = new InputPOrderLineDto();
 				Beans.copy(entity, lineDto).execute();
 
-				
+				// 商品コード存在フラグの更新
 				if(productService.existsProductCode(lineDto.productCode).exists){
 					lineDto.productIsExist = String.valueOf(InputPOrderForm.CODE_EXIST);
 				}else{
 					lineDto.productIsExist = String.valueOf(InputPOrderForm.CODE_NOEXIST);
 				}
-				
+				// 商品に対する発注残数
 				StockInfoDto stockInfoDto = this.productStockService
 					.calcStockQuantityByProductCode(lineDto.productCode);
 				if( stockInfoDto != null ){
 					Integer rest = stockInfoDto.porderRestQuantity + stockInfoDto.entrustRestQuantity;
 					lineDto.productRestQuantity = rest.toString();
 				}
+				
+				lineDto.quantityDB = lineDto.quantity;
+				
 				dtoList.add(lineDto);
 			}
 			return dtoList;
@@ -271,12 +285,12 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 				short i = 1;
 				for (InputPOrderLineDto dto : lineList) {
 
-					
+					// 見積番号を明細に設定する。
 					dto.poSlipId = slipDto.getKeyValue();
 
-					
+					// 伝票側のレートを明細行側にコピー
 					dto.rate = slipDto.supplierRate;
-					
+					// 伝票側の税率を明細行側にコピー
 					dto.ctaxRate = slipDto.taxRate;
 
 					PoLineTrn entity = Beans.createAndCopy(
@@ -286,16 +300,28 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 
 					entity.lineNo = i++;
 					if ( !StringUtil.hasLength(dto.poLineId)) {
-						
+						// 見積伝票明細番号を採番
 						dto.poLineId = Long
 								.toString(seqMakerService
 										.nextval(PoLineTrn.TABLE_NAME));
 						entity.poLineId = Integer.parseInt(dto.poLineId);
-						
+						// 発注残数を設定
 						entity.restQuantity = entity.quantity;
 						insertRecord(entity);
 					} else {
+						if(entity.restQuantity.compareTo(new BigDecimal(0)) <= 0){
+							entity.status = Constants.STATUS_PORDER_LINE.PURCHASED;
+						}
 						updateRecord(entity);
+						
+						// 仕入伝票のステータスも変更する
+						// 完納
+						if(entity.restQuantity.compareTo(new BigDecimal(0)) <= 0){
+							
+							supplierLineService.updateDeliveryProcessCategory(entity.poLineId,CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL);
+						
+							
+						}
 					}
 				}
 			}
@@ -306,6 +332,11 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 				super.updateAudit(ids);
 				deleteRecordsByLineId(ids);
 			}
+			
+			
+			// 発注伝票ステータス更新
+			poSlipService.updatePOrderTrnStatusByPoSlipId(slipDto.poSlipId);
+			
 
 		} catch (NumberFormatException e) {
 			throw new ServiceException(e);

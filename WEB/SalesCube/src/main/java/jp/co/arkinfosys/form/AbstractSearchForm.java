@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form;
 
 import java.util.List;
@@ -69,7 +68,7 @@ public abstract class AbstractSearchForm<DTOCLASS> {
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
 
-		
+		// デフォルトでは何もしない
 		return errors;
 	}
 }

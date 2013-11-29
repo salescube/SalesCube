@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.sales;
 
 /**
@@ -18,13 +17,13 @@ public class InputSalesReportForm {
 	/**
 	 * 帳票出力フラグ
 	 */
-	public boolean typeA;	
-	public boolean typeG;	
-	public boolean typeH;	
-	public boolean typeD;	
-	public boolean typeC;	
-	public boolean typeE;	
-	public boolean typeJ;	
-	public boolean typeF;	
+	public boolean typeA;	// 見積書
+	public boolean typeG;	// 請求書
+	public boolean typeH;	// 請求書
+	public boolean typeD;	// 納品書
+	public boolean typeC;	// 納品書
+	public boolean typeE;	// 仮納品書
+	public boolean typeJ;	// ピッキングリスト
+	public boolean typeF;	// 納品書兼領収書
 
 }

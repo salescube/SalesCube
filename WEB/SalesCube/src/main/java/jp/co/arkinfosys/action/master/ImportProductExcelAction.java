@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.io.BufferedInputStream;
@@ -66,7 +65,7 @@ public class ImportProductExcelAction extends CommonResources {
 
 			this.productService.updateProductsFromExcel(workbook);
 
-			
+			// メッセージ設定
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.import"));
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);

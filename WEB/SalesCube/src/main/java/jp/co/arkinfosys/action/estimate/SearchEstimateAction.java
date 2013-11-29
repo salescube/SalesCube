@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.estimate;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class SearchEstimateAction extends AbstractSearchAction<List<Object>> {
 	protected void doAfterIndex() throws Exception {
 		this.searchEstimateForm.searchTarget = Constants.SEARCH_TARGET.VALUE_SLIP;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), Constants.SEARCH_TARGET.VALUE_SLIP);
 	}

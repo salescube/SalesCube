@@ -82,10 +82,6 @@
 
 		// 検索
 		function onF2(){
-			// この条件で検索しますか？
-			if(!confirm('<bean:message key="confirm.search" />')){
-				return;
-			}
 
 			paramData = createParamData();
 			paramData["pageNo"] = 1;
@@ -275,25 +271,27 @@
 
 	<!-- メイン機能 -->
 	<div id="main_function">
+
 		<!-- タイトル -->
 		<span class="title"><bean:message key='titles.searchDeposit'/></span>
 
 		<!-- ファンクションボタン -->
 		<div class="function_buttons">
-			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/>
-			</button><button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/>
-			</button><button id="btnF4" tabindex="2003" onclick="onF4()">F4<br><bean:message key='words.action.setting'/>
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;</button>
+			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/></button>
+			<button id="btnF3" tabindex="2002" onclick="onF3()" disabled="disabled">F3<br><bean:message key='words.name.excel'/></button>
+			<button id="btnF4" tabindex="2003" onclick="onF4()">F4<br><bean:message key='words.action.setting'/></button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 
 			<!-- 検索条件 -->
@@ -301,120 +299,142 @@
 				<div id="errors" style="color: red">
 					<html:errors/>
 				</div>
-
-				<bean:message key='labels.searchCondition'/><br>
-				<div id="search_info">
-					<table id="search_target" class="forms" summary="searchTarget">
-						<colgroup>
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 21%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.depositSlipId'/></th> <!-- 入金番号 -->
-							<td><html:text property="depositSlipId" styleId="depositSlipId" style="width: 100px; ime-mode: disabled;" tabindex="100" /></td>
-							<th><bean:message key='labels.tantou.userId'/></th> <!-- 入力担当者コード -->
-							<td><html:text property="userId" styleId="userId" style="width: 150px; ime-mode: disabled;" tabindex="101" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog(1)" tabindex="102" />
-							</td>
-							<th><bean:message key='labels.tantou.userName'/></th> <!-- 入力担当者名 -->
-							<td><html:text property="userName" styleId="userName" style="width: 150px;" tabindex="103" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog(2)" tabindex="104" />
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.depositDate'/></th> <!-- 入金日 -->
-							<td>
-								<html:text property="depositDateFrom" styleId="depositDateFrom" style="width: 75px; ime-mode: disabled;" styleClass="date_input" tabindex="105" />
-								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="depositDateTo" styleId="depositDateTo" style="width: 75px; ime-mode: disabled;" styleClass="date_input" tabindex="106" />
-							</td>
-							<th><bean:message key='labels.inputPdate'/></th> <!-- 入力日 -->
-							<td>
-								<html:text property="inputPdateFrom" styleId="inputPdateFrom" style="width: 75px; ime-mode: disabled;" styleClass="date_input" tabindex="107" />
-								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="inputPdateTo" styleId="inputPdateTo" style="width: 75px; ime-mode: disabled;" styleClass="date_input" tabindex="108" />
-							</td>
-							<th><bean:message key='labels.depositTotal'/></th> <!-- 回収金額 -->
-							<td>
-								<html:text property="depositTotalFrom" styleId="depositTotalFrom" style="width: 75px; ime-mode: disabled;" tabindex="109" />
-								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="depositTotalTo" styleId="depositTotalTo" style="width: 75px; ime-mode: disabled;" tabindex="110" />
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.memorandum'/></th> <!-- 摘要 -->
-							<td colspan="5"><html:text property="depositAbstract" styleId="depositAbstract" style="width: 300px;" tabindex="111" /></td>
-						</tr>
-					</table>
-
-					<table id="customer_info" class="forms" summary="customerInfo">
-						<colgroup>
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 21%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.customerCode'/></th> <!-- 顧客コード -->
-							<td>
-								<html:text property="customerCode" styleId="customerCode" style="width: 150px; ime-mode: disabled;" tabindex="200" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="201" />
-							</td>
-							<th><bean:message key='labels.customerName'/></th> <!-- 顧客名 -->
-							<td>
-								<html:text property="customerName" styleId="customerName" style="width: 150px; ime-mode: auto;" tabindex="202" />
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="203" />
-							</td>
-							<th><bean:message key='labels.paymentName'/></th> <!-- 振込名義 -->
-							<td>
-								<html:text property="paymentName" styleId="paymentName" style="width: 150px; ime-mode: auto;" tabindex="204" />
-							</td>
-						</tr>
-					</table>
-
-					<table id="deposit_info" class="forms" summary="dedpositInfo">
-						<colgroup>
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 87%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.depositMethodType'/></th><!-- 入金取込 -->
-							<td>
-								<html:select property="depositMethodTypeCategory" styleId="depositMethodTypeCategory" style="width: 500px;" tabindex="300">
-									<html:options collection="depositMethodTypeCategoryList" property="value" labelProperty="label"/>
-								</html:select>
-							</td>
-						</tr>
-						<tr>
-							<th><bean:message key='labels.depositCategory'/></th> <!-- 入金区分 -->
-							<td>
-								<c:forEach var="item" items="${depositCategoryList}" varStatus="status">
-									<input type="checkbox" id="depositCategory_${f:h(status.index)}" value="${item.value}" tabindex="301"/>${f:h(item.label)}&nbsp
-								</c:forEach>
-								<br>
-								<button id="btnSelectAll" tabindex="302" onclick="onSelectAll(true)"><bean:message key='words.action.selectAll'/></button> <!-- 全て選択-->
-								<button id="btnSelectNone" tabindex="303" onclick="onSelectAll(false)"><bean:message key='words.action.selectNone'/></button> <!-- 全て解除-->
-							</td>
-						</tr>
-					</table>
-				</div>
-				<html:hidden property="sortColumn" styleId="sortColumn" />
-				<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
+				
+				<div class="form_section_wrap">
+				<div class="form_section">
+					<div class="section_title">
+						<bean:message key='labels.searchCondition'/><br>
+						<button class="btn_toggle">
+						    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+						</button>
+					</div><!-- /.section_title -->
+				
+					<div id="search_info" class="section_body">
+						<table id="search_target" class="forms" summary="searchTarget">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.depositSlipId'/></div></th> <!-- 入金番号 -->
+								<td><html:text property="depositSlipId" styleId="depositSlipId" style="width: 100px; ime-mode: disabled;" tabindex="100" /></td>
+								<th><div class="col_title_right"><bean:message key='labels.tantou.userId'/></div></th> <!-- 入力担当者コード -->
+								<td><html:text property="userId" styleId="userId" style="width: 150px; ime-mode: disabled;" tabindex="101" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog(1)" tabindex="102" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.tantou.userName'/></div></th> <!-- 入力担当者名 -->
+								<td><html:text property="userName" styleId="userName" style="width: 150px;" tabindex="103" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openUserSearchDialog(2)" tabindex="104" />
+								</td>
+							</tr>
+						</table>
+						<table id="search_target1" class="forms" summary="searchTarget1" style="width: auto;">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.depositDate'/></div></th> <!-- 入金日 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="depositDateFrom" styleId="depositDateFrom" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="105" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/> <!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="depositDateTo" styleId="depositDateTo" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="106" />
+									</div>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.inputPdate'/></div></th> <!-- 入力日 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="inputPdateFrom" styleId="inputPdateFrom" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="107" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/> <!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="inputPdateTo" styleId="inputPdateTo" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="108" />
+									</div>
+								</td>
+							</tr>
+						</table>
+						<table id="search_target2" class="forms" summary="searchTarget2">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.depositTotal'/></div></th> <!-- 回収金額 -->
+								<td>
+									<html:text property="depositTotalFrom" styleId="depositTotalFrom" style="width: 75px; ime-mode: disabled;" tabindex="109" />
+									<bean:message key='labels.betweenSign'/> <!-- ～ -->
+									<html:text property="depositTotalTo" styleId="depositTotalTo" style="width: 75px; ime-mode: disabled;" tabindex="110" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.memorandum'/></div></th> <!-- 摘要 -->
+								<td colspan="5"><html:text property="depositAbstract" styleId="depositAbstract" style="width: 300px;" tabindex="111" /></td>
+							</tr>
+						</table>
+	
+						<table id="customer_info" class="forms" summary="customerInfo">
+							<colgroup>
+								<col span="1" style="width: 13%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 13%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 13%">
+								<col span="1" style="width: 21%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.customerCode'/></div></th> <!-- 顧客コード -->
+								<td>
+									<html:text property="customerCode" styleId="customerCode" style="width: 150px; ime-mode: disabled;" tabindex="200" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="201" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.customerName'/></div></th> <!-- 顧客名 -->
+								<td>
+									<html:text property="customerName" styleId="customerName" style="width: 150px; ime-mode: auto;" tabindex="202" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="203" />
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.paymentName'/></div></th> <!-- 振込名義 -->
+								<td>
+									<html:text property="paymentName" styleId="paymentName" style="width: 150px; ime-mode: auto;" tabindex="204" />
+								</td>
+							</tr>
+						</table>
+	
+						<table id="deposit_info" class="forms" summary="dedpositInfo">
+							<colgroup>
+								<col span="1" style="width: 13%">
+								<col span="1" style="width: 87%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.depositMethodType'/></div></th><!-- 入金取込 -->
+								<td>
+									<html:select property="depositMethodTypeCategory" styleId="depositMethodTypeCategory" style="width: 500px;" tabindex="300">
+										<html:options collection="depositMethodTypeCategoryList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.depositCategory'/></div></th> <!-- 入金区分 -->
+								<td>
+									<c:forEach var="item" items="${depositCategoryList}" varStatus="status">
+										<input type="checkbox" id="depositCategory_${f:h(status.index)}" value="${item.value}" tabindex="301"/>${f:h(item.label)}&nbsp
+									</c:forEach>
+									<br>
+									<button id="btnSelectAll" tabindex="302" onclick="onSelectAll(true)" class="btn_small"><bean:message key='words.action.selectAll'/></button> <!-- 全て選択-->
+									<button id="btnSelectNone" tabindex="303" onclick="onSelectAll(false)" class="btn_small"><bean:message key='words.action.selectNone'/></button> <!-- 全て解除-->
+								</td>
+							</tr>
+						</table>
+					</div>
+					<html:hidden property="sortColumn" styleId="sortColumn" />
+					<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
+				</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
 			</div>
 		</s:form>
 
 		<form name="OutputForm" action="${f:url('/deposit/searchDepositResultOutput/excel')}" target="_blank" style="display: none;" method="POST">
 		</form>
 
-		<div style="width: 910px; text-align: right">
-			<button type="button" tabindex="350" onclick="onF1();"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
-			<button type="button" tabindex="351" onclick="onF2();"><bean:message key='words.action.search'/></button> <!-- 検索 -->
+		<div style="width: 1160px; text-align: right">
+			<button type="button" tabindex="350" onclick="onF1();" class="btn_medium"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
+			<button type="button" tabindex="351" onclick="onF2();"class="btn_medium"><bean:message key='words.action.search'/></button> <!-- 検索 -->
 		</div>
 		<span id="listContainer">
 			<%@ include file="/WEB-INF/view/ajax/deposit/searchDepositResultAjax/result.jsp" %>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.rorder;
 
 import java.util.ArrayList;
@@ -42,11 +41,11 @@ public class ImportOnlineOrderService extends AbstractService<OnlineOrderWork> {
 	public List<OnlineOrderWorkRelDto> createSearchResultList(String userId, String sortColumn, boolean sortOrderAsc)
 			throws ServiceException {
 		try {
-			
+			// 検索結果を取得する
 			List<OnlineOrderRelJoin> resultList =
 				onlineOrderService.findRoWorkRel( null, null, sortColumn, sortOrderAsc);
 
-			
+			// Dtoリストを生成する
 			List<OnlineOrderWorkRelDto> dtoList = new ArrayList<OnlineOrderWorkRelDto>();
 			for(OnlineOrderRelJoin onlineOrderRel : resultList) {
 				OnlineOrderWorkRelDto dto = Beans.createAndCopy(OnlineOrderWorkRelDto.class, onlineOrderRel).execute();
@@ -116,7 +115,7 @@ public class ImportOnlineOrderService extends AbstractService<OnlineOrderWork> {
 	 * @throws ServiceException
 	 */
 	public OnlineOrderWorkDto createOnlineOrderWorkDto(String[] values) throws ServiceException {
-		
+		// 引数チェック
 		if(values == null || values.length != Constants.ONLINE_ORDER_FILE.COLUMN_COUNT) {
 			ServiceException se =
 				new ServiceException(MessageResourcesUtil.getMessage("errors.system"));
@@ -124,13 +123,13 @@ public class ImportOnlineOrderService extends AbstractService<OnlineOrderWork> {
 			throw se;
 		}
 
-		
+		// オンライン受注
 		OnlineOrderWorkDto dto = new OnlineOrderWorkDto();
 
-		
+		// 読み取り位置を設定する
 		Integer pos = 0;
 
-		
+		// 値を設定
 		dto.userId = userDto.userId;
 		dto.onlineOrderId = values[pos];
 		pos++;

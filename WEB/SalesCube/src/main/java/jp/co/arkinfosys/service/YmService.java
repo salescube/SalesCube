@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.text.SimpleDateFormat;
@@ -58,11 +57,11 @@ public class YmService extends AbstractService {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(inputDate);
 
-			
+			// 年度
 			ymDto.annual = calendar.get(Calendar.YEAR);
-			
+			// 月度
 			ymDto.monthly = calendar.get(Calendar.MONTH) + 1;
-			
+			// 年月度
 			ymDto.ym = ymDto.annual * 100 + ymDto.monthly;
 
 			return ymDto;

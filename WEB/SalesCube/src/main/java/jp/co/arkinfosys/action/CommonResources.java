@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.io.IOException;
@@ -95,7 +94,7 @@ public class CommonResources {
 					printWriter = null;
 				}
 			} catch (IOException e) {
-				
+				// とりあえず書いとく
 				e.printStackTrace();
 			}
 		}

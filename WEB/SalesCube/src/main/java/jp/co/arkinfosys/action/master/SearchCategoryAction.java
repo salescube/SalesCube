@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import javax.annotation.Resource;
@@ -39,7 +38,7 @@ public class SearchCategoryAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// グループ名リストを取得
 		this.searchCategoryForm.groupList = categoryService
 				.findUpdatableGroups();
 

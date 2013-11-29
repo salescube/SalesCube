@@ -7,6 +7,7 @@ SET
 	DWB_TYPE=/*dwbType*/,
 	ACCOUNT_NUM=/*accountNum*/,
 	REMARKS=/*remarks*/,
+	VALID=/*valid*/,
 	UPD_FUNC=/*updFunc*/,
 	UPD_DATETM=now(),
 	UPD_USER=/*updUser*/

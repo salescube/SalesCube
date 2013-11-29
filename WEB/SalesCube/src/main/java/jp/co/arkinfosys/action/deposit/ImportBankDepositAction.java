@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.deposit;
 
 import java.io.UnsupportedEncodingException;
@@ -57,7 +56,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 	 * デフォルトのコンストラクタです.
 	 */
 	public ImportBankDepositAction() {
-		
+		// 入金ファイルはWindows31-Jでの読み込みを指定する(自動ではShift_JIS判別となるため)
 		super.setCharacterSet(Constants.CHARSET.WINDOWS31J);
 	}
 
@@ -73,7 +72,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		try {
 			this.init();
 			importBankDepositForm.newDepositSlipIdStr = "";
-			
+			// 結果の取得
 			importBankDepositForm.searchResultList =
 				importBankDepositService.getImportResultList(
 					importBankDepositForm.sortColumn,
@@ -84,7 +83,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 			importBankDepositForm.searchResultCount = importBankDepositForm.searchResultList.size();
 			importBankDepositForm.dispResultCount =importBankDepositForm.searchResultCount;
 
-			
+			//処理結果件数表示
 			setListCount();
 
 		} catch (ServiceException e) {
@@ -106,7 +105,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		try {
 			this.init();
 			importBankDepositForm.newDepositSlipIdStr = "";
-			
+			// 結果の取得
 			importBankDepositForm.searchResultList =
 				importBankDepositService.getImportResultList(
 					importBankDepositForm.sortColumn,
@@ -117,7 +116,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 			importBankDepositForm.searchResultCount = importBankDepositForm.searchResultList.size();
 			importBankDepositForm.dispResultCount =importBankDepositForm.searchResultCount;
 
-			
+			//処理結果件数表示
 			setListCount();
 
 		} catch (ServiceException e) {
@@ -159,25 +158,25 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 	@Execute(validator = true, validate = "validate", input = "reinput")
 	public String upload() throws Exception {
 		try {
-			
+			// 前データのDelete
 			bankDepositWorkService.deleteByUserId(userDto.userId);
-			
+			// 銀行入金データの読み込み
 			readXSV(importBankDepositForm.csvFile);
-			
+			// エラーがあるか？
 			if(messages.size() != 0) {
-				
+				// エラーの設定
 				ActionMessagesUtil.addErrors(super.httpSession, messages);
 				return "?redirect=true";
 			}
 
-			
+			// 読み込んだデータをInsert
 			for(BankDepositWorkDto dto : dtoList) {
 				bankDepositWorkService.insertRecord(dto);
 			}
-			
-			
+			// 突合処理
+			// 銀行入金データと得意先、請求金額突合する
 			importBankDepositForm.newDepositSlipIdStr = importBankDepositService.insertBankDeposit(userDto.userId, importBankDepositForm.bankId);
-			
+			// 結果の取得
 			importBankDepositForm.searchResultList =
 				importBankDepositService.getImportResultList(
 					importBankDepositForm.sortColumn,
@@ -190,7 +189,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 			importBankDepositForm.linkInputDeposit = this.userDto.isMenuUpdate( Constants.MENU_ID.INPUT_DEPOSIT );
 			importBankDepositForm.dispResultCount = importBankDepositForm.searchResultCount;
 
-			
+			//処理結果件数表示
 			setListCount();
 
 		} catch (UnsupportedEncodingException e) {
@@ -199,9 +198,9 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -223,12 +222,12 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 
 		ActionMessage error;
 
-		
+		// エラーが最大件数に達している場合は処理しない
 		if(isErrorsMax()) {
 			return;
 		}
 
-		
+		// カラム数
 		if (values == null
 				|| values.length != Constants.BANK_DEPOSIT_CSV.DEPOSIT_COLUMN_COUNT) {
 			addError("errors.line.onlineorder.format",
@@ -237,7 +236,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		}
 
 		BankDepositWorkDto inDto = new BankDepositWorkDto();
-		
+		// 銀行入金データ
 		inDto.lineNo = String.valueOf(index);
 		inDto.userId = userDto.userId;
 		inDto.column1 = values[0];
@@ -247,23 +246,23 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		inDto.paymentName = values[4];
 		inDto.paymentPrice = values[5];
 
-		
+		// 型チェック
 
-		
+		// paymentDate(日付)
 		error = ValidateUtil.dateType(inDto.paymentDate, Constants.FORMAT.DATE_DOT, false, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.bank.deposit.reason.paymentDate") });
 		if(error != null) {
 			addError(error);
 		}
 
-		
+		// paymentPrice(数値)
 		error = ValidateUtil.integerType(inDto.paymentPrice, "errors.line.onlineorder.format",
 				new Object[] { index, MessageResourcesUtil.getMessage("errors.bank.deposit.reason.paymentPrice") });
 		if(error != null) {
 			addError(error);
 		}
 
-		
+		// Insert用リストに追加
 		dtoList.add(inDto);
 	}
 
@@ -287,7 +286,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		importBankDepositForm.selectCount = 1;
 
 		String ret =  resetList(1);
-		importBankDepositForm.dispResultCount = importBankDepositForm.importOKCount;	
+		importBankDepositForm.dispResultCount = importBankDepositForm.importOKCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -301,7 +300,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 	public String resetListNG() throws Exception {
 		importBankDepositForm.selectCount = 2;
 		String ret =  resetList(2);
-		importBankDepositForm.dispResultCount = importBankDepositForm.importNGCount;	
+		importBankDepositForm.dispResultCount = importBankDepositForm.importNGCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -315,7 +314,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 	public String resetListAll() throws Exception {
 		importBankDepositForm.selectCount = 0;
 		String ret =  resetList(0);
-		importBankDepositForm.dispResultCount = importBankDepositForm.searchResultCount;	
+		importBankDepositForm.dispResultCount = importBankDepositForm.searchResultCount;	// 表示件数を設定
 		return ret;
 	}
 
@@ -330,13 +329,13 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		try {
 			this.init();
 			importBankDepositForm.newDepositSlipIdStr = "";
-			
+			// 結果の取得
 			List<ImportBankDepositResultDto> searchAllResultList =importBankDepositService.getImportResultList(importBankDepositForm.sortColumn,
 					importBankDepositForm.sortOrderAsc,
 					userDto.userId,
 					importBankDepositForm.newDepositSlipIdStr);
 
-			
+			// 処理結果件数を取得　add 2010.05.24 kaki
 			int iOK = 0;
 			int iNG = 0;
 			importBankDepositForm.searchResultList = new ArrayList<ImportBankDepositResultDto>();
@@ -344,13 +343,13 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 
 				if(resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_OLD)||
 					resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_NEW)){
-					
+					// 登録済み、新規登録　は、一致件数
 					iOK++;
 					if((iList == 1)||(iList == 0))
 						importBankDepositForm.searchResultList.add(resultList);
 				}
 				else{
-					
+					// それ以外は、不一致件数
 					iNG++;
 					if((iList == 2)||(iList == 0))
 						importBankDepositForm.searchResultList.add(resultList);
@@ -375,18 +374,18 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 	 * 処理結果の各種件数を設定します.
 	 */
 	public void setListCount(){
-		
+		// 処理結果件数を取得　add 2010.05.24 kaki
 		int iOK = 0;
 		int iNG = 0;
 		for(ImportBankDepositResultDto resultList : importBankDepositForm.searchResultList) {
 
 			if(resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_OLD)||
 				resultList.status.equals(Constants.BANK_DEPOSIT_CSV.STATUS_NEW)){
-				
+				// 登録済み、新規登録　は、一致件数
 				iOK++;
 			}
 			else{
-				
+				// それ以外は、不一致件数
 				iNG++;
 			}
 		}

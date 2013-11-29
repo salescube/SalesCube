@@ -51,35 +51,35 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0010"/>
 		<jsp:param name="MENU_ID" value="1005"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<span class="title"><bean:message key='titles.closeStock'/></span>
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %>
-			</button><button type="button" id="btnF2" tabindex="2001" disabled>F2<br>&nbsp;
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3();">F3<br><bean:message key='words.action.cutoff'/><%// 締実行 %>
-			</button><button type="button" id="btnF4" tabindex="2003" onclick="onF4();" ${cutoff?"":"disabled"}>F4<br><bean:message key='words.action.cutoffCancel'/><%// 締解除 %>
-			</button><button type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;
-			</button><button type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;
-			</button><button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;
-			</button><button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;
-			</button><button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;
-			</button><button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;
-			</button><button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;
-			</button><button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;
-			</button>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %></button>
+			<button type="button" id="btnF2" tabindex="2001" disabled>F2<br>&nbsp;</button>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3();">F3<br><bean:message key='words.action.cutoff'/><%// 締実行 %></button>
+			<button type="button" id="btnF4" tabindex="2003" onclick="onF4();" ${cutoff?"":"disabled"}>F4<br><bean:message key='words.action.cutoffCancel'/><%// 締解除 %></button>
+			<button type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;</button>
+			<button type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form onsubmit="return false;">
 
@@ -93,32 +93,46 @@
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 				</div>
+				
+				<div class="form_section_wrap">
+				    <div class="form_section">
+				        <div class="section_title">
+				            <span>在庫締情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+				        </div><!-- /.section_title -->
 
-				<div id="target_month_info">
-					<table class="forms" style="width: 400px;" summary="処理対象">
-						<colgroup>
-							<col span="1" style="width: 33%">
-							<col span="1" style="width: 64%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.cutoffDate'/><bean:message key='labels.must'/><%// 締年月日 %></th>
-							<td>
-								<html:hidden property="lastCutoffDate" />
-								<c:if test="${cutoff}">
-									<%// 最終締日は「yyyy/MM/dd」です。 %>
-									<bean:message key='labels.lastCutoffDate.exist' arg0="${lastCutoffDate}" />
-								</c:if>
-								<c:if test="${!cutoff}">
-									<%// 在庫締は行われていません。 %>
-									<bean:message key='labels.lastCutoffDate.notExist'/>
-								</c:if>
-								<br>
-								<html:text property="cutoffDate" styleId="cutoffDate" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="100" maxlength="10" />
-							</td>
-						</tr>
-					</table>
+						<div id="target_month_info" class="section_body">
+							<table class="forms" style="width: 400px;" summary="処理対象">
+								<colgroup>
+									<col span="1" style="width: 33%">
+									<col span="1" style="width: 64%">
+								</colgroup>
+								<tr style="margin-bottom: 0;">
+									<th></th>
+									<td>
+										<html:hidden property="lastCutoffDate" />
+										<c:if test="${cutoff}">
+											<%// 最終締日は「yyyy/MM/dd」です。 %>
+											<bean:message key='labels.lastCutoffDate.exist' arg0="${lastCutoffDate}" />
+										</c:if>
+										<c:if test="${!cutoff}">
+											<%// 在庫締は行われていません。 %>
+											<bean:message key='labels.lastCutoffDate.notExist'/>
+										</c:if>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right"><bean:message key='labels.cutoffDate'/><bean:message key='labels.must'/><%// 締年月日 %></div></th>
+									<td>
+										<html:text property="cutoffDate" styleId="cutoffDate" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="100" maxlength="10" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
 				</div>
-
 			</div>
 		</s:form>
 	</div>

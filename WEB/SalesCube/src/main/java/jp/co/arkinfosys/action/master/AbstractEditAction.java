@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import jp.co.arkinfosys.action.CommonResources;
@@ -48,8 +47,12 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 		AuditInfo record = loadData(key);
 		if (record != null) {
 			setForm(record);
-			form.creDatetmShow = StringUtil.getDateString(Constants.FORMAT.DATE, record.creDatetm);
-			form.updDatetmShow = StringUtil.getDateString(Constants.FORMAT.DATE, record.updDatetm);
+			
+			form.creDatetmShow = this.getActionForm().creDatetm;
+			form.updDatetmShow = this.getActionForm().updDatetm;
+			
+			//form.creDatetmShow = StringUtil.getDateString(Constants.FORMAT.DATE, record.creDatetm);
+			//form.updDatetmShow = StringUtil.getDateString(Constants.FORMAT.DATE, record.updDatetm);
 		}
 		initList();
 	}
@@ -61,7 +64,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 	 * @throws ServiceException
 	 */
 	protected void initList() throws ServiceException {
-		
+		// デフォルトでは何もしない
 	}
 
 	/**
@@ -137,7 +140,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 	 * @throws Exception
 	 */
 	protected void doInsertAfter(DTOCLASS dto) throws Exception {
-		
+		// デフォルト実装は何もしない
 	}
 
 	/**
@@ -148,7 +151,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 	 * @throws Exception
 	 */
 	protected void doUpdateAfter(DTOCLASS dto) throws Exception {
-		
+		// デフォルト実装は何もしない
 	}
 
 	/**
@@ -159,7 +162,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 	 * @throws Exception
 	 */
 	protected void doDeleteAfter(DTOCLASS dto) throws Exception {
-		
+		// デフォルト実装は何もしない
 	}
 
 	/**
@@ -201,18 +204,18 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 
 			DTOCLASS dto = Beans.createAndCopy(getDtoClass(), getActionForm()).execute();
 
-			
-			
+			// 登録
+			// 割引マスタ
 			this.getService().insertRecord(dto);
 
 			doInsertAfter(dto);
 
-			
+			// 編集モード
 			this.getActionForm().editMode = true;
 
 			init(getKey());
 
-			
+			// メッセージ設定
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.insert"));
 			ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
@@ -244,7 +247,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 
 			DTOCLASS dto = this.createDtoFromActionForm();
 
-			
+			// 更新
 			this.getService().updateRecord(dto);
 
 			this.doUpdateAfter(dto);
@@ -252,7 +255,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 			getActionForm().editMode = true;
 			this.init(getKey());
 
-			
+			// メッセージ設定
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.update"));
 			ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
@@ -262,7 +265,7 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 		} catch (UnabledLockException e) {
 			super.errorLog(e);
 
-			
+			// ロックエラー
 			ActionMessages errors = new ActionMessages();
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e
 					.getKey()));
@@ -304,17 +307,17 @@ public abstract class AbstractEditAction<DTOCLASS extends MasterEditDto, ENTITY>
 
 			this.getService().updateAudit(dto.getKeys());
 
-			
+			// 削除処理
 			this.getService().deleteRecord(dto);
 
 			this.doDeleteAfter(dto);
 
-			
+			// 新規モード
 			this.getActionForm().initialize();
 			init(null);
 			this.getActionForm().editMode = false;
 
-			
+			// メッセージ設定
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.delete"));
 			ActionMessagesUtil.addMessages(this.httpRequest, this.messages);

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.List;
@@ -92,9 +91,9 @@ public class InputStockAction extends
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// 続行可能？
 			if (e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}
 		}
@@ -205,25 +204,25 @@ public class InputStockAction extends
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
 		try {
-			
+			// 権限の取得
 			inputStockForm.menuUpdate = userDto
 					.isMenuUpdate(Constants.MENU_ID.INPUT_STOCK);
 
-			
+			// プルダウンの初期化
 			initList();
 
-			
+			// DTOの取得
 			EadSlipTrnDto eadSlipTrnDto = inputStockService
 					.loadBySlipId(inputStockForm.eadSlipId);
-			
+			// 入出庫入力画面にて作成された伝票のみ参照
 			if ((eadSlipTrnDto == null) || !"2".equals(eadSlipTrnDto.srcFunc)) {
 				return false;
 			}
 
-			
+			// DTOの値をFormへコピー
 			Beans.copy(eadSlipTrnDto, inputStockForm).execute();
 
-			
+			// Formの明細行を初期化する
 			inputStockForm.eadLineTrnDtoList = eadSlipTrnDto.getLineDtoList();
 
 			inputStockForm.initLoad();
@@ -258,30 +257,30 @@ public class InputStockAction extends
 
 		if (inputStockForm.eadLineTrnDtoList != null) {
 			for (EadLineTrnDto eadLineTrnDto : inputStockForm.eadLineTrnDtoList) {
-				
+				// 商品コードに入力がない場合は無視
 				if (!StringUtil.hasLength(eadLineTrnDto.productCode)) {
 					continue;
 				}
 
-				
+				// 明細行が1件以上、存在する
 				inputLine = true;
 
-				
+				// 必須チェック
 
-				
+				// 数量
 				err = ValidateUtil.required(eadLineTrnDto.quantity,
 						"errors.line.required", new Object[] {
 								eadLineTrnDto.lineNo, labelQuantity });
 				addError(errors, err);
-				
+				// 棚番
 				err = ValidateUtil.required(eadLineTrnDto.rackCode,
 						"errors.line.required", new Object[] {
 								eadLineTrnDto.lineNo, labelRackCode });
 				addError(errors, err);
 
-				
+				// 長さチェック
 
-				
+				// 商品コード
 				if (StringUtil.hasLength(eadLineTrnDto.productCode)) {
 					err = ValidateUtil.maxlength(eadLineTrnDto.productCode,
 							CODE_SIZE.PRODUCT, "errors.line.maxlength",
@@ -290,7 +289,7 @@ public class InputStockAction extends
 									Integer.toString(CODE_SIZE.PRODUCT) });
 					addError(errors, err);
 				}
-				
+				// 備考
 				if (StringUtil.hasLength(eadLineTrnDto.remarks)) {
 					err = ValidateUtil
 							.maxlength(eadLineTrnDto.remarks, 120,
@@ -299,7 +298,7 @@ public class InputStockAction extends
 											"120" });
 					addError(errors, err);
 				}
-				
+				// 棚番コード
 				if (StringUtil.hasLength(eadLineTrnDto.rackCode)) {
 					err = ValidateUtil.maxlength(eadLineTrnDto.rackCode,
 							CODE_SIZE.RACK, "errors.line.maxlength",
@@ -308,9 +307,9 @@ public class InputStockAction extends
 					addError(errors, err);
 				}
 
-				
+				// 型チェック
 
-				
+				// 数量
 				boolean quantityType = false;
 				if (StringUtil.hasLength(eadLineTrnDto.quantity)) {
 					err = ValidateUtil.intRange(eadLineTrnDto.quantity, 1,
@@ -325,9 +324,9 @@ public class InputStockAction extends
 					}
 				}
 
-				
+				// 値チェック（マスタ存在確認）
 
-				
+				// 商品コード
 				if (StringUtil.hasLength(eadLineTrnDto.productCode)) {
 					Product product = inputStockService
 							.findProductByCode(eadLineTrnDto.productCode);
@@ -340,14 +339,14 @@ public class InputStockAction extends
 							.equals(product.stockCtlCategory)
 							|| CategoryTrns.PRODUCT_SET_TYPE_SET
 									.equals(product.setTypeCategory)) {
-						
+						// 在庫管理しない商品は入出庫できない
 						err = new ActionMessage(
 								"errors.line.product.stockctl.off",
 								eadLineTrnDto.lineNo);
 						addError(errors, err);
 					}
 				}
-				
+				// 棚番
 				if (StringUtil.hasLength(eadLineTrnDto.rackCode)) {
 					Rack rack = inputStockService
 							.findRackByCode(eadLineTrnDto.rackCode);
@@ -359,13 +358,13 @@ public class InputStockAction extends
 					}
 				}
 
-				
-				
+				// 値チェック（相関）
+				// 同商品、同棚番はエラー
 				if (StringUtil.hasLength(eadLineTrnDto.productCode)
 						&& StringUtil.hasLength(eadLineTrnDto.rackCode)) {
 					for (EadLineTrnDto eadLineTrnDto2 : inputStockForm.eadLineTrnDtoList) {
 						if (eadLineTrnDto.equals(eadLineTrnDto2)) {
-							
+							// 同じ行はチェックしない
 							continue;
 						}
 						if (eadLineTrnDto.productCode
@@ -383,13 +382,13 @@ public class InputStockAction extends
 			}
 		}
 
-		
+		// 明細行が1行以上、存在するかどうか
 		if (!inputLine) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.noline"));
 		}
 
-		
+		// TODO:暫定的な処理。本来であればフレームワークのaddMessage(String... arg)に統一すべき
 		super.messages.add(errors);
 
 		return super.messages;

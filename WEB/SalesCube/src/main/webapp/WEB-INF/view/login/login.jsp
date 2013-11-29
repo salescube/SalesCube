@@ -28,10 +28,15 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
+	--%>
+	<%-- ログインイメージの表示 --%>
+	<div style="text-align: center; width: 500px;margin-left : auto ; margin-right : auto ; margin-top: 200px;">
+		<img src="${f:url('/images/login_logo.jpg')}">
+	</div>
 
-	
+	<%-- メニュー領域 --%>
 	<div id="menu">
 		<div class="buisiness_menu1" style="height: 24px;">
 			<img src="${f:url('/images/bmenu1_empty.png')}">
@@ -42,8 +47,8 @@
 		</div>
 	</div>
 
-	
-	<div id="main_function">
+	<%-- メイン機能領域 --%>
+	<div id="main_function" style="text-align : center ;">
 		<div class="function_forms">
 
 			<div style="padding-left: 20px">
@@ -51,33 +56,34 @@
 			</div>
 
 			<s:form>
-				<table class="forms" style="width: 500px" summary="login_form">
+				<table class="forms" style="width: 500px;margin-left : auto ; margin-right : auto ; text-align : left ;" summary="login_form">
 					<colgroup>
 						<col span="1" style="width: 50%">
 						<col span="1" style="width: 50%">
 					</colgroup>
 					<tr>
-						<th><bean:message key='labels.userId'/><bean:message key='labels.must'/></th><!-- ユーザーID -->
-						<td><html:text style="width: 150px; ime-mode: disabled;" tabindex="100" property="userId"/></td>
+						<th><div class="col_title_right"><bean:message key='labels.userId'/><bean:message key='labels.must'/></div></th><!-- ユーザーID -->
+						<td><html:text style="width: 100%; ime-mode: disabled; background-color: #FFFFFF;" tabindex="100" property="userId"/></td>
 					</tr>
 					<tr>
-						<th><bean:message key='labels.password'/><bean:message key='labels.must'/></th><!-- パスワード -->
-						<td><html:password style="width: 150px; ime-mode: disabled;" tabindex="101" property="password" redisplay="false" styleId="password"/></td>
+						<th><div class="col_title_right"><bean:message key='labels.password'/><bean:message key='labels.must'/></div></th><!-- パスワード -->
+						<td><html:password style="width: 100%; ime-mode: disabled; background-color: #FFFFFF;" tabindex="101" property="password" redisplay="false" styleId="password"/></td>
 					</tr>
 				</table>
 
-				<div style="text-align: right; width: 500px">
-					<html:button property="resetButton" style="width: 80px;" tabindex="150"
+				<div style="text-align: center; width: 500px;margin-left : auto ; margin-right : auto ;">
+					<html:button property="resetButton" styleClass="btn_medium" tabindex="150"
 						onclick="initForm();">
 						<bean:message key='words.action.initialize'/>
-					</html:button>
-					<s:submit property="login" styleId="login" style="width: 80px;" tabindex="151">
+					</html:button><%-- 初期化 --%>
+					<s:submit property="login" styleId="login" styleClass="btn_medium" tabindex="151">
 						<bean:message key='words.action.login'/>
-					</s:submit>
+					</s:submit><%-- ログイン --%>
 				</div>
 			</s:form>
 <!--
-			<fieldset style="width: 750px; border-style: ridge; border-width: 5px; border-color: #6495ed; font-weight: bold;">
+<div align="center">
+			<fieldset   style="width: 750px; border-style: ridge; border-width: 5px; border-color: #6495ed; font-weight: bold; text-align: left; ">
 				<legend>デモサイトについて</legend>
 				<ul>
 					<li style="margin-bottom: 10px;">デモサイトは『<a href="http://www.ark-info-sys.co.jp/jp/product/salescube/demo.html">SalesCube デモサイト利用規約</a>』に同意頂いた上でご利用下さい。<br></li>
@@ -95,13 +101,14 @@
 						10分間以上操作が行われない場合、自動的にログアウト状態となることにご注意下さい。
 					</li>
 
-					<li style="margin-bottom: 10px;">デモサイトはバージョン7以降のInternet Explorerで正常に動作致します。</li>
+					<li style="margin-bottom: 10px;">デモサイトの推奨ブラウザは、Google Chromeです。</li>
 
 					<li>デモサイトの一部機能は、デモサイトを信頼済みサイトに登録して頂く事で正常に動作致します。<br>
 						→<a href="${f:url('/setTrustSite.html')}">信頼済みサイトの設定方法</a>
 					</li>
 				</ul>
 			</fieldset>
+</div>
 -->
 		</div>
 	</div>

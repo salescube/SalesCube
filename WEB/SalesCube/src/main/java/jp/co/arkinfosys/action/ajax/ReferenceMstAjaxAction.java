@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.net.URLEncoder;
@@ -88,13 +87,13 @@ public class ReferenceMstAjaxAction extends CommonAjaxResources {
 	public String prepare() {
 		ActionMessages errors = referenceMstForm.validate();
 		if (!errors.isEmpty()) {
-			
+			// 検索条件エラー
 			ActionMessagesUtil.addErrors(super.httpRequest, errors);
 			this.httpResponse.setStatus(450);
 			return "/ajax/errorResponse.jsp";
 		}
 
-		
+		// 保存用検索条件にコピー
 		Beans.copy(referenceMstForm, referenceMstFormDto).execute();
 
 		return null;
@@ -108,28 +107,28 @@ public class ReferenceMstAjaxAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String excel() throws Exception {
 		try {
-			
+			// 保存用出力条件からコピー
 			Beans.copy(referenceMstFormDto, referenceMstForm).execute();
 
-			
+			// パラメータを作成する
 			BeanMap params = createParamMap();
 
-			
+			// 検索を行う
 			masterList = referenceMstService.getMasterListByCondition(params);
 			detailList = referenceMstService.getDetailListByCondition(params);
 
-			
+			// 出力タイプごとの設定
 			if (REFERENCE_MST_TARGET.VALUE_CUSTOMER.equals(referenceMstForm.outputTarget)) {
 				setup4Customer();
 			}
 
-			
+			// 添付ファイル名設定
 			String attach = String.format(ATTACHMENT_FORMAT, URLEncoder.encode(attachFileName,ATTACHMENT_ENCODE));
 			httpResponse.setHeader(CONTENT_DISPOSITION, attach);
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}
@@ -143,12 +142,12 @@ public class ReferenceMstAjaxAction extends CommonAjaxResources {
 	private BeanMap createParamMap() {
 		BeanMap map = new BeanMap();
 
-		
+		// 共通部
 		map.put(ReferenceMstService.Param.OUTPUT_TARGET, referenceMstForm.outputTarget);
 
-		
+		// 出力タイプごとの設定
 
-		
+		// 顧客マスタ
 		if (REFERENCE_MST_TARGET.VALUE_CUSTOMER.equals(referenceMstForm.outputTarget)) {
 			map.put(ReferenceMstService.Param.CUSTOMER_CODE_FROM, referenceMstForm.customerCodeFrom9);
 			map.put(ReferenceMstService.Param.CUSTOMER_CODE_TO, referenceMstForm.customerCodeTo9);
@@ -163,10 +162,10 @@ public class ReferenceMstAjaxAction extends CommonAjaxResources {
 	 * 顧客マスタリスト出力の設定をします.
 	 */
 	private void setup4Customer() {
-		
+		// 添付ファイル名
 		attachFileName = AttachFileName.FILENAME09;
 
-		
+		// カラム定義
 		masterColList = new ArrayList<ReportColumnInfoDto>();
 		masterColList.add(new ReportColumnInfoDto("customerCode",0,"labels.report.mst.customermst.customerCode"));
 		masterColList.add(new ReportColumnInfoDto("customerName",0,"labels.report.mst.customermst.customerName"));
@@ -243,7 +242,7 @@ public class ReferenceMstAjaxAction extends CommonAjaxResources {
 		masterColList.add(new ReportColumnInfoDto("creDatetm",10,"labels.report.mst.customermst.creDate"));
 		masterColList.add(new ReportColumnInfoDto("updDatetm",10,"labels.report.mst.customermst.updDate"));
 
-		
+		// 明細部カラム定義（明細なし）
 		detailColList = null;
 	}
 

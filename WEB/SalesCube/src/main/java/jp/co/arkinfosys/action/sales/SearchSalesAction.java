@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.util.List;
@@ -60,11 +59,11 @@ public class SearchSalesAction extends AbstractSearchAction<List<Object>> {
 	protected void doAfterIndex() throws Exception {
 		this.searchSalesForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = detailDispItemService.createResult(null, null,
 				this.getSearchMenuID(), Constants.SEARCH_TARGET.VALUE_LINE);
 
-		
+		// 受注入力画面の権限フラグを設定
 		this.searchSalesForm.isInputROrderValid = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_RORDER);
 	}
@@ -111,7 +110,7 @@ public class SearchSalesAction extends AbstractSearchAction<List<Object>> {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 画面のプルダウンリストを初期化する
 		this.searchSalesForm.searchTargetList = ListUtil.getSearchTargetList();
 		this.searchSalesForm.dcCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DC_CATEGORY);

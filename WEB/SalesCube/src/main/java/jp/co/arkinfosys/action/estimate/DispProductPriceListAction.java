@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.estimate;
 
 import javax.annotation.Resource;
@@ -60,7 +59,7 @@ public class DispProductPriceListAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// フォームの初期化
 		dispProductPriceListForm.init(userDto, mineDto);
 		return DispProductPriceListAction.Mapping.SEARCH;
 	}
@@ -75,10 +74,10 @@ public class DispProductPriceListAction extends CommonResources {
 	public String show() throws Exception {
 		try {
 
-			
+			// 商品情報を取得
 			ProductJoin pj = productService.findById(this.dispProductPriceListForm.productCode);
 			if( pj == null ){
-				
+				// メッセージに設定
 				super.messages
 						.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"errors.dispProductPrice.none.productCode"));
@@ -91,7 +90,7 @@ public class DispProductPriceListAction extends CommonResources {
 					this.dispProductPriceListForm.retailPrice = "";
 				}
 				this.dispProductPriceListForm.productRemarks = pj.remarks;
-				
+				// 割引マスタ情報を取得
 				Discount discount = discountRelService
 						.findDiscountMstByProduct(this.dispProductPriceListForm.productCode);
 				if( discount != null ){
@@ -99,7 +98,7 @@ public class DispProductPriceListAction extends CommonResources {
 					this.dispProductPriceListForm.discountName = discount.discountName;
 					this.dispProductPriceListForm.remarks = discount.remarks;
 
-					
+					// 割引情報を取得
 					this.dispProductPriceListForm.discountTrnList = discountTrnService
 								.findDiscountTrnByDiscountId(discount.discountId);
 				}else{

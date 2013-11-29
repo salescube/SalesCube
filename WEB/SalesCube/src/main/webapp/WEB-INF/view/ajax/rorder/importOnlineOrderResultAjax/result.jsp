@@ -9,7 +9,7 @@
 	</div>
 </div>
 <span id="searchResultList">
-	<table id="search_result" summary="検索結果" class="forms" style="table-layout: auto;">
+	<table id="search_result" summary="検索結果" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 		<colgroup>
 			<col span="1" style="min-width: 10%">
 			<col span="1" style="min-width: 15%">
@@ -20,7 +20,7 @@
 		</colgroup>
 		<thead>
 			<tr>
-				<th rowspan="2" id='result_status' style='cursor: pointer' onclick="sort('status')">
+				<th rowspan="2" id='result_status' class="rd_top_left"  style='cursor: pointer; height:60px;' onclick="sort('status')">
 					<bean:message key='labels.onlineorder.status' /><%// 状態 %>
 					<span id="sortStatus_status" style="color: blue">
 						<c:if test='${sortColumn=="status"}'>
@@ -33,7 +33,7 @@
 						</c:if>
 					</span>
 				</th>
-				<th rowspan="2" id='result_roSlipId' style='cursor: pointer' onclick="sort('roSlipId')">
+				<th rowspan="2" id='result_roSlipId' style='cursor: pointer; height:60px;' onclick="sort('roSlipId')">
 					<bean:message key='labels.roSlipId' /><%// 受注番号 %>
 					<span id="sortStatus_roSlipId" style="color: blue">
 						<c:if test='${sortColumn=="roSlipId"}'>
@@ -46,10 +46,10 @@
 						</c:if>
 					</span>
 				</th>
-				<th colspan="3">
+				<th colspan="3" style='height:30px; border-bottom: 1px solid #555555;'>
 					<bean:message key='labels.onlineorder.info' /><%// 通販サイト情報 %>
 				</th>
-				<th rowspan="2" id='result_loadDate' style='cursor: pointer' onclick="sort('loadDate')">
+				<th rowspan="2" id='result_loadDate' style='cursor: pointer; height:30px;' onclick="sort('loadDate')">
 					<bean:message key='labels.loadDate' /><%// 取込日 %>
 					<span id="sortStatus_status" style="color: blue">
 						<c:if test='${sortColumn=="loadDate"}'>
@@ -62,10 +62,10 @@
 						</c:if>
 					</span>
 				</th>
-				<th rowspan="2">&nbsp;</th><%// 削除ボタン %>
+				<th rowspan="2" class="rd_top_right" style='height:60px;'>&nbsp;</th><%// 削除ボタン %>
 			</tr>
 			<tr>
-				<th id='result_onlineOrderId' style='cursor: pointer' onclick="sort('onlineOrderId')">
+				<th id='result_onlineOrderId' style='cursor: pointer; height:30px;' onclick="sort('onlineOrderId')">
 					<bean:message key='labels.onlineorder.orderId' /><%// 注文番号 %>
 					<span id="sortStatus_onlineOrderId" style="color: blue">
 						<c:if test='${sortColumn=="onlineOrderId"}'>
@@ -78,7 +78,7 @@
 						</c:if>
 					</span>
 				</th>
-				<th id='result_supplierDate' style='cursor: pointer' onclick="sort('supplierDate')">
+				<th id='result_supplierDate' style='cursor: pointer; height:30px;' onclick="sort('supplierDate')">
 					<bean:message key='labels.onlineorder.roDate' /><%// 受注日 %>
 					<span id="sortStatus_supplierDate" style="color: blue">
 						<c:if test='${sortColumn=="supplierDate"}'>
@@ -91,7 +91,7 @@
 						</c:if>
 					</span>
 				</th>
-				<th id='result_customerName' style='cursor: pointer' onclick="sort('customerName')">
+				<th id='result_customerName' style='cursor: pointer; height:30px;' onclick="sort('customerName')">
 					<bean:message key='labels.onlineorder.orderCustomerName' /><%// 注文者氏名 %>
 					<span id="sortStatus_customerName" style="color: blue">
 						<c:if test='${sortColumn=="customerName"}'>
@@ -122,7 +122,7 @@
 							</span>
 						</c:if>
 					</td>
-					<td style="text-align: center">
+					<td style="text-align: center">&nbsp;
 						<c:if test='${rowData.roSlipId==null}'>
 							<c:if test="${isInputValid}">
 								<bean:define id="concatUrl" value="${'/rorder/inputROrder/online/'}?roSlipId=${rowData.onlineOrderId}" />
@@ -137,19 +137,19 @@
 							<c:if test="${!isInputValid}">
 								${f:h(rowData.roSlipId)}
 							</c:if>
-						</c:if>
+						</c:if>&nbsp;
 					</td>
 					<td style="text-align: left">
-						${f:h(rowData.onlineOrderId)}
+						&nbsp;${f:h(rowData.onlineOrderId)}&nbsp;
 					</td>
 					<td style="text-align: center">
-						${f:h(rowData.supplierDate)}
+						&nbsp;${f:h(rowData.supplierDate)}&nbsp;
 					</td>
 					<td style="text-align: left">
-						${f:h(rowData.customerName)}
+						&nbsp;${f:h(rowData.customerName)}&nbsp;
 					</td>
 					<td style="text-align: center">
-						${f:h(rowData.loadDate)}
+						&nbsp;${f:h(rowData.loadDate)}
 					</td>
 					<td style="text-align: center">
 							<input type="button" value="<bean:message key="words.action.delLine"/>"

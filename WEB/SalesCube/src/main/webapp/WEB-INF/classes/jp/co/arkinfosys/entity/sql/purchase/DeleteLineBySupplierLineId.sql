@@ -1,2 +1,0 @@
-DELETE FROM SUPPLIER_LINE_TRN_/*$domainId*/'DEFAULT'
-WHERE SUPPLIER_LINE_ID=/*supplierLineId*/'default'

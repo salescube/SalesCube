@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.rorder;
 
 import java.math.BigDecimal;
@@ -25,8 +24,8 @@ import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.StockInfoDto;
 import jp.co.arkinfosys.dto.rorder.ROrderLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
-import jp.co.arkinfosys.entity.OnlineOrderWork;
 import jp.co.arkinfosys.entity.Customer;
+import jp.co.arkinfosys.entity.OnlineOrderWork;
 import jp.co.arkinfosys.entity.RoLineTrn;
 import jp.co.arkinfosys.entity.RoSlipTrn;
 import jp.co.arkinfosys.entity.TaxRate;
@@ -41,10 +40,10 @@ import jp.co.arkinfosys.service.AbstractSlipService;
 import jp.co.arkinfosys.service.CategoryService;
 import jp.co.arkinfosys.service.CustomerService;
 import jp.co.arkinfosys.service.DeliveryService;
+import jp.co.arkinfosys.service.OnlineOrderRelService;
 import jp.co.arkinfosys.service.OnlineOrderService;
 import jp.co.arkinfosys.service.ProductService;
 import jp.co.arkinfosys.service.ProductStockService;
-import jp.co.arkinfosys.service.OnlineOrderRelService;
 import jp.co.arkinfosys.service.RoLineService;
 import jp.co.arkinfosys.service.RoSlipService;
 import jp.co.arkinfosys.service.exception.ServiceException;
@@ -106,13 +105,13 @@ public class InputROrderAction extends
 	/** 税転嫁リスト */
 	public List<LabelValueBean> taxShiftCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 完納区分リストの内容
 	public List<LabelValueBean> statusCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 配送業者リストの内容
 	public List<LabelValueBean> dcCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 配送時間帯リストの内容
 	public List<LabelValueBean> dcTimeZoneCategoryList = new ArrayList<LabelValueBean>();
 
 	/**
@@ -181,19 +180,19 @@ public class InputROrderAction extends
 
 		try {
 
-			
+			// 初期化関数
 			this.inputROrderForm.initialize();
 			this.inputROrderForm.initDc();
 			this.inputROrderForm.initializeScreenInfo();
 			initForms();
 
-			
+			// オンライン受注テーブルからデータを取得
 			List<OnlineOrderWork> list = onlineOrderService
 					.findOnlineOrderWorkByRoId(this.inputROrderForm.roSlipId);
 
 			if (list.size() == 0) {
-				
-				
+				// 検索結果がなかった
+				// 該当する受注伝票が存在しない場合
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.dataNotExist", "受注ＩＤ",
 								inputROrderForm.roSlipId));
@@ -201,16 +200,16 @@ public class InputROrderAction extends
 				return Mapping.ONLINE_ORDER;
 			}
 
-			
+			// アクションフォームをセットアップ
 			this.inputROrderForm.setUp(list);
 
 
-			
+			// 顧客情報を取得
 			Customer customer = customerService
 					.findCustomerByCode(this.inputROrderForm.customerCode);
 
 			if (customer == null) {
-				
+				// 該当する顧客が存在しない場合
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.dataNotExist", "顧客データ",
 								inputROrderForm.customerCode));
@@ -219,7 +218,7 @@ public class InputROrderAction extends
 				return Mapping.ONLINE_ORDER;
 			}
 
-			
+			// 顧客情報を設定
 			this.inputROrderForm.customerName = customer.customerName;
 			this.inputROrderForm.taxShiftCategory = customer.taxShiftCategory;
 			this.inputROrderForm.taxFractCategory = customer.taxFractCategory;
@@ -230,13 +229,13 @@ public class InputROrderAction extends
 			this.inputROrderForm.customerRemarks = customer.remarks;
 			this.inputROrderForm.customerCommentData = customer.commentData;
 
-			
+			// オンライン受注 配送料情報取得
 			ProductJoin pjShip = productService
 					.findById(Constants.EXCEPTIANAL_PRODUCT_CODE.ONLINE_DELIVERY_PRICE);
-			
+			// オンライン受注 配送料計算用
 			BigDecimal sumOnlineShippingPrice = BigDecimal.ZERO;
 
-			
+			// 明細行
 			int index = 1;
 			this.inputROrderForm.lineList = new ArrayList<ROrderLineDto>();
 			for (OnlineOrderWork orderLine : list) {
@@ -282,7 +281,7 @@ public class InputROrderAction extends
 				dto.productRemarks = pj.remarks;
 				dto.eadRemarks = pj.eadRemarks;
 
-				
+				// 以下、画面上hidden項目
 				dto.supplierPcode = pj.supplierPcode;
 				dto.roMaxNum = String.valueOf(pj.roMaxNum);
 				StockInfoDto stockInfo = productStockService
@@ -292,18 +291,18 @@ public class InputROrderAction extends
 				dto.taxCategory = pj.taxCategory;
 				dto.ctaxRate = this.inputROrderForm.taxRate;
 				dto.stockCtlCategory = pj.stockCtlCategory;
-				dto.deletable = true; 
+				dto.deletable = true; // この行は削除させない
 				index++;
 				this.inputROrderForm.lineList.add(dto);
 
-				
+				// 手数料(=オンライン配送料)を求める計算
 				if ((orderLine.shippingPrice != null)) {
 					sumOnlineShippingPrice = sumOnlineShippingPrice
 							.add(orderLine.shippingPrice);
 				}
 			}
 
-			
+			// 手数料(=オンライン配送料)の追加
 			if ((sumOnlineShippingPrice.compareTo(BigDecimal.ZERO) != 0)) {
 				ROrderLineDto dtoShip = new ROrderLineDto();
 				dtoShip.lineNo = String.valueOf(index);
@@ -317,7 +316,7 @@ public class InputROrderAction extends
 				dtoShip.status = this.inputROrderForm.defaultStatusCode;
 				dtoShip.statusName = this.inputROrderForm.defaultStatusName;
 
-				
+				// 税抜き金額を計算
 				BigDecimal noTax = toNoTax(customer, sumOnlineShippingPrice,
 						new BigDecimal(this.inputROrderForm.taxRate));
 				dtoShip.unitCost = noTax.toString();
@@ -328,27 +327,27 @@ public class InputROrderAction extends
 				dtoShip.productRemarks = pjShip.remarks;
 				dtoShip.eadRemarks = pjShip.eadRemarks;
 
-				
+				// 以下、画面上hidden項目
 				dtoShip.supplierPcode = pjShip.supplierPcode;
 				dtoShip.roMaxNum = String.valueOf(pjShip.roMaxNum);
 				dtoShip.possibleDrawQuantity = "1";
 				dtoShip.taxCategory = pjShip.taxCategory;
 				dtoShip.ctaxRate = this.inputROrderForm.taxRate;
-				dtoShip.deletable = true; 
+				dtoShip.deletable = true; // この行は削除させない
 
 				index++;
 				this.inputROrderForm.lineList.add(dtoShip);
 			}
 
-			
+			// 最大数以下だったら明細行を作る
 			ROrderSlipDto dto = (ROrderSlipDto) inputROrderForm.copyToDto();
 			dto.fillList();
 			dto.copyTo(inputROrderForm.lineList);
 
-			
+			// リストの初期化
 			makeListByForm();
 
-			
+			// オンライン用の初期化（納入先欄が入力可能なことによる）
 			initOnlineOrderForms();
 
 			this.inputROrderForm.isImport = true;
@@ -361,7 +360,7 @@ public class InputROrderAction extends
 			throw e;
 		}
 
-		
+		// 入力画面を表示
 		return Mapping.INPUT;
 	}
 
@@ -373,19 +372,19 @@ public class InputROrderAction extends
 	 * @return 引数の端数処理モードのBigDecimal表現
 	 */
 	private int bigDecimalModeCodeFromStringToInt(String taxFractCategory) {
-		
+		//切捨て
 		if (CategoryTrns.FLACT_CATEGORY_DOWN.equals(taxFractCategory)) {
 			return BigDecimal.ROUND_DOWN;
 		}
-		
+		//切り上げ
 		else if (CategoryTrns.FLACT_CATEGORY_UP.equals(taxFractCategory)) {
 			return BigDecimal.ROUND_UP;
 		}
-		
+		//四捨五入
 		else if (CategoryTrns.FLACT_CATEGORY_HALF_UP.equals(taxFractCategory)) {
 			return BigDecimal.ROUND_HALF_UP;
 		}
-		
+		//なにこれ？
 		return BigDecimalModeCodeIntError;
 	}
 
@@ -402,13 +401,13 @@ public class InputROrderAction extends
 		rate = rate
 				.add(taxRate
 						.divide(
-								new BigDecimal(100.0) 
+								new BigDecimal(100.0) //100.0だと割り切れないことは無いのですが念のため
 								,
-								mineDto.statsDecAlignment + 1 
+								mineDto.statsDecAlignment + 1 //+1：有効桁数確保
 								,
-								bigDecimalModeCodeFromStringToInt(CategoryTrns.FLACT_CATEGORY_HALF_UP))); 
+								bigDecimalModeCodeFromStringToInt(CategoryTrns.FLACT_CATEGORY_HALF_UP))); //統計系数値は四捨五入固定
 
-		
+		//端数処理方式コード取得
 		int BDCode = bigDecimalModeCodeFromStringToInt(customer.taxFractCategory);
 		if (BDCode == BigDecimalModeCodeIntError) {
 			return null;
@@ -422,7 +421,7 @@ public class InputROrderAction extends
 	 * @throws Exception
 	 */
 	private void initTax() throws Exception {
-		
+		// 現在の税率を取得し、画面に設定する
 		initTax(new Timestamp(System.currentTimeMillis()));
 	}
 
@@ -437,7 +436,7 @@ public class InputROrderAction extends
 			initTax();
 			return;
 		}
-		
+		// 指定日の税率を取得し、画面に設定する
 		TaxRate tx;
 		SimpleDateFormat DF_TIME = new SimpleDateFormat(Constants.FORMAT.DATE);
 		tx = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX, DF_TIME
@@ -452,7 +451,7 @@ public class InputROrderAction extends
 	 */
 	public void initForms() throws Exception {
 
-		
+		// 税率等初期化
 		if (!StringUtil.hasLength(inputROrderForm.taxFractCategory)) {
 			inputROrderForm.taxFractCategory = mineDto.taxFractCategory;
 		}
@@ -462,12 +461,12 @@ public class InputROrderAction extends
 		if (!StringUtil.hasLength(inputROrderForm.priceFractCategory)) {
 			inputROrderForm.priceFractCategory = mineDto.priceFractCategory;
 		}
-		
+		// 配送関連初期化
 		initDc();
 
 		if (Constants.EXCEPTIANAL_CUSTOMER_CODE.ONLINE_ORDER
 				.equals(inputROrderForm.customerCode)) {
-			
+			// オンライン用の初期化
 			initOnlineOrderForms();
 		}
 	}
@@ -477,7 +476,7 @@ public class InputROrderAction extends
 	 * @throws Exception
 	 */
 	public void initOnlineOrderForms() throws Exception {
-		
+		// オンラインデータフラグをON
 		this.inputROrderForm.isOnlineOrder = true;
 	}
 
@@ -487,13 +486,13 @@ public class InputROrderAction extends
 	 * @throws Exception
 	 */
 	public void initForms(ROrderSlipDto dto) throws Exception {
-		
+		// 同期トークンのセッションへの登録
 		TokenProcessor.getInstance().saveToken(request);
 
-		
+		// プルダウンの生成
 		makeList(dto);
 
-		
+		// 明細リストを初期行数にする
 
 		if (!this.inputROrderForm.isImport
 				&& inputROrderForm.lineList.size() == 0) {
@@ -501,27 +500,27 @@ public class InputROrderAction extends
 			dto.copyTo(inputROrderForm.lineList);
 		}
 
-		
+		// 税率初期化
 		initTax();
 
-		
+		// 「売上完了」の場合のみ、更新不可とする。
 		inputROrderForm.statusUpdate = !(Constants.STATUS_RORDER_SLIP.SALES_FINISH
 				.equals(dto.status));
 
-		
+		// 更新できない場合は削除もできない
 		inputROrderForm.deletable = inputROrderForm.statusUpdate;
 
-		
+		// 税率等初期化
 		inputROrderForm.taxFractCategory = dto.taxFractCategory;
 		inputROrderForm.taxShiftCategory = dto.taxShiftCategory;
 		inputROrderForm.priceFractCategory = dto.priceFractCategory;
 
-		
+		// 配送関連初期化
 		initDc();
 
 		if (Constants.EXCEPTIANAL_CUSTOMER_CODE.ONLINE_ORDER
 				.equals(inputROrderForm.customerCode)) {
-			
+			// オンライン用の初期化
 			initOnlineOrderForms();
 		}
 	}
@@ -531,35 +530,35 @@ public class InputROrderAction extends
 	 * @throws Exception
 	 */
 	private void makeListByForm() throws Exception {
-		
+		// 税転嫁プルダウンの値
 		String code = inputROrderForm.taxShiftCategory;
 		String name = this.categoryService.findCategoryNameByIdAndCode(
 				Categories.ART_TAX_SHIFT_CATEGORY, code);
 		this.taxShiftCategoryList.add(new LabelValueBean(name, code));
 
-		
+		// 敬称プルダウンの値
 		this.preTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
 		this.preTypeCategoryList.add(0, new LabelValueBean("", ""));
 
-		
+		// 支払条件プルダウンの値
 		code = inputROrderForm.cutoffGroupCategory;
 		name = this.categoryService.findCategoryNameByIdAndCode(
 				Categories.CUTOFF_GROUP, code);
 		this.cutOffList.add(new LabelValueBean(name, code));
 
-		
+		// 取引区分プルダウンの値
 		code = inputROrderForm.salesCmCategory;
 		name = this.categoryService.findCategoryNameByIdAndCode(
 				Categories.SALES_CM_CATEGORY, code);
 		this.salesCmCategoryList.add(new LabelValueBean(name, code));
 
-		
+		// 配送業者プルダウンの値
 		this.dcCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DC_CATEGORY);
 		this.dcCategoryList.add(0, new LabelValueBean("", ""));
 
-		
+		// 配送時間帯プルダウンの値
 		this.dcTimeZoneCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DC_TIMEZONE_CATEGORY);
 		this.dcTimeZoneCategoryList.add(0, new LabelValueBean("", ""));
@@ -571,7 +570,7 @@ public class InputROrderAction extends
 					delivery.deliveryCode));
 		}
 
-		
+		// 完納区分　リスト作成
 		createCategoryList(Categories.RO_LINE_STATUS, statusCategoryList, false);
 	}
 
@@ -581,27 +580,27 @@ public class InputROrderAction extends
 	 */
 	private void makeList(ROrderSlipDto record) {
 		try {
-			
+			// 税転嫁プルダウンの値
 			taxShiftCategoryList = new ArrayList<LabelValueBean>();
 			String code = record.taxShiftCategory;
 			String name = this.categoryService.findCategoryNameByIdAndCode(
 					Categories.ART_TAX_SHIFT_CATEGORY, code);
 			this.taxShiftCategoryList.add(new LabelValueBean(name, code));
 
-			
+			// 敬称プルダウンの値
 			preTypeCategoryList = new ArrayList<LabelValueBean>();
 			this.preTypeCategoryList = categoryService
 					.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
 			this.preTypeCategoryList.add(0, new LabelValueBean("", ""));
 
-			
+			// 支払条件プルダウンの値
 			cutOffList = new ArrayList<LabelValueBean>();
 			code = record.cutoffGroup + record.paybackCycleCategory;
 			name = this.categoryService.findCategoryNameByIdAndCode(
 					Categories.CUTOFF_GROUP, code);
 			this.cutOffList.add(new LabelValueBean(name, code));
 
-			
+			// 取引区分プルダウンの値
 			salesCmCategoryList = new ArrayList<LabelValueBean>();
 			code = record.salesCmCategory;
 			name = this.categoryService.findCategoryNameByIdAndCode(
@@ -617,7 +616,7 @@ public class InputROrderAction extends
 				}
 			}
 
-			
+			// 完納区分　リスト作成
 			createCategoryList(Categories.RO_LINE_STATUS, statusCategoryList,
 					false);
 
@@ -632,12 +631,12 @@ public class InputROrderAction extends
 	 */
 	protected void initDc() throws ServiceException {
 
-		
+		// 配送業者プルダウンの値
 		this.dcCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DC_CATEGORY);
 		this.dcCategoryList.add(0, new LabelValueBean("", ""));
 
-		
+		// 配送時間帯プルダウンの値
 		this.dcTimeZoneCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DC_TIMEZONE_CATEGORY);
 		this.dcTimeZoneCategoryList.add(0, new LabelValueBean("", ""));
@@ -654,13 +653,14 @@ public class InputROrderAction extends
 	public ActionMessages validateAtCreateSlip() throws ServiceException {
 
 		prepareForm();
-		inputROrderForm.initialize();
+		//inputROrderForm.initialize();
+		inputROrderForm.upsertInitialize();
 		try {
-			
+			// 存在する顧客か確認
 			if (StringUtil.hasLength(this.inputROrderForm.customerCode)
 					&& customerService
 							.isExistCustomerCode(inputROrderForm.customerCode) == false) {
-				
+				// 顧客コードがXXのデータは存在しません
 				String strLabel = MessageResourcesUtil
 						.getMessage("labels.customerCode");
 				addMessage("errors.dataNotExist", strLabel,
@@ -671,7 +671,7 @@ public class InputROrderAction extends
 			addMessage("errors.system");
 		}
 		try {
-			
+			// 存在する商品か確認
 			checkProducts();
 
 		} catch (ServiceException e) {
@@ -710,7 +710,7 @@ public class InputROrderAction extends
 	protected boolean checkProducts() throws ServiceException {
 
 		int nCount = 0;
-		
+		// 明細行に存在する商品コードが実在するか確認する
 		for (ROrderLineDto dto : this.inputROrderForm.lineList) {
 			if (!StringUtil.hasLength(dto.productCode)) {
 				continue;
@@ -725,7 +725,7 @@ public class InputROrderAction extends
 			}
 		}
 		if (nCount == 0) {
-			
+			// 正常なデータが１件も無い時はエラー
 			return false;
 		}
 		return true;
@@ -737,7 +737,7 @@ public class InputROrderAction extends
 	 */
 	protected void setDeletableByOnlineOrder() throws Exception {
 		if (!this.inputROrderForm.menuUpdate) {
-			
+			// そもそも更新不可の場合はチェックしない
 			return;
 		}
 
@@ -799,13 +799,13 @@ public class InputROrderAction extends
 		dto.retailPrice = price.toString();
 		dto.productRemarks = pj.remarks;
 		dto.eadRemarks = pj.eadRemarks;
-		
+		// 以下、画面上hidden項目
 		dto.supplierPcode = pj.supplierPcode;
 		dto.roMaxNum = "1";
 		dto.possibleDrawQuantity = "1";
 		dto.taxCategory = pj.taxCategory;
 		dto.ctaxRate = this.inputROrderForm.taxRate;
-		dto.deletable = false; 
+		dto.deletable = false; // この行は削除させない
 
 		return dto;
 	}
@@ -841,14 +841,14 @@ public class InputROrderAction extends
 	 */
 	private void setValueToName() {
 
-		
+		// 配送業者名設定
 		for (LabelValueBean lvb : dcCategoryList) {
 			if (lvb.getValue().equals(inputROrderForm.dcCategory)) {
 				inputROrderForm.dcName = lvb.getLabel();
 				break;
 			}
 		}
-		
+		// 配送時間帯設定
 		for (LabelValueBean lvb : dcTimeZoneCategoryList) {
 			if (lvb.getValue().equals(inputROrderForm.dcTimezoneCategory)) {
 				inputROrderForm.dcTimezone = lvb.getLabel();
@@ -872,9 +872,9 @@ public class InputROrderAction extends
 	 */
 	@Override
 	protected void createList() throws Exception {
-		if (inputROrderForm.isNewData()) {
+//		if (inputROrderForm.isNewData()) {
 			makeListByForm();
-		}
+//		}
 	}
 
 	/**
@@ -931,7 +931,7 @@ public class InputROrderAction extends
 	 */
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
-		
+		// 伝票情報をロードする
 		ROrderSlipDto dto = roSlipService
 				.loadBySlipId(inputROrderForm.roSlipId);
 
@@ -941,7 +941,7 @@ public class InputROrderAction extends
 
 		Beans.copy(dto, inputROrderForm).execute();
 
-		
+		// 明細情報をロードする
 		List<ROrderLineDto> lineList = roLineService.loadBySlip(dto);
 		dto.setLineDtoList(lineList);
 		dto.fillList();
@@ -975,11 +975,11 @@ public class InputROrderAction extends
 	protected void afterLoad() throws Exception,
 			ServiceException {
 
-		
+		// リストを初期化
 		ROrderSlipDto dto = (ROrderSlipDto) inputROrderForm.copyToDto();
 		initForms(dto);
 
-		
+		// 各行に引当可能数を設定
 		for (ROrderLineDto lineDto : this.inputROrderForm.lineList) {
 			if (!StringUtil.hasLength(lineDto.productCode)) {
 				continue;
@@ -988,7 +988,7 @@ public class InputROrderAction extends
 					.calcStockQuantityByProductCode(lineDto.productCode);
 			lineDto.possibleDrawQuantity = String
 					.valueOf(stockInfo.possibleDrawQuantity);
-			
+			// 完納状態を設定
 			if (Constants.STATUS_RORDER_LINE.RECEIVED.equals(lineDto.status)) {
 				lineDto.statusName = this.inputROrderForm.defaultStatusName;
 			} else if (Constants.STATUS_RORDER_LINE.NOWPURCHASING
@@ -1001,28 +1001,28 @@ public class InputROrderAction extends
 				lineDto.statusName = this.inputROrderForm.finishStatusName;
 			}
 
-			
+			//hidden設定　未納数、数量
 			lineDto.quantityDB = lineDto.quantity;
 			lineDto.restQuantityDB = lineDto.restQuantity;
 		}
-		
+		// オンライン関係のデータを確認
 		setDeletableByOnlineOrder();
 
 		if (!inputROrderForm.statusUpdate) {
-			
+			// メッセージを保存
 
-			
+			// 状態名を取得
 			String categoryName = categoryService.findCategoryNameByIdAndCode(
 					SlipStatusCategories.RO_SLIP_STATUS, dto.status);
 
-			
+			// 伝票名取得
 			String strSlipLabel = MessageResourcesUtil
 					.getMessage("erroes.db.roSlip");
-			
+			// 動作名取得
 			String strActionLabel = MessageResourcesUtil
 					.getMessage("words.action.edit");
 
-			
+			// メッセージに設定
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.slip.lock", strSlipLabel,
 							categoryName, strActionLabel));
@@ -1039,7 +1039,7 @@ public class InputROrderAction extends
 	 */
 	@Override
 	protected void afterDelete(AbstractSlipDto<ROrderLineDto> dto) throws Exception {
-		
+		// オンライン連携レコードが存在する場合削除する
 		deleteOnlineOrderRelRec();
 	}
 
@@ -1054,11 +1054,11 @@ public class InputROrderAction extends
 	protected void afterUpsert(boolean bInsert, AbstractSlipDto<ROrderLineDto> dto)
 			throws Exception {
 
-		
+		// オンラインデータの登録の場合は、関連テーブルに登録し、オンライン受注テーブルを削除する
 		if (this.inputROrderForm.isOnlineOrder) {
-			
-			
-			
+			// 関連テーブルに登録
+			// 受付番号1件につき、1件だけ登録する。
+			// 関連テーブルにデータが無かったら登録する
 			if (!onlineOrderRelService
 					.hasRecordByROrderSlip(this.inputROrderForm.roSlipId)) {
 				OnlineOrderWork work = new OnlineOrderWork();
@@ -1085,7 +1085,7 @@ public class InputROrderAction extends
 	protected void beforeUpsert(boolean bInsert, AbstractSlipDto<ROrderLineDto> param)
 			throws Exception {
 
-		
+		// リストを初期化
 		makeListByForm();
 		setValueToName();
 
@@ -1098,7 +1098,7 @@ public class InputROrderAction extends
 
 		List<ROrderLineDto> lineList = inputROrderForm.lineList;
 
-		
+		// 明細行の状態フラグが全て「売上完了」の場合、伝票の状態フラグも「9:売上完了」とする。
 		boolean isComp = true;
 		for (int i = 0; i < lineList.size(); i++) {
 			ROrderLineDto lineDto = lineList.get(i);
@@ -1107,10 +1107,10 @@ public class InputROrderAction extends
 			}
 		}
 		if (isComp) {
-			dto.status = "9"; 
+			dto.status = "9"; // 売上完了
 		}
 
-		
+		// 配送業者名称と配送時間帯名称を設定
 		dto.dcName = this.inputROrderForm.dcName;
 		dto.dcTimezone = this.inputROrderForm.dcTimezone;
 	}

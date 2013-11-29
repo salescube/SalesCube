@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	@Override
 	public UserJoin findById(String userId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, userId);
 
@@ -106,7 +105,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	public UserJoin findUserByIdAndPassword(String userId, String password)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, userId);
 			param
@@ -137,7 +136,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(param, conditions, null, false);
 
 			return this.selectBySqlFile(Integer.class,
@@ -169,10 +168,10 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(param, conditions, sortColumn, sortOrderAsc);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(UserService.Param.ROW_COUNT, rowCount);
 				param.put(UserService.Param.OFFSET, offset);
@@ -204,7 +203,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(param, conditions, sortColumn, sortOrderAsc);
 
 			return this.selectBySqlFile(UserJoin.class,
@@ -250,70 +249,70 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	private Map<String, Object> setCondition(Map<String, Object> param,
 			Map<String, Object> conditions, String sortColumn,
 			boolean sortOrderAsc) {
-		
+		// 社員コード（ユーザーID）
 		if (conditions.containsKey(UserService.Param.USER_ID)) {
 			param.put(UserService.Param.USER_ID, super
 					.createPrefixSearchCondition((String) conditions
 							.get(UserService.Param.USER_ID)));
 		}
 
-		
+		// 社員名
 		if (conditions.containsKey(UserService.Param.NAME_KNJ)) {
 			param.put(UserService.Param.NAME_KNJ, super
 					.createPartialSearchCondition((String) conditions
 							.get(UserService.Param.NAME_KNJ)));
 		}
 
-		
+		// 社員名カナ
 		if (conditions.containsKey(UserService.Param.NAME_KANA)) {
 			param.put(UserService.Param.NAME_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(UserService.Param.NAME_KANA)));
 		}
 
-		
+		// 部門
 		if (conditions.containsKey(UserService.Param.DEPT_ID)) {
 			param.put(UserService.Param.DEPT_ID, conditions
 					.get(UserService.Param.DEPT_ID));
 		}
 
-		
+		// 権限
 		if (conditions.containsKey(RoleService.Param.ROLE_ID)) {
 			param.put(RoleService.Param.ROLE_ID, conditions
 					.get(RoleService.Param.ROLE_ID));
 		}
 
-		
+		// メールアドレス
 		if (conditions.containsKey(UserService.Param.EMAIL)) {
 			param.put(UserService.Param.EMAIL, super
 					.createPartialSearchCondition((String) conditions
 							.get(UserService.Param.EMAIL)));
 		}
 
-		
+		// ソートカラムを設定する
 		if (UserService.Param.USER_ID.equals(sortColumn)) {
-			
+			// 社員コード
 			param.put(UserService.Param.SORT_COLUMN_USER,
 					UserService.COLUMN_USER_ID);
 		} else if (UserService.Param.NAME_KNJ.equals(sortColumn)) {
-			
+			// 社員名
 			param.put(UserService.Param.SORT_COLUMN_USER,
 					UserService.COLUMN_NAME_KNJ);
 		} else if (UserService.Param.NAME_KANA.equals(sortColumn)) {
-			
+			// 社員名カナ
 			param.put(UserService.Param.SORT_COLUMN_USER,
 					UserService.COLUMN_NAME_KANA);
 		} else if (UserService.Param.DEPT_NAME.equals(sortColumn)) {
-			
+			// 部門名
 			param.put(UserService.Param.SORT_COLUMN_DEPT,
 					UserService.COLUMN_DEPT_NAME);
 		} else if (UserService.Param.EMAIL.equals(sortColumn)) {
-			
+			// E-MAIL
 			param.put(UserService.Param.SORT_COLUMN_USER,
 					UserService.COLUMN_EMAIL);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(UserService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -336,7 +335,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 		}
 		try {
 
-			
+			// ユーザーの登録
 			Map<String, Object> param = super.createSqlParam();
 			BeanMap userInfo = Beans.createAndCopy(BeanMap.class, dto)
 					.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -353,13 +352,13 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 					super.mineDto.passwordValidDays);
 			this.updateBySqlFile("user/InsertUser.sql", param).execute();
 
-			
+			// ユーザー権限の登録
 			param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 			for (MenuDto menuDto : dto.menuDtoList) {
 				if (Constants.MENU_VALID_LEVEL.INVALID
 						.equals(menuDto.validFlag)) {
-					
+					// 無効は処理しない
 					continue;
 				}
 
@@ -389,13 +388,13 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			return;
 		}
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 			super.lockRecordBySqlFile("user/LockUserById.sql", param,
 					dto.updDatetm);
 
-			
+			// ユーザーの更新
 			param = super.createSqlParam();
 			BeanMap userInfo = Beans.createAndCopy(BeanMap.class, dto)
 					.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -414,7 +413,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			}
 			this.updateBySqlFile("user/UpdateUser.sql", param).execute();
 
-			
+			// 権限情報の差分を判断し、更新する
 			param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 
@@ -425,7 +424,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 					}
 
 					if (originalMenuDto.validFlag.equals(menuDto.validFlag)) {
-						
+						// 変更なし
 						continue;
 					}
 
@@ -436,7 +435,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 								.equals(menuDto.validFlag)
 								|| Constants.MENU_VALID_LEVEL.VALID_FULL
 										.equals(menuDto.validFlag)) {
-							
+							// 無効から変更された場合はINSERT
 							param
 									.put(MenuService.Param.MENU_ID,
 											menuDto.menuId);
@@ -450,7 +449,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 							.equals(originalMenuDto.validFlag)
 							|| Constants.MENU_VALID_LEVEL.VALID_FULL
 									.equals(originalMenuDto.validFlag)) {
-						
+						// 元が無効以外の場合はDELETE-INSERT
 
 						param.put(MenuService.Param.MENU_ID,
 								originalMenuDto.menuId);
@@ -462,7 +461,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 
 						if (Constants.MENU_VALID_LEVEL.INVALID
 								.equals(menuDto.validFlag)) {
-							
+							// 変更後が無効の場合は登録不要
 							break;
 						}
 
@@ -493,22 +492,22 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	public void deleteRecord(UserDto dto) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 			super.lockRecordBySqlFile("user/LockUserById.sql", param,
 					dto.updDatetm);
 
-			
+			// ユーザーの削除
 			param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 			this.updateBySqlFile("user/DeleteUserByUserId.sql", param)
 					.execute();
 
-			
+			// 履歴
 			super.updateAudit(GrantRole.TABLE_NAME, this.getKeyColumnNames(), new String[] { dto.userId });
 
-			
+			// ユーザー権限の削除
 			param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
 			param.put(MenuService.Param.MENU_ID, null);
@@ -532,7 +531,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	public void updatePassword(String userId, String password)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, userId);
 			param
@@ -540,7 +539,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 							.encrypt(password));
 
 			if (super.mineDto.passwordValidDays != null) {
-				
+				// 自社マスタの設定がある場合には本日から指定日数の期限を設定
 				param.put(UserService.Param.PASSWORD_VALID_DAYS,
 						super.mineDto.passwordValidDays);
 			}
@@ -578,7 +577,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 							Constants.FORMAT.DATE).execute();
 				}
 
-				
+				// 権限の追加
 				if (userDto.roleDtoList == null) {
 					userDto.roleDtoList = new ArrayList<RoleDto>();
 				}

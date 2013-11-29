@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 	@Resource
 	public EditSupplierForm editSupplierForm;
 
-	
+	// サービス群
 	/** 区分マスタ */
 	@Resource
 	public CategoryService categoryService;
@@ -89,7 +88,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 	@Resource
 	public SupplierService supplierService;
 
-	
+	// リスト
 	/** 敬称 */
 	public List<LabelValueBean> supplierPcPreTypeCategoryList = new ArrayList<LabelValueBean>();
 
@@ -322,81 +321,81 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#initList()
 	 */
 	protected void initList() throws ServiceException {
-		
-		
-		
+		//
+		// その他初期化
+		//
 
-		
+		// 敬称
 		supplierPcPreTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
-		
+		// 先頭に空白を入れる
 		supplierPcPreTypeCategoryList.add(0, new LabelValueBean());
 
-		
+		// 取引区分
 		supplierCmCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.SUPPLIER_CM_CATEGORY);
-		
+		// 先頭に空白を入れる
 		supplierCmCategoryList.add(0, new LabelValueBean());
 
-		
+		// 税転嫁
 		taxShiftCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.APT_TAX_SHIFT_CATEGORY);
-		
+		// 先頭に空白を入れる
 		taxShiftCategoryList.add(0, new LabelValueBean());
 
-		
+		// 支払方法
 		paymentTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PAYMENT_TYPE_CATEGORY);
 
-		
+		// 先頭に空白を入れる
 		paymentTypeCategoryList.add(0, new LabelValueBean());
 
-		
+		// 回収間隔
 		paymentCycleCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PAYMENT_CYCLE_CATEGORY);
-		
+		// 先頭に空白を入れる
 		paymentCycleCategoryList.add(0, new LabelValueBean());
 
-		
+		// レート
 		List<Rate> list = rateService.findAllRate();
 		for (Rate rate : list) {
 			rateList.add(new LabelValueBean(rate.name, rate.rateId.toString()));
 		}
-		
+		// 先頭に空白を入れる
 		rateList.add(0, new LabelValueBean());
 
-		
+		// 振込方法
 		transferTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.TRANSFER_TYPE_CATEGORY);
-		
+		// 先頭に空白を入れる
 		transferTypeCategoryList.add(0, new LabelValueBean());
 
-		
+		// 税端数処理
 		taxFractCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.TAX_FRACT_CATEGORY);
-		
+		// 先頭に空白を入れる
 		taxFractCategoryList.add(0, new LabelValueBean());
 
-		
+		// 単価端数処理
 		priceFractCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRICE_FRACT_CATEGORY);
-		
+		// 先頭に空白を入れる
 		priceFractCategoryList.add(0, new LabelValueBean());
 
-		
+		// 手数料負担
 		serviceChargeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.SERVICE_CHARGE_CATEGORY);
-		
+		// 先頭に空白を入れる
 		serviceChargeCategoryList.add(0, new LabelValueBean());
 
 		if (!StringUtil.hasLength(getKey())) {
-			
+			// 新規追加の場合、初期値マスタから値を取る。
 			Map<String, Object> initMap = initMstService
 					.findInitDataByTableName(Supplier.TABLE_NAME);
 
-			
+			// ※以下、ダウンキャストはテーブル定義に則っているので安全
 
-			
+			// 敬称
 			String initVal = (String) initMap.get(InitColumn.SUPPLIER_PC_PRE_CATEGORY);
 			if (initVal != null) {
 				editSupplierForm.supplierPcPreCategory = initVal;
@@ -404,7 +403,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 				editSupplierForm.supplierPcPreCategory = Constants.DEFAULT_INIT_VALUE.PC_PRE_CATEGORY;
 			}
 
-			
+			// 取引区分の初期値
 			initVal = (String) initMap
 					.get(InitColumn.SUPPLIER_CM_CATEGORY);
 			if (initVal != null) {
@@ -413,7 +412,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 				editSupplierForm.supplierCmCategory = Constants.DEFAULT_INIT_VALUE.SUPPLIER_CM_CATEGORY;
 			}
 
-			
+			// 税転嫁
 			initVal = (String) initMap
 					.get(InitColumn.TAX_SHIFT_CATEGORY);
 			if (initVal != null) {
@@ -422,7 +421,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 				editSupplierForm.taxShiftCategory = Constants.DEFAULT_INIT_VALUE.TAX_SHIFT_CATEGORY;
 			}
 
-			
+			// 税端数処理
 			initVal = (String) initMap
 					.get(InitColumn.TAX_FRACT_CATEGORY);
 			if (initVal != null) {
@@ -431,7 +430,7 @@ public class EditSupplierAction extends AbstractEditAction<SupplierDto, Supplier
 				editSupplierForm.taxFractCategory = Constants.DEFAULT_INIT_VALUE.TAX_FRACT_CATEGORY;
 			}
 
-			
+			// 単価端数処理
 			initVal = (String) initMap
 					.get(InitColumn.PRICE_FRACT_CATEGORY);
 			if (initVal != null) {

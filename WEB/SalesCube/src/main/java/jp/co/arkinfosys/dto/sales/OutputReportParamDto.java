@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 import java.util.ArrayList;
@@ -13,19 +12,19 @@ import java.util.Arrays;
 *
 */
 public class OutputReportParamDto {
-	
+	// 受注番号
 	public String roSlipId;
 
-	
+	// 売上番号
 	public String salesSlipId;
 
-	
+	// 帳票名
 	public String reportFileComma;
 
-	
+	// 帳票名リスト
 	public ArrayList<String> reportFileList = null;
 
-	
+	// 日付表示フラグ
 	public boolean dispDateFlag = false;
 
 	/**

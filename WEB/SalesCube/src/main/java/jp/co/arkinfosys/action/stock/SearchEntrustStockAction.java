@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -52,13 +51,13 @@ public class SearchEntrustStockAction extends
 	 */
 	@Override
 	protected void doAfterIndex() throws Exception {
-		
+		// 検索対象プルダウンの初期値を設定
 		this.searchEntrustStockForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
 
-		
+		// ソートカラムの初期値を設定
 		this.searchEntrustStockForm.sortColumn = null;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = searchEntrustStockService
 				.createSearchStockResult(null, null,
 						searchEntrustStockForm.searchTarget);
@@ -70,17 +69,17 @@ public class SearchEntrustStockAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 検索対象
 		this.searchEntrustStockForm.searchTargetList = ListUtil
 				.getSearchTargetList();
-		
+		// 分類(大)
 		this.searchEntrustStockForm.product1List = productClassService
 				.findAllProductClass1LabelValueBeanList();
 		this.searchEntrustStockForm.product1List.add(0, new LabelValueBean());
-		
+		// 分類(中)
 		this.searchEntrustStockForm.product2List = new ArrayList<LabelValueBean>();
 		this.searchEntrustStockForm.product2List.add(new LabelValueBean());
-		
+		// 分類(小)
 		this.searchEntrustStockForm.product3List = new ArrayList<LabelValueBean>();
 		this.searchEntrustStockForm.product3List.add(new LabelValueBean());
 	}

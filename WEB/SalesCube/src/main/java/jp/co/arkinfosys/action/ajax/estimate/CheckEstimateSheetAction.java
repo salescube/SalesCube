@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.estimate;
 
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class CheckEstimateSheetAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String exists() throws ServiceException {
 		try {
-			
+			// 見積情報の存在チェック
 			InputEstimateDto dto = (InputEstimateDto) estimateSheetService
 					.loadBySlipId(this.estimateSheetId);
 			if (dto == null) {

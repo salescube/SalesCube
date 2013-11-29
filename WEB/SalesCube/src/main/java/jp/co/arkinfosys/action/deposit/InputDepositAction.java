@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.deposit;
 
 import java.util.ArrayList;
@@ -72,12 +71,12 @@ public class InputDepositAction extends
 		public static final String INPUT = "inputDeposit.jsp";
 	}
 
-	
+	// 画面とAction間でデータをやり取りするオブジェクトを定義する
 	@ActionForm
 	@Resource
 	public InputDepositForm inputDepositForm;
 
-	
+	// ビジネスロジックを定義したオブジェクト
 	@Resource
 	private DepositSlipService depositSlipService;
 
@@ -111,25 +110,25 @@ public class InputDepositAction extends
 	@Resource
 	public BankDepositRelService bankDepositRelService;
 
-	
-	
+	// 画面表示に使用するオブジェクト
+	// 入金伝票
 	public DepositSlip depositSlip;
-	
+	// 入金伝票明細行
 	public List<DepositLine> depositLine;
 
-	
+	// 入金区分リストの内容
 	public List<LabelValueBean> depositCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 敬称区分リストの内容
 	public List<LabelValueBean> preTypeCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 取引区分リストの内容
 	public List<LabelValueBean> salesCmCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 支払条件リストの内容
 	public List<LabelValueBean> cutoffGroupCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 銀行マスタリストの内容
 	public List<LabelValueBean> bankMstList = new ArrayList<LabelValueBean>();
 
 	private boolean initCategoryFlag = false;
@@ -169,30 +168,30 @@ public class InputDepositAction extends
 	protected void initCategoryList() throws ServiceException {
 
 		if (initCategoryFlag) {
-			
+			// 初期化済み
 			return;
 		}
-		
+		// 入金区分プルダウンの値
 		createCategoryList(Categories.DEPOSIT_CATEGORY, depositCategoryList,
 				false);
 
-		
+		// 敬称区分プルダウンの値
 		createCategoryList(Categories.PRE_TYPE, preTypeCategoryList, true);
 
-		
+		// 取引区分プルダウンの値
 		createCategoryList(Categories.SALES_CM_CATEGORY, salesCmCategoryList,
 				true);
 
-		
+		// 取引区分プルダウンの値
 		createCategoryList(Categories.CUTOFF_GROUP, cutoffGroupCategoryList,
 				true);
 
-		
+		// 銀行リストの最初は空欄
 		LabelValueBean beanB = new LabelValueBean();
 		beanB.setValue("");
 		beanB.setLabel(" ");
 		this.bankMstList.add(beanB);
-		
+		// 銀行リストの取得
 		List<BankDwb> bankList = this.bankService.selectBankDwbList();
 		for (BankDwb bank : bankList) {
 			beanB = new LabelValueBean();
@@ -239,9 +238,9 @@ public class InputDepositAction extends
 		ActionErrors errors = new ActionErrors();
 		ActionMessage error;
 
-		
+		// 存在する顧客か確認
 		if (customerService.isExistCustomerCode(inputDepositForm.customerCode) == false) {
-			
+			// 顧客コードがXXのデータは存在しません
 			String strLabel = MessageResourcesUtil
 					.getMessage("labels.customerCode");
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -249,7 +248,7 @@ public class InputDepositAction extends
 					inputDepositForm.customerCode));
 		}
 
-		
+		// 入金区分が設定されていること
 		if (!StringUtil.hasLength(inputDepositForm.depositCategory)) {
 			String strLabel = MessageResourcesUtil
 					.getMessage("labels.depositCategory");
@@ -266,7 +265,7 @@ public class InputDepositAction extends
 			}
 
 			validCnt++;
-			
+			// 備考の文字数チェック
 			if (StringUtil.hasLength(lineDto.remarks)) {
 				error = ValidateUtil.maxlength(lineDto.remarks,
 						InputDepositForm.remarksSize, "errors.line.length",
@@ -279,7 +278,7 @@ public class InputDepositAction extends
 					errors.add(ActionMessages.GLOBAL_MESSAGE, error);
 				}
 			}
-			
+			// 金額の数値チェック
 			if (StringUtil.hasLength(lineDto.price)) {
 				error = ValidateUtil
 						.integerType(lineDto.price, "errors.line.integer",
@@ -304,7 +303,7 @@ public class InputDepositAction extends
 												.toString()));
 					}
 
-					
+					// 数値0チェック 2010.04.21 add kaki
 					if (price == 0) {
 						String strLabel = MessageResourcesUtil
 								.getMessage("labels.price");
@@ -320,7 +319,7 @@ public class InputDepositAction extends
 								.getMessage("labels.price")));
 			}
 		}
-		
+		// 有効な明細行が存在しない
 		if (validCnt == 0) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.deposit.noline"));
@@ -334,12 +333,12 @@ public class InputDepositAction extends
 	 */
 	protected void loadBillSlip() throws ServiceException {
 
-		
+		// 請求書取得
 		Bill bill = billService.findBillById(Integer
 				.parseInt(inputDepositForm.inputBillId));
 		if (bill == null) {
-			
-			
+			// 該当する請求書が存在しない場合
+			// 削除済を探す
 			bill = billOldService.findBillById(Integer
 					.parseInt(inputDepositForm.inputBillId));
 			if (bill == null) {
@@ -353,9 +352,9 @@ public class InputDepositAction extends
 			}
 		}
 		inputDepositForm.initialize(bill);
-		
+		// 顧客情報を読み込み
 		CustomerJoin cj = customerService.findById(bill.customerCode);
-		
+		// 請求先情報を読み込み
 		List<DeliveryAndPre> deliveryList;
 		try {
 			deliveryList = deliveryService
@@ -369,7 +368,7 @@ public class InputDepositAction extends
 		}
 		inputDepositForm.initialize(cj, deliveryList.get(0));
 
-		
+		// 直近の請求書情報から請求書日付を取得する
 		List<Bill> billList = billService
 				.findLastBillByCustomerCode(inputDepositForm.customerCode);
 		Date startDate;
@@ -386,12 +385,12 @@ public class InputDepositAction extends
 			}
 		}
 
-		
+		// 指定した入金伝票番号以外入金情報を取得する
 		inputDepositForm.nowPaybackPrice = depositSlipService
 				.getDepositTotalPrice(inputDepositForm.customerCode, startDate,
 						inputDepositForm.depositSlipId).toString();
 
-		
+		// 売上情報を取得する
 		inputDepositForm.nowSalesPrice = salesService.getSalesTotalPrice(
 				inputDepositForm.customerCode, startDate, null).toString();
 	}
@@ -401,7 +400,7 @@ public class InputDepositAction extends
 	 */
 	private void setValueToName() {
 
-		
+		// 銀行名設定
 		for (DepositLineDto lineDto : inputDepositForm.depLineList) {
 			for (LabelValueBean lvb : bankMstList) {
 				if (lvb.getValue().equals(lineDto.bankId)) {
@@ -485,8 +484,8 @@ public class InputDepositAction extends
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
 
-		
-		
+		// 伝票取得
+		// 入金伝票取得
 		DepositSlipDto dto = depositSlipService
 				.loadBySlipId(inputDepositForm.depositSlipId);
 
@@ -496,13 +495,13 @@ public class InputDepositAction extends
 
 		Beans.copy(dto, inputDepositForm).execute();
 
-		
+		// 入金伝票明細行取得
 		List<DepositLineDto> dlList = depositLineService.loadBySlip(dto);
 		dto.setLineDtoList(dlList);
 		dto.fillList();
 		inputDepositForm.setLineList(dto.getLineDtoList());
 
-		
+		// 直近の請求書情報から請求書日付を取得する
 		List<Bill> billList = billService
 				.findLastBillByCustomerCode(inputDepositForm.customerCode);
 		Date startDate;
@@ -519,12 +518,12 @@ public class InputDepositAction extends
 			}
 		}
 
-		
+		// 指定した入金伝票番号以外入金情報を取得する
 		inputDepositForm.nowPaybackPrice = depositSlipService
 				.getDepositTotalPrice(inputDepositForm.customerCode, startDate,
 						inputDepositForm.depositSlipId).toString();
 
-		
+		// 売上情報を取得する
 		inputDepositForm.nowSalesPrice = salesService.getSalesTotalPrice(
 				inputDepositForm.customerCode, startDate, null).toString();
 
@@ -549,7 +548,7 @@ public class InputDepositAction extends
 	@Override
 	protected void beforeUpsert(boolean bInsert, AbstractSlipDto<DepositLineDto> dto)
 			throws Exception {
-		
+		// リストボックスの選択値から文字列を設定
 		setValueToName();
 	}
 
@@ -563,17 +562,17 @@ public class InputDepositAction extends
 		if (Constants.STATUS_DEPOSIT_SLIP.CUTOFF
 				.equals(this.inputDepositForm.status)) {
 
-			
+			// 状態名を取得
 			String categoryName = categoryService.findCategoryNameByIdAndCode(
 					SlipStatusCategories.DEPOSIT_SLIP_STATUS,
 					this.inputDepositForm.status);
-			
+			// 伝票名取得
 			String strSlipLabel = MessageResourcesUtil
 					.getMessage("erroes.db.depositSlip");
-			
+			// 動作名取得
 			String strActionLabel = MessageResourcesUtil
 					.getMessage("words.action.edit");
-			
+			// メッセージに設定
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.slip.lock", strSlipLabel,
 							categoryName, strActionLabel));
@@ -581,16 +580,16 @@ public class InputDepositAction extends
 		} else {
 			if (StringUtil.hasLength(this.inputDepositForm.salesCutoffDate)) {
 
-				
+				// 状態名を取得
 				String categoryName = MessageResourcesUtil
 						.getMessage("labesl.closeArtBalance");
-				
+				// 伝票名取得
 				String strSlipLabel = MessageResourcesUtil
 						.getMessage("erroes.db.depositSlip");
-				
+				// 動作名取得
 				String strActionLabel = MessageResourcesUtil
 						.getMessage("words.action.edit");
-				
+				// メッセージに設定
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("infos.slip.lock", strSlipLabel,
 								categoryName, strActionLabel));

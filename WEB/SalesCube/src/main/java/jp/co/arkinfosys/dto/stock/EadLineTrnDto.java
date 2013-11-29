@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.stock;
 
 import java.io.Serializable;
@@ -23,8 +22,8 @@ public class EadLineTrnDto extends AbstractLineDto implements Serializable {
 
 	public String eadSlipId;
 
-	
-	
+	//public String eadLineNo;
+	//public String lineNo;
 
 	public String productCode;
 
@@ -102,10 +101,10 @@ public class EadLineTrnDto extends AbstractLineDto implements Serializable {
 	public EadLineTrnDto createStockDto() {
 		EadLineTrnDto stockLineDto = new EadLineTrnDto();
 
-		
+		// 共通
 		stockLineDto.eadLineId = this.eadLineId;
 		stockLineDto.eadSlipId = this.eadSlipId;
-		
+		//stockLineDto.eadLineNo = this.eadLineNo;
 		stockLineDto.lineNo = this.lineNo;
 		stockLineDto.productCode = this.productCode;
 		stockLineDto.productAbstract = this.productAbstract;

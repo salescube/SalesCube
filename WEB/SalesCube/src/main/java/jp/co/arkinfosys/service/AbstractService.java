@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.BufferedInputStream;
@@ -193,15 +192,15 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 	 */
 	protected int lockRecordBySqlFile(String sql, Map<String, Object> param,
 			Timestamp dtm) throws UnabledLockException, ServiceException {
-		
+		// 対象レコードを検索
 		BeanMap result = null;
 		UnabledLockException exResult = null;
 		try {
 			result = this.selectBySqlFile(BeanMap.class, sql, param)
 					.getSingleResult();
 		} catch (SQLRuntimeException e) {
-			
-			
+			// ここでつかまった場合はSQLエラーかタイムアウト
+			// 区別をするのはかな～りアヤシイになるのでタイムアウトで返しちゃいます。
 			exResult = new UnabledLockException(
 					"errors.exclusive.control.locked");
 			exResult.setLockStatus(AbstractService.LockResult.ALREADY_LOCKED);
@@ -210,7 +209,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 			throw new ServiceException(e);
 		}
 
-		
+		// レコードが取得できなかった
 		if (result == null) {
 			exResult = new UnabledLockException(
 					"errors.exclusive.control.deleted");
@@ -218,8 +217,8 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 			throw exResult;
 		}
 
-		
-		
+		// 更新時間取得
+		// nullチェックはしない！ あったら不具合で「ぬるぽ」が投げられます！
 		try {
 			Object updDtm = result.get(AbstractService.Param.UPD_DATETM);
 			String updUser = (String) result
@@ -233,11 +232,11 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 						.getTime());
 			}
 
-			
+			// 更新時間判定
 			if (tm != null && tm.compareTo(dtm) == 0) {
 				return AbstractService.LockResult.SUCCEEDED;
 			}
-			
+			// 既に更新済み
 			exResult = new UnabledLockException(
 					"errors.exclusive.control.updated");
 			exResult.setLockStatus(AbstractService.LockResult.ALREADY_UPDATED);
@@ -265,7 +264,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 	protected int lockRecordBySqlFile(String sql, Map<String, Object> param,
 			String dtm) throws UnabledLockException, ServiceException {
 		try {
-			
+			// String→Timestamp変換＆判定
 			Timestamp tm = new Timestamp(new SimpleDateFormat(
 					Constants.FORMAT.TIMESTAMP).parse(dtm).getTime());
 			return this.lockRecordBySqlFile(sql, param, tm);
@@ -285,10 +284,10 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 	protected List<ENTITY> findByCondition(Map<String, Object> conditions,
 			String[] params, String sqlFileName) throws ServiceException {
 
-		
-		
-		
-		
+		// 検索条件を指定しないものも許可するのでSQLで調整してください
+		// if (conditions == null) {
+		// return new ArrayList<Bill>();
+		// }
 		try {
 			Map<String, Object> param = createSqlParam();
 			this.setEmptyCondition(param, params);
@@ -315,7 +314,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 	private Map<String, Object> setEmptyCondition(Map<String, Object> param,
 			String[] params) {
 
-		
+		// 検索条件
 		for (String paramName : params) {
 			param.put(paramName, null);
 		}
@@ -417,7 +416,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 			return null;
 		}
 
-		
+		// 小文字の英字と、大文字の英字または数字が並んでいる箇所を検索する
 		Pattern pattern = Pattern.compile("([a-z])([A-Z0-9])");
 		Matcher matcher = pattern.matcher(variableName);
 
@@ -426,7 +425,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 			String c1 = matcher.group(1);
 			String c2 = matcher.group(2);
 
-			
+			// マッチした箇所にアンダーバーを挿入する
 			matcher.appendReplacement(buf, c1 + "_" + c2);
 		}
 		matcher.appendTail(buf);
@@ -528,16 +527,16 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 		boolean deflate = false;
 		if (StringUtil.hasLength(acceptEncoding)
 				&& acceptEncoding.contains(FileDownloadService.GZIP)) {
-			
+			// 圧縮可能であれば圧縮する
 			httpResponse.setHeader(
 					FileDownloadService.HTTP_HEADER.CONTENT_ENCODING,
 					FileDownloadService.GZIP);
 			deflate = true;
 		}
 
-		
+		// Content-Type設定
 		httpResponse.setContentType(Constants.MIME.BIN);
-		
+		// Content-Disposition設定
 		httpResponse.setHeader(
 				FileDownloadService.HTTP_HEADER.CONTENT_DISPOSITION,
 				"attachment; filename=\""
@@ -545,7 +544,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 								.getBytes(Constants.CHARSET.WINDOWS31J),
 								Constants.CHARSET.LATIN1) + "\"");
 
-		
+		// OutputStreamを返す
 		if (deflate) {
 			return new GZIPOutputStream(new BufferedOutputStream(httpResponse
 					.getOutputStream()));
@@ -578,7 +577,7 @@ public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> 
 
 		} catch (SocketException e) {
 			if (!e.getMessage().contains("ClientAbortException")) {
-				
+				// ClientAbortExceptionはユーザキャンセルなので正常と判断
 				throw e;
 			}
 		} finally {

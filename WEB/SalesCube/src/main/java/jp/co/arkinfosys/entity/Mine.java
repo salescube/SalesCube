@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.io.Serializable;
@@ -28,6 +27,8 @@ public class Mine implements Serializable {
     public String companyAbbr;
 
     public String companyCeoName;
+
+    public String companyCeoTitle;
 
     public String companyZipCode;
 

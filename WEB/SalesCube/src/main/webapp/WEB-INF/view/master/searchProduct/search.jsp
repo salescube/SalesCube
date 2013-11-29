@@ -51,9 +51,7 @@
 	 * 検索処理実行
 	 */
 	function searchProduct(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData(), true);
 	}
 
@@ -370,181 +368,189 @@
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0013"/>
 		<jsp:param name="MENU_ID" value="1300"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能 --%>
 	<div id="main_function">
 		<span class="title">商品</span>
 
 		<s:form onsubmit="return false;">
 
 			<div class="function_buttons">
-				<button type="button" tabindex="2000" onclick="initForm();">F1<br>初期化</button><button
-					type="button" tabindex="2001" onclick="searchProduct();">F2<br>検索</button><button
-					type="button" tabindex="2002"
-						onclick="addProduct();" <c:if test="${!isUpdate}">disabled="disabled"</c:if> >F3<br>追加</button><button
-					type="button" tabindex="2003"
-						onclick="outputExcel();" <c:if test="${!userDto.validUpDwnProducts}">disabled="disabled"</c:if> >F4<br><bean:message key='words.name.excel'/>出力</button><button
-					type="button" tabindex="2004"
-						onclick="showImportExcelDialog();" <c:if test="${!userDto.validUpDwnProducts}">disabled="disabled"</c:if> >F5<br><bean:message key='words.name.excel'/>取込</button><button
-					type="button" disabled="disabled">F6<br>&nbsp;</button><button
-					type="button" disabled="disabled">F7<br>&nbsp;</button><button
-					type="button" disabled="disabled">F8<br>&nbsp;</button><button
-					type="button" disabled="disabled">F9<br>&nbsp;</button><button
-					type="button" disabled="disabled">F10<br>&nbsp;</button><button
-					type="button" disabled="disabled">F11<br>&nbsp;</button><button
-					type="button" disabled="disabled">F12<br>&nbsp;</button>
+				<button type="button" tabindex="2000" onclick="initForm();">F1<br>初期化</button>
+					<button type="button" tabindex="2001" onclick="searchProduct();">F2<br>検索</button>
+					<button type="button" tabindex="2002"
+						onclick="addProduct();" <c:if test="${!isUpdate}">disabled="disabled"</c:if> >F3<br>追加</button>
+					<button type="button" tabindex="2003"
+						onclick="outputExcel();" <c:if test="${!userDto.validUpDwnProducts}">disabled="disabled"</c:if> >F4<br><bean:message key='words.name.excel'/>出力</button>
+					<button type="button" tabindex="2004"
+						onclick="showImportExcelDialog();" <c:if test="${!userDto.validUpDwnProducts}">disabled="disabled"</c:if> >F5<br><bean:message key='words.name.excel'/>取込</button>
+					<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F8<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+					<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 			</div>
-
+			<br><br><br>
 			
+			<%-- 入力メイン --%>
 			<div class="function_forms">
-				
+			
+				<%-- エラー表示部分 --%>
 				<div style="color:red; padding-left: 20px">
 					<span id="ajax_errors">
 						<html:errors/>
 						<span  style="color:blue;">
-						<html:messages id="msg" message="true">
-							<bean:write name="msg" ignore="true"/>
-						</html:messages>
+							<html:messages id="msg" message="true">
+								<bean:write name="msg" ignore="true"/>
+							</html:messages>
 						</span>
 					</span>
 				</div>
 
-				<span onclick="">商品情報</span><br>
 
-				
-				<table id="product_searach_info_1" class="forms" summary="検索情報１">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 30%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 25%">
-					</colgroup>
-					<tr>
-						<th>商品コード</th>
-						<td><html:text styleId="productCode" property="productCode" style="width: 200px; ime-mode: disabled;" tabindex="100"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch($('#productCode'));" tabindex="101"/>
-						</td>
-						<th>商品名</th>
-						<td><html:text styleId="productName" property="productName" style="width: 200px;" tabindex="102"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;
-								" onclick="productSearch($('#productName'));" tabindex="103"/>
-						</td>
-						<th>商品名カナ</th>
-						<td><html:text styleId="productKana" property="productKana" style="width: 200px;" tabindex="104"/></td>
-					</tr>
-					<tr>
-						<th>仕入先コード</th>
-						<td><html:text styleId="supplierCode" property="supplierCode" style="width: 100px; ime-mode: disabled;" tabindex="105"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="106" onclick="showSearchSupplierDialog($('#supplierCode'));" /></td>
-						<th>仕入先名</th>
-						<td><html:text styleId="supplierName" property="supplierName" style="width: 200px;" tabindex="107"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="108"  onclick="showSearchSupplierDialog($('#supplierName'));" /></td>
-						<th>標準化分類</th>
-						<td>
-						<html:select styleId="productStandardCategory" property="productStandardCategory" tabindex="109">
-							<html:options collection="standardCategoryList" property="value" labelProperty="label" />
-						</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th>状況</th>
-						<td>
-						<html:select styleId="productStatusCategory" property="productStatusCategory" tabindex="110">
-							<html:options collection="statusCategoryList" property="value" labelProperty="label" />
-						</html:select>
-						</td>
-						<th>保管</th>
-						<td>
-						<html:select styleId="productStockCategory" property="productStockCategory" tabindex="111">
-							<html:options collection="stockCategorylist" property="value" labelProperty="label" />
-						</html:select>
-						</td>
-						<th>セット分類</th>
-						<td>
-						<html:select styleId="setTypeCategory" property="setTypeCategory" tabindex="112">
-							<html:options collection="setCategoryList" property="value" labelProperty="label" />
-						</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th>備考</th>
-						<td colspan="5"><html:text styleId="remarks" property="remarks" style="width: 500px;" tabindex="113"/></td>
-					</tr>
-				</table>
+			    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span>商品情報</span><br>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
+	
+					<%-- 検索条件1 --%>
+					<div id="search_info" class="section_body">
+						<table id="product_searach_info_1" class="forms" summary="検索情報１">
+							<tr>
+								<th><div class="col_title_right">商品コード</div></th>
+								<td><html:text styleId="productCode" property="productCode" style="width: 200px; ime-mode: disabled;" tabindex="100"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="productSearch($('#productCode'));" tabindex="101"/>
+								</td>
+								<th><div class="col_title_right">商品名</div></th>
+								<td><html:text styleId="productName" property="productName" style="width: 200px;" tabindex="102"/>
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;
+										" onclick="productSearch($('#productName'));" tabindex="103"/>
+								</td>
+								<th><div class="col_title_right">商品名カナ</div></th>
+								<td><html:text styleId="productKana" property="productKana" style="width: 200px;" tabindex="104"/></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">仕入先コード</div></th>
+								<td><html:text styleId="supplierCode" property="supplierCode" style="width: 100px; ime-mode: disabled;" tabindex="105"/>
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="106" onclick="showSearchSupplierDialog($('#supplierCode'));" /></td>
+								<th><div class="col_title_right">仕入先名</div></th>
+								<td><html:text styleId="supplierName" property="supplierName" style="width: 200px;" tabindex="107"/>
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="108"  onclick="showSearchSupplierDialog($('#supplierName'));" /></td>
+								<th><div class="col_title_right">標準化分類</div></th>
+								<td>
+								<html:select styleId="productStandardCategory" property="productStandardCategory" tabindex="109">
+									<html:options collection="standardCategoryList" property="value" labelProperty="label" />
+								</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">状況</div></th>
+								<td>
+								<html:select styleId="productStatusCategory" property="productStatusCategory" tabindex="110">
+									<html:options collection="statusCategoryList" property="value" labelProperty="label" />
+								</html:select>
+								</td>
+								<th><div class="col_title_right">保管</div></th>
+								<td>
+								<html:select styleId="productStockCategory" property="productStockCategory" tabindex="111">
+									<html:options collection="stockCategorylist" property="value" labelProperty="label" />
+								</html:select>
+								</td>
+								<th><div class="col_title_right">セット分類</div></th>
+								<td>
+								<html:select styleId="setTypeCategory" property="setTypeCategory" tabindex="112">
+									<html:options collection="setCategoryList" property="value" labelProperty="label" />
+								</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">備考</div></th>
+								<td colspan="5"><html:text styleId="remarks" property="remarks" style="width: 500px;" tabindex="113"/></td>
+							</tr>
+						</table>
+	
+						<table class="forms" summary="検索条件2">
+							<colgroup>
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 90%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right">分類（大）</div></th>
+								<td>
+									<select id="product1" name="product1" class="ProductClass1_TopEmpty" style="width: 500px;" tabindex="200">
+										<c:forEach var="bean" items="${product1List}">
+											<option value="${bean.value}">${f:h(bean.label)}</option>
+										</c:forEach>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">分類（中）</div></th>
+								<td>
+									<select id="product2" name="product2" class="ProductClass2_TopEmpty" style="width: 500px;" tabindex="201">
+										<option value=""></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">分類（小）</div></th>
+								<td>
+									<select id="product3" name="product3" class="ProductClass3_TopEmpty" style="width: 500px;" tabindex="202">
+										<option value=""></option>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</div>
+		    	</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
 
-				<table class="forms" summary="検索条件2">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 90%">
-					</colgroup>
-					<tr>
-						<th>分類（大）</th>
-						<td>
-							<select id="product1" name="product1" class="ProductClass1_TopEmpty" style="width: 500px;" tabindex="200">
-								<c:forEach var="bean" items="${product1List}">
-									<option value="${bean.value}">${f:h(bean.label)}</option>
-								</c:forEach>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th>分類（中）</th>
-						<td>
-							<select id="product2" name="product2" class="ProductClass2_TopEmpty" style="width: 500px;" tabindex="201">
-								<option value=""></option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th>分類（小）</th>
-						<td>
-							<select id="product3" name="product3" class="ProductClass3_TopEmpty" style="width: 500px;" tabindex="202">
-								<option value=""></option>
-							</select>
-						</td>
-					</tr>
-				</table>
-
-				<div style="width: 910px; text-align: right">
-					<button type="button" tabindex="250" style="width:80px" onclick="initForm();">初期化</button>
-					<button type="button" tabindex="251" style="width:80px" onclick="searchProduct();">検索</button>
+				<div style="width: 1160px; text-align: right">
+					<button type="button" tabindex="250" style="width: 80px;" onclick="initForm();" class="btn_medium">初期化</button>
+					<button type="button" tabindex="251" style="width: 80px;" onclick="searchProduct();" class="btn_medium">検索</button>
 				</div>
-
+	
 				<div id="ListContainer">
-					<div style="width: 910px; height: 25px;">
+					<div style="width: 1010px; height: 25px;">
 							<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
 		                    <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 					</div>
-					<table id="List" summary="商品検索結果"  class="forms" style="width: 910px">
-						<colgroup>
-							<col span="1" style="width: 15%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 15%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 10%">
-						</colgroup>
-						<tr>
-							<th style="cursor: pointer">商品コード</th>
-							<th style="cursor: pointer">商品名</th>
-							<th style="cursor: pointer">仕入先</th>
-							<th style="cursor: pointer">分類（大）</th>
-							<th style="cursor: pointer">備考</th>
-							<th style="cursor: pointer">&nbsp;</th>
-						</tr>
-					</table>
+					<span id="searchResultList">
+						<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+							<colgroup>
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 20%">
+								<col span="1" style="width: 10%">
+							</colgroup>
+							<tr>
+								<th class="rd_top_left" style="cursor: pointer; height: 30px;">商品コード</th>
+								<th class="xl64" style="cursor: pointer; height: 30px;">商品名</th>
+								<th class="xl64" style="cursor: pointer; height: 30px;">仕入先</th>
+								<th class="xl64" style="cursor: pointer; height: 30px;">分類（大）</th>
+								<th class="xl64" style="cursor: pointer; height: 30px;">備考</th>
+								<th class="xl64 rd_top_right" style="cursor: pointer; height: 30px;">&nbsp;</th>
+							</tr>
+						</table>
+					</span>
 				</div>
 			</div>
 
@@ -554,21 +560,23 @@
 		</s:form>
 	</div>
 
-	
+	<%-- Excel取込みダイアログ --%>
 	<div id="ImportProductExcelDialog" title="商品マスタExcel取込" style="display: none;">
 		<form name="ImportProductExcelForm" action="${f:url('/master/importProductExcel')}" method="post" enctype="multipart/form-data">
-			<table style="width: 550px;">
-				<tr>
-					<td><input type="file" name="productExcelFile" style="width: 450px;"></td>
-					<td style="text-align: right">
-						<button type="button" tabindex="500"
-							onclick="uploadExcel();">取込</button>
-						<input id="uploadSubmit" type="submit" name="upload" value="取込" style="display: none;">
-						<button type="button" tabindex="501"
-							onclick="$('#ImportProductExcelDialog').dialog('close');">閉じる</button>
-					</td>
-				</tr>
-			</table>
+			<div style="padding: 20px 20px 0 20px;">
+				<table style="width: 100%;">
+					<tr>
+						<td><input type="file" name="productExcelFile" style="width: 350px; color: #FFFFFF;"></td>
+						<td>
+							<button type="button" tabindex="500"
+								onclick="uploadExcel();">取込</button>
+							<input id="uploadSubmit" type="submit" name="upload" value="取込" style="display: none;">
+							<button type="button" tabindex="501"
+								onclick="$('#ImportProductExcelDialog').dialog('close');">閉じる</button>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</form>
 	</div>
 

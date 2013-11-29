@@ -312,47 +312,48 @@
 
 		// 全て選択・全て解除
 		 function checkAll(flg){
-		 	$("#input_table").find("input[type='checkbox']").attr('checked', flg);
+		 	//$("#input_table").find("input[type='checkbox']").attr('checked', flg);
+		 	$("#order_detail_info").find("input[type='checkbox']").attr('checked', flg);
 		 }
 
 	-->
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0010"/>
 		<jsp:param name="MENU_ID" value="1007"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<span class="title"><bean:message key='titles.inputEntrustStock'/></span>
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %>
-			</button><button type="button" id="btnF2" tabindex="2001" onclick="onF2();" ${(menuUpdate&&isExistSlipRead)?"":"disabled"}>F2<br><bean:message key='words.action.delete'/><%// 削除 %>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %></button>
+			<button type="button" id="btnF2" tabindex="2001" onclick="onF2();" ${(menuUpdate&&isExistSlipRead)?"":"disabled"}>F2<br><bean:message key='words.action.delete'/><%// 削除 %></button>
 <c:if test="${!isExistSlipRead}">
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.register'/><%// 登録 %>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.register'/><%// 登録 %></button>
 </c:if>
 <c:if test="${isExistSlipRead}">
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.renew'/><%// 更新 %>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.renew'/><%// 更新 %></button>
 </c:if>
-			</button><button type="button" id="btnF4" tabindex="2001" disabled>F4<br>&nbsp;
-			</button><button type="button" id="btnF5" tabindex="2004" ${(menuUpdate&&isExistSlipRead)?"":"disabled"} onclick="onF5();">F5<br><bean:message key='words.name.pdf'/>
-			</button><button type="button" id="btnF6" tabindex="2005" onclick="onF6();" ${!isExistSlipRead?"":"disabled"}>F6<br>伝票呼出
-			</button><button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;
-			</button><button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;
-			</button><button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;
-			</button><button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;
-			</button><button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;
-			</button><button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;
-			</button>
+			<button type="button" id="btnF4" tabindex="2001" disabled>F4<br>&nbsp;</button>
+			<button type="button" id="btnF5" tabindex="2004" ${(menuUpdate&&isExistSlipRead)?"":"disabled"} onclick="onF5();">F5<br><bean:message key='words.name.pdf'/></button>
+			<button type="button" id="btnF6" tabindex="2005" onclick="onF6();" ${!isExistSlipRead?"":"disabled"}>F6<br>伝票呼出</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form onsubmit="return false;">
 
@@ -367,103 +368,121 @@
 					</html:messages>
 				</div>
 
-				<bean:message key='labels.entrustStockSlipInfos'/><br>
-				<table id="order_info" class="forms" summary="委託入出庫伝票情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.entrustEadSlipId'/></th><%// 委託入出庫番号 %>
-						<td><html:text property="entrustEadSlipId" styleId="entrustEadSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="findSlip();"/></td>
-						<th><bean:message key='labels.poSlipId'/></th><%// 発注番号 %>
-						<td><html:text property="poSlipId" styleId="poSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="copySlipFromPorder();"/></td>
-						<th><bean:message key='labels.entrustEadDate'/><bean:message key='labels.must'/></th><%// 入出庫日 %>
-						<td><html:text property="entrustEadDate" styleId="entrustEadDate" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
-						<th><bean:message key='labels.userName' /></th><%// 入力担当者 %>
-						<td>
-							<html:text property="userName"  styleClass="c_disable" readonly="true" />
-						</td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.entrustEadCategory'/></th><%// 入出庫区分 %>
-						<td>
-							<html:select property="entrustEadCategory" styleId="entrustEadCategory" tabindex="103" onblur="copySlipFromPorder();" >
-								<html:options collection="categoryList" property="value" labelProperty="label"/>
-							</html:select>
-						</td>
-						<th><bean:message key='labels.remarks'/></th><%// 備考 %>
-						<td colspan="5"><html:text property="remarks" styleClass="c_referable" style="width: 570px;" tabindex="104" maxlength="120" /></td>
-					</tr>
-				</table>
-				<html:hidden property="copySlipId" styleId="copySlipId" />
-				<html:hidden property="userId"/>
-				<html:hidden property="stockPdate" />
-				<html:hidden property="updDatetm" />
-				<html:hidden property="isExistSlipRead" styleId="isExistSlipRead"  />
-				<html:hidden property="dispatchOrderPrintCount" styleId="dispatchOrderPrintCount"  />
-				<html:hidden property="copySlipFixedEntrustEadCategory" styleId="copySlipFixedEntrustEadCategory"  />
+			    <div class="form_section_wrap">
+   				<div class="form_section">
+	       			<div class="section_title">
+						<span><bean:message key='labels.entrustStockSlipInfos'/></span><br>
+	        			<button class="btn_toggle">
+	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	        			</button>
+					</div>
+					
+	       			<div id="order_section" class="section_body">
+						<table id="order_info" class="forms" summary="委託入出庫伝票情報">
+							<colgroup>
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 15%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.entrustEadSlipId'/></div></th><%// 委託入出庫番号 %>
+								<td><html:text property="entrustEadSlipId" styleId="entrustEadSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="findSlip();"/></td>
+								<th><div class="col_title_right"><bean:message key='labels.poSlipId'/></div></th><%// 発注番号 %>
+								<td><html:text property="poSlipId" styleId="poSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="copySlipFromPorder();"/></td>
+								<th><div class="col_title_right"><bean:message key='labels.entrustEadDate'/><bean:message key='labels.must'/></div></th><%// 入出庫日 %>
+								<td><html:text property="entrustEadDate" styleId="entrustEadDate" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
+								<th><div class="col_title_right"><bean:message key='labels.userName' /></div></th><%// 入力担当者 %>
+								<td>
+									<html:text property="userName"  styleClass="c_disable" readonly="true" />
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.entrustEadCategory'/></div></th><%// 入出庫区分 %>
+								<td>
+									<html:select property="entrustEadCategory" styleId="entrustEadCategory" tabindex="103" onblur="copySlipFromPorder();" >
+										<html:options collection="categoryList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+								<th><div class="col_title_right"><bean:message key='labels.remarks'/></div></th><%// 備考 %>
+								<td colspan="5"><html:text property="remarks" styleClass="c_referable" style="width: 570px;" tabindex="104" maxlength="120" /></td>
+							</tr>
+						</table>
+						<html:hidden property="copySlipId" styleId="copySlipId" />
+						<html:hidden property="userId"/>
+						<html:hidden property="stockPdate" />
+						<html:hidden property="updDatetm" />
+						<html:hidden property="isExistSlipRead" styleId="isExistSlipRead"  />
+						<html:hidden property="dispatchOrderPrintCount" styleId="dispatchOrderPrintCount"  />
+						<html:hidden property="copySlipFixedEntrustEadCategory" styleId="copySlipFixedEntrustEadCategory"  />
+					</div>
+				</div>
+				</div>
 
-				<span>仕入先情報</span><br>
-				<table id="order_info" class="forms" summary="仕入先情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 65%">
-					</colgroup>
-					<tr>
-						<th>仕入先コード</th>
-						<td>
-							<html:text property="supplierCode" styleId="supplierCode" styleClass="c_disable" style="width: 130px"  tabindex="200" readonly="true" />
-						</td>
-						<th>仕入先名</th>
-						<td><html:text property="supplierName" styleId="supplierName" style="width: 235px;" styleClass="c_disable" tabindex="202" readonly="true" /></td>
-					</tr>
-				</table>
+			    <div class="form_section_wrap">
+   				<div class="form_section">
+	       			<div class="section_title">
+						<span>仕入先情報</span><br>
+	        			<button class="btn_toggle">
+	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	        			</button>
+					</div>
+					
+	       			<div id="order_section" class="section_body">
+						<table id="order_info" class="forms" summary="仕入先情報">
+							<colgroup>
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 10%">
+								<col span="1" style="width: 65%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right">仕入先コード</div></th>
+								<td>
+									<html:text property="supplierCode" styleId="supplierCode" styleClass="c_disable" style="width: 130px"  tabindex="200" readonly="true" />
+								</td>
+								<th><div class="col_title_right">仕入先名</div></th>
+								<td><html:text property="supplierName" styleId="supplierName" style="width: 235px;" styleClass="c_disable" tabindex="202" readonly="true" /></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				</div>
 
 				<br>
-				<input type="button" id="allCheck" name="allCheck" tabindex="300" value="全て選択" onclick="checkAll(true);" >
-				<input type="button" id="allUnCheck" name="allUnCheck" tabindex="301" value="全て解除" onclick="checkAll(false);" >
+				<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
+				<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
 
-				
-				<table id="input_table" summary="入出庫明細リスト" class="forms" style="margin-top: 0px;">
-					<colgroup>
-						<col span="1" style="width: 40px;">
-						<col span="1" style="width:125px;">
-						<col span="1" style="width:235px;">
-						<col span="1" style="width: 60px;">
-						<col span="1" style="">
-					</colgroup>
+				<%-- 入力明細領域 --%>
+				<table id="order_detail_info" summary="入出庫明細リスト" class="forms" style="margin-top: 0px;">
 					<thead>
 						<tr>
-							<th rowspan="2"><bean:message key='labels.select'/></th><%// 選択 %>
-							<th rowspan="2"><bean:message key='labels.productCode'/></th><%// 商品コード %>
-							<th rowspan="2"><bean:message key='labels.productName'/></th><%// 商品名 %>
-							<th rowspan="2"><bean:message key='labels.quantity'/></th><%// 数量 %>
-							<th><bean:message key='labels.productRemarks'/></th><%// 商品備考 %>
+							<th rowspan="2" class="rd_top_left" style="height: 60px; width: 5%;"><bean:message key='labels.select'/></th><%// 選択 %>
+							<th rowspan="2" style="height: 60px; width: 20%;"><bean:message key='labels.productCode'/></th><%// 商品コード %>
+							<th rowspan="2" style="height: 60px; width: 25%;"><bean:message key='labels.productName'/></th><%// 商品名 %>
+							<th rowspan="2" style="height: 60px; width: 10%"><bean:message key='labels.quantity'/></th><%// 数量 %>
+							<th class="rd_top_right" style="height: 30px; width: 40%; border-bottom: 1px solid #555555;"><bean:message key='labels.productRemarks'/></th><%// 商品備考 %>
 						</tr>
 						<tr>
-							<th colspan="5"><bean:message key='labels.remarks'/></th><%// 備考 %>
+							<th colspan="5" style="height: 30px;"><bean:message key='labels.remarks'/></th><%// 備考 %>
 						</tr>
 					</thead>
 					<tbody id="tbodyLine">
 						<c:forEach var="entrustEadLineTrnDtoList" items="${entrustEadLineTrnDtoList}" varStatus="status">
 							<c:if test='${entrustEadLineTrnDtoList.lineNo != null}'>
 								<tr id="trLine${status.index}">
+									<!-- 選択 -->
 									<td id="tdNo${status.index}" style="text-align: center">
-	<c:if test="${!isExistSlipRead}">
-										<html:checkbox name="entrustEadLineTrnDtoList" property="checkEadLine"  indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].checkEadLine" />
-	</c:if>
+										&nbsp;
+										<c:if test="${!isExistSlipRead}">
+											<html:checkbox name="entrustEadLineTrnDtoList" property="checkEadLine"  indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].checkEadLine" />
+										</c:if>
+										&nbsp;
 									</td>
-
 									<td style="display: none;">
 										<html:hidden name="entrustEadLineTrnDtoList" property="lineNo" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].lineNo" />
 										<html:hidden name="entrustEadLineTrnDtoList" property="entrustEadLineId" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].entrustEadLineId" />
@@ -472,24 +491,37 @@
 										<html:hidden name="entrustEadLineTrnDtoList" property="productAbstract" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].productAbstract" />
 										<html:hidden name="entrustEadLineTrnDtoList" property="poLineId" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].poLineId" />
 									</td>
+									
+									<!-- 商品コード -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<span id="productAbstract${status.index}" style="display: block; width:250px; height:3em; white-space: normal; overflow: auto; padding: 1px;">
+										<span id="productAbstract${status.index}" style="display: block; width:95%; height:3em; white-space: normal; overflow: auto; padding: 1px;">
 											<c:out value="${entrustEadLineTrnDtoList.productCode}" />
 										</span>
 									</td>
+									
+									<!-- 商品名 -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<span id="productAbstract${status.index}" style="display: block; width:250px; height:3em; white-space: normal; overflow: auto; padding: 1px;">
+										<span id="productAbstract${status.index}" style="display: block; width:95%; height:3em; white-space: normal; overflow: auto; padding: 1px;">
 											<c:out value="${entrustEadLineTrnDtoList.productAbstract}" />
 										</span>
 									</td>
+									
+									<!-- 数量 -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<html:text name="entrustEadLineTrnDtoList" property="quantity" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].quantity" styleClass="c_disable numeral_commas" style="width: 55px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1002}" maxlength="6"  readonly="true" /><br>
-										<button id="stockButton${status.index}">在庫</button>
+										<div class="box_1of2" style="border-bottom: 0;">
+											<html:text name="entrustEadLineTrnDtoList" property="quantity" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].quantity" styleClass="c_disable numeral_commas" style="width: 75px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1002}" maxlength="6"  readonly="true" /><br>
+										</div>
+										<div class="box_2of2">
+											<button type="button" id="stockButton${status.index}" class="btn_small" style="width:75px;">在庫</button>
+										</div>
 									</td>
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<html:textarea name="entrustEadLineTrnDtoList" property="productRemarks" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].productRemarks" style="width: 300px; height: 3em;" tabindex="${status.index*lineElementCount+1003}" readonly="true"  styleClass="c_disable" /> <br>
-										<html:textarea name="entrustEadLineTrnDtoList" property="remarks" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].remarks" style="width: 300px; height: 3em;" tabindex="${status.index*lineElementCount+1004}" />
-
+										<div class="box_1of2" style="height: 70px;">
+											<html:textarea name="entrustEadLineTrnDtoList" property="productRemarks" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].productRemarks" style="width: 95%; height: 75%;" tabindex="${status.index*lineElementCount+1003}" readonly="true"  styleClass="c_disable" /> <br>
+										</div>
+										<div class="box_2of2" style="height: 70px;">
+											<html:textarea name="entrustEadLineTrnDtoList" property="remarks" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].remarks" style="width: 95%; height: 75%;" tabindex="${status.index*lineElementCount+1004}" />
+										</div>
 										<c:out value="${entrustEadLineTrnDtoList.remarks}" />
 									</td>
 								</tr>
@@ -500,12 +532,19 @@
 				</table>
 			</div>
 		</s:form>
-		<div style="text-align: right; width: 910px">
+		
+		<div style="width: 1160px; text-align: center; margin-top: 10px;">
 			<c:if test="${!isExistSlipRead}">
-				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}><bean:message key='words.action.register'/><%// 登録 %></button>
+				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}>
+					<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 登録 %>
+					<!--<bean:message key='words.action.register'/><%// 登録 %>-->
+				</button>
 			</c:if>
 			<c:if test="${isExistSlipRead}">
-				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}><bean:message key='words.action.renew'/><%// 更新 %></button>
+				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}>
+					<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 更新 %>
+					<!--<bean:message key='words.action.renew'/><%// 更新 %>-->
+				</button>
 			</c:if>
 		</div>
 	</div>

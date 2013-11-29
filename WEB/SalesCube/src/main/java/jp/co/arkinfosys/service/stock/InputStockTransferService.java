@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.ArrayList;
@@ -45,19 +44,19 @@ public class InputStockTransferService extends CommonInputStockService {
 	 */
 	@Override
 	protected int insertRecord(EadSlipTrnDto dto) throws ServiceException {
-		
+		// 入出庫伝票番号を採番
 		String dispatchSlipId = Long.toString(seqMakerService
 				.nextval(EadService.Table.EAD_SLIP_TRN));
 		String enterSlipId  = Long.toString(seqMakerService
 				.nextval(EadService.Table.EAD_SLIP_TRN));
 
-		
+		// 出庫側の処理
 
-		
-		
+		// 入出庫伝票の処理
+		// 入出庫伝票番号
 		dto.eadSlipId = dispatchSlipId;
 
-		
+		// 入出庫年度、月度、年月度を計算
 		YmDto ymDto = ymService.getYm(dto.eadDate);
 		if(ymDto == null) {
 			ServiceException se = new ServiceException(
@@ -69,36 +68,36 @@ public class InputStockTransferService extends CommonInputStockService {
 		dto.eadMonthly = ymDto.monthly.toString();
 		dto.eadYm = ymDto.ym.toString();
 
-		
+		// 入出庫伝票区分
 		dto.eadSlipCategory = CategoryTrns.EAD_SLIP_CATEGORY_NORMAL;
 
-		
+		// 入出庫区分
 		dto.eadCategory = CategoryTrns.EAD_CATEGORY_DISPATCH;
 
-		
+		// 登録元機能
 		dto.srcFunc = Constants.SRC_FUNC.STOCK_TRANSFER;
 
-		
+		// 売上伝票番号
 		dto.salesSlipId = null;
 
-		
+		// 仕入伝票番号
 		dto.supplierSlipId = null;
 
-		
+		// 移動入出庫伝票番号
 		dto.moveDepositSlipId = enterSlipId;
 
-		
+		// 在庫締処理日
 		dto.stockPdate = null;
 
-		
+		// Insert(出庫)
 		EadSlipTrn deliveryTrn = Beans.createAndCopy(EadSlipTrn.class,dto).execute();
 		eadService.insertSlip(deliveryTrn);
 
-		
+		// 出庫のDTOから入庫のDTOを作成する
 		EadSlipTrnDto stockDto = dto.createStockDto();
 		EadSlipTrn stockTrn = Beans.createAndCopy(EadSlipTrn.class,stockDto).execute();
 
-		
+		// Insert(入庫)
 		eadService.insertSlip(stockTrn);
 
 		return 0;
@@ -113,14 +112,14 @@ public class InputStockTransferService extends CommonInputStockService {
 	 * @throws ServiceException
 	 * @throws UnabledLockException
 	 */
-	
+	// 在庫移動入力画面は登録(insert)のみ
 	@Override
 	public int save(EadSlipTrnDto dto, AbstractService<?>... abstractServices)
 			throws ServiceException, UnabledLockException {
 
 		int lockResult = LockResult.SUCCEEDED;
 
-		
+		// 在庫移動入力を登録する
 		insertRecord(dto);
 
 		return lockResult;
@@ -157,42 +156,42 @@ public class InputStockTransferService extends CommonInputStockService {
 	@Override
 	public EadSlipTrnDto loadBySlipId(String eadSlipId) throws ServiceException{
 		try {
-			
+			// 入力された入出庫番号が数値であるかチェック
 			try {
 				Integer.valueOf(eadSlipId);
 			} catch (NumberFormatException e) {
 				return null;
 			}
-			
-			
+			// EadSlipTrnDtoを生成する
+			// 伝票を検索する
 			EadSlipTrn eadSlipTrn = eadService.findSlipByEadSlipId(Integer.valueOf(eadSlipId));
 			if( (eadSlipTrn == null) ||(eadSlipTrn.moveDepositSlipId == null)){
-				
+				// 伝票を取得できなかった場合はnullを返す
 				return null;
 			}
-			
+			// 入庫側伝票番号が指定された場合は出庫側伝票番号で再検索する
 			if(CategoryTrns.EAD_CATEGORY_ENTER.equals(eadSlipTrn.eadCategory)) {
 				eadSlipTrn = eadService.findSlipByEadSlipId(Integer.valueOf(eadSlipTrn.moveDepositSlipId));
 				if( (eadSlipTrn == null)){
-					
+					// 伝票を取得できなかった場合はnullを返す
 					return null;
 				}
 			}
-			
+			// 出庫側明細を検索する
 			List<EadLineTrn> eadLineTrnList = eadService.findLineByEadSlipId(Integer.valueOf(eadSlipTrn.eadSlipId));
 			if (eadLineTrnList.size() == 0) {
-				
+				// 明細を取得できなかった場合はnullを返す
 				return null;
 			}
-			
+			// 入庫側明細を検索する
 			List<EadLineTrn> eadLineTrnDestList = eadService.findLineByEadSlipId(
 													Integer.valueOf(eadSlipTrn.moveDepositSlipId));
 			if (eadLineTrnDestList.size() == 0) {
-				
+				// 明細を取得できなかった場合はnullを返す
 				return null;
 			}
 			if(eadLineTrnList.size() != eadLineTrnDestList.size()) {
-				
+				// 出庫側と入庫側の明細行数に相違がある場合はnullを返す
 				return null;
 			}
 
@@ -209,19 +208,19 @@ public class InputStockTransferService extends CommonInputStockService {
 				EadLineTrn eadLineTrnDest = eadLineTrnDestList.get(i);
 				i++;
 
-				
+				// 移動先棚番を設定する
 				eadLineTrnDto.rackCodeDest = eadLineTrnDest.rackCode;
 				eadLineTrnDto.rackNameDest = eadLineTrnDest.rackName;
 
-				
+				// 現在庫数,変更後在庫数は取得し、設定
 				ProductJoin pj = findProductByCode(eadLineTrnDto.productCode);
 				if( pj != null ){
-					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ 
+					if( CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(pj.stockCtlCategory)){ // 在庫管理区分
 						StockInfoDto dto = productStockService.calcStockQuantityByProductCode(eadLineTrnDto.productCode);
 						eadLineTrnDto.stockCount = Integer.toString( dto.currentTotalQuantity);
 					}
 				}
-				
+				// 移動可能数(棚在庫数)を計算
 				int unclosedQuantity = eadService.countUnclosedQuantityByProductCode(
 						eadLineTrnDto.productCode, eadLineTrnDto.rackCode);
 				int closedQuantity = productStockService.countClosedQuantityByProductCode(
@@ -229,10 +228,10 @@ public class InputStockTransferService extends CommonInputStockService {
 				int movableQuantity = unclosedQuantity + closedQuantity;
 				eadLineTrnDto.movableStockCount = Integer.toString(movableQuantity);
 
-				
+				// 移動元在庫数
 				eadLineTrnDto.quantitySrc = Integer.toString(movableQuantity);
 
-				
+				// 移動先在庫数
 				int unclosedQuantityDest = eadService.countUnclosedQuantityByProductCode(
 						eadLineTrnDto.productCode, eadLineTrnDto.rackCodeDest);
 				int closedQuantityDest = productStockService.countClosedQuantityByProductCode(

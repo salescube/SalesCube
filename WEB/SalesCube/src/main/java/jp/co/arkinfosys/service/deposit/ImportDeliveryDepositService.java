@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.deposit;
 
 import java.text.SimpleDateFormat;
@@ -112,7 +111,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 
 		String newDepositSlipIdStr = "";
 
-		
+		// 配送業者入金データと送り状データを伝票番号で突合する
 		List<DeliveryDepositWorkJoin> depositList = deliveryDepositWorkService.findDeliveryDepositWorkByUserId(userId);
 		List<InvoiceDataWorkJoin> invoiceDataWorkList = invoiceDataWorkService.findInvoiceDataWorkByUserId(userId);
 		int depositIndex = 0;
@@ -136,13 +135,13 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 		Integer salesSlipId = invoiceDataWork.salesSlipId;
 		String customerCode = invoiceDataWork.customerCode;
 
-		int depositLineNo = 0;		
+		int depositLineNo = 0;		// 入金伝票行番
 
-		
+		// 銀行マスタから取得
 		Bank bankInfo = (Bank)bankService.findById(bankId);
 
 		while ( depositIndex<depositSize ||  index<invoiceSize){
-			
+			// 配送業者入金データのデータ区分が「20（返品）」はスキップする
 			if( deliverySlipId.length() > 0){
 				if( Constants.DELIVERY_DEPOSIT_CSV.DATA_CATEGORY_RETURN_GOODS.equals(dataCategory)){
 					ActionMessages errors = new ActionMessages();
@@ -161,7 +160,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 					continue;
 				}
 			}
-			
+			// 配送業者入金データと送り状データを伝票番号を比較
 			int comp = deliverySlipId.compareTo(invoiceDeliverySlipId);
 			if( deliverySlipId.length() == 0){
 				comp = 1;
@@ -182,7 +181,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				}
 				continue;
 			}else if( comp > 0 ) {
-				
+				// 「送り状のみ」画面表示へ
 				index++;
 				if( index < invoiceSize){
 					invoiceDataWork = invoiceDataWorkList.get(index);
@@ -197,10 +196,10 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				continue;
 			}
 
-			
-			
+			// 伝票番号が一致する
+			// 売上伝票があるか？
 			if( salesSlipId == null ){
-				
+				// 「関連売上なし」
 				depositIndex++;
 				if( depositIndex < depositSize){
 					deposit = depositList.get(depositIndex);
@@ -223,12 +222,12 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				}
 				continue;
 			}
-			
+			// 配送業者入金関連テーブルに伝票番号がなければ入金伝票を作成
 			if( depositSlipId == null ){
 				 long price = productPrice;
 
-				
-				
+				// 「新規登録」 入金伝票を作成し、配送業者入金関連テーブルに登録する
+				// 得意先情報を取得
 				 Customer customerData = customerService.findCustomerByCode(customerCode);
 
 				 DepositSlipDto dto = new DepositSlipDto();
@@ -237,7 +236,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				 dto.status = Constants.STATUS_DEPOSIT_SLIP.PAID;
 				 dto.depositDate = DF_YMD.format(new Date());
 				 dto.inputPdate = DF_YMD.format(new Date());
-			     
+			     // 仕入日から仕入年度、仕入月度、仕入年月度を取得
 				 YmDto ymDto = ymService.getYm(dto.depositDate);
 				 if( ymDto != null ){
 					 dto.depositAnnual = ymDto.annual.toString();
@@ -256,7 +255,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 					 dto.cutoffGroup  = customerData.cutoffGroup;
 					 dto.paybackCycleCategory = customerData.paybackCycleCategory;
 
-					 
+					 // 顧客コードを指定して請求先を取得する
 					 List<DeliveryAndPre>baList =  deliveryService.searchDeliveryByCompleteCustomerCode(customerData.customerCode);
 					 DeliveryAndPre baInfo = baList.get(0);
 
@@ -282,7 +281,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 					 dto.taxFractCategory = customerData.taxFractCategory;
 					 dto.priceFractCategory = customerData.priceFractCategory;
 				 }
-				 dto.depositCategory = CategoryTrns.DEPOSIT_CATEGORY_CASH_ON_DELIVERY;	
+				 dto.depositCategory = CategoryTrns.DEPOSIT_CATEGORY_CASH_ON_DELIVERY;	// 代引き
 
 				 dto.depositTotal = Long.valueOf(price).toString();
 
@@ -290,7 +289,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				 dto.depositMethodTypeCategory = CategoryTrns.DEPOSIT_METHOD_DELIVERY;
 
 
-				 
+				 // 明細行
 				 depositLineNo++;
 				 DepositLineDto line = new DepositLineDto();
 				 line.status = Constants.STATUS_DEPOSIT_LINE.PAID;
@@ -304,7 +303,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				 dto.getLineDtoList().add(line);
 				 dto.removeBlankLine();
 
-				 
+				 // 登録
 				try {
 					dto.depositTotal = Long.valueOf(price).toString();
 					Long newSlipId = insertDeposit(dto, deliverySlipId, dataCategory);
@@ -324,7 +323,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 
 			}
 
-			
+			// 「登録済」
 			depositIndex++;
 			if( depositIndex < depositSize){
 				deposit = depositList.get(depositIndex);
@@ -365,7 +364,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 			 newSlipId = Long.valueOf(dto.getKeyValue());
 			 depositLineService.save(dto, dto.getLineDtoList(), null);
 
-			 
+			 // 配送業者入金関連テーブルに登録
 			 DeliveryDepositRelDto rel = new DeliveryDepositRelDto();
 			 rel.salesSlipId = dto.salesSlipId;
 			 rel.depositSlipId = newSlipId.toString();
@@ -394,7 +393,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 	public List<ImportDeliveryDepositResultSortDto> getImportResultList(String userId ,String newDepositSlipIdStr )
 			throws ServiceException
 	{
-		
+		// 新規入金伝票番号マップの作成
 		Map<Long, Long> newDepositSlipIdMap = new HashMap<Long, Long>();
 		if( newDepositSlipIdStr.length() > 0 ){
 			String tmpString = newDepositSlipIdStr;
@@ -406,7 +405,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 		}
 		List<ImportDeliveryDepositResultSortDto> resultList = new ArrayList<ImportDeliveryDepositResultSortDto>() ;
 
-		
+		// 配送業者入金データと送り状データを伝票番号で突合する
 		List<DeliveryDepositWorkJoin> depositList = deliveryDepositWorkService.findDeliveryDepositWorkByUserId(userId);
 		List<InvoiceDataWorkJoin> invoiceDataWorkList = invoiceDataWorkService.findInvoiceDataWorkByUserId(userId);
 		int depositIndex = 0;
@@ -426,7 +425,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 		String dataCategory = "";
 		long priceTotal = 0;
 
-		
+		// 日付の出力形式を設定
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 		if ( depositSize > 0){
@@ -459,7 +458,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 		ImportDeliveryDepositResultSortDto  resultDto = new ImportDeliveryDepositResultSortDto();
 
 		while ( depositIndex<depositSize ||  index<invoiceSize){
-			
+			// 配送業者入金データのデータ区分が「20（返品）」はエラーとしスキップする
 			if( deliverySlipId.length() > 0){
 				if( Constants.DELIVERY_DEPOSIT_CSV.DATA_CATEGORY_RETURN_GOODS.equals(dataCategory)){
 					depositIndex++;
@@ -484,7 +483,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 					continue;
 				}
 			}
-			
+			// 入金データと送り状データを伝票番号を比較
 			int comp = deliverySlipId.compareTo(invoiceDeliverySlipId);
 			if( deliverySlipId.length() == 0){
 				comp = 1;
@@ -493,7 +492,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				comp = -1;
 			}
 			if( comp < 0 ){
-				
+				// 結果をセット
 				resultDto = new ImportDeliveryDepositResultSortDto();
 				resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_DEPOSIT_ONLY;
 				resultDto.salesSlipId = "";
@@ -526,8 +525,8 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				}
 				continue;
 			}else if( comp > 0 ) {
-				
-				
+				// 「送り状のみ」
+				// 結果をセット
 				resultDto = new ImportDeliveryDepositResultSortDto();
 				resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_INVOICE_ONLY;
 				resultDto.salesSlipId = "";
@@ -552,11 +551,11 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				continue;
 			}
 
-			
-			
+			// 伝票番号が一致する
+			// 売上伝票があるか？
 			if( salesSlipId == null ){
-				
-				
+				// 「関連売上なし」
+				// 結果をセット
 				resultDto = new ImportDeliveryDepositResultSortDto();
 				resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_NOREL_SALES;
 				resultDto.salesSlipId = "";
@@ -599,33 +598,33 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 				continue;
 			}
 
-			
-			
-			
+			// 配送業者入金関連テーブルに伝票番号がなければ入金伝票を作成
+			// 登録済み
+			// 得意先情報を取得
 			Customer customerData = customerService.findCustomerByCode(customerCode);
 			if( depositSlipId == null ){
-				
-				
+				// 新規登録　こちらには来ないはず
+				// 結果をセット
 				resultDto = new ImportDeliveryDepositResultSortDto();
 				resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_DEL;
 				resultDto.salesMoney = "";
 			}else{
-				
-				
+				// 登録済み
+				// 新規かどうか newDepositSlipIdMapに入金番号があれば新規
 				resultDto = new ImportDeliveryDepositResultSortDto();
 				Long key = Long.valueOf(depositSlipId.longValue());
 				if( newDepositSlipIdMap != null && newDepositSlipIdMap.containsKey(key) ){
-					
+					// 新規
 					resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_NEW;
 					resultDto.salesMoney = Long.valueOf(priceTotal).toString();
 				}else{
-					
+					// 登録済み
 					resultDto.status = Constants.DELIVERY_DEPOSIT_CSV.STATUS_OLD;
 					resultDto.salesMoney = "";
 				}
 			}
 
-			
+			// 結果をセット
 			if(relSalesSlipId != null ){
 				resultDto.salesSlipId = relSalesSlipId.toString();
 			}else{
@@ -645,7 +644,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 			resultDto.productPrice =  Long.valueOf(productPrice).toString();
 			resultList.add(resultDto);
 
-			
+			// 「登録済」
 			depositIndex++;
 			if( depositIndex < depositSize){
 				deposit = depositList.get(depositIndex);
@@ -702,7 +701,7 @@ public class ImportDeliveryDepositService extends DeliveryDepositWorkService {
 			ImportDeliveryDepositResultSortDto[] resultArray = new ImportDeliveryDepositResultSortDto[ resultList.size() ];
 
 			int index = 0;
-			
+			// ソートする
 			for (ImportDeliveryDepositResultSortDto result : resultList) {
 				String key = "";
 				if( Param.STATUS.equals(sortColumn)){

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ public class AptBalanceService extends AbstractService<AptBalanceTrn> {
 	 *
 	 */
     public static class Param {
-    	
+    	// 買掛締日
     	public static final String APT_CUTOFF_DATE = "aptCutoffDate";
 
     }
@@ -39,7 +38,7 @@ public class AptBalanceService extends AbstractService<AptBalanceTrn> {
      */
     public BigDecimal calcAptBalanceBySupplierCode(String supplierCode) throws ServiceException {
 		try {
-			
+			//MAPの生成
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SupplierService.Param.SUPPLIER_CODE, supplierCode);
 			param.put(SupplierSlipService.Param.STATUS, SlipStatusCategoryTrns.SUPPLIER_SLIP_UNPAID);

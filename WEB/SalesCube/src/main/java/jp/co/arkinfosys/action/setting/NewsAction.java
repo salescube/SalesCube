@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 
@@ -65,8 +64,8 @@ public class NewsAction extends CommonResources {
 	 */
 	@Execute(validate = "validate", validator = true, input = StockAction.Mapping.INPUT)
 	public String update() throws Exception {
-		
-		
+		// おしらせ情報を更新する
+		// 排他制御
 		News news = this.newsService.getNews();
 		if (news != null) {
 			String nowUpdatetm = "";
@@ -78,10 +77,10 @@ public class NewsAction extends CommonResources {
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return StockAction.Mapping.INPUT;
 			}
-			
+			//updateする
 			this.newsService.updateNews(newsForm.description);
 		}else{
-			
+			//insertする
 			this.newsService.insertNews(newsForm.description);
 		}
 		super.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("infos.news.changed"));
@@ -111,7 +110,7 @@ public class NewsAction extends CommonResources {
 	private void init() throws Exception {
 		isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_NEWS );
 
-		
+		// お知らせマスタの情報を取得する
 		News news = this.newsService.getNews();
 		newsForm.description = "";
 		if (news != null) {

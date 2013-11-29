@@ -1,6 +1,6 @@
 <table style="width: 650px;">
 	<tr>
-		<td style="text-align: left;">検索結果件数: ${searchResultCount}件</td>
+		<td style="text-align: left; color: #FFFFFF;">検索結果件数: ${searchResultCount}件</td>
 		<td style="text-align: right;">
 			<span style="color: red">
 			 	<html:messages id="resultThreshold" message="true">
@@ -11,21 +11,27 @@
 	</tr>
 </table>
 
-<div
-	style="padding: 0px; border: none; width: 650px; height: 240px; overflow: hidden">
-<table id="${dialogId}List" summary="担当者検索結果" style="width: 640px;">
+<div id="${dialogId}Div"
+	style="border: none; width: 650px; height: 220px; overflow: hidden;">
+<table class="dialog_resultList"  id="${dialogId}List" summary="担当者検索結果" style="width: 100%;">
 	<colgroup>
-		<col span="1" style="width: 64px"><col span="1" style="width: 128px"><col span="1" style="width: 224px"><col span="1" style="width: 224px">
+		<col span="1" style="width: 30%">
+		<col span="1" style="width: 35%">
+		<col span="1" style="width: 35%">
 	</colgroup>
 	<tr>
-		<th>&nbsp;</th><th>担当者コード</th><th>担当者名</th><th>部門</th>
+		<th>担当者コード</th>
+		<th>担当者名</th>
+		<th>部門</th>
 	</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
-			<td style="text-align: center;"><input type="radio" name="${dialogId}_selectedUserId" value="${f:h(bean.userId)}"
-				tabindex="9100" onclick="$('#${dialogId}_selectButton').attr('disabled', false);">
+			<td>
+				<a href="javascript:void(0)"  tabindex="9100" style="color: #1D9CCC" onclick="_selectLinkSearchResult( '${dialogId}', '${f:h(bean.userId)}');
+				$('#${dialogId}').dialog('close');" >${f:h(bean.userId)}</a>
 			</td>
-			<td>${f:h(bean.userId)}</td><td>${f:h(bean.nameKnj)}</td><td>${f:h(bean.deptName)}</td>
+			<td>${f:h(bean.nameKnj)}</td>
+			<td>${f:h(bean.deptName)}</td>
 		</tr>
 	</c:forEach>
 </table>

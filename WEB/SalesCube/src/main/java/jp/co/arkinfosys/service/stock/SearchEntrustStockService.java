@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class SearchEntrustStockService extends
 			List<List<Object>> searchResultList, String searchTarget)
 			throws ServiceException {
 		try {
-			
+			// パラメータを作成する
 			List<BeanMap> resultMapList = new ArrayList<BeanMap>();
 			if (eadSlipLineJoinDtoList != null) {
 				for (EntrustEadSlipLineJoinDto entrustEadDto : eadSlipLineJoinDtoList) {
@@ -77,7 +76,7 @@ public class SearchEntrustStockService extends
 				}
 			}
 
-			
+			// 検索結果に表示する列を取得する
 			List<DetailDispItemDto> columnInfoList = detailDispItemService
 					.createResult(resultMapList, searchResultList,
 							Constants.MENU_ID.SEARCH_ENTRUST_STOCK,
@@ -102,10 +101,10 @@ public class SearchEntrustStockService extends
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if (Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				count = entrustEadService.findEadSlipCntByCondition(params);
 			} else if (Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -129,33 +128,33 @@ public class SearchEntrustStockService extends
 	public List<EntrustEadSlipLineJoinDto> createEadSlipJoinDtoList(
 			BeanMap params) throws ServiceException {
 		try {
-			
+			// 検索対象を取得する
 			String searchTarget = (String) params.get(Param.SEARCH_TARGET);
 
-			
+			// ソートカラムを設定
 			String sortColumn = null;
 			if (params.containsKey(EntrustEadService.Param.SORT_COLUMN)) {
 				sortColumn = (String) params
 						.get(EntrustEadService.Param.SORT_COLUMN);
-			
-			
+			//} else {
+			//	sortColumn = EntrustEadService.Param.ENTRUST_EAD_SLIP_ID;
 			}
 
-			
+			// ソートカラムを設定
 			boolean sortOrderAsc = true;
 			if (params.containsKey(EntrustEadService.Param.SORT_ORDER_ASC)) {
 				sortOrderAsc = (Boolean) params
 						.get(EntrustEadService.Param.SORT_ORDER_ASC);
 			}
 
-			
+			// 伝票単位か明細単位か
 			List<?> resultList = null;
 			if (Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
-				
+				// 検索を行う
 				resultList = entrustEadService.findEadSlipByCondition(params,
 						sortColumn, sortOrderAsc);
 			} else if (Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
-				
+				// 検索を行う
 				resultList = entrustEadService.findEadSlipLineByCondition(
 						params, sortColumn, sortOrderAsc);
 			}
@@ -163,17 +162,17 @@ public class SearchEntrustStockService extends
 				return new ArrayList<EntrustEadSlipLineJoinDto>();
 			}
 
-			
+			// EadSlipLineJoinDtoリストを生成する
 			List<EntrustEadSlipLineJoinDto> resultDtoList = new ArrayList<EntrustEadSlipLineJoinDto>();
 			for (Object resultLine : resultList) {
-				
+				// Dtoを生成
 				EntrustEadSlipLineJoinDto entrustEadSlipTrnDto = Beans
 						.createAndCopy(EntrustEadSlipLineJoinDto.class,
 								resultLine)
 						.dateConverter(Constants.FORMAT.DATE)
 						.timestampConverter(Constants.FORMAT.TIMESTAMP)
 						.execute();
-				
+				// リストに追加
 				resultDtoList.add(entrustEadSlipTrnDto);
 			}
 

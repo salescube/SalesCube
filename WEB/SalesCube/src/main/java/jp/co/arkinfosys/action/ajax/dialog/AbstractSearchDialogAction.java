@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public abstract class AbstractSearchDialogAction<DTOCLASS, ENTITY> extends
 		try {
 			this.doBeforeSearch();
 
-			
+			// 検索結果の最大表示件数を取得する
 			int threshold = this.getMaxThreshold();
 
 			AbstractSearchForm<DTOCLASS> actionForm = this.getActionForm();
@@ -73,21 +72,21 @@ public abstract class AbstractSearchDialogAction<DTOCLASS, ENTITY> extends
 			BeanMap params = Beans.createAndCopy(BeanMap.class, actionForm)
 					.excludesWhitespace().lrTrim().execute();
 
-			
+			// 検索を行う
 			List<ENTITY> entityList = this.doSearch(params,
 					actionForm.sortColumn, actionForm.sortOrderAsc);
 
-			
+			// 検索結果件数を設定する
 			actionForm.searchResultCount = entityList.size();
 
-			
+			// 検索結果を最大表示件数に合わせてカット
 			if (entityList.size() > threshold) {
 				super.messages.add("resultThreshold", new ActionMessage(
 						SEARCH_THRESHOLD_OVER, entityList.size(), threshold));
 				ActionMessagesUtil.saveMessages(super.httpRequest,
 						super.messages);
 
-				
+				// 表示件数を絞る
 				List<ENTITY> tempList = new ArrayList<ENTITY>();
 				tempList.addAll(entityList.subList(0, threshold));
 				entityList = tempList;
@@ -231,7 +230,7 @@ public abstract class AbstractSearchDialogAction<DTOCLASS, ENTITY> extends
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

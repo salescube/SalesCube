@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import javax.annotation.Resource;
@@ -42,7 +41,7 @@ public abstract class CommonInputStockLineService extends AbstractLineService<Ea
      */
     @Override
     public int deleteRecords(String id) throws ServiceException{
-    	
+    	// 明細行を削除する
     	return eadService.deleteLineByEadSlipId(id);
     }
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.util.Locale;
@@ -17,7 +16,7 @@ import org.seasar.struts.util.ServletContextUtil;
  *
  */
 public class MessageResourcesUtil
-
+// extends org.seasar.struts.util.MessageResourcesUtil
 {
 	/**
 	 * コンストラクタです.

@@ -375,10 +375,10 @@ function immediatelyPOCategoryChange() {
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0007"/>
 		<jsp:param name="MENU_ID" value="0704"/>
@@ -391,19 +391,20 @@ function immediatelyPOCategoryChange() {
 	<span class="title"><bean:message key='titles.outputRecommendList'/></span>
 
 	<div class="function_buttons">
-		   <button id="btnF1" onclick="onF1()"                     tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button><!--初期化
-		--><button id="btnF2" onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.search'/></button><!--
-		--><button id="btnF3" onclick="onF3()"                     tabindex="2002" disabled="disabled">F3<br><bean:message key='words.action.porder'/></button><!--発注
-		--><button id="btnF4" onclick="onF4()"                     tabindex="2003" disabled="disabled">F4<br><bean:message key='words.name.excel'/></button><!--
-		--><button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
+		<button id="btnF1" onclick="onF1()"                     tabindex="2000">F1<br><bean:message key='words.action.initialize'/></button><!--初期化-->
+		<button id="btnF2" onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.search'/></button><!---->
+		<button id="btnF3" onclick="onF3()"                     tabindex="2002" disabled="disabled">F3<br><bean:message key='words.action.porder'/></button><!--発注-->
+		<button id="btnF4" onclick="onF4()"                     tabindex="2003" disabled="disabled">F4<br><bean:message key='words.name.excel'/></button><!---->
+		<button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
 	</div>
+	<br><br><br>
 
 	<s:form onsubmit="return false;">
 
@@ -418,12 +419,21 @@ function immediatelyPOCategoryChange() {
 			<bean:write name="msg" ignore="true"/><br>
 		</html:messages>
 	</div>
+	
+	<div class="form_section_wrap">
+	<div class="form_section">
+		<div class="section_title">
 			<bean:message key='labels.searchCondition'/><!-- 検索条件 -->
+			<button class="btn_toggle">
+			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			</button>
+		</div><!-- /.section_title -->
+			
+		<div id="search_info" class="section_body">
 			<table class="forms" style="width: 800px">
 				<colgroup>
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 35%">
-
 					<col span="1" style="width: 10%">
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 10%">
@@ -431,7 +441,7 @@ function immediatelyPOCategoryChange() {
 				</colgroup>
 				<tbody>
 				<tr>
-					<th><bean:message key='labels.supplier'/></th><!-- 仕入先名 -->
+					<th><div class="col_title_right"><bean:message key='labels.supplier'/></div></th><!-- 仕入先名 -->
 					<td>
 						<html:select styleId="supplierCode" property="supplierCode" tabindex="100">
 							<c:forEach var="bean" items="${supplierList}">
@@ -441,7 +451,7 @@ function immediatelyPOCategoryChange() {
 						<input type="hidden" id="lastSelectedSupplierCode"/>
 						<html:hidden styleId="supplierName" property="supplierName"/>
 					</td>
-					<th><bean:message key='labels.poCategory'/></th><!-- 発注区分 -->
+					<th><div class="col_title_right"><bean:message key='labels.poCategory'/></div></th><!-- 発注区分 -->
 					<td>
 						<html:select styleId="poCategory" property="poCategory" tabindex="100" onchange="poCategoryChange();">
 							<c:forEach var="bean" items="${poCategoryList}">
@@ -449,7 +459,7 @@ function immediatelyPOCategoryChange() {
 							</c:forEach>
 						</html:select>
 					</td>
-					<th><bean:message key='labels.immediatelyPOCategory'/></th><!-- 都度発注区分 -->
+					<th><div class="col_title_right"><bean:message key='labels.immediatelyPOCategory'/></div></th><!-- 都度発注区分 -->
 					<td>
 						<html:select styleId="immediatelyPOCategory" property="immediatelyPOCategory" tabindex="100" onchange="immediatelyPOCategoryChange();">
 							<c:forEach var="bean" items="${immediatelyPOCategoryList}">
@@ -459,7 +469,7 @@ function immediatelyPOCategoryChange() {
 					</td>
 				</tr>
 				<tr>
-					<th><bean:message key='labels.excludeProductsSearchCondition'/></th>
+					<th><div class="col_title_right"><bean:message key='labels.excludeProductsSearchCondition'/></div></th>
 					<td colspan="5">
 						<html:checkbox property="excludeHoldingStockZero" styleId="excludeHoldingStockZero" tabindex="200"/><label for="excludeHoldingStockZero"><bean:message key='labels.exclude.holdingStockZero'/></label><br><%// 保有数0の商品は除く %>
 						<html:checkbox property="excludeAvgShipCountZero" styleId="excludeAvgShipCountZero" tabindex="201"/><label for="excludeAvgShipCountZero"><bean:message key='labels.exclude.avgShipCountZero'/></label><br><%// 平均出荷数0の商品は除く %>
@@ -468,11 +478,27 @@ function immediatelyPOCategoryChange() {
 				</tr>
 				</tbody>
 			</table>
-			<div>
-			<div style="width: 800px; text-align :right">
-				<button onclick="onSearch()"><bean:message key='words.action.search'/></button>
-			</div>
+		</div>
+	</div><!-- /.form_section -->
+   	</div><!-- /.form_section_wrap -->
+   	
+   	
+	<div>
+	<div style="width: 1160px; text-align :right">
+		<button onclick="onSearch()" class="btn_medium"><bean:message key='words.action.search'/></button>
+	</div>
+	
+
+	<div class="form_section_wrap">
+	<div class="form_section">
+		<div class="section_title">
 			<bean:message key='labels.poSlipInfos'/><!-- 発注伝票情報 -->
+			<button class="btn_toggle">
+			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			</button>
+		</div><!-- /.section_title -->
+			
+		<div id="search_info" class="section_body">
 			<table class="forms" style="width: 500px">
 				<colgroup>
 					<col span="1" style="width: 20%">
@@ -482,9 +508,9 @@ function immediatelyPOCategoryChange() {
 				</colgroup>
 				<tbody>
 				<tr>
-				<th><bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/></th><!-- 納期 -->
-				<td><html:text styleId="deliveryDate" property="deliveryDate" maxlength="${f:h(ML_DATE)}" styleClass="date_input" style="width:100px;" tabindex="101"/></td>
-				<th><bean:message key='labels.transportCategory'/></th><!-- 運送便区分 -->
+				<th><div class="col_title_right"><bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/></div></th><!-- 納期 -->
+				<td><html:text styleId="deliveryDate" property="deliveryDate" maxlength="${f:h(ML_DATE)}" styleClass="date_input" style="width:135px;" tabindex="101"/></td>
+				<th><div class="col_title_right"><bean:message key='labels.transportCategory'/></div></th><!-- 運送便区分 -->
 				<td>
 					<html:select styleId="transportCategory" property="transportCategory" tabindex="102">
 						<c:forEach var="bean" items="${transportCategoryList}">
@@ -495,36 +521,38 @@ function immediatelyPOCategoryChange() {
 				</tr>
 				</tbody>
 			</table>
-			</div>
-			<div>
-				<table>
-					<tr>
-						<td><bean:message key='labels.holdQuantity'/></td><!-- 保有数 -->
-						<td><bean:message key='labels.formula.holdQuantity'/></td><!-- ：現在庫数 ＋ 委託在庫数 ＋ 発注残数 ＋ 委託残数 － 受注残数 -->
-					</tr>
-					<tr>
-						<td><bean:message key='labels.holdTerm'/></td><!-- 保有月数 -->
-						<td><bean:message key='labels.formula.holdTerm'/></td><!-- ：保有数 ÷ 平均出庫数 -->
-					</tr>
-				</table>
-			</div>
 		</div>
+	</div><!-- /.form_section -->
+   	</div><!-- /.form_section_wrap -->
 
-		<BR>
-		<input type="button" id="allCheck" name="allCheck" tabindex="300" value="全て選択" onclick="checkAll(true);" disabled="disabled">
-		<input type="button" id="allUnCheck" name="allUnCheck" tabindex="301" value="全て解除" onclick="checkAll(false);" disabled="disabled">
+	<div>
+		<table>
+			<tr>
+				<td><bean:message key='labels.holdQuantity'/></td><!-- 保有数 -->
+				<td><bean:message key='labels.formula.holdQuantity'/></td><!-- ：現在庫数 ＋ 委託在庫数 ＋ 発注残数 ＋ 委託残数 － 受注残数 -->
+			</tr>
+			<tr>
+				<td><bean:message key='labels.holdTerm'/></td><!-- 保有月数 -->
+				<td><bean:message key='labels.formula.holdTerm'/></td><!-- ：保有数 ÷ 平均出庫数 -->
+			</tr>
+		</table>
+	</div>
+</div>
 
-		<html:hidden property="sortColumn" styleId="sortColumn" />
-		<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
+<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small" disabled="disabled">全て選択</button>
+<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small" disabled="disabled">全て解除</button>
 
-		<span id="listContainer">
-			
-			<%@ include file="/WEB-INF/view/ajax/outputRecommendListAjax/searchResultList.jsp" %>
-		</span>
+<html:hidden property="sortColumn" styleId="sortColumn" />
+<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 
-		<div style="width: 910px; text-align :right">
-			<button id="btnPOrder" onclick="onF3()" tabindex="1999" disabled="disabled"><bean:message key='words.action.porder'/></button><!-- 発注 -->
-		</div>
+<span id="listContainer">
+	<%-- 検索結果領域 --%>
+	<%@ include file="/WEB-INF/view/ajax/outputRecommendListAjax/searchResultList.jsp" %>
+</span>
+
+<div style="width: 1160px; text-align :right; margin-top: 10px;">
+	<button id="btnPOrder" onclick="onF3()" tabindex="1999" disabled="disabled" class="btn_medium"><bean:message key='words.action.porder'/></button><!-- 発注 -->
+</div>
 
 </s:form>
 

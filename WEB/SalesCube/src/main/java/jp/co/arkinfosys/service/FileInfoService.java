@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.BufferedInputStream;
@@ -105,7 +104,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	@Override
 	public int countByCondition(Map<String, Object> conditions)
 			throws ServiceException {
-		
+		// 未使用メソッド
 		return 0;
 	}
 
@@ -125,7 +124,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 			Map<String, Object> conditions, String sortColumn,
 			boolean sortOrderAsc, int rowCount, int offset)
 			throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -162,13 +161,13 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	public void downloadFile(String fileId, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) throws ServiceException {
 		try {
-			
+			// ファイル情報を取得
 			FileInfo fileInfo = this.findById(fileId);
 			if (fileInfo == null) {
 				return;
 			}
 
-			
+			// ファイルパスを作成
 			String filePath = this.getUploadFolderPath() + File.separator
 					+ fileInfo.realFileName;
 
@@ -189,7 +188,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	 */
 	public void insertRecord(FileInfoDto dto) throws ServiceException {
 		try {
-			
+			// 内部管理用ファイルオブジェクト
 			File uploadedFile = File.createTempFile(
 					FileInfoService.FILE_PREFIX, "", new File(
 							getUploadFolderPath()));
@@ -197,7 +196,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 			BufferedInputStream is = null;
 			BufferedOutputStream os = null;
 			try {
-				
+				// アップロードファイルをコピー
 				is = new BufferedInputStream(dto.formFile.getInputStream());
 				os = new BufferedOutputStream(
 						new FileOutputStream(uploadedFile));
@@ -207,16 +206,16 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 				os.close();
 			}
 
-			
+			// 半角カナ→全角カナ
 			dto.title = dto.title;
 			dto.fileName = dto.formFile.getFileName();
 			dto.realFileName = uploadedFile.getName();
 			dto.fileSize = String.valueOf(uploadedFile.length());
 
-			
+			// 発番
 			long fileId = seqMakerService.nextval(FileInfo.TABLE_NAME);
 
-			
+			// ファイルの登録
 			Map<String, Object> param = super.createSqlParam();
 			param.put(FileInfoService.Param.FILE_ID, fileId);
 
@@ -247,29 +246,29 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	public void deleteRecord(FileInfoDto dto) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(FileInfoService.Param.FILE_ID, dto.fileId);
 			this.lockRecordBySqlFile("fileinfo/LockFileInfoById.sql", param,
 					dto.updDatetm);
 
-			
+			// ファイル情報を取得
 			FileInfo fileInfo = this.findById(dto.fileId.toString());
 			if (fileInfo == null) {
 				return;
 			}
 
-			
+			// ファイルパスを作成
 			String filePath = getUploadFolderPath() + File.separator
 					+ fileInfo.realFileName;
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(FileInfoService.Param.FILE_ID, dto.fileId);
 			this.updateBySqlFile("fileinfo/DeleteFileInfoById.sql", param)
 					.execute();
 
-			
+			// ファイル削除
 			File file = new File(filePath);
 			if (file.exists()) {
 				file.delete();
@@ -287,7 +286,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	 */
 	@Override
 	public void updateRecord(FileInfoDto dto) throws Exception {
-		
+		// 未使用メソッド
 	}
 
 	/**
@@ -300,7 +299,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
 
-		
+		// 公開範囲
 		if (conditions.containsKey(FileInfoService.Param.OPEN_LEVEL)) {
 			if (Constants.MENU_VALID_LEVEL.VALID_LIMITATION.equals(conditions
 					.get(FileInfoService.Param.OPEN_LEVEL))) {
@@ -312,13 +311,13 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 			}
 		}
 
-		
+		// ソートカラム名を設定する
 		if (StringUtil.hasLength(sortColumn)) {
 			param.put(FileInfoService.Param.SORT_COLUMN, StringUtil
 					.convertColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(FileInfoService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {

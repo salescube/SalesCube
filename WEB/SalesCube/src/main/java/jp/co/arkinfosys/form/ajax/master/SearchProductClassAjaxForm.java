@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.master;
 
 import org.apache.struts.action.ActionMessage;
@@ -29,7 +28,7 @@ public class SearchProductClassAjaxForm {
 	 */
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
-		
+		// 検索条件の有無チェック
 		if (!StringUtil.hasLength(classCode1)
 				&& !StringUtil.hasLength(classCode2)
 				&& !StringUtil.hasLength(classCode3)) {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class ConvertPaymentNameAjaxAction extends CommonAjaxResources {
 		} catch (IOException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 		}
 

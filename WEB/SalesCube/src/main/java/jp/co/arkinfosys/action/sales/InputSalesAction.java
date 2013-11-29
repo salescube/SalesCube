@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.util.ArrayList;
@@ -69,12 +68,12 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		public static final String INIT = "init";
 	}
 
-	
+	// 画面とAction間でデータをやり取りするオブジェクトを定義する
 	@ActionForm
 	@Resource
 	public InputSalesForm inputSalesForm;
 
-	
+	// ビジネスロジックを定義したオブジェクト
 	@Resource
 	private SalesService	salesService;
 
@@ -87,7 +86,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	@Resource
 	protected BillService billService;
 
-	
+	// 商品マスタ用サービス
 	@Resource
 	public ProductService productService;
 
@@ -109,29 +108,29 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	@Resource
 	protected DepositSlipService depositSlipService;
 
-	
-	
+	// 画面表示に使用するオブジェクト
+	// 配送業者リストの内容
 	public List<LabelValueBean> dcCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 配送時間帯リストの内容
 	public List<LabelValueBean> dcTimeZoneCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 税転嫁リストの内容
 	public List<LabelValueBean> taxShiftCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 支払条件リストの内容
 	public List<LabelValueBean> cutoffGroupCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 取引区分リストの内容
 	public List<LabelValueBean> salesCmCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 顧客納品先リストの内容
 	public List<LabelValueBean> deliveryList = new ArrayList<LabelValueBean>();
 
-	
+	// 敬称区分リストの内容
 	public List<LabelValueBean> preTypeCategoryList = new ArrayList<LabelValueBean>();
 
-	
+	// 完納区分リストの内容
 	public List<LabelValueBean> delivertProcessCategoryList = new ArrayList<LabelValueBean>();
 
 	static private String RORDER_SLIP = "RORDER";
@@ -164,13 +163,13 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 			if( SALES_SLIP.equals(inputSalesForm.copySlipName)){
 				return super.copy();
 			}else if( RORDER_SLIP.equals(inputSalesForm.copySlipName)){
-				
+				// 受注伝票複写
 				if( "".equals(inputSalesForm.copySlipId)){
 					String strLabel = MessageResourcesUtil.getMessage("labels.roSlipId");
 					addMessage("errors.notExist",strLabel);
 					return Mapping.INPUT;
 				}
-				
+				// 受注伝票番号から売上伝票を生成する
 				if(!createSalesSlipByRo(inputSalesForm.copySlipId)) {
 					inputSalesForm.clear();
 				}
@@ -179,11 +178,11 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				throw new ServiceException("errors.system");
 			}
 
-			
+			// リスト作成
 			this.createList();
 
-			
-			
+			// 顧客納品先リストの作成
+			// 顧客納品先は顧客が決まるまで作成できないので、初期状態とする
 			if( StringUtil.hasLength( inputSalesForm.customerCode ) ){
 				createDeliveryList();
 			}
@@ -210,33 +209,33 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 */
 	protected void initCategoryList() throws ServiceException {
 
-		
+		// 作成済の時は何もしない
 		if( inputSalesForm.initCategory == false ){
 			return;
 		}
 
-		
+		// 配送業者リストの作成
 		createCategoryList(Categories.DC_CATEGORY, dcCategoryList, true );
 
-		
+		// 配送時間帯リストの作成
 		createCategoryList(Categories.DC_TIMEZONE_CATEGORY, dcTimeZoneCategoryList, true );
 
-		
+		// 税転嫁リストの作成
 		createCategoryList(Categories.ART_TAX_SHIFT_CATEGORY, taxShiftCategoryList, true );
 
-		
+		// 支払条件リストの作成
 		createCategoryList(Categories.CUTOFF_GROUP, cutoffGroupCategoryList, true );
 
-		
+		// 取引区分リストの作成
 		createCategoryList(Categories.SALES_CM_CATEGORY, salesCmCategoryList, true );
 
-		
+		// 敬称区分リストの作成
 		createCategoryList(Categories.PRE_TYPE, preTypeCategoryList, true );
 
-		
+		// 完納区分リストの作成
 		createCategoryList(Categories.DELIVERY_PROCESS_CATEGORY, delivertProcessCategoryList, true );
 
-		
+		// カテゴリを作成済
 		inputSalesForm.initCategory = false;
 	}
 
@@ -286,7 +285,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		int minus = 0;
 		int nCount = 0;
 		boolean isCredit = false;
-		
+		// 明細行に存在する商品コードが実在するか確認する
 		for( SalesLineDto lineDto : isf.salesLineList ){
 			if (lineDto.isBlank()) {
 				continue;
@@ -299,7 +298,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				nCount++;
 			}
 
-			
+			// 数量
 			if( checkInt(lineDto.quantity, lineDto.lineNo,
 							"labels.quantity") ){
 				Integer data = Integer.valueOf(lineDto.quantity);
@@ -310,41 +309,41 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				}
 			}
 
-			
+			// 完納区分
 			checkInt(lineDto.deliveryProcessCategory, lineDto.lineNo,
 							"labels.deliveryProcessCategory");
-			
+			// 仕入単価
 			checkDouble(lineDto.unitCost, lineDto.lineNo,
 							"labels.unitCost");
-			
+			// 仕入金額
 			Double dblCost = checkDouble(lineDto.cost, lineDto.lineNo,
 							"labels.cost");
-			
+			// 売上単価
 			checkDouble(lineDto.unitRetailPrice, lineDto.lineNo,
 							"labels.unitRetailPrice");
-			
+			// 売上金額
 			Double dblRetailPrice = checkDouble(lineDto.retailPrice, lineDto.lineNo,
 							"labels.retailPrice");
 
-			
-			
+			// 数値０チェック
+			// 数量
 			checkNum0Int(lineDto.quantity, lineDto.lineNo, "labels.quantity");
 
 			if(!DiscountUtil.isExceptianalProduct( lineDto.productCode )) {
-				
+				// 仕入単価
 				checkNum0Double(lineDto.unitCost, lineDto.lineNo,
 								"labels.unitCost");
-				
+				// 仕入金額
 				checkNum0Double(lineDto.cost, lineDto.lineNo,	"labels.cost");
 			}
-			
+			// 売上単価
 			checkNum0Int(lineDto.unitRetailPrice, lineDto.lineNo,
 							"labels.unitRetailPrice");
-			
+			// 売上金額
 			checkNum0Double(lineDto.retailPrice, lineDto.lineNo,
 							"labels.retailPrice");
 
-			
+			// 棚番 特殊商品コードの行は処理しない
 			if( pj != null ){
 				lineDto.stockCtlCategory = pj.stockCtlCategory;
 				if( CheckUtil.isRackCheck(pj) ){
@@ -354,7 +353,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 					}
 				}
 			}
-			
+			// 計算によって生成される項目の最大最小値チェック
 			if( dblCost != null ){
 				if(( dblCost < Constants.LIMIT_VALUE.PRICE_MIN )
 				 ||( dblCost > Constants.LIMIT_VALUE.PRICE_MAX )){
@@ -393,19 +392,19 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				addMessage( "errors.line.maxlength", lineDto.lineNo,
 						strLabel, "120" );
 			}
-			
+			// クレジットの場合は、分納できない。
 			if( CategoryTrns.SALES_CM_CREDIT_CARD.equals( isf.salesCmCategory )
 					&&(CategoryTrns.DELIVERY_PROCESS_CATEGORY_PARTIAL.equals(lineDto.deliveryProcessCategory))){
 				isCredit = true;
 			}
 		}
 
-		
+		// クレジットの場合は、分納できない。
 		if( isCredit){
 			addMessage( "errors.valid.credit" );
 		}
 		if( nCount == 0 ){
-			
+			// 正常なデータが１件も無い時はエラー
 			addMessage( "errors.noValidLine" );
 			return false;
 		}
@@ -547,28 +546,28 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 */
 	private void setValueToName(SalesSlipDto d) {
 
-		
+		// 配送業者名設定
 		for(LabelValueBean lvb : dcCategoryList ){
 			if( lvb.getValue().equals(inputSalesForm.dcCategory)){
 				d.dcName = lvb.getLabel();
 				break;
 			}
 		}
-		
+		// 配送時間帯設定
 		for(LabelValueBean lvb : dcTimeZoneCategoryList ){
 			if( lvb.getValue().equals(inputSalesForm.dcTimezoneCategory)){
 				d.dcTimezone = lvb.getLabel();
 				break;
 			}
 		}
-		
+		// 納入先敬称名設定
 		for(LabelValueBean lvb : preTypeCategoryList ){
 			if( lvb.getValue().equals(inputSalesForm.deliveryPcPreCategory)){
 				d.deliveryPcPre = lvb.getLabel();
 				break;
 			}
 		}
-		
+		// 請求先敬称名設定
 		for(LabelValueBean lvb : preTypeCategoryList ){
 			if( lvb.getValue().equals(inputSalesForm.baPcPreCategory)){
 				d.baPcPre = lvb.getLabel();
@@ -596,10 +595,10 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 */
 	protected boolean createSalesSlipByRo( String roSlipId ) throws ServiceException {
 
-		
+		// 受注伝票を読み込む
 		ROrderSlipDto rosDto = roSlipSalesService.loadBySlipId(roSlipId);
 		if (rosDto == null){
-			
+			// 受注番号が存在しない場合、エラーメッセージを表示
 			addMessage("errors.copy.notexist");
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 			return false;
@@ -609,14 +608,14 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		rosDto.setLineDtoList(lineList);
 
 		boolean brestQuantity = false;
-		
+		// 伝票複写時の条件の確認
 		for( ROrderLineDto rolDto : rosDto.getLineDtoList() ){
 			if( !StringUtil.hasLength( rolDto.restQuantity ) ){
 				continue;
 			}
 			try {
 				if(!Constants.STATUS_RORDER_LINE.SALES_FINISH.equals(rolDto.status)){
-					
+					// 完納区分が「完了」である場合は、取り込まない
 					brestQuantity = true;
 					break;
 				}
@@ -626,24 +625,24 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		}
 
 		if (!brestQuantity) {
-			
+			// コピー可能な受注番号が存在しない場合、エラーメッセージを表示
 			addMessage("errors.copy.notexist");
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 			return false;
 		}
 
-		
+		// 顧客情報を取得
 		Customer customer = customerService.findCustomerByCode(rosDto.customerCode);
 		if( customer == null ){
-			
+			// 顧客コードがXXのデータは存在しません
 			String strLabel = MessageResourcesUtil.getMessage("labels.customerCode");
 			addMessage( "errors.dataNotExist", strLabel, inputSalesForm.customerCode );
 		}
 
-		
+		// 受注伝票用ActionFormに展開する
 		inputSalesForm.initialize( rosDto, customer );
 
-		
+		// 関連情報を取得
 		SalesSlipDto dto = (SalesSlipDto) inputSalesForm.copyToDto();
 		dto.copyFrom(inputSalesForm.salesLineList);
 		List<SalesLineDto> salesLineList = dto.getLineDtoList();
@@ -651,13 +650,13 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 			salesLineService.setStockInfoForm(lineDto);
 		}
 
-		
+		// 顧客の請求先情報を取得する
 		List<DeliveryAndPre> delList = deliveryService.searchDeliveryByCompleteCustomerCode(rosDto.customerCode);
 		if( delList.size() == 0 ){
 			String strLabel = MessageResourcesUtil.getMessage("labels.customerCode");
 			throw new ServiceException(strLabel);
 		}else{
-			
+			// 請求情報を初期化
 			inputSalesForm.initialize( delList.get(0) );
 		}
 
@@ -671,34 +670,34 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 * @return 顧客マスタの顧客情報と売上伝票の納入先情報が一致するか否か
 	 */
 	protected boolean sameCheckCustomerAndDelivery(Customer customer,InputSalesForm isf) {
-		if( !isf.deliveryName.equals(customer.customerName) ){			
+		if( !isf.deliveryName.equals(customer.customerName) ){			// 納入先名
 			return false;
 		}
-		if( !isf.deliveryOfficeName.equals(customer.customerOfficeName) ){	
+		if( !isf.deliveryOfficeName.equals(customer.customerOfficeName) ){	// 納入先事業所名
 			return false;
 		}
-		if( !isf.deliveryDeptName.equals(customer.customerDeptName) ){		
+		if( !isf.deliveryDeptName.equals(customer.customerDeptName) ){		// 納入先部署名
 			return false;
 		}
-		if( !isf.deliveryZipCode.equals(customer.customerZipCode) ){		
+		if( !isf.deliveryZipCode.equals(customer.customerZipCode) ){		// 納入先郵便番号
 			return false;
 		}
-		if( !isf.deliveryAddress1.equals(customer.customerAddress1) ){		
+		if( !isf.deliveryAddress1.equals(customer.customerAddress1) ){		// 納入先住所１
 			return false;
 		}
-		if( !isf.deliveryAddress2.equals(customer.customerAddress2) ){		
+		if( !isf.deliveryAddress2.equals(customer.customerAddress2) ){		// 納入先住所２
 			return false;
 		}
-		if( !isf.deliveryPcName.equals(customer.customerPcName) ){		
+		if( !isf.deliveryPcName.equals(customer.customerPcName) ){		// 納入先担当者名
 			return false;
 		}
-		if( !isf.deliveryPcPreCategory.equals(customer.customerPcPreCategory) ){	
+		if( !isf.deliveryPcPreCategory.equals(customer.customerPcPreCategory) ){	// 納入先敬称コード
 			return false;
 		}
-		if( !isf.deliveryTel.equals(customer.customerTel) ){			
+		if( !isf.deliveryTel.equals(customer.customerTel) ){			// 納入先電話番号
 			return false;
 		}
-		if( !isf.deliveryFax.equals(customer.customerFax) ){			
+		if( !isf.deliveryFax.equals(customer.customerFax) ){			// 納入先ＦＡＸ番号
 			return false;
 		}
 		return true;
@@ -708,7 +707,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 * 不要な明細行を削除します.<BR>
 	 */
 	private void deleteBlankLine() {
-		
+		// 不要な明細行を削除
 		for( int i = this.inputSalesForm.salesLineList.size()-1 ; i >= 0 ; i-- ){
 			SalesLineDto lineDto = this.inputSalesForm.salesLineList.get(i);
 			if (lineDto.isBlank()) {
@@ -734,10 +733,10 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 */
 	@Override
 	protected void createList() throws Exception {
-		
+		// 区分情報を作成する
 		initCategoryList();
 
-		
+		// 空欄で作成
 		createDeliveryList();
 	}
 
@@ -821,7 +820,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	 */
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
-		
+		// 伝票情報をロードする
 		SalesSlipDto dto = salesService.loadBySlipId(inputSalesForm.salesSlipId);
 
 		if (dto == null) {
@@ -831,7 +830,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		Beans.copy(dto, inputSalesForm).execute();
 
-		
+		// 明細情報をロードする
 		List<SalesLineDto> lineList = salesLineService.loadBySlip(dto);
 		dto.setLineDtoList(lineList);
 		dto.fillList();
@@ -842,12 +841,12 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		Customer customer = customerService.findCustomerByCode(inputSalesForm.customerCode);
 		if( customer != null ){
 			inputSalesForm.initialize(customer);
-			
+			// 仮納品書の出力フラグ設定（顧客情報と納入先が同じ時には出力しない）
 			inputSalesForm.reportEFlag = !sameCheckCustomerAndDelivery(customer,inputSalesForm);
 		}
 
-		
-		
+		// 顧客納品先リストの作成
+		// 顧客納品先は顧客が決まるまで作成できないので、初期状態とする
 		createDeliveryList();
 
 		deleteBlankLine();
@@ -874,14 +873,14 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		if( SalesSlipTrn.STATUS_FINISH.equals( this.inputSalesForm.status) ){
 
-			
+			// 状態名を取得
 			String categoryName = categoryService.findCategoryNameByIdAndCode(
 					SlipStatusCategories.SALES_SLIP_STATUS, this.inputSalesForm.status );
-			
+			// 伝票名取得
 			String strSlipLabel = MessageResourcesUtil.getMessage("erroes.db.salesSlip");
-			
+			// 動作名取得
 			String strActionLabel = MessageResourcesUtil.getMessage("words.action.edit");
-			
+			// メッセージに設定
 			addMessage("infos.slip.lock", strSlipLabel, categoryName, strActionLabel);
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 
@@ -889,19 +888,21 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		}else{
 			if( StringUtil.hasLength(this.inputSalesForm.salesCutoffDate) ){
 
-				
+				// 状態名を取得
 				String categoryName = MessageResourcesUtil.getMessage("labesl.closeArtBalance");
-				
+				// 伝票名取得
 				String strSlipLabel = MessageResourcesUtil.getMessage("erroes.db.salesSlip");
-				
+				// 動作名取得
 				String strActionLabel = MessageResourcesUtil.getMessage("words.action.edit");
-				
+				// メッセージに設定
 				addMessage("infos.slip.lock", strSlipLabel, categoryName, strActionLabel);
 				ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 
 				this.inputSalesForm.menuUpdate = false;
 			}
 		}
+		
+		inputSalesForm.setSalesDateTaxRate();
 	}
 
 	/**
@@ -922,14 +923,14 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		SalesSlipDto dto = (SalesSlipDto) d;
 		if (!bInsert) {
-			
+			// 入出庫が締済みかどうか
 			if(this.inputStockSalesService.existsClosedEadSlip((SalesSlipDto) dto)) {
 			}
 		}
-		
+		// リストボックスの選択値から文字列を設定
 		setValueToName(dto);
 
-		
+		// 請求書発行単位が売上伝票の場合、請求書を作成する
 		if( CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP.equals(inputSalesForm.billPrintUnit) ) {
 			if (bInsert) {
 				billService.setBillId(dto);
@@ -938,7 +939,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 			}
 		} else {
 			if (!bInsert && StringUtil.hasLength(inputSalesForm.salesBillId)) {
-				
+				// 伝票情報の更新
 				inputSalesForm.salesBillId = null;
 			}
 		}
@@ -964,22 +965,22 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		SalesSlipDto dto = (SalesSlipDto) d;
 		if( CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP.equals(inputSalesForm.billPrintUnit) ) {
 			if (bInsert || !StringUtil.hasLength(inputSalesForm.salesBillId)) {
-				
-				
+				// 顧客の属性が　売掛　→　売掛以外　に変更された　または　新規レコード
+				//　売上請求書情報の作成
 				billService.insertBillSales(dto);
 			}else{
-				
+				// 顧客の属性は売掛以外から　変更されていない
 
 
-				
+				// 売上請求書情報の更新
 				billService.updateBillSales(dto);
 			}
 		} else {
 			if (!bInsert && StringUtil.hasLength(inputSalesForm.salesBillId)) {
-				
+				// 顧客の属性は売掛から　変更されていない
 				SalesSlipDto dto2 = (SalesSlipDto) this.createDTO();
 				dto2.salesBillId = inputSalesForm.salesBillId;
-				
+				// 売上請求書情報の削除
 				billService.deleteBillSales(dto2);
 			}
 		}
@@ -987,11 +988,11 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		if (bInsert) {
 
-			
+			// 入出庫伝票の登録
 			inputStockSalesService.insert(dto);
 
 		} else {
-			
+			// 入出庫伝票の更新
 			inputStockSalesService.update(dto);
 		}
 
@@ -1019,10 +1020,10 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 		}
 
 		try {
-			
+			// 存在する顧客か確認
 			Customer customer = customerService.findCustomerByCode(inputSalesForm.customerCode);
 			if( customer == null ){
-				
+				// 顧客コードがXXのデータは存在しません
 				String strLabel = MessageResourcesUtil.getMessage("labels.customerCode");
 				addMessage( "errors.dataNotExist", strLabel, inputSalesForm.customerCode );
 			}
@@ -1030,7 +1031,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 			addMessage( "errors.system" );
 		}
 		try {
-			
+			// 存在する商品か確認
 			checkLines(inputSalesForm);
 
 		} catch (ServiceException e) {
@@ -1058,7 +1059,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	@Override
 	public ActionMessages validateAtDeleteSlip() throws ServiceException {
 		SalesSlipDto dto = (SalesSlipDto) inputSalesForm.copyToDto();
-		
+		// 入出庫が締済みかどうか
 		if(this.inputStockSalesService.existsClosedEadSlip(dto)) {
 			addMessage( "errors.delete.stockclosed" );
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -1083,9 +1084,9 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		SalesSlipDto dto = (SalesSlipDto) d;
 
-		boolean doBill = false;	
+		boolean doBill = false;	// 売上伝票単位の請求書を作成するかどうか
 
-		
+		// 請求書発行単位が売上伝票の場合、請求書を作成する
 		if( CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP.equals(inputSalesForm.billPrintUnit) ) {
 			doBill = true;
 		}
@@ -1096,9 +1097,9 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		inputStockSalesService.delete(dto);
 
-		
-		
-		
+		//
+		// 入金伝票の削除
+		// 取引区分が「現金」の場合のみ
 		if( CategoryTrns.SALES_CM_CASH.equals(inputSalesForm.salesCmCategory) ){
 			depositSlipService.deleteBySales(dto);
 		}

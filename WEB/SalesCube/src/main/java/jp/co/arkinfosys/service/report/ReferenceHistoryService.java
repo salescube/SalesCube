@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.report;
 
 import java.util.List;
@@ -80,10 +79,10 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 	 */
 	public List<BeanMap> getSlipListByCondition(BeanMap params) throws ServiceException {
 		try {
-			
+			// 出力対象を取得する
 			String outputTarget = (String)params.get(Param.OUTPUT_TARGET);
 
-			
+			// 出力対象毎に処理を分岐
 			String sql = null;
 			if (REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE.equals(outputTarget)) {
 				sql="report/FindEstimateSCondition.sql";
@@ -138,10 +137,10 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 	 */
 	public List<BeanMap> getDetailListByCondition(BeanMap params) throws ServiceException {
 		try {
-			
+			// 出力対象を取得する
 			String outputTarget = (String)params.get(Param.OUTPUT_TARGET);
 
-			
+			// 出力対象毎に処理を分岐
 			String sql = null;
 			if (REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE.equals(outputTarget)) {
 				sql="report/FindEstimateLCondition.sql";
@@ -214,7 +213,7 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 			param.put(ReferenceHistoryService.paramArray[i], null);
 		}
 
-		
+		// 入出庫伝票の初期化（これだけ型が異なるので別扱い）
 		param.put(Param.EAD_SLIP_CATEGORY, null);
 
 		return param;
@@ -238,7 +237,7 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 			}
 		}
 
-		
+		// 入出庫伝票の初期化（これだけ型が異なるので別扱い）
 		if (conditions.containsKey(Param.EAD_SLIP_CATEGORY)) {
 			Object obj = conditions.get(Param.EAD_SLIP_CATEGORY);
 			if (obj != null) {

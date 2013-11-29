@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.io.BufferedInputStream;
@@ -17,6 +16,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 
+import jp.co.arkinfosys.common.Constants.VALID_FLAG;
 import jp.co.arkinfosys.entity.join.BankDwb;
 import jp.co.arkinfosys.service.BankService;
 import jp.co.arkinfosys.service.MineService;
@@ -105,51 +105,51 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	 * @throws ServiceException
 	 */
 	protected void createReport() throws ServiceException {
-		int reportCnt = 0;	
+		int reportCnt = 0;	// フラグでもいいけど何かに使えるかもなのでカウンタにする
 
-		
+		// レポート作成
 		for (int index=0;;index++) {
-			
+			// レポート取得
 			String reportId = this.getReportId(index);
 			if (reportId==null) {
 				break;
 			}
 
-			
+			// 伝票データ取得
 			BeanMap slip = this.getSlip(index);
 			if (slip==null) {
-				
+				// 次の帳票を出力
 				continue;
 			}
 
-			
+			// 明細データを取得
 			List<BeanMap> detail = this.getDetailList(index);
 			if (detail==null) {
-				
+				// 次の帳票を出力
 				continue;
 			}
 
-			
+			// 自社情報を取得して伝票データを追加する
 			BeanMap mine = this.getMine();
 			mine.putAll(slip);
 
-			
+			// 銀行情報を取得して自社データに追加する
 			BeanMap bank = this.getBank();
 			if(bank != null) {
 				mine.putAll(bank);
 			}
 
-			
+			// レポート作成
 			this.reportTemplateService.createReport(reportId, mine, detail);
 			reportCnt++;
 
-			
+			// 実ファイル名を取得
 			String realFileName = this.getRealFilePreffix(index);
 			if (realFileName==null || realFileName.length()<1) {
 				continue;
 			}
 
-			
+			// 一時ディレクトリ作成
 			if (this.tempDir==null) {
 				String path = this.reportTemplateService.getOutputDirectoryPath()+"/"+this.httpSession.getId();
 				File dir = new File(path);
@@ -157,7 +157,7 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 				this.tempDir = dir.getAbsolutePath();
 			}
 
-			
+			// 一時ディレクトリに出力
 			realFileName = this.tempDir + "/" + realFileName;
 			if (this.docType==DocType.PDF) {
 				this.reportTemplateService.outputToPDF(realFileName+ReportTemplateService.FileSuffix.PDF);
@@ -168,12 +168,12 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 			this.reportTemplateService.disposeReport();
 		}
 
-		
+		// レポート未作成の場合はここで終了
 		if (reportCnt==0) {
 			return;
 		}
 
-		
+		// 直接レスポンスに返却する場合
 		if (this.tempDir==null) {
 			if (this.docType==DocType.PDF) {
 				this.outputToPDF();
@@ -184,13 +184,13 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 			return;
 		}
 
-		
+		// 一時ファイルをzip圧縮してレスポンスに返却
 		try {
 			String zipFile = this.createZipFile();
 			String resFile = this.getFilePreffix() + ReportTemplateService.FileSuffix.ZIP;
 			this.reportTemplateService.writeResponse(this.httpResponse, zipFile, ReportTemplateService.MimeType.ZIP, resFile);
 
-			
+			// 一時ディレクトリごと削除
 			File[] files = {new File(this.tempDir)};
 			this.deleteFiles(files);
 			this.tempDir = null;
@@ -206,7 +206,7 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	protected void outputToPDF() throws ServiceException {
 		String attachmentFileName = this.getFilePreffix() + ReportTemplateService.FileSuffix.PDF;
 		this.reportTemplateService.outputToPDF(this.httpResponse, attachmentFileName);
-		this.reportTemplateService.disposeReport();	
+		this.reportTemplateService.disposeReport();	// クリアしちゃう
 	}
 
 	/**
@@ -216,7 +216,7 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	protected void outputToXLS() throws ServiceException {
 		String attachmentFileName = this.getFilePreffix() + ReportTemplateService.FileSuffix.XLS;
 		this.reportTemplateService.outputToXLS(this.httpResponse, attachmentFileName);
-		this.reportTemplateService.disposeReport();	
+		this.reportTemplateService.disposeReport();	// クリアしちゃう
 	}
 
 	/**
@@ -227,12 +227,12 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	 * @throws ServiceException
 	 */
 	protected BeanMap getMine() throws ServiceException {
-		
+		// 未取得の場合は取得する
 		if (mineMst==null) {
 			mineMst = this.mineService.getMineSimple();
 		}
 
-		
+		// コピーを返却
 		BeanMap ret = new BeanMap();
 		ret.putAll(mineMst);
 
@@ -247,11 +247,15 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	 * @throws ServiceException
 	 */
 	protected BeanMap getBank() throws ServiceException {
-		
+		// 未取得の場合は取得する
 		if (bankMst==null) {
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put(BankService.Param.BANK_ID, this.getBankId());
+//			param.put(BankService.Param.BANK_ID, this.getBankId());
 
+			// 有効な銀行のみ
+			param.put(BankService.Param.VALID, VALID_FLAG.VALID);
+
+			
 			List<BankDwb> bankList;
 			bankList = this.bankService.findByConditionLimit( param, BankService.Param.BANK_CODE, true, 1, 0);
 
@@ -262,23 +266,14 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 			}
 		}
 
-		
+		// コピーを返却
 		BeanMap ret = new BeanMap();
 		ret.putAll(bankMst);
-		ret.remove(EXCLUDE_REMARKS);	
+		ret.remove(EXCLUDE_REMARKS);	// 銀行マスタの適用は除外
 		
 		return ret;
 	}
 
-	/**
-	 * 銀行IDを返します.<br>
-	 * デフォルト実装ではnull(未指定)を返します.<br>
-	 * 必要に応じてサブクラスでオーバーライドしてください.
-	 * @return 銀行ID
-	 */
-	protected String getBankId() {
-		return null;
-	}
 
 	/**
 	 * zipファイルを作成します.
@@ -286,12 +281,12 @@ public abstract class AbstractReportWriterAction extends CommonResources {
 	 * @throws Exception
 	 */
 	private String createZipFile() throws Exception{
-		
+		// テンポラリファイルを作成
 		File dir = new File(this.reportTemplateService.getOutputDirectoryPath());
 		File tmpFile = File.createTempFile(this.domainDto.domainId, null, dir);
 		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile));
 
-		
+		// 保存ファイルをzipファイルに追加する
 		File[] files = {new File(this.tempDir)};
 		try {
 			encode(zos, files);

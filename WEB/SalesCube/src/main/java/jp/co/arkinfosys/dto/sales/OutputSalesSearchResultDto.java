@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 import java.io.Serializable;
@@ -17,27 +16,27 @@ public class OutputSalesSearchResultDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public String roSlipId;
-	public String salesSlipId;
-	public String salesDate;
-	public String customerCode;
-	public String deliveryCode;
-	public String firstDeliveryCode; 
-	public String customerName;
-	public String billPrintCount;
-	public String deliveryPrintCount;
-	public String tempDeliveryPrintCount;
-	public String shippingPrintCount;
-	public String tempDeliverySlipFlag;
-	public String siPrintCount;
-	public String billPrintUnit;
-	public String billDatePrint;
-	public String estimatePrintCount;
-	public String delborPrintCount;
-	public String remarks;
-	public String salesCmCategory; 
+	public String roSlipId;/* 受注伝票番号 */
+	public String salesSlipId;/* 売上番号 */
+	public String salesDate;/* 売上日 */
+	public String customerCode;/* 得意先コード */
+	public String deliveryCode;/* 納入先コード */
+	public String firstDeliveryCode; /* trueが入っている時には、顧客情報と納入先情報が一致（仮納品書出力制御に使用） */
+	public String customerName;/* 得意先名 */
+	public String billPrintCount;/* 請求書発行フラグ */
+	public String deliveryPrintCount;/* 納品書発行フラグ */
+	public String tempDeliveryPrintCount;/* 仮納品書発行フラグ */
+	public String shippingPrintCount;/* 出荷指示書発行フラグ */
+	public String tempDeliverySlipFlag;/* 仮納品書出力フラグ */
+	public String siPrintCount;/* 送り状データ出力フラグ */
+	public String billPrintUnit;/* 請求書発行単位 */
+	public String billDatePrint;/* 請求書日付有無 */
+	public String estimatePrintCount;/* 見積書 */
+	public String delborPrintCount;/* 納品書兼領収書 */
+	public String remarks;/* 備考 */
+	public String salesCmCategory; /* 売上取引区分 */
 
-	
+	// 検索結果の各チェックボックス表示フラグ
 	public boolean isEstimateCheckDisp = false;
 	public boolean isBillCheckDisp = false;
 	public boolean isDeliveryCheckDisp = false;
@@ -45,7 +44,7 @@ public class OutputSalesSearchResultDto implements Serializable {
 	public boolean isPickingListCheckDisp = false;
 	public boolean isDeliveryReceiptCheckDisp = false;
 
-	
+	// EXCEL,PDF出力ファイル(Excel,PDF出力のフォーマット)
 	public String fileEstimate = "";
 	public String fileBill = "";
 	public String fileDelivery = "";
@@ -53,20 +52,20 @@ public class OutputSalesSearchResultDto implements Serializable {
 	public String filePickingList = "";
 	public String fileDeliveryReceipt = "";
 
-	
-	
-	public String REPORT_ALL = Constants.REPORT_SELECTION.VALUE_ALL;
-	public String REPORT_BILL = Constants.REPORT_SELECTION.VALUE_BILL;
-	public String REPORT_DELIVERY = Constants.REPORT_SELECTION.VALUE_DELIVERY;
-	public String REPORT_TEMP_DELIVERY = Constants.REPORT_SELECTION.VALUE_TEMP_DELIVERY;
-	public String REPORT_PICKING_LIST = Constants.REPORT_SELECTION.VALUE_PICKING;
-	public String REPORT_ESTIMATE = Constants.REPORT_SELECTION.VALUE_ESTIMATE;
-	public String REPORT_DELIVERY_RECEIPT = Constants.REPORT_SELECTION.VALUE_DELIVERY_RECEIPT;
-	public String REPORT_PICKING_CONSTRACTION = Constants.REPORT_SELECTION.VALUE_PICKING_CONSTRACTION;
-																										
-																										
-	public String REPORT_DELIVERY_6 = Constants.REPORT_SELECTION.VALUE_DELIVERY_6;
-	public String REPORT_BILL_POST = Constants.REPORT_SELECTION.VALUE_BILL_POST;
+	// 帳票種類チェックボックスのID(検索結果へのID設定用)
+	// 注意：帳票種類が１０を超えた場合はIDの"1"～"9"を"01"～"09"と振り直す必要がある
+	public String REPORT_ALL = Constants.REPORT_SELECTION.VALUE_ALL;// 全ての帳票
+	public String REPORT_BILL = Constants.REPORT_SELECTION.VALUE_BILL;// 請求書(個別発行で商品に同梱の場合)
+	public String REPORT_DELIVERY = Constants.REPORT_SELECTION.VALUE_DELIVERY;// 納品書
+	public String REPORT_TEMP_DELIVERY = Constants.REPORT_SELECTION.VALUE_TEMP_DELIVERY;// 仮納品書
+	public String REPORT_PICKING_LIST = Constants.REPORT_SELECTION.VALUE_PICKING;// ピッキングリスト
+	public String REPORT_ESTIMATE = Constants.REPORT_SELECTION.VALUE_ESTIMATE;// 見積書
+	public String REPORT_DELIVERY_RECEIPT = Constants.REPORT_SELECTION.VALUE_DELIVERY_RECEIPT;// 納品書兼領収書
+	public String REPORT_PICKING_CONSTRACTION = Constants.REPORT_SELECTION.VALUE_PICKING_CONSTRACTION;// ピッキングリスト
+																										// +
+																										// 組立指示書
+	public String REPORT_DELIVERY_6 = Constants.REPORT_SELECTION.VALUE_DELIVERY_6;// 納品書6行
+	public String REPORT_BILL_POST = Constants.REPORT_SELECTION.VALUE_BILL_POST;// 請求書(個別発行で郵送の場合)
 
 	/**
 	 * 帳票種類チェックボックスの見積書IDを取得します.
@@ -132,31 +131,31 @@ public class OutputSalesSearchResultDto implements Serializable {
 		return Constants.REPORT_SELECTION.VALUE_DELIVERY_RECEIPT;
 	}
 
-	
-	public String REPORT_FILE_A = Constants.REPORT_TEMPLATE.REPORT_ID_A;
-	public String REPORT_FILE_C = Constants.REPORT_TEMPLATE.REPORT_ID_C;
-	public String REPORT_FILE_D = Constants.REPORT_TEMPLATE.REPORT_ID_D;
-	public String REPORT_FILE_E = Constants.REPORT_TEMPLATE.REPORT_ID_E;
-	public String REPORT_FILE_F = Constants.REPORT_TEMPLATE.REPORT_ID_F;
-	public String REPORT_FILE_G = Constants.REPORT_TEMPLATE.REPORT_ID_G;
-	public String REPORT_FILE_H = Constants.REPORT_TEMPLATE.REPORT_ID_H;
-	public String REPORT_FILE_J = Constants.REPORT_TEMPLATE.REPORT_ID_J;
-	public String REPORT_FILE_K = Constants.REPORT_TEMPLATE.REPORT_ID_K;
+	// 帳票種別
+	public String REPORT_FILE_A = Constants.REPORT_TEMPLATE.REPORT_ID_A;// 御見積書
+	public String REPORT_FILE_C = Constants.REPORT_TEMPLATE.REPORT_ID_C;// 納品書
+	public String REPORT_FILE_D = Constants.REPORT_TEMPLATE.REPORT_ID_D;// 納品書６行
+	public String REPORT_FILE_E = Constants.REPORT_TEMPLATE.REPORT_ID_E;// 仮納品書
+	public String REPORT_FILE_F = Constants.REPORT_TEMPLATE.REPORT_ID_F;// 納品書兼領収書
+	public String REPORT_FILE_G = Constants.REPORT_TEMPLATE.REPORT_ID_G;// 請求書(個別発行で商品に同梱の場合)
+	public String REPORT_FILE_H = Constants.REPORT_TEMPLATE.REPORT_ID_H;// 請求書(個別発行で郵送の場合)
+	public String REPORT_FILE_J = Constants.REPORT_TEMPLATE.REPORT_ID_J;// ピッキングリスト
+	public String REPORT_FILE_K = Constants.REPORT_TEMPLATE.REPORT_ID_K;// 組立指示書
 
-	
+	// 出力する帳票の日付表示フラグ
 	public boolean dispDateFlag = false;
 
-	
-	public boolean allOutput = false; 
-	public boolean tempDeliveryOutputFlag = false; 
-	public boolean tempDeliveryOutput = false; 
+	// 「全て出力済みを除く」チェックボックスの制御で使用する
+	public boolean allOutput = false; // 全て出力済みフラグ
+	public boolean tempDeliveryOutputFlag = false; // 仮納品書発行フラグ（発行対象/対象外）
+	public boolean tempDeliveryOutput = false; // 仮納品書（発行済/未発行）
 
 	/**
 	 * デフォルトの出力ステータスを返します.
 	 * @return 出力ステータス
 	 */
 	public String getDefaultOutputStatus() {
-		
+		// 出力帳票
 		StringBuilder reportFile = new StringBuilder();
 		StringBuilder reportPrintState = new StringBuilder();
 

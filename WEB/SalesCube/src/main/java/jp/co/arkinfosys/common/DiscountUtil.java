@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.math.BigDecimal;
@@ -14,7 +13,7 @@ import java.util.HashMap;
  */
 public class DiscountUtil {
 
-	
+	// アイテム総数値引き用
 	HashMap<String,BigDecimal> mapProductCode = null;
 
 	/**

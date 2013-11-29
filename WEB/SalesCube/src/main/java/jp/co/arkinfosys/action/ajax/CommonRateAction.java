@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class CommonRateAction extends CommonAjaxResources {
 	@Execute(validator = false, urlPattern = "getRateInfosByRateId/{rateId}")
 	public String getRateInfosByRateId() throws Exception {
 
-		
+		// レートIDを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonRateForm.rateId)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -56,15 +55,15 @@ public class CommonRateAction extends CommonAjaxResources {
 
 			Rate rate = rateService.findById(commonRateForm.rateId);
 
-			
+			// レートIDを指定した検索なので複数はかえらない
 			if (rate != null) {
 
-				
+				// エンティティの内容をマップに展開
 				BeanMap map = Beans.createAndCopy(BeanMap.class, rate)
 						.dateConverter(Constants.FORMAT.TIMESTAMP, "creDatetm",
 								"updDatetm").execute();
 
-				
+				// アクションフォームの内容（計算結果）をマップに展開
 				BeanMap bmap = super.createBeanMapWithNullToEmpty(map);
 				ResponseUtil.write(JSON.encode(bmap), "text/javascript");
 
@@ -92,7 +91,7 @@ public class CommonRateAction extends CommonAjaxResources {
 			List<Rate> rateList = rateService.findAllRate();
 			Map<String, Object> rateMap = new HashMap<String, Object>();
 			for (Rate rate : rateList) {
-				
+				// レートIDをキーに、通貨記号
 				rateMap.put(Integer.toString(rate.rateId), rate.sign);
 			}
 

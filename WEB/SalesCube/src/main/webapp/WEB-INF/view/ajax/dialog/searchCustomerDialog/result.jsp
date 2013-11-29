@@ -1,6 +1,6 @@
 <table style="width: 710px;">
 	<tr>
-		<td style="text-align: left;">検索結果件数: ${searchResultCount}件</td>
+		<td style="text-align: left; color: #FFFFFF;">検索結果件数: ${searchResultCount}件</td>
 		<td style="text-align: right; white-space: normal;">
 			<span style="color: red">
 			 	<html:messages id="resultThreshold" message="true">
@@ -11,13 +11,11 @@
 	</tr>
 </table>
 
-<div
-	style="padding: 0px; border: none; width: 710px; height: 240px; overflow: hidden;">
-<table id="${dialogId}List" summary="顧客検索結果"
-	style="width: 700px;">
+<div id="${dialogId}Div"
+	style="border: none; width: 710px; height: 240px; overflow: hidden;">
+<table class="dialog_resultList"  id="${dialogId}List" summary="顧客検索結果" style="width: 100%;">
 	<colgroup>
-		<col span="1" style="width: 5%">
-		<col span="1" style="width: 10%">
+		<col span="1" style="width: 15%">
 		<col span="1" style="width: 20%">
 		<col span="1" style="width: 10%">
 		<col span="1" style="width: 10%">
@@ -27,7 +25,6 @@
 		<col span="1" style="width: 12%">
 	</colgroup>
 	<tr>
-		<th>&nbsp;</th>
 		<th>顧客コード</th>
 		<th>顧客名</th>
 		<th>TEL</th>
@@ -39,12 +36,10 @@
 	</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
-			<td style="text-align: center;"><input type="radio"
-				name="${dialogId}_selectedCustomer" value="${f:h(bean.customerCode)}"
-				tabindex="6100"
-				onclick="$('#${dialogId}_selectButton').attr('disabled', false);">
+			<td style="text-align: center">
+				<a href="javascript:void(0)"  tabindex="6100" style="color: #1D9CCC" onclick="_selectLinkSearchResultAjax( '${dialogId}', '${f:h(bean.customerCode)}', CustomerParams, 'customerCode' );
+					$('#${dialogId}').dialog('close');" >${f:h(bean.customerCode)}</a>
 			</td>
-			<td>${f:h(bean.customerCode)}</td>
 			<td>${f:h(bean.customerName)}</td>
 			<td>${f:h(bean.customerTel)}</td>
 			<td>${f:h(bean.customerPcName)}</td>

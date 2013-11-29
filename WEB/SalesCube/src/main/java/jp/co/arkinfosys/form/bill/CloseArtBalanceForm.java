@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.bill;
 
 import java.text.SimpleDateFormat;
@@ -22,13 +21,13 @@ import org.seasar.struts.annotation.Msg;
  */
 public class CloseArtBalanceForm {
 
-	
+	// 売掛締処理日
     @DateType(datePattern = Constants.FORMAT.DATE,
     		msg = @Msg(key = "errors.date"),
     		arg0 = @Arg(key = "labesl.closeArtBalanceDate", resource = true, position = 0))
 	public String cutOffDate;
 
-	
+	// 最終売掛締処理日
 	public String lastCutOffDate;
 
 

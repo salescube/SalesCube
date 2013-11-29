@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -68,15 +67,15 @@ public class RoSlipSalesService extends RoSlipService {
 			ServiceException {
 
 
-		
+		// 伝票の排他制御
 		ROrderSlipDto roDto = new ROrderSlipDto();
-		
+		// 更新日付設定
 		roDto.updDatetm = dto.roUpdDatetm;
 		roDto.roSlipId = dto.roSlipId;
 
 		lock(roDto);
 
-		
+		// 伝票取得
 		ROrderSlipDto roDtoOld = loadBySlipId(dto.roSlipId);
 		if( roDtoOld == null ){
 			throw new ServiceException("errors.system");
@@ -87,7 +86,7 @@ public class RoSlipSalesService extends RoSlipService {
 
 		boolean complete = true;
 		boolean partial = false;
-		
+		// 明細行更新
 		for( ROrderLineDto rold : roDtoOld.getLineDtoList() ){
 
 			boolean exist = false;
@@ -99,23 +98,23 @@ public class RoSlipSalesService extends RoSlipService {
 					Double numRest = Double.valueOf(rold.restQuantity);
 					Double numInput = Double.valueOf(lineDto.quantity);
 
-					
+					// 残数計算
 					numRest -= numInput;
-					
+					// 残数設定
 					Converter conv = createProductNumConverter();
 					Number num = (Number) conv.getAsObject(numRest.toString());
 					rold.restQuantity = num.toString();
 
-					
+					// 最終出荷日は売上日
 					rold.lastShipDate = getLastShipDate(dto, lineDto);
 
-					
+					// ステータス設定
 					setStatus(lineDto.deliveryProcessCategory, rold);
 					break;
 				}
 			}
 			if( exist ){
-				
+				// 明細行更新
 				RoLineTrn entity = Beans
 									.createAndCopy(RoLineTrn.class, rold).dateConverter(
 										Constants.FORMAT.TIMESTAMP, "updDatetm")
@@ -124,7 +123,7 @@ public class RoSlipSalesService extends RoSlipService {
 					throw new ServiceException("errors.system");
 				}
 			}
-			
+			// 全体の状態確認
 			if( !Constants.STATUS_RORDER_LINE.SALES_FINISH.equals(rold.status)){
 				complete = false;
 			}
@@ -132,7 +131,7 @@ public class RoSlipSalesService extends RoSlipService {
 				partial = true;
 			}
 		}
-		
+		// 伝票状態確認
 		if( partial ){
 			roDtoOld.status = Constants.STATUS_RORDER_SLIP.SALES_NOW;
 		}else if( complete ){
@@ -140,7 +139,7 @@ public class RoSlipSalesService extends RoSlipService {
 		}else{
 			roDtoOld.status = Constants.STATUS_RORDER_SLIP.RECEIVED;
 		}
-		
+		// 伝票更新
 		RoSlipTrn entity = Beans.createAndCopy(RoSlipTrn.class, roDtoOld)
 			.dateConverter(Constants.FORMAT.DATE, "roDate", "validDate")
 				.dateConverter(Constants.FORMAT.DATE, "shipDate", "validDate")
@@ -165,7 +164,7 @@ public class RoSlipSalesService extends RoSlipService {
 	public int updateSlipBySales(SalesSlipDto dto) throws UnabledLockException,
 			ServiceException {
 
-		
+		// 伝票取得
 		ROrderSlipDto roDtoOld = loadBySlipId(dto.roSlipId);
 		if( roDtoOld == null ){
 			throw new ServiceException("errors.system");
@@ -176,9 +175,9 @@ public class RoSlipSalesService extends RoSlipService {
 
 		boolean complete = true;
 		boolean partial = false;
-		
+		// 明細行更新
 		for( ROrderLineDto rold : roDtoOld.getLineDtoList() ){
-			
+			// 全体の状態確認
 			if( !Constants.STATUS_RORDER_LINE.SALES_FINISH.equals(rold.status)){
 				complete = false;
 			}
@@ -186,7 +185,7 @@ public class RoSlipSalesService extends RoSlipService {
 				partial = true;
 			}
 		}
-		
+		// 伝票状態確認
 		if( partial ){
 			roDtoOld.status = Constants.STATUS_RORDER_SLIP.SALES_NOW;
 		}else if( complete ){
@@ -194,7 +193,7 @@ public class RoSlipSalesService extends RoSlipService {
 		}else{
 			roDtoOld.status = Constants.STATUS_RORDER_SLIP.RECEIVED;
 		}
-		
+		// 伝票更新
 		RoSlipTrn entity = Beans.createAndCopy(RoSlipTrn.class, roDtoOld)
 			.dateConverter(Constants.FORMAT.DATE, "roDate", "validDate")
 				.dateConverter(Constants.FORMAT.DATE, "shipDate", "validDate")
@@ -227,17 +226,17 @@ public class RoSlipSalesService extends RoSlipService {
 		BigDecimal numRest = new BigDecimal(rold.restQuantity);
 		BigDecimal numInput = new BigDecimal(lineDto.quantity);
 
-		
+		// 残数計算
 		numRest = numRest.subtract(numInput);
 		rold.restQuantity = numRest.toString();
 
-		
+		// 最終出荷日は売上日
 		rold.lastShipDate = getLastShipDate(dto, lineDto);
 
-		
+		// ステータス設定
 		setStatus(lineDto.deliveryProcessCategory, rold);
 
-		
+		// 明細行更新
 		RoLineTrn entity = Beans
 							.createAndCopy(RoLineTrn.class, rold).dateConverter(
 								Constants.FORMAT.TIMESTAMP, "updDatetm")
@@ -271,17 +270,17 @@ public class RoSlipSalesService extends RoSlipService {
 		BigDecimal numInput = new BigDecimal(lineDto.quantity);
 		BigDecimal numBack = new BigDecimal(lineDto.bkQuantity);
 
-		
+		// 残数計算
 		numRest = numRest.subtract(numInput.subtract(numBack));
 		rold.restQuantity = numRest.toString();
 
-		
+		// 最終出荷日は売上日
 		rold.lastShipDate = getLastShipDate(dto, lineDto);
 
-		
+		// ステータス設定
 		setStatus(lineDto.deliveryProcessCategory, rold);
 
-		
+		// 明細行更新
 		RoLineTrn entity = Beans
 							.createAndCopy(RoLineTrn.class, rold).dateConverter(
 								Constants.FORMAT.TIMESTAMP, "updDatetm")
@@ -314,17 +313,17 @@ public class RoSlipSalesService extends RoSlipService {
 		BigDecimal numRest = new BigDecimal(rold.restQuantity);
 		BigDecimal numBack = sl.quantity;
 
-		
+		// 残数計算
 		numRest = numRest.add(numBack);
 		rold.restQuantity = numRest.toString();
 
-		
+		// ステータス設定（削除した場合は、数量で判断）
 		setStatusRestNum( numRest, numRo, rold, dto.salesCmCategory );
 
-		
+		// 最終出荷日更新
 		rold.lastShipDate = salesLineService.getLastShipDate(dto.salesSlipId, sl.roLineId.toString());
 
-		
+		// 明細行更新
 		RoLineTrn entity = Beans
 							.createAndCopy(RoLineTrn.class, rold).dateConverter(
 								Constants.FORMAT.TIMESTAMP, "updDatetm")
@@ -347,13 +346,13 @@ public class RoSlipSalesService extends RoSlipService {
 	protected void setStatusRestNum( BigDecimal numRest, BigDecimal numRo, ROrderLineDto rold, String salesCmCategory )
 	throws ServiceException {
 		if( BigDecimal.ZERO.compareTo(numRest) == 0 ){
-			
+			// 残数 = 0であれば「売上完了」
 			rold.status = Constants.STATUS_RORDER_LINE.SALES_FINISH;
 		}else if( numRest.compareTo(numRo) == 0  ){
-			
+			// 受注数 = 残数であれば「受注」
 			rold.status = Constants.STATUS_RORDER_LINE.RECEIVED;
 		}else{
-			
+			// 「分納中」
 			rold.status = Constants.STATUS_RORDER_LINE.NOWPURCHASING;
 		}
 	}
@@ -383,7 +382,7 @@ public class RoSlipSalesService extends RoSlipService {
 	 */
 	public ROrderLineDto findSlipLineById(String lineId) throws ServiceException {
 
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(RoLineService.Param.RO_LINE_ID, lineId);
 
@@ -410,28 +409,28 @@ public class RoSlipSalesService extends RoSlipService {
 		SimpleDateFormat DF_YMD = new SimpleDateFormat(Constants.FORMAT.DATE);
 		String dbLast;
 		try {
-			
+			// DB上の最も新しい売上日を取得する
 			dbLast = salesLineService.getLastShipDate(dto.salesSlipId, lineDto.roLineId);
 			if( dbLast == null ){
-				
+				// 見つからない時には現状の売上伝票の日付
 				return dto.salesDate;
 			}
 		} catch (ServiceException e) {
-			
+			// 見つからない時には現状の売上伝票の日付
 			return dto.salesDate;
 		}
 		java.util.Date dbDate;
 		try {
 			dbDate = DF_YMD.parse(dbLast);
 		} catch (ParseException e) {
-			
+			// 見つからない時には現状の売上伝票の日付
 			return dto.salesDate;
 		}
 		java.util.Date fmDate;
 		try {
 			fmDate = DF_YMD.parse(dto.salesDate);
 		} catch (ParseException e) {
-			
+			// 見つからない時にはDBの売上伝票の日付（ここは通らない）
 			return dbLast;
 		}
 		if( fmDate.after(dbDate)){

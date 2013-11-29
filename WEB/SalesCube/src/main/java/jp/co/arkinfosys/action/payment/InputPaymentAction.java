@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.payment;
 
 import java.math.BigDecimal;
@@ -65,7 +64,7 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	@Resource
 	public InputPaymentForm inputPaymentForm;
 
-	
+	// Service
 	@Resource
 	private InputPaymentService inputPaymentService;
 
@@ -84,10 +83,10 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	@Resource
 	private AptBalanceService aptBalanceService;
 
-	
+	// 画面で使用する変数
 	public List<LabelValueBean> paymentDetailList = new ArrayList<LabelValueBean>();
-	public Map<String, CategoryJoin> supCategoryMap = new HashMap<String, CategoryJoin>();
-	public Map<String, String> rateMap = new HashMap<String, String>();
+	public Map<String, CategoryJoin> supCategoryMap = new HashMap<String, CategoryJoin>();// 仕入明細区分
+	public Map<String, String> rateMap = new HashMap<String, String>();// レート
 
 	/**
 	 * 伝票を複写します.<br>
@@ -105,43 +104,43 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 		prepareForm();
 
 		try {
-			
+			// 複写対象データ数を取得する
 			int validSlipCount = inputPaymentService.searchUnpaidSupplierSlipCount(this.inputPaymentForm.poSlipId);
 
 			if(validSlipCount <= 0) {
-				
+				// 発注番号をクリアする
 				inputPaymentForm.poSlipId = "";
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.copy.notexist"));
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 				return InputPaymentAction.Mapping.INPUT;
 			}
 
-			
+			// コピー元情報を取得する
 			InputPaymentDto dto = inputPaymentService.findByPoSlipId(this.inputPaymentForm.poSlipId);
 
 			if(dto == null) {
-				
+				// 発注番号をクリアする
 				inputPaymentForm.poSlipId = "";
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.copy.notexist"));
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
 				return InputPaymentAction.Mapping.INPUT;
 			}
 
-			
+			// コピー元情報にフォーム内容を設定する
 			dto.userName = this.inputPaymentForm.userName;
 			dto.paymentDate = this.inputPaymentForm.paymentDate;
 
-			
+			// コピーを実行する
 			Beans.copy(dto, this.inputPaymentForm).execute();
 
-			
+			// 買掛残高
 			BigDecimal aptBalance = this.aptBalanceService.calcAptBalanceBySupplierCode(inputPaymentForm.supplierCode);
 			if(aptBalance != null) {
 				DecimalFormat df = NumberUtil.createDecimalFormat(dto.priceFractCategory, super.mineDto.unitPriceDecAlignment, true);
 				inputPaymentForm.aptBalance = df.format(aptBalance);
 			}
 
-			
+			// 初期値を設定する
 			this.inputPaymentForm.initCopy();
 
 			createList();
@@ -163,20 +162,20 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	 */
 	@Override
 	protected void afterLoad() throws Exception, ServiceException {
-		
+		// 明細行リストを取得する
 		List<InputPaymentLineDto> lineList =  this.inputPaymentForm.lineDtoList;
 
-		
+		// 空行を削除して新規リストを作成する
 		List<InputPaymentLineDto> newLineList = new ArrayList<InputPaymentLineDto>();
 
 		for(InputPaymentLineDto lineDto : lineList) {
-			
+			// 空白行以外はリストに追加する
 			if(!lineDto.isBlank()) {
 				newLineList.add(lineDto);
 			}
 		}
 
-		
+		// 新リストをフォームに設定する
 		this.inputPaymentForm.lineDtoList = newLineList;
 	}
 
@@ -192,13 +191,13 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 		InputPaymentDto paymentDto = (InputPaymentDto)dto;
 
 		if(bInsert) {
-			
+			// 登録の場合
 			paymentDto.status = Constants.STATUS_PAYMENT_SLIP.PAID;
 			paymentDto.userId = super.userDto.userId;
 			paymentDto.setLineDtoList(null);
 
 		} else {
-			
+			// 更新の場合
 			paymentDto.status = Constants.STATUS_PAYMENT_SLIP.PAID;
 		}
 	}
@@ -227,7 +226,7 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	@Override
 	protected void afterUpsert(boolean bInsert, AbstractSlipDto<InputPaymentLineDto> dto) throws Exception {
 		try {
-			
+			// 仕入伝票を更新する
 			this.inputPaymentService.updateSupplierForUpdate((InputPaymentDto)dto);
 
 		} catch(Exception e) {
@@ -243,10 +242,10 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	 */
 	@Override
 	protected void beforeDelete(AbstractSlipDto<InputPaymentLineDto> dto) throws Exception {
-		
+		// 支払伝票レコードをロックする
 		this.inputPaymentService.lockPaymentRecord((InputPaymentDto)dto);
 
-		
+		// 仕入伝票レコードをロックする
 		this.inputPaymentService.lockSupplierRecord((InputPaymentDto)dto);
 	}
 
@@ -258,7 +257,7 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	 */
 	@Override
 	protected void afterDelete(AbstractSlipDto<InputPaymentLineDto> dto) throws Exception {
-		
+		// 仕入伝票を更新する
 		this.inputPaymentService.updateSupplierForDelete((InputPaymentDto)dto);
 	}
 
@@ -280,10 +279,10 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 	@Override
 	protected void createList() throws Exception {
 		try {
-			
+			// ユーザの権限を設定
 			inputPaymentForm.menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_PAYMENT);
 
-			
+			// レート設定
 			rateMap = rateService.findRateIdAndNameMap();
 			inputPaymentForm.rateName = rateMap.get(inputPaymentForm.rateId);
 
@@ -295,11 +294,11 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 				if(slipLine.supplierDetailCategory == null) {
 					continue;
 				}
-				
+				// 仕入明細区分名設定
 				slipLine.supplierDetailCategoryName = (supCategoryMap.get(slipLine.supplierDetailCategory)).categoryCodeName;
 			}
 
-			
+			// 支払明細区分ドロップダウン設定
 			paymentDetailList = categoryService.findCategoryLabelValueBeanListById(Categories.PAYMENT_DETAIL);
 
 		} catch(ServiceException e) {
@@ -380,14 +379,14 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 			List<InputPaymentLineDto> lineList = this.inputPaymentLineService.loadBySlip(dto);
 			this.inputPaymentForm.lineDtoList = lineList;
 
-			
+			// 買掛残高
 			BigDecimal aptBalance = this.aptBalanceService.calcAptBalanceBySupplierCode(inputPaymentForm.supplierCode);
 			if(aptBalance != null) {
 				DecimalFormat df = NumberUtil.createDecimalFormat(dto.priceFractCategory, super.mineDto.unitPriceDecAlignment, true);
 				inputPaymentForm.aptBalance = df.format(aptBalance);
 			}
 
-			
+			// 仕入先税率を設定
 			this.inputPaymentForm.supplierTaxRate = dto.supplierTaxRate;
 
 			inputPaymentForm.initLoad();
@@ -420,17 +419,17 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 		ActionMessages errors = new ActionMessages();
 		ActionMessage tempMsg;
 
-		
-		String labelSupplierCode = MessageResourcesUtil.getMessage("labels.supplierCode");
-		String labelUnitPrice = MessageResourcesUtil.getMessage("labels.unitPrice");
-		String labelDolUnitPrice = MessageResourcesUtil.getMessage("labels.dolUnitPrice");
+		// メッセージに表示する文字列
+		String labelSupplierCode = MessageResourcesUtil.getMessage("labels.supplierCode");// 仕入先
+		String labelUnitPrice = MessageResourcesUtil.getMessage("labels.unitPrice");// 円単価
+		String labelDolUnitPrice = MessageResourcesUtil.getMessage("labels.dolUnitPrice");// 外貨単価
 		String labelPrice = MessageResourcesUtil.getMessage("labels.price");
 		String labelDolPrice = MessageResourcesUtil.getMessage("labels.dolPrice");
 
-		String labelRemarks = MessageResourcesUtil.getMessage("labels.remarks");
+		String labelRemarks = MessageResourcesUtil.getMessage("labels.remarks");// 備考(支払伝票明細行)
 
-		
-		String supplierCode = inputPaymentForm.supplierCode;
+		// チェック項目
+		String supplierCode = inputPaymentForm.supplierCode;// 仕入先コード
 
 		/**
 		 * 【支払伝票】 ・必須チェック ・日付書式チェック ・長さチェック
@@ -438,23 +437,23 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 		 */
 
 		/********** 支払入力チェック **********/
-		
-		
+		// ***** 仕入先コード *****
+		// *** 必須チェック ***
 		if("".equals(supplierCode)) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.required", labelSupplierCode));
 
-			
+			// 仕入先コードが無い場合その後のチェックが行えないため、validateを終了する
 			return errors;
 		}
 
-		
+		// 仕入先情報を取得
 		Supplier supplier = supplierService.findById(supplierCode);
 
-		
+		// *** 存在チェック ***/
 		if(!"".equals(supplierCode)) {
-			
+			// 仕入先コードに入力がある場合のみチェック
 			if(supplier == null || "".equals(supplier.supplierCode)) {
-				
+				// 仕入先コードが存在しない
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.dataNotExist", labelSupplierCode, supplierCode));
 				return errors;
 			}
@@ -462,68 +461,68 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 
 		/********** 支払入力明細行チェック **********/
 		int checkedCount = 0;
-		boolean NATIONAL_SUPPLIER = (supplier.rateId == null); 
+		boolean NATIONAL_SUPPLIER = (supplier.rateId == null); // レートIDがnullなら国内仕入先
 		for(int i = 0; i < inputPaymentForm.lineDtoList.size(); i++) {
 			InputPaymentLineDto line = inputPaymentForm.lineDtoList.get(i);
 
-			
+			// 明細チェック数のカウント(チェック数が0件の時のエラー検出のため)
 			if(line.checkPayLine) {
 				checkedCount++;
 			}
 
-			
+			// *** 必須チェック ***/
 			if(NATIONAL_SUPPLIER) {
-				
+				// 仕入先が国内の場合、円単価の必須チェック
 				if("".equals(line.unitPrice)) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.required", i + 1, labelUnitPrice));
 				}
 			} else {
-				
+				// 仕入先が国外の場合、外貨単価の必須チェック
 				if("".equals(line.dolUnitPrice)) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.required", i + 1, labelDolUnitPrice));
 				}
 			}
 
-			
+			// *** 半角数値チェック ＆ 長さチェック(整数部 + 少数部が8+2以下) ***/
 
-			
+			// 円単価
 			tempMsg = ValidateUtil.decimalType(i + 1, line.unitPrice, labelUnitPrice, 9, 0);
 			if(tempMsg != null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, tempMsg);
 			} else if(StringUtil.hasLength(line.unitPrice)) {
-				
+				// 数値０チェック
 				float funitPrice = Float.parseFloat(line.unitPrice);
 				if(Double.compare(funitPrice, 0) == 0) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.num0", i + 1, labelUnitPrice));
 				}
 			}
 
-			
+			// 外貨単価
 			tempMsg = ValidateUtil.decimalType(i + 1, line.dolUnitPrice, labelDolUnitPrice, 9, 3);
 			if(tempMsg != null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, tempMsg);
 			} else if(StringUtil.hasLength(line.dolUnitPrice)) {
-				
+				// 数値０チェック
 				float fdolUnitPrice = Float.parseFloat(line.dolUnitPrice);
 				if(Double.compare(fdolUnitPrice, 0) == 0) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.num0", i + 1, labelDolUnitPrice));
 				}
 			}
 
-			
+			// 円金額
 			tempMsg = ValidateUtil.decimalType(i + 1, line.price, labelPrice, 9, 0);
 			if(tempMsg != null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, tempMsg);
 			}
 
-			
+			// 外貨金額
 			tempMsg = ValidateUtil.decimalType(i + 1, line.dolPrice, labelDolPrice, 9, 3);
 			if(tempMsg != null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, tempMsg);
 			}
 
-			
-			
+			// *** 長さチェック ***/
+			// 備考
 			if(StringUtil.hasLength(line.remarks)) {
 				if(line.remarks.length() > 50) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.maxbytelength", i + 1, labelRemarks, "50"));
@@ -531,7 +530,7 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 			}
 		}
 
-		
+		// 登録時で、明細が選択されていない場合エラーとする
 		if(checkedCount <= 0 && inputPaymentForm.isNew()) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.nocheck"));
 		}

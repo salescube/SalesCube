@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.report;
 
 import java.util.List;
@@ -48,10 +47,10 @@ public class ReferenceMstAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception{
-		
+		// プルダウンの初期化
 		initList();
 
-		
+		// 出力対象プルダウンの初期値を設定
 		referenceMstForm.outputTarget = Constants.REFERENCE_HISTORY_TARGET.VALUE_ESTIMATE;
 
 		return ReferenceMstAction.Mapping.INPUT;

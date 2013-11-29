@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import org.seasar.framework.beans.util.Beans;
  */
 public class DepositLineService extends
 		AbstractLineService<DepositLine, DepositLineDto, DepositSlipDto> {
-	
+	// 発番用サービス
 	public SeqMakerService seqMakerService;
 
 	public DepositLine depositLine = new DepositLine();
@@ -40,23 +39,23 @@ public class DepositLineService extends
 	 *
 	 */
 	public static class Param {
-		private static final String SORT_ORDER = "sortOrder"; 
-		private static final String ROW_COUNT = "rowCount"; 
-		private static final String OFFSET_ROW = "offsetRow"; 
-		public static final String DEPOSIT_LINE_ID = "depositLineId"; 
-		public static final String STATUS = "status"; 
-		public static final String DEPOSIT_SLIP_ID = "depositSlipId"; 
-		public static final String DEPOSIT_LINE_NO = "lineNo"; 
+		private static final String SORT_ORDER = "sortOrder"; // ソート方向
+		private static final String ROW_COUNT = "rowCount"; // 取得件数
+		private static final String OFFSET_ROW = "offsetRow"; // 取得件数
+		public static final String DEPOSIT_LINE_ID = "depositLineId"; // 入金伝票行ID
+		public static final String STATUS = "status"; // 状態フラグ
+		public static final String DEPOSIT_SLIP_ID = "depositSlipId"; // 入金伝票番号
+		public static final String DEPOSIT_LINE_NO = "lineNo"; // 入金伝票行番
 		public static final String DEPOSIT_LINE_IDS = "depositLineIds";
 
-		private static final String SORT_COLUMN_DEPOSIT_LINE = "sortColumnDepositLine"; 
-		public static final String SLIP_STATUS = "slipStatus"; 
-		private static final String CUSTOMER_CODE = "customerCode"; 
-		public static final String DEPOSIT_DATE = "depositDate"; 
-		public static final String DEPOSIT_DATE_FROM = "depositDateFrom"; 
-		public static final String DEPOSIT_DATE_TO = "depositDateTo"; 
-		private static final String SORT_COLUMN_SLIP_ID = "sortColumnSlipId"; 
-		private static final String BILL_CUTOFF_DATE = "billCutoffDate"; 
+		private static final String SORT_COLUMN_DEPOSIT_LINE = "sortColumnDepositLine"; // 行番号のソート条件
+		public static final String SLIP_STATUS = "slipStatus"; // 伝票状態フラグ
+		private static final String CUSTOMER_CODE = "customerCode"; // 顧客番号
+		public static final String DEPOSIT_DATE = "depositDate"; // 入金日
+		public static final String DEPOSIT_DATE_FROM = "depositDateFrom"; // 入金日(期間指定FROM)
+		public static final String DEPOSIT_DATE_TO = "depositDateTo"; // 入金日(期間指定TO)
+		private static final String SORT_COLUMN_SLIP_ID = "sortColumnSlipId"; // 伝票番号のソート条件
+		private static final String BILL_CUTOFF_DATE = "billCutoffDate"; // 請求締日
 		public static final String IS_CONTAIN_CLOSE_LEAK = "isContainCloseLeak";
 		public static final String LEAK_CHECK_CUTOFF_DATE = "leakCheckCutoffDate";
 		public static final String DEPOSIT_CATEGORY = "depositCategory";
@@ -100,11 +99,11 @@ public class DepositLineService extends
 		if (!StringUtil.hasLength(lineDto.remarks)) {
 			bRemarks = false;
 		}
-		
+		// 空行は例外ではないがfalseを返す
 		if ((bPrice == false) && (bBank == false) && (bRemarks == false)) {
 			return false;
 		}
-		
+		// 空行で無い時にはエラー
 		if (!bPrice) {
 			throw new ServiceException("errors.deposit.price");
 		}
@@ -126,8 +125,8 @@ public class DepositLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.STATUS, DepositLine.STATUS_INIT);
 		conditions.put(Param.SLIP_STATUS, DepositSlip.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -154,8 +153,8 @@ public class DepositLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.DEPOSIT_DATE, closeDate);
 		conditions.put(Param.SALES_CUTOFF_DATE, null);
@@ -183,8 +182,8 @@ public class DepositLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.STATUS, DepositLine.STATUS_INIT);
 		conditions.put(Param.SLIP_STATUS, DepositSlip.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -211,8 +210,8 @@ public class DepositLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.STATUS, DepositLine.STATUS_CLOSE);
 		conditions.put(Param.SLIP_STATUS, DepositSlip.STATUS_CLOSE);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
@@ -237,8 +236,8 @@ public class DepositLineService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.DEPOSIT_LINE_ID, depositLineId);
 
 		return findByCondition(conditions, params,
@@ -293,7 +292,7 @@ public class DepositLineService extends
 	 * @param dl 明細行エンティティ
 	 */
 	public void setReOpenDepositLine(DepositLine dl) {
-		
+		// 状態
 		dl.status = DepositLine.STATUS_INIT;
 	}
 
@@ -309,8 +308,8 @@ public class DepositLineService extends
 			throws ServiceException {
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 伝票番号が一致
 		conditions.put(Param.DEPOSIT_SLIP_ID, dto.depositSlipId);
 		conditions.put(Param.SORT_COLUMN_DEPOSIT_LINE, COLUMN_DEPOSIT_LINE_NO);
 		conditions.put(Param.SORT_ORDER, Constants.SQL.ASC);
@@ -349,7 +348,7 @@ public class DepositLineService extends
 		short lineNo = 0;
 		for (DepositLineDto lineDto : lineList) {
 
-			
+			// 入力内容が存在する行だけを登録対象とする
 			if (lineDto.isBlank()){
 				continue;
 			}
@@ -359,10 +358,10 @@ public class DepositLineService extends
 			lineDto.depositSlipId = slipDto.depositSlipId;
 			lineDto.depositCategory = slipDto.depositCategory;
 
-			
+			// 明細の登録 --------------------------------
 
 			if (lineDto.depositLineId == null || lineDto.depositLineId.length() == 0) {
-				
+				// 伝票番号の発番
 				Long newLineId = seqMakerService.nextval(DepositLine.TABLE_NAME);
 
 				lineDto.depositLineId = newLineId.toString();
@@ -390,26 +389,26 @@ public class DepositLineService extends
 	 */
 	@Override
 	protected int insertRecord(DepositLine entity) throws ServiceException {
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
-		
-		
-		
+		// 基礎となるカラム名(空で)をエンティティからPUT
+		// BeanMap FoundationParam =
+		// Beans.createAndCopy(BeanMap.class,this.depositLine).execute();
+		// param.putAll(FoundationParam);
 
 		NumberConverter conv = new NumberConverter(mineDto.priceFractCategory,
 				mineDto.unitPriceDecAlignment, false);
-		
+		// アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, entity)
 				.converter(conv, "price").execute();
 		param.putAll(AFparam);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// SQLクエリを投げる
 		return this.updateBySqlFile("deposit/InsertDepositLine.sql", param)
 				.execute();
 	}
@@ -423,21 +422,21 @@ public class DepositLineService extends
 	 */
 	@Override
 	protected int updateRecord(DepositLine entity) throws ServiceException {
-		
+		// MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
 		NumberConverter conv = new NumberConverter(mineDto.priceFractCategory,
 				mineDto.unitPriceDecAlignment, false);
-		
+		// アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, entity)
 				.converter(conv, "price").execute();
 		param.putAll(AFparam);
 
-		
+		// 更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		// SQLクエリを投げる
 		return this.updateBySqlFile("deposit/UpdateDepositLine.sql", param)
 				.execute();
 	}

@@ -769,34 +769,6 @@
 	}
 
 	/**
-	 * 個人顧客の場合に、顧客名、顧客名カナが変更されたら、顧客担当者名、顧客担当者名カナにコピーする
-	 * 　　　　　　　　　顧客担当者名、顧客担当者名カナが変更されたら、顧客名、顧客名カナにコピーする
-	 */
-	function copyNameXPcName(direction) {
-		var customerCode = $("#customerCode").val();
-		if(customerCode.length == 0) {
-			return;
-		}
-
-		var headChar = customerCode.charAt(0);
-		if(headChar != '2' && headChar != '4') {
-			// 個人顧客以外は行わない
-			return;
-		}
-
-		if(direction) {
-			// 顧客→担当者
-			$("#customerPcName").val($("#customerName").val());
-			$("#customerPcKana").val($("#customerKana").val());
-		}
-		else {
-			// 担当者→顧客
-			$("#customerName").val($("#customerPcName").val());
-			$("#customerKana").val($("#customerPcKana").val());
-		}
-	}
-
-	/**
 	 * 郵便番号と住所の一致をチェックし、不一致であればメッセージを表示する
 	 */
 	function checkZipCodeAndAddress(element) {
@@ -904,10 +876,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1302"/>
@@ -973,6 +945,7 @@
 		<button disabled="disabled">F11<br>&nbsp;</button>
 		<button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+	<br><br><br>
 
 	<div class="function_forms">
 	<div id="address_errors" class="action_errors" style="padding-left: 20px"></div>
@@ -982,512 +955,511 @@
 		<bean:write name="msg" ignore="true"/><br>
 	</html:messages>
 	</div>
+	
+    <div class="form_section_wrap">
+	    <div class="form_section">
+	    	<div class="section_title">
+				<span>顧客情報</span>
+	            <button class="btn_toggle">
+	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+	            </button>
+			</div><!-- /.section_title -->
+	
+			<div id="order_section" class="section_body">
+			<table id="user_info" class="forms" summary="顧客情報">
+				<tr>
+					<th><div class="col_title_right">顧客コード<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:text styleId="customerCode" property="customerCode" tabindex="100" readonly="${editMode || !isUpdate}"
+	                    	styleClass="${editMode || !isUpdate ? 'c_disable' : '' }" style="width: 180px;ime-mode:disabled;"
+	                    	onfocus="this.curVal=this.value;"  />
+	    				<html:image src="${f:url('/images//customize/btn_search.png')}"
+	    					style="vertical-align: middle; cursor: pointer;" tabindex="101" onclick="openCustomerSearchDialog();" />
+	                </td>
+					<th><div class="col_title_right">顧客名<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="60" styleId="customerName" property="customerName" style="width: 250px" tabindex="102"
+							onfocus="this.curVal=this.value;"/></td>
+					<th><div class="col_title_right">顧客名カナ<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="60" styleId="customerKana" property="customerKana" style="width: 250px" tabindex="103"
+							onfocus="this.curVal=this.value;"
+							onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); convertPaymentName(this.value); }"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">事業所名</div></th>
+					<td><html:text maxlength="60" styleId="customerOfficeName" property="customerOfficeName" style="width:250px" tabindex="104"/></td>
+					<th><div class="col_title_right">事業所名カナ</div></th>
+					<td><html:text maxlength="60" styleId="customerOfficeKana" property="customerOfficeKana" style="width:250px" tabindex="105"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
+					<th><div class="col_title_right">顧客略称</div></th>
+					<td><html:text maxlength="14" styleId="customerAbbr" property="customerAbbr" style="width:250px" tabindex="106"/></td>
+				</tr>
+			</table>
 
-		<span>顧客情報</span><br>
-		<table id="user_info" class="forms" summary="顧客情報">
-			<colgroup>
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 13%">
-				<col span="1" style="width: 20%">
-			</colgroup>
-			<tr>
-				<th>顧客コード<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text styleId="customerCode" property="customerCode" tabindex="100" readonly="${editMode || !isUpdate}"
-                    	styleClass="${editMode || !isUpdate ? 'c_disable' : '' }" style="width: 180px;ime-mode:disabled;"
-                    	onfocus="this.curVal=this.value;"  />
-    				<html:image src="${f:url('/images/icon_04_02.gif')}"
-    					style="vertical-align: middle; cursor: pointer;" tabindex="101" onclick="openCustomerSearchDialog();" />
-                </td>
-				<th>顧客名<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="60" styleId="customerName" property="customerName" style="width: 200px" tabindex="102"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ copyNameXPcName(true); }"/></td>
-				<th>顧客名カナ<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="60" styleId="customerKana" property="customerKana" style="width: 200px" tabindex="103"
-						onfocus="this.curVal=this.value;"
-						onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); copyNameXPcName(true); convertPaymentName(this.value); }"/></td>
-			</tr>
-			<tr>
-				<th>事業所名</th>
-				<td><html:text maxlength="60" styleId="customerOfficeName" property="customerOfficeName" style="width:200px" tabindex="104"/></td>
-				<th>事業所名カナ</th>
-				<td><html:text maxlength="60" styleId="customerOfficeKana" property="customerOfficeKana" style="width:200px" tabindex="105"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
-				<th>顧客略称</th>
-				<td><html:text maxlength="14" styleId="customerAbbr" property="customerAbbr" style="width:200px" tabindex="106"/></td>
-			</tr>
-		</table>
+			<table class="forms" style="width: 910px" summary="自社情報2">
+				<tr>
+					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="8" styleId="customerZipCode" property="customerZipCode" style="width:100px;ime-mode:disabled;" tabindex="201"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect('customer');}"/>
+	                <html:image tabindex="202" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('customer');" />
+	                </td>
+					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="50" styleId="customerAddress1" property="customerAddress1" style="width:250px" tabindex="202"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
+					<th><div class="col_title_right">住所２</div></th>
+					<td><html:text maxlength="50" styleId="customerAddress2" property="customerAddress2" style="width:250px" tabindex="203"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">担当者</div></th>
+					<td><html:text maxlength="60" styleId="customerPcName" property="customerPcName" style="width:250px" tabindex="204"
+							onfocus="this.curVal=this.value;" /></td>
+					<th><div class="col_title_right">担当者カナ</div></th>
+					<td><html:text maxlength="60" styleId="customerPcKana" property="customerPcKana" style="width:250px" tabindex="205"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
+					<th><div class="col_title_right">敬称</div></th>
+					<td>
+	                    <html:select styleId="customerPcPreCategory" property="customerPcPreCategory" tabindex="206">
+	                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+				</tr>
+				<tr>
+	                <th><div class="col_title_right">部署名</div></th>
+	                <td><html:text maxlength="60" styleId="customerDeptName" property="customerDeptName" style="width:250px" tabindex="207"/></td>
+	                <th><div class="col_title_right">役職</div></th>
+	                <td colspan="3"><html:text maxlength="60" styleId="customerPcPost" property="customerPcPost" style="width:250px" tabindex="208"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">TEL</div></th>
+					<td><html:text maxlength="15" styleId="customerTel" property="customerTel" style="width:250px;ime-mode:disabled;" tabindex="209"/></td>
+					<th><div class="col_title_right">FAX</div></th>
+					<td colspan="3"><html:text maxlength="15" styleId="customerFax" property="customerFax" style="width:250px;ime-mode:disabled;" tabindex="210"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">E-MAIL</div></th>
+					<td colspan="5"><html:text maxlength="255" styleId="customerEmail" property="customerEmail" style="width:250px;ime-mode:disabled;" tabindex="211"/></td>
+				</tr>
+			</table>
+	
+			<table class="forms" style="width: 910px" summary="自社情報3">
+				<tr>
+					<th><div class="col_title_right">顧客ランク</div></th>
+					<td colspan="3">
+	                    <html:select styleId="customerRankCategory" property="customerRankCategory" tabindex="300" style="width: 250px;">
+	                        <html:options collection="customerRankList" property="value" labelProperty="label"/>
+						</html:select>
+						 <html:checkbox styleId="customerUpdFlag" property="customerUpdFlag" value="1" tabindex="301">顧客ランク適用</html:checkbox>
+					</td>
+					<th><div class="col_title_right">受注停止</div></th>
+					<td>
+	                    <html:select styleId="customerRoCategory" property="customerRoCategory" tabindex="302" style="width:150px;">
+	                        <html:options collection="customerRoCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">与信限度額</div></th>
+					<td>
+						<html:text maxlength="9" styleId="maxCreditLimit" property="maxCreditLimit" styleClass="numeral_commas yen_value BDCyen"
+							onchange="applyPriceAlignment();"
+							style="width:120px; ime-mode: disabled;" tabindex="303"/>
+					</td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">業種</div></th>
+					<td>
+	                    <html:select styleId="customerBusinessCategory" property="customerBusinessCategory" tabindex="304" style="width:180px;">
+	                        <html:options collection="customerBusinessCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">職種</div></th>
+					<td>
+	                    <html:select styleId="customerJobCategory" property="customerJobCategory" tabindex="305" style="width:180px;">
+	                        <html:options collection="customerJobCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">税端数処理<bean:message key='labels.must'/></div></th>
+					<td>
+                    	<html:select styleId="taxFractCategory" property="taxFractCategory" tabindex="306" styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"  disabled="${editMode || !isUpdate ? 'true' : '' }"  >
+                        	<html:options collection="taxFractCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">税転稼<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="308" style="width:150px;">
+	                        <html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">最終締処理日</div></th>
+					<td><html:text styleId="lastCutoffDate" property="lastCutoffDate" style="width:120px;text-align:center;" tabindex="309" styleClass="c_disable" readonly="true"/></td>
+				</tr>
+			</table>
+			<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
+			<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
+	
+			<table class="forms" style="width: 910px" summary="自社情報3">
+				<tr>
+					<th><div class="col_title_right">取引区分<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:select styleId="salesCmCategory" property="salesCmCategory" tabindex="400" >
+	                        <html:options collection="salesCmCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">支払条件<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:select styleId="cutoffGroupCategory" property="cutoffGroupCategory" tabindex="401">
+	                        <html:options collection="cutoffGroupList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">回収方法<bean:message key='labels.must'/></div></th>
+					<td colspan="3">
+	                    <html:select styleId="paybackTypeCategory" property="paybackTypeCategory" tabindex="402">
+	                        <html:options collection="paybackTypeCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">請求書発行単位<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:select styleId="billPrintUnit" property="billPrintUnit" tabindex="403" >
+	                        <html:options collection="billPrintUnitList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">請求書日付有無<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:select styleId="billDatePrint" property="billDatePrint" tabindex="404">
+	                        <html:options collection="billDatePrintList" property="value" labelProperty="label"/>
+						</html:select>
+					</td>
+					<th><div class="col_title_right">仮納品書出力不可</div></th>
+					<td><html:checkbox styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag" value="0" tabindex="405"/></td>
+				</tr>
+			</table>
+	
+			<table class="forms" style="width: 910px" summary="自社情報3">
+				<colgroup>
+					<col span="1" style="width: 10%">
+					<col span="1" style="width: 90%">
+				</colgroup>
+				<tr>
+					<th><div class="col_title_right">振込名義</div></th>
+					<td><html:text maxlength="60" styleId="paymentName" property="paymentName" style="width:600px" tabindex="500"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">備考</div></th>
+					<td><html:text maxlength="120" styleId="remarks" property="remarks" style="width:600px" tabindex="501"/></td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">コメント</div></th>
+					<td><html:text maxlength="1000" styleId="commentData" property="commentData" style="width:600px" tabindex="502"/></td>
+				</tr>
+			</table>
+			</div><!-- /.section_body -->
+		</div><!-- /.form_section -->
+	</div><!-- /.form_section_wrap -->
 
-		<table class="forms" style="width: 910px" summary="自社情報2">
-			<colgroup>
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-			</colgroup>
-			<tr>
-				<th>郵便番号<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="8" styleId="customerZipCode" property="customerZipCode" style="width:70px;ime-mode:disabled;" tabindex="201"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect('customer');}"/>
-                <html:image tabindex="202" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('customer');" />
-                </td>
-				<th>住所１<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="50" styleId="customerAddress1" property="customerAddress1" style="width:250px" tabindex="202"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
-				<th>住所２</th>
-				<td><html:text maxlength="50" styleId="customerAddress2" property="customerAddress2" style="width:250px" tabindex="203"/></td>
-			</tr>
-			<tr>
-				<th>担当者</th>
-				<td><html:text maxlength="60" styleId="customerPcName" property="customerPcName" style="width:150px" tabindex="204"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ copyNameXPcName(false); }"/></td>
-				<th>担当者カナ</th>
-				<td><html:text maxlength="60" styleId="customerPcKana" property="customerPcKana" style="width:150px" tabindex="205"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); copyNameXPcName(false); }"/></td>
-				<th>敬称</th>
-				<td>
-                    <html:select styleId="customerPcPreCategory" property="customerPcPreCategory" tabindex="206">
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-                <th>部署名</th>
-                <td><html:text maxlength="60" styleId="customerDeptName" property="customerDeptName" style="width:150px" tabindex="207"/></td>
-                <th>役職</th>
-                <td colspan="3"><html:text maxlength="60" styleId="customerPcPost" property="customerPcPost" style="width:400px" tabindex="208"/></td>
-			</tr>
-			<tr>
-				<th>TEL</th>
-				<td><html:text maxlength="15" styleId="customerTel" property="customerTel" style="width:150px;ime-mode:disabled;" tabindex="209"/></td>
-				<th>FAX</th>
-				<td colspan="3"><html:text maxlength="15" styleId="customerFax" property="customerFax" style="width:150px;ime-mode:disabled;" tabindex="210"/></td>
-			</tr>
-			<tr>
-				<th>E-MAIL</th>
-				<td colspan="5"><html:text maxlength="255" styleId="customerEmail" property="customerEmail" style="width:400px;ime-mode:disabled;" tabindex="211"/></td>
-			</tr>
-		</table>
+    <div class="form_section_wrap">
+	    <div class="form_section">
+	    	<div class="section_title">
+				<span>
+				<span>納入先情報</span>
+				<button style="position:relative; left: 800px; width: 150px;" onclick="copyCustomerToDelivery()" tabindex="600" class="btn_medium">顧客の情報をコピー</button>
+				</span>
+	            <button class="btn_toggle">
+	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+	            </button>
+			</div><!-- /.section_title -->
+			
+			<div id="order_section" class="section_body">
+			<table id="delivery_table" class="forms" summary="納入先情報">
+	            <tbody id="delivery_info">
+				<tr>
+					<th><div class="col_title_right">納入先<bean:message key='labels.must'/></div></th>
+					<td colspan="5">
+						<html:select styleId="selectedDelivery" property="selectedDelivery" style="width: 500px" onchange="changeDelivery()" tabindex="601">
+	                        <html:option value=""></html:option>
+	                        <html:options collection="deliveryList" property="deliveryCode" labelProperty="deliveryName"/>
+						</html:select>
+						<html:hidden styleId="selectedDeliveryIndex" property="selectedDeliveryIndex"/>
+						<button id="addb" style="width: 80px; margin-left: 50px" onclick="addDelivery()" tabindex="602" class="btn_medium">追加</button>
+						<button id="delb" style="width: 80px" onclick="deleteDelivery()" tabindex="603" class="btn_medium">削除</button>
+					</td>
+				</tr>
+				<tr id="deliveryRow_0_1">
+					<th><div class="col_title_right">納入先名<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:text maxlength="60" styleId="deliveryRow_0Name" property="newDeliveryName" tabindex="604" style="width:200px;"/>
+					</td>
+					<th><div class="col_title_right">納入先名カナ<bean:message key='labels.must'/></div></th>
+					<td colspan="3">
+						<html:text maxlength="60" styleId="deliveryRow_0Kana" property="newDeliveryKana" tabindex="605" style="width:200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+					</td>
+				</tr>
+				<tr id="deliveryRow_0_2">
+					<th><div class="col_title_right">事業所名</div></th>
+					<td>
+						<html:text maxlength="60" styleId="deliveryRow_0OfficeName" property="newDeliveryOfficeName" tabindex="606" style="width:200px;"/>
+	                </td>
+					<th><div class="col_title_right">事業所名カナ</div></th>
+					<td>
+						<html:text maxlength="60" styleId="deliveryRow_0OfficeKana" property="newDeliveryOfficeKana" tabindex="607" style="width:200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+	                </td>
+					<th><div class="col_title_right">部署名</div></th>
+					<td>
+						<html:text maxlength="60" styleId="deliveryRow_0DeptName" property="newDeliveryDeptName" tabindex="608" style="width:200px;"/>
+	                </td>
+				</tr>
+				<tr id="deliveryRow_0_3">
+					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<td>
+						<html:text maxlength="8" styleId="deliveryRow_0ZipCode" property="newDeliveryZipCode" tabindex="609" style="width:100px;ime-mode:disabled;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_0'); }"/>
+	    				<html:image tabindex="610" styleId="deliveryRow_0ZipCodeIcon" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;"/>
+	                </td>
+					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:text maxlength="50" styleId="deliveryRow_0Address1" property="newDeliveryAddress1" tabindex="611" style="width:200px;"
+	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>
+	                </td>
+					<th><div class="col_title_right">住所２</div></th>
+					<td>
+	                    <html:text maxlength="50" styleId="deliveryRow_0Address2" property="newDeliveryAddress2" tabindex="612" style="width:200px;"/>
+	                </td>
+				</tr>
+				<tr id="deliveryRow_0_4">
+					<th><div class="col_title_right">担当者</div></th>
+					<td>
+						<html:text maxlength="60" styleId="deliveryRow_0PcName" property="newDeliveryPcName" tabindex="613" style="width:150px;"/>
+	                </td>
+					<th><div class="col_title_right">担当者カナ</div></th>
+					<td>
+						<html:text maxlength="60" styleId="deliveryRow_0PcKana" property="newDeliveryPcKana" tabindex="614" style="width:150px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+	                </td>
+					<th><div class="col_title_right">敬称</div></th>
+					<td>
+	                    <html:select styleId="deliveryRow_0PcPreCategory" property="newDeliveryPcPreCategory" tabindex="615">
+	                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+	                    <input type="hidden" id="defaultPcPreCategory" name="defaultPcPreCategory" value="">
+	                </td>
+				</tr>
+				<tr id="deliveryRow_0_5">
+					<th><div class="col_title_right">TEL</div></th>
+					<td>
+						<html:text maxlength="15" styleId="deliveryRow_0Tel" property="newDeliveryTel" tabindex="616" style="width:150px;ime-mode:disabled;"/>
+	                </td>
+					<th><div class="col_title_right">FAX</div></th>
+					<td colspan="3">
+	                    <html:text maxlength="15" styleId="deliveryRow_0Fax" property="newDeliveryFax" tabindex="617" style="width:150px;ime-mode:disabled;"/>
+	                </td>
+				</tr>
+				<tr id="deliveryRow_0_6">
+					<th><div class="col_title_right">E-MAIL</div></th>
+					<td colspan="5">
+						<html:text maxlength="255" styleId="deliveryRow_0Email" property="newDeliveryEmail" tabindex="618" style="width:400px;ime-mode:disabled;"/>
+	                </td>
+				</tr>
+	            <c:forEach var="deliveryList" varStatus="s" items="${deliveryList}">
+				<tr id="deliveryRow_${s.index+1}_1" style="display: none;">
+					<th><div class="col_title_right">納入先名<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Name" name="deliveryList" property="deliveryName" tabindex="-1" indexed="true" style="width:200px;"/>
+	                    <html:hidden styleId="deliveryRow_${s.index+1}Code" name="deliveryList" property="deliveryCode" indexed="true"/>
+					</td>
+					<th><div class="col_title_right">納入先名カナ<bean:message key='labels.must'/></div></th>
+					<td colspan="3">
+	                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Kana" name="deliveryList" property="deliveryKana" tabindex="-1" indexed="true" style="width:200px;"
+	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+					</td>
+				</tr>
+				<tr id="deliveryRow_${s.index+1}_2" style="display: none;">
+					<th><div class="col_title_right">事業所名</div></th>
+					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}OfficeName" name="deliveryList" property="deliveryOfficeName" tabindex="-1" indexed="true" style="width:200px;"/></td>
+					<th><div class="col_title_right">事業所名カナ</div></th>
+					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}OfficeKana" name="deliveryList" property="deliveryOfficeKana" tabindex="-1" indexed="true" style="width:200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
+					<th><div class="col_title_right">部署名</div></th>
+					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}DeptName" name="deliveryList" property="deliveryDeptName" tabindex="-1" indexed="true" style="width:200px;"/></td>
+				</tr>
+				<tr id="deliveryRow_${s.index+1}_3" style="display: none;">
+					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="8" styleId="deliveryRow_${s.index+1}ZipCode" name="deliveryList" property="deliveryZipCode" tabindex="-1" indexed="true" style="width:100px;ime-mode:disabled;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_${s.index+1}'); }"/>
+					<html:image tabindex="-1" styleId="deliveryRow_${s.index+1}_3_icon" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;"/>
+	                </td>
+					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<td><html:text maxlength="50" styleId="deliveryRow_${s.index+1}Address1" name="deliveryList" property="deliveryAddress1" tabindex="-1" indexed="true" style="width:200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
+					<th><div class="col_title_right">住所２</div></th>
+					<td><html:text maxlength="50" styleId="deliveryRow_${s.index+1}Address2" name="deliveryList" property="deliveryAddress2" tabindex="-1" indexed="true" style="width:200px;"/></td>
+				</tr>
+				<tr id="deliveryRow_${s.index+1}_4" style="display: none;">
+					<th><div class="col_title_right">担当者</div></th>
+					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}PcName" name="deliveryList" property="deliveryPcName" tabindex="-1" indexed="true" style="width:200px;"/></td>
+					<th><div class="col_title_right">担当者カナ</div></th>
+					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}PcKana" name="deliveryList" property="deliveryPcKana" tabindex="-1" indexed="true" style="width:200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
+					<th><div class="col_title_right">敬称</div></th>
+					<td>
+	                    <html:select styleId="deliveryRow_${s.index+1}PcPreCategory" name="deliveryList" property="deliveryPcPreCategory" tabindex="-1" indexed="true">
+	                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+	                </td>
+				</tr>
+				<tr id="deliveryRow_${s.index+1}_5" style="display: none;">
+					<th><div class="col_title_right">TEL</div></th>
+					<td><html:text maxlength="15" styleId="deliveryRow_${s.index+1}Tel" name="deliveryList" property="deliveryTel" tabindex="-1" indexed="true" style="width:200px;ime-mode:disabled;"/></td>
+					<th><div class="col_title_right">FAX</div></th>
+					<td colspan="3"><html:text maxlength="15" styleId="deliveryRow_${s.index+1}Fax" name="deliveryList" property="deliveryFax" tabindex="-1" indexed="true" style="width:200px;ime-mode:disabled;"/></td>
+				</tr>
+				<tr id="deliveryRow_${s.index+1}_6" style="display: none;">
+					<th><div class="col_title_right">E-MAIL</div></th>
+					<td colspan="5"><html:text maxlength="255" styleId="deliveryRow_${s.index+1}Email" name="deliveryList" property="deliveryEmail" tabindex="-1" indexed="true" style="width:400px;ime-mode:disabled;"/></td>
+				</tr>
+	            <script type="text/javascript">
+				<!--
+	            	// イベントの貼り付け
+	                $("#deliveryRow_${s.index+1}_3_icon").bind("click", {"id": "deliveryRow_${s.index+1}"}, searchZipCode);
+	            -->
+	            </script>
+	            </c:forEach>
+	            <script type="text/javascript">
+	            <!--
+	                // イベントの貼り付け
+	                $("#deliveryRow_0ZipCodeIcon").bind("click", {"id": "deliveryRow_0"}, searchZipCode);
+	            -->
+	            </script>
+	            </tbody>
+			</table>
+			</div><!-- /.section_body -->
+		</div><!-- /.form_section -->
+	</div><!-- /.form_section_wrap -->
 
-		<table class="forms" style="width: 910px" summary="自社情報3">
-			<colgroup>
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 19%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 12%">
-			</colgroup>
-			<tr>
-				<th>顧客ランク</th>
-				<td colspan="3">
-                    <html:select styleId="customerRankCategory" property="customerRankCategory" tabindex="300">
-                        <html:options collection="customerRankList" property="value" labelProperty="label"/>
-					</html:select>
-					 <html:checkbox styleId="customerUpdFlag" property="customerUpdFlag" value="1" tabindex="301">顧客ランク適用</html:checkbox>
-				</td>
-				<th>受注停止</th>
-				<td>
-                    <html:select styleId="customerRoCategory" property="customerRoCategory" tabindex="302">
-                        <html:options collection="customerRoCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>与信限度額</th>
-				<td>
-					<html:text maxlength="9" styleId="maxCreditLimit" property="maxCreditLimit" styleClass="numeral_commas yen_value BDCyen"
-						onchange="applyPriceAlignment();"
-						style="width:120px; ime-mode: disabled;" tabindex="303"/>
-				</td>
-			</tr>
-			<tr>
-				<th>業種</th>
-				<td>
-                    <html:select styleId="customerBusinessCategory" property="customerBusinessCategory" tabindex="304">
-                        <html:options collection="customerBusinessCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>職種</th>
-				<td>
-                    <html:select styleId="customerJobCategory" property="customerJobCategory" tabindex="305">
-                        <html:options collection="customerJobCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>税転稼<bean:message key='labels.must'/></th>
-				<td>
-                    <html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="308">
-                        <html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>最終締処理日</th>
-				<td><html:text styleId="lastCutoffDate" property="lastCutoffDate" style="width:100px;text-align:center;" tabindex="309" styleClass="c_disable" readonly="true"/></td>
-			</tr>
-		</table>
-		<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
-		<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
+    <div class="form_section_wrap">
+	    <div class="form_section">
+	    	<div class="section_title">
+				<span>請求先情報</span>
+				<button style="position:relative; left: 800px; width: 150px;" onclick="copyCustomerToBilling()" tabindex="700" class="btn_medium">顧客の情報をコピー</button>
+	            <button class="btn_toggle">
+	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+	            </button>
+			</div><!-- /.section_title -->
+			
+			<div id="order_section" class="section_body">
+		
+			<table id="bill_info" class="forms" summary="請求先情報">
+				<tr>
+					<th><div class="col_title_right">請求先名<bean:message key='labels.must'/></div></th>
+					<td>
+						<html:hidden styleId="billTo_deliveryCode" property="billTo.deliveryCode" />
+						<html:text maxlength="60" styleId="billTo_deliveryName" property="billTo.deliveryName" tabindex="701" style="width: 200px;"/>
+					</td>
+					<th><div class="col_title_right">請求先名カナ<bean:message key='labels.must'/></div></th>
+					<td colspan="3">
+						<html:text maxlength="60" styleId="billTo_deliveryKana" property="billTo.deliveryKana" tabindex="702" style="width: 200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+					</td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">事業所名</div></th>
+					<td>
+						<html:text maxlength="60" styleId="billTo_deliveryOfficeName" property="billTo.deliveryOfficeName" tabindex="703" style="width: 200px;"/>
+	                </td>
+					<th><div class="col_title_right">事業所名カナ</div></th>
+					<td>
+						<html:text maxlength="60" styleId="billTo_deliveryOfficeKana" property="billTo.deliveryOfficeKana" tabindex="704" style="width: 200px;"
+							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+	                </td>
+					<th><div class="col_title_right">部署名</div></th>
+					<td>
+						<html:text maxlength="60" styleId="billTo_deliveryDeptName" property="billTo.deliveryDeptName" tabindex="705" style="width: 200px;"/>
+	                </td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<td>
+	                    <html:text maxlength="8" styleId="billTo_deliveryZipCode" property="billTo.deliveryZipCode" tabindex="706" style="width: 100px;ime-mode:disabled;"
+	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('billTo_delivery'); }" />
+	    				<html:image tabindex="707" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('billTo_delivery');" />
+	                </td>
+					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+	                <td>
+	                    <html:text maxlength="50" styleId="billTo_deliveryAddress1" property="billTo.deliveryAddress1" tabindex="708" style="width: 200px"
+	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>
+	                </td>
+					<th><div class="col_title_right">住所２</div></th>
+					<td>
+	                    <html:text maxlength="50" styleId="billTo_deliveryAddress2" property="billTo.deliveryAddress2" tabindex="709" style="width: 200px"/>
+	                </td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">担当者</div></th>
+					<td>
+	                    <html:text maxlength="60" styleId="billTo_deliveryPcName" property="billTo.deliveryPcName" tabindex="710" style="width: 200px"/>
+	                </td>
+					<th><div class="col_title_right">担当者カナ</div></th>
+					<td>
+	                    <html:text maxlength="60" styleId="billTo_deliveryPcKana" property="billTo.deliveryPcKana" tabindex="711" style="width: 200px"
+	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
+	                </td>
+					<th><div class="col_title_right">敬称</div></th>
+					<td>
+	                    <html:select styleId="billTo_deliveryPcPreCategory" property="billTo.deliveryPcPreCategory" tabindex="712">
+	                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+						</html:select>
+	                </td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">TEL</div></th>
+					<td>
+	                    <html:text maxlength="15" styleId="billTo_deliveryTel" property="billTo.deliveryTel" tabindex="713" style="width: 200px;ime-mode:disabled;"/>
+	                </td>
+					<th><div class="col_title_right">FAX</div></th>
+					<td colspan="3">
+	                    <html:text maxlength="15" styleId="billTo_deliveryFax" property="billTo.deliveryFax" tabindex="714" style="width: 200px;ime-mode:disabled;"/>
+	                </td>
+				</tr>
+				<tr>
+					<th><div class="col_title_right">E-MAIL</div></th>
+					<td colspan="5">
+	                    <html:text maxlength="255" styleId="billTo_deliveryEmail" property="billTo.deliveryEmail" tabindex="715" style="width: 400px;ime-mode:disabled;"/>
+	                </td>
+				</tr>
+			</table>
+			</div><!-- /.section_body -->
+		</div><!-- /.form_section -->
+	</div><!-- /.form_section_wrap -->
 
-		<table class="forms" style="width: 910px" summary="自社情報3">
-			<colgroup>
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 22%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 23%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-			</colgroup>
-			<tr>
-				<th>取引区分<bean:message key='labels.must'/></th>
-				<td>
-                    <html:select styleId="salesCmCategory" property="salesCmCategory" tabindex="400" >
-                        <html:options collection="salesCmCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>支払条件<bean:message key='labels.must'/></th>
-				<td>
-                    <html:select styleId="cutoffGroupCategory" property="cutoffGroupCategory" tabindex="401">
-                        <html:options collection="cutoffGroupList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>回収方法<bean:message key='labels.must'/></th>
-				<td colspan="3">
-                    <html:select styleId="paybackTypeCategory" property="paybackTypeCategory" tabindex="402">
-                        <html:options collection="paybackTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<th>請求書発行単位<bean:message key='labels.must'/></th>
-				<td>
-                    <html:select styleId="billPrintUnit" property="billPrintUnit" tabindex="403" >
-                        <html:options collection="billPrintUnitList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>請求書日付有無<bean:message key='labels.must'/></th>
-				<td>
-                    <html:select styleId="billDatePrint" property="billDatePrint" tabindex="404">
-                        <html:options collection="billDatePrintList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>仮納品書出力不可</th>
-				<td><html:checkbox styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag" value="0" tabindex="405"/></td>
-			</tr>
-		</table>
-
-		<table class="forms" style="width: 910px" summary="自社情報3">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 90%">
-			</colgroup>
-			<tr>
-				<th>振込名義</th>
-				<td><html:text maxlength="60" styleId="paymentName" property="paymentName" style="width:600px" tabindex="500"/></td>
-			</tr>
-			<tr>
-				<th>備考</th>
-				<td><html:text maxlength="120" styleId="remarks" property="remarks" style="width:600px" tabindex="501"/></td>
-			</tr>
-			<tr>
-				<th>コメント</th>
-				<td><html:text maxlength="1000" styleId="commentData" property="commentData" style="width:600px" tabindex="502"/></td>
-			</tr>
-		</table>
-
-		<span>納入先情報</span><button style="position:relative; left: 680px" onclick="copyCustomerToDelivery()" tabindex="600">顧客の情報をコピー</button><br>
-		<table id="delivery_table" class="forms" summary="納入先情報">
-			<colgroup>
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-			</colgroup>
-            <tbody id="delivery_info">
-			<tr>
-				<th>納入先<bean:message key='labels.must'/></th>
-				<td colspan="5">
-					<html:select styleId="selectedDelivery" property="selectedDelivery" style="width: 500px" onchange="changeDelivery()" tabindex="601">
-                        <html:option value=""></html:option>
-                        <html:options collection="deliveryList" property="deliveryCode" labelProperty="deliveryName"/>
-					</html:select>
-					<html:hidden styleId="selectedDeliveryIndex" property="selectedDeliveryIndex"/>
-					<button id="addb" style="width: 80px; margin-left: 50px" onclick="addDelivery()" tabindex="602">追加</button>
-					<button id="delb" style="width: 80px" onclick="deleteDelivery()" tabindex="603">削除</button>
-				</td>
-			</tr>
-			<tr id="deliveryRow_0_1">
-				<th>納入先名<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text maxlength="60" styleId="deliveryRow_0Name" property="newDeliveryName" tabindex="604" style="width:200px;"/>
-				</td>
-				<th>納入先名カナ<bean:message key='labels.must'/></th>
-				<td colspan="3">
-					<html:text maxlength="60" styleId="deliveryRow_0Kana" property="newDeliveryKana" tabindex="605" style="width:200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-				</td>
-			</tr>
-			<tr id="deliveryRow_0_2">
-				<th>事業所名</th>
-				<td>
-					<html:text maxlength="60" styleId="deliveryRow_0OfficeName" property="newDeliveryOfficeName" tabindex="606" style="width:200px;"/>
-                </td>
-				<th>事業所名カナ</th>
-				<td>
-					<html:text maxlength="60" styleId="deliveryRow_0OfficeKana" property="newDeliveryOfficeKana" tabindex="607" style="width:200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-                </td>
-				<th>部署名</th>
-				<td>
-					<html:text maxlength="60" styleId="deliveryRow_0DeptName" property="newDeliveryDeptName" tabindex="608" style="width:200px;"/>
-                </td>
-			</tr>
-			<tr id="deliveryRow_0_3">
-				<th>郵便番号<bean:message key='labels.must'/></th>
-				<td>
-					<html:text maxlength="8" styleId="deliveryRow_0ZipCode" property="newDeliveryZipCode" tabindex="609" style="width:70px;ime-mode:disabled;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_0'); }"/>
-    				<html:image tabindex="610" styleId="deliveryRow_0ZipCodeIcon" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;"/>
-                </td>
-				<th>住所１<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text maxlength="50" styleId="deliveryRow_0Address1" property="newDeliveryAddress1" tabindex="611" style="width:200px;"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>
-                </td>
-				<th>住所２</th>
-				<td>
-                    <html:text maxlength="50" styleId="deliveryRow_0Address2" property="newDeliveryAddress2" tabindex="612" style="width:200px;"/>
-                </td>
-			</tr>
-			<tr id="deliveryRow_0_4">
-				<th>担当者</th>
-				<td>
-					<html:text maxlength="60" styleId="deliveryRow_0PcName" property="newDeliveryPcName" tabindex="613" style="width:150px;"/>
-                </td>
-				<th>担当者カナ</th>
-				<td>
-					<html:text maxlength="60" styleId="deliveryRow_0PcKana" property="newDeliveryPcKana" tabindex="614" style="width:150px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-                </td>
-				<th>敬称</th>
-				<td>
-                    <html:select styleId="deliveryRow_0PcPreCategory" property="newDeliveryPcPreCategory" tabindex="615">
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-                    <input type="hidden" id="defaultPcPreCategory" name="defaultPcPreCategory" value="">
-                </td>
-			</tr>
-			<tr id="deliveryRow_0_5">
-				<th>TEL</th>
-				<td>
-					<html:text maxlength="15" styleId="deliveryRow_0Tel" property="newDeliveryTel" tabindex="616" style="width:150px;ime-mode:disabled;"/>
-                </td>
-				<th>FAX</th>
-				<td colspan="3">
-                    <html:text maxlength="15" styleId="deliveryRow_0Fax" property="newDeliveryFax" tabindex="617" style="width:150px;ime-mode:disabled;"/>
-                </td>
-			</tr>
-			<tr id="deliveryRow_0_6">
-				<th>E-MAIL</th>
-				<td colspan="5">
-					<html:text maxlength="255" styleId="deliveryRow_0Email" property="newDeliveryEmail" tabindex="618" style="width:400px;ime-mode:disabled;"/>
-                </td>
-			</tr>
-            <c:forEach var="deliveryList" varStatus="s" items="${deliveryList}">
-			<tr id="deliveryRow_${s.index+1}_1" style="display: none;">
-				<th>納入先名<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Name" name="deliveryList" property="deliveryName" tabindex="-1" indexed="true" style="width:200px;"/>
-                    <html:hidden styleId="deliveryRow_${s.index+1}Code" name="deliveryList" property="deliveryCode" indexed="true"/>
-				</td>
-				<th>納入先名カナ<bean:message key='labels.must'/></th>
-				<td colspan="3">
-                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Kana" name="deliveryList" property="deliveryKana" tabindex="-1" indexed="true" style="width:200px;"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-				</td>
-			</tr>
-			<tr id="deliveryRow_${s.index+1}_2" style="display: none;">
-				<th>事業所名</th>
-				<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}OfficeName" name="deliveryList" property="deliveryOfficeName" tabindex="-1" indexed="true" style="width:200px;"/></td>
-				<th>事業所名カナ</th>
-				<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}OfficeKana" name="deliveryList" property="deliveryOfficeKana" tabindex="-1" indexed="true" style="width:200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
-				<th>部署名</th>
-				<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}DeptName" name="deliveryList" property="deliveryDeptName" tabindex="-1" indexed="true" style="width:200px;"/></td>
-			</tr>
-			<tr id="deliveryRow_${s.index+1}_3" style="display: none;">
-				<th>郵便番号<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="8" styleId="deliveryRow_${s.index+1}ZipCode" name="deliveryList" property="deliveryZipCode" tabindex="-1" indexed="true" style="width:70px;ime-mode:disabled;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_${s.index+1}'); }"/>
-				<html:image tabindex="-1" styleId="deliveryRow_${s.index+1}_3_icon" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;"/>
-                </td>
-				<th>住所１<bean:message key='labels.must'/></th>
-				<td><html:text maxlength="50" styleId="deliveryRow_${s.index+1}Address1" name="deliveryList" property="deliveryAddress1" tabindex="-1" indexed="true" style="width:200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
-				<th>住所２</th>
-				<td><html:text maxlength="50" styleId="deliveryRow_${s.index+1}Address2" name="deliveryList" property="deliveryAddress2" tabindex="-1" indexed="true" style="width:200px;"/></td>
-			</tr>
-			<tr id="deliveryRow_${s.index+1}_4" style="display: none;">
-				<th>担当者</th>
-				<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}PcName" name="deliveryList" property="deliveryPcName" tabindex="-1" indexed="true" style="width:150px;"/></td>
-				<th>担当者カナ</th>
-				<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}PcKana" name="deliveryList" property="deliveryPcKana" tabindex="-1" indexed="true" style="width:150px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
-				<th>敬称</th>
-				<td>
-                    <html:select styleId="deliveryRow_${s.index+1}PcPreCategory" name="deliveryList" property="deliveryPcPreCategory" tabindex="-1" indexed="true">
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-                </td>
-			</tr>
-			<tr id="deliveryRow_${s.index+1}_5" style="display: none;">
-				<th>TEL</th>
-				<td><html:text maxlength="15" styleId="deliveryRow_${s.index+1}Tel" name="deliveryList" property="deliveryTel" tabindex="-1" indexed="true" style="width:150px;ime-mode:disabled;"/></td>
-				<th>FAX</th>
-				<td colspan="3"><html:text maxlength="15" styleId="deliveryRow_${s.index+1}Fax" name="deliveryList" property="deliveryFax" tabindex="-1" indexed="true" style="width:150px;ime-mode:disabled;"/></td>
-			</tr>
-			<tr id="deliveryRow_${s.index+1}_6" style="display: none;">
-				<th>E-MAIL</th>
-				<td colspan="5"><html:text maxlength="255" styleId="deliveryRow_${s.index+1}Email" name="deliveryList" property="deliveryEmail" tabindex="-1" indexed="true" style="width:400px;ime-mode:disabled;"/></td>
-			</tr>
-            <script type="text/javascript">
-			<!--
-            	// イベントの貼り付け
-                $("#deliveryRow_${s.index+1}_3_icon").bind("click", {"id": "deliveryRow_${s.index+1}"}, searchZipCode);
-            -->
-            </script>
-            </c:forEach>
-            <script type="text/javascript">
-            <!--
-                // イベントの貼り付け
-                $("#deliveryRow_0ZipCodeIcon").bind("click", {"id": "deliveryRow_0"}, searchZipCode);
-            -->
-            </script>
-            </tbody>
-		</table>
-
-		<span>請求先情報</span><button style="position:relative; left: 680px" tabindex="700" onclick="copyCustomerToBilling()">顧客の情報をコピー</button><br>
-		<table id="bill_info" class="forms" summary="請求先情報">
-			<colgroup>
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 14%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-			</colgroup>
-			<tr>
-				<th>請求先名<bean:message key='labels.must'/></th>
-				<td>
-					<html:hidden styleId="billTo_deliveryCode" property="billTo.deliveryCode" />
-					<html:text maxlength="60" styleId="billTo_deliveryName" property="billTo.deliveryName" tabindex="701" style="width: 200px;"/>
-				</td>
-				<th>請求先名カナ<bean:message key='labels.must'/></th>
-				<td colspan="3">
-					<html:text maxlength="60" styleId="billTo_deliveryKana" property="billTo.deliveryKana" tabindex="702" style="width: 200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-				</td>
-			</tr>
-			<tr>
-				<th>事業所名</th>
-				<td>
-					<html:text maxlength="60" styleId="billTo_deliveryOfficeName" property="billTo.deliveryOfficeName" tabindex="703" style="width: 200px;"/>
-                </td>
-				<th>事業所名カナ</th>
-				<td>
-					<html:text maxlength="60" styleId="billTo_deliveryOfficeKana" property="billTo.deliveryOfficeKana" tabindex="704" style="width: 200px;"
-						onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-                </td>
-				<th>部署名</th>
-				<td>
-					<html:text maxlength="60" styleId="billTo_deliveryDeptName" property="billTo.deliveryDeptName" tabindex="705" style="width: 200px;"/>
-                </td>
-			</tr>
-			<tr>
-				<th>郵便番号<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text maxlength="8" styleId="billTo_deliveryZipCode" property="billTo.deliveryZipCode" tabindex="706" style="width: 70px;ime-mode:disabled;"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('billTo_delivery'); }" />
-    				<html:image tabindex="707" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('billTo_delivery');" />
-                </td>
-				<th>住所１<bean:message key='labels.must'/></th>
-                <td>
-                    <html:text maxlength="50" styleId="billTo_deliveryAddress1" property="billTo.deliveryAddress1" tabindex="708" style="width: 200px"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>
-                </td>
-				<th>住所２</th>
-				<td>
-                    <html:text maxlength="50" styleId="billTo_deliveryAddress2" property="billTo.deliveryAddress2" tabindex="709" style="width: 200px"/>
-                </td>
-			</tr>
-			<tr>
-				<th>担当者</th>
-				<td>
-                    <html:text maxlength="60" styleId="billTo_deliveryPcName" property="billTo.deliveryPcName" tabindex="710" style="width: 150px"/>
-                </td>
-				<th>担当者カナ</th>
-				<td>
-                    <html:text maxlength="60" styleId="billTo_deliveryPcKana" property="billTo.deliveryPcKana" tabindex="711" style="width: 150px"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
-                </td>
-				<th>敬称</th>
-				<td>
-                    <html:select styleId="billTo_deliveryPcPreCategory" property="billTo.deliveryPcPreCategory" tabindex="712">
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-                </td>
-			</tr>
-			<tr>
-				<th>TEL</th>
-				<td>
-                    <html:text maxlength="15" styleId="billTo_deliveryTel" property="billTo.deliveryTel" tabindex="713" style="width: 150px;ime-mode:disabled;"/>
-                </td>
-				<th>FAX</th>
-				<td colspan="3">
-                    <html:text maxlength="15" styleId="billTo_deliveryFax" property="billTo.deliveryFax" tabindex="714" style="width: 150px;ime-mode:disabled;"/>
-                </td>
-			</tr>
-			<tr>
-				<th>E-MAIL</th>
-				<td colspan="5">
-                    <html:text maxlength="255" styleId="billTo_deliveryEmail" property="billTo.deliveryEmail" tabindex="715" style="width: 400px;ime-mode:disabled;"/>
-                </td>
-			</tr>
-		</table>
-
-		<div style="text-align: right; width: 910px">
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
-			<button tabindex="800" onclick="initForm()">初期化</button>
+			<button tabindex="800" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="801" disabled="disabled">新規追加</button>
+		<button tabindex="801" disabled="disabled" class="btn_medium">新規追加</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-            <button tabindex="802" disabled="disabled">更新</button>
+            <button tabindex="802" disabled="disabled" class="btn_medium">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="802" onclick="registerCustomer()">更新</button>
+            <button tabindex="802" onclick="registerCustomer()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="802" onclick="registerCustomer()">登録</button>
+            <button tabindex="802" onclick="registerCustomer()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="803" disabled="disabled">削除</button>
+		<button tabindex="803" disabled="disabled" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="803" onclick="deleteCustomer()">削除</button>
+		<button tabindex="803" onclick="deleteCustomer()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="803" disabled="disabled">削除</button>
+		<button tabindex="803" disabled="disabled" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>
@@ -1501,67 +1473,67 @@
 	<html:hidden property="updDatetmShow"/>
 	<html:hidden property="lastSalesCutoffDate"/>
 
-
+<%-- 敬称 --%>
   	<c:forEach var="preType" items="${preTypeCategoryList}" varStatus="status">
 	<input type="hidden" name="preTypeCategoryList[${status.index}].label" value="${f:h(preType.label)}">
 	<input type="hidden" name="preTypeCategoryList[${status.index}].value" value="${preType.value}">
 </c:forEach>
-
+<%-- 顧客ランク --%>
 <c:forEach var="rank" items="${customerRankList}" varStatus="status">
 	<input type="hidden" name="customerRankList[${status.index}].label" value="${f:h(rank.label)}">
 	<input type="hidden" name="customerRankList[${status.index}].value" value="${rank.value}">
 </c:forEach>
-
+<%-- 受注停止 --%>
 <c:forEach var="roCategory" items="${customerRoCategoryList}" varStatus="status">
 	<input type="hidden" name="customerRoCategoryList[${status.index}].label" value="${f:h(roCategory.label)}">
 	<input type="hidden" name="customerRoCategoryList[${status.index}].value" value="${roCategory.value}">
 </c:forEach>
-
+<%-- 業種 --%>
 <c:forEach var="businessCategory" items="${customerBusinessCategoryList}" varStatus="status">
 	<input type="hidden" name="customerBusinessCategoryList[${status.index}].label" value="${f:h(businessCategory.label)}">
 	<input type="hidden" name="customerBusinessCategoryList[${status.index}].value" value="${businessCategory.value}">
 </c:forEach>
-
+<%-- 職種 --%>
 <c:forEach var="jobCategory" items="${customerJobCategoryList}" varStatus="status">
 	<input type="hidden" name="customerJobCategoryList[${status.index}].label" value="${f:h(jobCategory.label)}">
 	<input type="hidden" name="customerJobCategoryList[${status.index}].value" value="${jobCategory.value}">
 </c:forEach>
-
+<%-- 取引区分 --%>
 <c:forEach var="cmCategory" items="${salesCmCategoryList}" varStatus="status">
 	<input type="hidden" name="salesCmCategoryList[${status.index}].label" value="${f:h(cmCategory.label)}">
 	<input type="hidden" name="salesCmCategoryList[${status.index}].value" value="${cmCategory.value}">
 </c:forEach>
-
+<%-- 税転嫁 --%>
 <c:forEach var="taxShiftCategory" items="${taxShiftCategoryList}" varStatus="status">
 	<input type="hidden" name="taxShiftCategoryList[${status.index}].label" value="${f:h(taxShiftCategory.label)}">
 	<input type="hidden" name="taxShiftCategoryList[${status.index}].value" value="${taxShiftCategory.value}">
 </c:forEach>
-
+<%-- 税転嫁 --%>
 <c:forEach var="cutoffGroup" items="${cutoffGroupList}" varStatus="status">
 	<input type="hidden" name="cutoffGroupList[${status.index}].label" value="${f:h(cutoffGroup.label)}">
 	<input type="hidden" name="cutoffGroupList[${status.index}].value" value="${cutoffGroup.value}">
 </c:forEach>
-
+<%-- 回収方法 --%>
 <c:forEach var="paybackTypeCategory" items="${paybackTypeCategoryList}" varStatus="status">
 	<input type="hidden" name="paybackTypeCategoryList[${status.index}].label" value="${f:h(paybackTypeCategory.label)}">
 	<input type="hidden" name="paybackTypeCategoryList[${status.index}].value" value="${paybackTypeCategory.value}">
 </c:forEach>
-
+<%-- 税端数処理 --%>
 <c:forEach var="taxFractCategory" items="${taxFractCategoryList}" varStatus="status">
 	<input type="hidden" name="taxFractCategoryList[${status.index}].label" value="${f:h(taxFractCategory.label)}">
 	<input type="hidden" name="taxFractCategoryList[${status.index}].value" value="${taxFractCategory.value}">
 </c:forEach>
-
+<%-- 単価端数処理 --%>
 <c:forEach var="priceFractCategory" items="${priceFractCategoryList}" varStatus="status">
 	<input type="hidden" name="priceFractCategoryList[${status.index}].label" value="${f:h(priceFractCategory.label)}">
 	<input type="hidden" name="priceFractCategoryList[${status.index}].value" value="${priceFractCategory.value}">
 </c:forEach>
-
+<%-- 請求書発行単位 --%>
 <c:forEach var="billPrintUnit" items="${billPrintUnitList}" varStatus="status">
 	<input type="hidden" name="billPrintUnitList[${status.index}].label" value="${f:h(billPrintUnit.label)}">
 	<input type="hidden" name="billPrintUnitList[${status.index}].value" value="${billPrintUnit.value}">
 </c:forEach>
-
+<%-- 請求書日付有無 --%>
 <c:forEach var="billDatePrint" items="${billDatePrintList}" varStatus="status">
 	<input type="hidden" name="billDatePrintList[${status.index}].label" value="${f:h(billDatePrint.label)}">
 	<input type="hidden" name="billDatePrintList[${status.index}].value" value="${billDatePrint.value}">

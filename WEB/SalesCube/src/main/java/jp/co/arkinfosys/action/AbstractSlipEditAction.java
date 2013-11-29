@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.util.List;
@@ -50,22 +49,22 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 		AbstractSlipEditForm<LINEDTOCLASS> form = this.getActionForm();
 		prepareForm();
 
-		
+		// アクションフォームの初期化
 		form.reset();
 		form.initialize();
 		form.initializeScreenInfo();
 
-		
+		// 画面のリスト項目を初期化
 		this.createList();
 
-		
+		// DTOクラスの生成
 		AbstractSlipDto<LINEDTOCLASS> dto = this.createDTO();
 
-		
+		// 明細行の初期設定
 		dto.fillList();
 		form.setLineList(dto.getLineDtoList());
 
-		
+		// フォームのデフォルト値を設定
 		form.setDefaultSelected(dto);
 
 		form.newData = true;
@@ -103,12 +102,12 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 
 				form.newData = true;
 				form.setKeyValue("");
-				
+				// 新規入力として
 				return index();
 			} else {
 				form.newData = false;
 
-				
+				// リストを埋める
 				AbstractSlipDto<LINEDTOCLASS> dto = form.copyToDto();
 				dto.setLineDtoList(form.getLineList());
 				dto.fillList();
@@ -134,12 +133,13 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	@Execute(validator=false)
 	public String errorInit() throws Exception {
 
-		
+		// フォームの初期設定
 		AbstractSlipEditForm<LINEDTOCLASS> form = this.getActionForm();
 		prepareForm();
-		form.initialize();
+		//form.initialize();
+		form.upsertInitialize();
 
-		
+		// 画面のリスト項目を初期化
 		this.createList();
 
 		return this.getInputURIString();
@@ -173,52 +173,53 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 
 		try {
 
-			
+			// フォームからエンティティに値をコピーする
 			AbstractSlipDto<LINEDTOCLASS> dto = form.copyToDto();
 
-			
-			form.initialize();
+			// フォームの初期化
+			//form.initialize();
+			form.upsertInitialize();
 			this.createList();
 
-			
+			// 伝票ヘッダと明細を登録する
 			boolean bInsert = form.isNewData();
 
-			
+			// 登録前の処理
 			this.beforeUpsert(bInsert, dto);
 
-			
+			// 未入力の明細行をリストから削除する
 			dto.copyFrom(form.getLineList());
 			dto.removeBlankLine();
 
-			
+			// 登録する
 			AbstractSlipService service = this.getSlipService();
 			service.save(dto,this.getAdditionalServiceOnSaveSlip());
 
-			
+			// 発番した番号をフォームに設定する
 			form.setKeyValue(dto.getKeyValue());
 
-			
+			// 明細を登録する
 			AbstractLineService lineService = this.getLineService();
 			lineService.save(dto, dto.getLineDtoList(), form.deleteLineIds,this.getAdditionalServiceOnSaveSlip());
 
-			
+			// 削除明細をクリアする
 			form.deleteLineIds = "";
 
-			
+			// 登録後の処理
 			this.afterUpsert(bInsert, dto);
 
-			
+			// 登録済みデータを読み込む
 			this.loadData();
 			this.afterLoad();
 
-			
+			// リストを補完する
 			dto.setLineDtoList(form.getLineList());
 			dto.fillList();
 			form.setLineList(dto.getLineDtoList());
 
 			form.newData = false;
 
-			
+			// 登録完了メッセージ表示
 			if( bInsert){
 				addMessage("infos.insert");
 			}else{
@@ -230,15 +231,15 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			super.errorLog(e);
-			
+			// 続行可能？
 			if(e.isStopOnError()) {
-				
+				// システム例外として処理する
 				throw e;
 			}else{
 				addMessage(e.getMessage());
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 
-				
+				// 遷移先を例外発生箇所で設定しておくこと！
 				return this.getInputURIString();
 			}
 		} catch (UnabledLockException e) {
@@ -282,32 +283,32 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 		try {
 			AbstractSlipDto<LINEDTOCLASS> dto = form.copyToDto();
 
-			
+			// 前処理
 			this.beforeDelete(dto);
 
-			
+			// 伝票のオーディット情報を更新する
 			this.getSlipService().updateAudit(dto.getKeyValue());
 
-			
+			// 伝票を削除する
 			this.getSlipService().deleteById(dto.getKeyValue(), this.getActionForm().updDatetm);
 
-			
+			// 商品コードがない要素を削除する
 			dto.removeBlankLine();
 
-			
+			// 明細のオーディット情報を更新する
 			this.getLineService().updateAudit(dto.getKeyValue());
 
-			
+			// 明細を削除する
 			this.getLineService().deleteRecords(dto.getKeyValue());
 
 
-			
+			// 後処理
 			this.afterDelete(dto);
 
-			
+			// プルダウン情報作成
 			createList();
 
-			
+			// 削除完了メッセージ表示
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("infos.delete"));
 
@@ -352,7 +353,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 
 			DTOCLASS dto = (DTOCLASS)form.copyToDto();
 
-			
+			// 伝票情報をロードする
 			if (dto.getKeyValue() == null || dto.getKeyValue().length() == 0) {
 				String strLabel = MessageResourcesUtil.getMessage(this.getSlipKeyLabel());
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -363,11 +364,11 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 			dto = this.getSlipService().loadBySlipId(dto.getKeyValue());
 			Beans.copy(dto, form).execute();
 
-			
+			// 明細情報をロードする
 			List<LINEDTOCLASS> lineDtoList = this.getLineService().loadBySlip(dto);
 			form.setLineList(lineDtoList);
 
-			
+			// 初期値を設定する
 			form.initCopy();
 
 			createList();
@@ -435,7 +436,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 * @return 追加サービスの配列
 	 */
 	protected AbstractService<?>[] getAdditionalServiceOnSaveSlip() {
-		
+		// デフォルト実装では何も返さない
 		return null;
 	}
 
@@ -448,7 +449,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 * @throws Exception
 	 */
 	protected void beforeUpsert(boolean bInsert, AbstractSlipDto<LINEDTOCLASS> dto) throws Exception {
-		
+		// デフォルト実装では何もしない
 	}
 
 	/**
@@ -460,7 +461,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 * @throws Exception
 	 */
 	protected void afterUpsert(boolean bInsert, AbstractSlipDto<LINEDTOCLASS> dto) throws Exception {
-		
+		// デフォルト実装では何もしない
 	}
 
 	/**
@@ -471,7 +472,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 * @throws Exception
 	 */
 	protected void beforeDelete(AbstractSlipDto<LINEDTOCLASS> dto) throws Exception {
-		
+		// デフォルト実装では何もしない
 	}
 
 	/**
@@ -482,7 +483,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 * @throws Exception
 	 */
 	protected void afterDelete(AbstractSlipDto<LINEDTOCLASS> dto) throws Exception {
-		
+		// デフォルト実装では何もしない
 	}
 
 	/**
@@ -534,7 +535,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 	 */
 	protected void addMessage(String... arg) {
 
-		
+		// 第一引数にerrors.が入っていない時には文言が入っている
 		if(( arg[0].indexOf("errors.") < 0 )&&( arg[0].indexOf("infos.") < 0 )){
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage( "errors.none", arg[0]));

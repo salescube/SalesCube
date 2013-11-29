@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.util.List;
@@ -78,7 +77,7 @@ public class LoginAction extends CommonResources {
 		try {
 			if (this.loginForm.domainId == null
 					&& super.domainDto.domainId == null) {
-				
+				// ドメインIDの存在チェック
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.missing.domain"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -92,10 +91,10 @@ public class LoginAction extends CommonResources {
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.missing.domain"));
 			} else {
-				
+				// ドメイン情報をセッション管理DTOに格納する
 				Beans.copy(domain, super.domainDto).execute();
 			}
-			
+			// SSO用修正
 			if( StringUtil.hasLength( this.loginForm.userId ) && StringUtil.hasLength( this.loginForm.password ) ){
 				return login();
 			}
@@ -103,7 +102,7 @@ public class LoginAction extends CommonResources {
 			ActionMessages loginErrors = (ActionMessages) super.httpRequest
 					.getAttribute(AbstractLoginCheckInterceptor.LOGIN_CHECK_MESSAGES_KEY);
 			if (loginErrors != null) {
-				
+				// 未ログインエラー
 				super.messages.add(loginErrors);
 			}
 
@@ -124,7 +123,7 @@ public class LoginAction extends CommonResources {
 	public String login() {
 		try {
 			if (super.domainDto.domainId == null) {
-				
+				// ドメインチェック
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.missing.domain"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -134,24 +133,24 @@ public class LoginAction extends CommonResources {
 			User user = this.userService.findUserByIdAndPassword(
 					loginForm.userId, loginForm.password);
 			if (user == null) {
-				
+				// ユーザー存在チェック
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.invalid.login"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return LoginAction.Mapping.INPUT;
 			}
 
-			
+			// ログイン情報をセッション管理DTOに格納する
 			Beans.copy(user, super.userDto).execute();
 
-			
+			// ユーザーが利用可能なメニュー一覧を取得する
 			List<MenuJoin> menuJoinList = this.menuService
 					.findMenuByUserId(loginForm.userId);
 			super.userDto.menuDtoList = this.menuService
 					.convertMenuJoinToDto(menuJoinList);
 
-			
-			
+			// ユーザーのファイル参照権限を設定する
+			// 商品のダウンロード/アップロード権限を設定する
 			for (MenuJoin menuJoin : menuJoinList) {
 				if (Constants.MENU_ID.REFERENCE_FILES.equals(menuJoin.menuId)) {
 					super.userDto.fileOpenLevel = menuJoin.validFlag;
@@ -162,16 +161,16 @@ public class LoginAction extends CommonResources {
 				}
 			}
 
-			
+			// 自社マスタの情報を取得する
 			Mine mine = this.mineService.getMine();
 			if (mine != null) {
-				
+				// 自社情報をセッション管理DTOに格納する
 				Beans.copy(mine, super.mineDto).execute();
 				mineDto.initDecAlignFormat();
 
 				if (mine.passwordValidDays != null
 						&& this.userDto.isPasswordExpired()) {
-					
+					// 自社マスタの設定がnullでなく、パスワードが期限切れの場合
 					return LoginAction.Mapping.PASSWORD;
 				}
 			}
@@ -180,7 +179,7 @@ public class LoginAction extends CommonResources {
 		} catch (Exception e) {
 			super.errorLog(e);
 		}
-		
+		// ログイン画面ではエラー画面に遷移しない
 		return LoginAction.Mapping.INPUT;
 	}
 }

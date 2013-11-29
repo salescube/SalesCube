@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -58,9 +57,9 @@ public class BillAndArtService extends AbstractService {
 		Double salesPrice = 0.0;
 		for( SalesLineTrn sl : salesLineList ){
 			if( sl.retailPrice != null ){
-
+//				if( SalesLineService.isEtcPriceCode(sl.productCode) == false ){
 					salesPrice = salesPrice + sl.retailPrice.doubleValue();
-
+//				}
 			}
 		}
 		return new BigDecimal(salesPrice);
@@ -73,15 +72,15 @@ public class BillAndArtService extends AbstractService {
 	 * @return null
 	 */
 	public BigDecimal getEtcPrice(List<SalesLineTrn> salesLineList) {
-
-
-
-
-
-
-
-
-
+//		Double salesPrice = 0.0;
+//		for( SalesLineTrn sl : salesLineList ){
+//			if( sl.retailPrice != null ){
+//				if( SalesLineService.isEtcPriceCode(sl.productCode) == true ){
+//					salesPrice = salesPrice + sl.retailPrice.doubleValue();
+//				}
+//			}
+//		}
+//		return new BigDecimal(salesPrice);
 		return null;
 	}
 
@@ -95,45 +94,45 @@ public class BillAndArtService extends AbstractService {
 	public BigDecimal getCTaxPrice(Customer customer, List<SalesLineTrn> salesLineList) {
 		Double ctaxPrice = 0.0;
 
-//		Double rateBase = 1.0;	
+//		Double rateBase = 1.0;	// 内税計算用
 
 		if( CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX.equals(customer.taxShiftCategory)) {
-			
+			// 区分名：税転嫁、区分コード名：内税
 
-			
-
-
-//					
-
-
-//						
-
-//						
-
-
-//						
-
-
-
-
-
+			// 内税は消費税なし
+//			for( SalesLineTrn sl : salesLineList ){
+//				if( sl.retailPrice != null ){
+//					// 課税区分を確認
+//					String taxCategory = SalesService.checkTaxCategory(sl.taxCategory);
+//					if( CategoryTrns.TAX_CATEGORY_FREE.equals( taxCategory) ){
+//						// 免税
+//					}else if( CategoryTrns.TAX_CATEGORY_IMPOSITION.equals( taxCategory)){
+//						// 外税
+//						ctaxPrice = ctaxPrice + sl.ctaxPrice.doubleValue();
+//					}else if( CategoryTrns.TAX_CATEGORY_INCLUDED.equals( taxCategory)){
+//						// 内税
+//						ctaxPrice = ctaxPrice +
+//						( sl.retailPrice.doubleValue()/( rateBase + sl.ctaxRate.doubleValue() ));
+//					}
+//				}
+//			}
 
 		}else if( CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL.equals(customer.taxShiftCategory)){
-			
+			// 区分名：税転嫁、区分コード名：外税伝票計
 			HashMap<Double,Double> ctaxMap = new HashMap<Double, Double>();
 
-			
+			// 伝票ごとの消費税額を集計
 			if( salesLineList.size() > 0 ){
 				SalesLineTrn slTmp = salesLineList.get(0);
 				for( SalesLineTrn sl : salesLineList ){
 					if( sl.salesSlipId.equals(slTmp.salesSlipId) == false ){
-						
+						// 税率ごとの消費税を集計
 						ctaxPrice += getTax( ctaxMap, customer.taxFractCategory );
 						ctaxMap.clear();
 					}
 					if( sl.retailPrice != null ){
 						Double price = ctaxMap.get(sl.ctaxRate.doubleValue());
-						
+						// 課税対象額を取得
 						Double thisPrice = getForTaxPrice( sl );
 						if( price == null ){
 							price = thisPrice;
@@ -149,14 +148,14 @@ public class BillAndArtService extends AbstractService {
 			ctaxPrice += getTax( ctaxMap, customer.taxFractCategory );
 
 		}else if( CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(customer.taxShiftCategory)){
-			
+			// 区分名：税転嫁、区分コード名：外税締単位
 			HashMap<Double,Double> ctaxMap = new HashMap<Double, Double>();
 
-			
+			// 税率ごとの売上金額を集計
 			for( SalesLineTrn sl : salesLineList ){
 				if( sl.retailPrice != null ){
 					Double price = ctaxMap.get(sl.ctaxRate.doubleValue());
-					
+					// 課税対象額を取得
 					Double thisPrice = getForTaxPrice( sl );
 					if( price == null ){
 						price = thisPrice;
@@ -166,7 +165,7 @@ public class BillAndArtService extends AbstractService {
 					ctaxMap.put(sl.ctaxRate.doubleValue(), price);
 				}
 			}
-			
+			// 税率ごとの消費税を集計
 			ctaxPrice = getTax( ctaxMap, customer.taxFractCategory );
 		}
 		return new BigDecimal(ctaxPrice);
@@ -178,16 +177,16 @@ public class BillAndArtService extends AbstractService {
 	 * @return 課税対象金額
 	 */
 	public Double getForTaxPrice( SalesLineTrn sl ) {
-		Double rateBase = 1.0;	
+		Double rateBase = 1.0;	// 内税計算用
 		Double thisPrice = 0.0;
-		
+		// 課税区分を確認
 		if( CategoryTrns.TAX_CATEGORY_FREE.equals(sl.taxCategory) ){
-			
+			// 免税
 		}else if( CategoryTrns.TAX_CATEGORY_IMPOSITION.equals(sl.taxCategory)){
-			
+			// 外税
 			thisPrice = sl.retailPrice.doubleValue();
 		}else if( CategoryTrns.TAX_CATEGORY_INCLUDED.equals(sl.taxCategory)){
-			
+			// 内税
 			thisPrice =
 				( sl.retailPrice.doubleValue()/( rateBase + sl.ctaxRate.doubleValue() ));
 		}
@@ -202,13 +201,13 @@ public class BillAndArtService extends AbstractService {
 	 */
 	public Double getTax( HashMap<Double,Double> ctaxMap, String taxFractCategory ) {
 		Double tax = 0.0;
-		Set<Entry<Double,Double>> entrySet = ctaxMap.entrySet();     
+		Set<Entry<Double,Double>> entrySet = ctaxMap.entrySet();     //すべてのvalue
 		Iterator<Entry<Double, Double>> entryIte = entrySet.iterator();
-		while(entryIte.hasNext()) {              
-			Map.Entry<Double, Double> ent = entryIte.next();        
+		while(entryIte.hasNext()) {              //ループ
+			Map.Entry<Double, Double> ent = entryIte.next();        //key=value
 			if( ent.getKey() != null ){
-				
-				tax = tax + ( ent.getValue() * ( ent.getKey() / 100.0 ) );	
+				// 税率×金額
+				tax = tax + ( ent.getValue() * ( ent.getKey() / 100.0 ) );	// key=税率は％表記なので100.0で割る
 			}
 		}
 		BigDecimal bd = new BigDecimal( tax );
@@ -253,17 +252,17 @@ public class BillAndArtService extends AbstractService {
 			break;
 		case 25:
 			cal.set(Calendar.DAY_OF_MONTH, 1);
-			cal.add(Calendar.MONTH,1);	
+			cal.add(Calendar.MONTH,1);	// 月末
 			cal.add(Calendar.DATE,-1);
 			break;
 		case 31:
 			switch (cycle) {
-			case 1:	
+			case 1:	// 翌月
 				cal.set(Calendar.DAY_OF_MONTH, 1);
-				cal.add(Calendar.MONTH,1);	
+				cal.add(Calendar.MONTH,1);	// 月末
 				cal.add(Calendar.DATE,-1);
 				break;
-			case 2:	
+			case 2:	// 翌々月
 				cal.set(Calendar.DAY_OF_MONTH, 5);
 				break;
 			default:

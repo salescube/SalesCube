@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.estimate;
 
 import jp.co.arkinfosys.dto.AbstractLineDto;
@@ -173,7 +172,7 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
 	 */
 	public String priceFractCategory;
 
-	
+	// 新規作成状態の管理フラグ
 	public Boolean newData;
 
 	/**

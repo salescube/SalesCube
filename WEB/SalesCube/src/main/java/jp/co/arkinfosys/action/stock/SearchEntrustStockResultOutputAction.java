@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -153,7 +152,7 @@ public class SearchEntrustStockResultOutputAction extends
 	 */
 	@Override
 	protected MasterSearch<EntrustEadSlipLineJoinDto> getService() {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -164,7 +163,7 @@ public class SearchEntrustStockResultOutputAction extends
 	 */
 	@Override
 	protected Class<List<Object>> getDtoClass() {
-		
+		// 未使用メソッド
 		return null;
 	}
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.sales;
 
 import java.util.List;
@@ -89,10 +88,10 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 検索対象を取得する
 			String searchTarget = (String)params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				count = findSlipCntByCondition(params);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -115,10 +114,10 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 	 */
 	public List<BeanMap> getSearchResult(BeanMap params) throws ServiceException {
 		try {
-			
+			// 検索対象を取得する
 			String searchTarget = (String)params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				return findSlipByCondition(params);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -207,15 +206,15 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// 特定のカラムがsortキーに指定された場合は伝票、行番をキーにする
 			String sortColumn = (String)param.get(Param.SORT_COLUMN);
 			if (Column.SALES_SLIP_ID.equals(sortColumn)) {
-				
+				// 売上番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_SALES_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_SALES_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
 			}else if(Column.RO_SLIP_ID.equals(sortColumn)){
-				
+				// 受注番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_RO_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_RO_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
@@ -279,103 +278,103 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 売上番号
 		if (conditions.containsKey(Param.SALES_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_SLIP_ID))) {
 				param.put(Param.SALES_SLIP_ID,new Long((String)conditions.get(Param.SALES_SLIP_ID)));
 			}
 		}
 
-		
+		// 受注番号
 		if (conditions.containsKey(Param.RO_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.RO_SLIP_ID))) {
 				param.put(Param.RO_SLIP_ID,new Long((String)conditions.get(Param.RO_SLIP_ID)));
 			}
 		}
 
-		
+		// 受付番号
 		if (conditions.containsKey(Param.RECEPT_NO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.RECEPT_NO))) {
 				param.put(Param.RECEPT_NO,super.createPrefixSearchCondition((String)conditions.get(Param.RECEPT_NO)));
 			}
 		}
 
-		
+		// 売上日From
 		if (conditions.containsKey(Param.SALES_DATE_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_FROM))) {
 				param.put(Param.SALES_DATE_FROM,(String)conditions.get(Param.SALES_DATE_FROM));
 			}
 		}
 
-		
+		// 売上日To
 		if (conditions.containsKey(Param.SALES_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_TO))) {
 				param.put(Param.SALES_DATE_TO,(String)conditions.get(Param.SALES_DATE_TO));
 			}
 		}
 
-		
+		// 納期指定日From
 		if (conditions.containsKey(Param.DELIVERY_DATE_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.DELIVERY_DATE_FROM))) {
 				param.put(Param.DELIVERY_DATE_FROM,(String)conditions.get(Param.DELIVERY_DATE_FROM));
 			}
 		}
 
-		
+		// 納期指定日To
 		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.DELIVERY_DATE_TO))) {
 				param.put(Param.DELIVERY_DATE_TO,(String)conditions.get(Param.DELIVERY_DATE_TO));
 			}
 		}
 
-		
+		// 配送業者
 		if (conditions.containsKey(Param.DC_CATEGORY)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.DC_CATEGORY))) {
 				param.put(Param.DC_CATEGORY,(String)conditions.get(Param.DC_CATEGORY));
 			}
 		}
 
-		
+		// 配送時間帯
 		if (conditions.containsKey(Param.DC_TIMEZONE_CATEGORY)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.DC_TIMEZONE_CATEGORY))) {
 				param.put(Param.DC_TIMEZONE_CATEGORY,(String)conditions.get(Param.DC_TIMEZONE_CATEGORY));
 			}
 		}
 
-		
+		// ピッキング備考
 		if (conditions.containsKey(Param.PICKING_REMARKS)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PICKING_REMARKS))) {
 				param.put(Param.PICKING_REMARKS,super.createPartialSearchCondition((String)conditions.get(Param.PICKING_REMARKS)));
 			}
 		}
 
-		
+		// 顧客コード
 		if (conditions.containsKey(Param.CUSTOMER_CODE)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.CUSTOMER_CODE))) {
 				param.put(Param.CUSTOMER_CODE,super.createPrefixSearchCondition((String)conditions.get(Param.CUSTOMER_CODE)));
 			}
 		}
 
-		
+		// 顧客名
 		if (conditions.containsKey(Param.CUSTOMER_NAME)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.CUSTOMER_NAME))) {
 				param.put(Param.CUSTOMER_NAME,super.createPartialSearchCondition((String)conditions.get(Param.CUSTOMER_NAME)));
 			}
 		}
 
-		
+		// 顧客担当者名
 		if (conditions.containsKey(Param.CUSTOMER_PC_NAME)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.CUSTOMER_PC_NAME))) {
 				param.put(Param.CUSTOMER_PC_NAME,super.createPartialSearchCondition((String)conditions.get(Param.CUSTOMER_PC_NAME)));
 			}
 		}
 
-		
+		// 売上取引区分
 		if(conditions.containsKey(Param.SALES_CM_CATEGORY_LIST)) {
 			param.put(Param.SALES_CM_CATEGORY_LIST, conditions.get(Param.SALES_CM_CATEGORY_LIST));
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(Param.PRODUCT_CODE)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT_CODE))) {
 				param.put(Param.PRODUCT_CODE,
@@ -383,7 +382,7 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(Param.PRODUCT_ABSTRACT)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT_ABSTRACT))) {
 				param.put(Param.PRODUCT_ABSTRACT,
@@ -391,28 +390,28 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 分類（大）
 		if (conditions.containsKey(Param.PRODUCT1)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT1))) {
 				param.put(Param.PRODUCT1,(String)conditions.get(Param.PRODUCT1));
 			}
 		}
 
-		
+		// 分類（中）
 		if (conditions.containsKey(Param.PRODUCT2)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT2))) {
 				param.put(Param.PRODUCT2,(String)conditions.get(Param.PRODUCT2));
 			}
 		}
 
-		
+		// 分類（小）
 		if (conditions.containsKey(Param.PRODUCT3)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT3))) {
 				param.put(Param.PRODUCT3,(String)conditions.get(Param.PRODUCT3));
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SUPPLIER_CODE))) {
 				param.put(Param.SUPPLIER_CODE,
@@ -420,7 +419,7 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SUPPLIER_NAME))) {
 				param.put(Param.SUPPLIER_NAME,
@@ -428,7 +427,7 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SORT_COLUMN))) {
 				param.put(Param.SORT_COLUMN,
@@ -436,7 +435,7 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean)conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.ASC);
@@ -444,13 +443,13 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT,
 					conditions.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW,conditions.get(Param.OFFSET_ROW));
 		}

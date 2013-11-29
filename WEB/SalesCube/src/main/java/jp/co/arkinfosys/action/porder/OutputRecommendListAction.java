@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.porder;
 
 import java.util.ArrayList;
@@ -57,8 +56,8 @@ public class OutputRecommendListAction extends CommonResources {
 	/**
 	 * ファイル名表示用
 	 */
-
-
+//	@Resource
+//	protected MakeOutPOrderResultOutputAction pOrderReportWriterAjaxAction;
 
 	/**
 	 * 仕入先リスト
@@ -118,15 +117,15 @@ public class OutputRecommendListAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() {
-		
+		//画面権限情報取得
 		outputRecommendListForm.validInputPOrder = userDto
 				.isMenuValid(Constants.MENU_ID.INPUT_PORDER);
 		outputRecommendListForm.updateOutputRecommendList = userDto
 				.isMenuUpdate(Constants.MENU_ID.OUTPUT_RECOMMEND_LIST);
-		
+		//プルダウンの初期化
 		makeList();
 
-		
+		// ソート情報保持リストの取得
 		columnInfoList = outputRecommendListService.getColumnInfoList();
 
 		return "outputRecommendList.jsp";
@@ -140,87 +139,87 @@ public class OutputRecommendListAction extends CommonResources {
 	public String order() {
 		try {
 
-			
+			//画面権限情報取得
 			outputRecommendListForm.validInputPOrder = userDto
 					.isMenuValid(Constants.MENU_ID.INPUT_PORDER);
 			outputRecommendListForm.updateOutputRecommendList = userDto
 					.isMenuUpdate(Constants.MENU_ID.OUTPUT_RECOMMEND_LIST);
-			
+			//結果画面のリ スト用
 			List<OutputRecommendOrderResultLine> orderResultList = new ArrayList<OutputRecommendOrderResultLine>();
 
-			
+			// ユーザ名とかドメインとか
 			Map<String, Object> CommonParam = outputRecommendListService.createCommonParam();
 
-			
+			//伝票パラメータの生成
 			Map<String, Object> slipParam = new HashMap<String, Object>();
 			slipParam.putAll(CommonParam);
 			slipParam.put(OutputRecommendListService.SlipParam.SUPPLIER_CODE, outputRecommendListForm.supplierCode);
 			slipParam.put(OutputRecommendListService.SlipParam.DELIVERY_DATE, outputRecommendListForm.deliveryDate);
 			if(CategoryTrns.ENTRUST_PORDER.equals(outputRecommendListForm.poCategory)) {
-				
+				// 発注区分が委託発注の場合は「委託在庫」
 				slipParam.put(OutputRecommendListService.SlipParam.TRANSPORT_CATEGORY, CategoryTrns.TRANSPORT_CATEGORY_ENTRUST);
 			}
 			else {
 				slipParam.put(OutputRecommendListService.SlipParam.TRANSPORT_CATEGORY, outputRecommendListForm.transportCategory);
 			}
 
-			
+			//明細行パラメータ
 			List<Map<String, Object>> lineParam = new ArrayList<Map<String, Object>>();
 
-			
+			//結果画面のリスト各行のデータ
 			OutputRecommendOrderResultLine orderResultLine = new OutputRecommendOrderResultLine();
 			orderResultLine.poSlipId = null;
 			orderResultLine.lines = new ArrayList<OutputRecommendOrderResultSlipLine>();
-			
+			//明細行分ける？
 			int lineCount = 0;
 			lineParam.clear();
 			for(OutputRecommendListFormDto l_Result : outputRecommendListForm.searchResultList){
-				
+				//明細行用のデータを抽出する？
 				if(Null2Bool(l_Result.validRow)){
-					
+					//行内データを行内パラメータに
 					Map<String, Object> row_lineParam = new HashMap<String, Object>();
 					row_lineParam.putAll(CommonParam);
 					row_lineParam.put(OutputRecommendListService.SlipParam.PRODUCT_CODE, l_Result.productCode );
 					row_lineParam.put(OutputRecommendListService.SlipParam.QUANTITY, l_Result.pOrderQuantity );
-					
+					//明細行パラメータに追加
 					lineParam.add(row_lineParam);
-					
+					//結果画面用に記録
 					OutputRecommendOrderResultLine.OutputRecommendOrderResultSlipLine orderResultSlipLine
 								= new OutputRecommendOrderResultLine.OutputRecommendOrderResultSlipLine();
 					orderResultSlipLine.productCode = l_Result.productCode;
 					orderResultSlipLine.pOrderQuantity = l_Result.pOrderQuantity;
 					orderResultLine.lines.add(orderResultSlipLine);
-					
+					//行抽出できた
 					lineCount++;
 				}
-				
+				//明細行がもういっぱいです。途中で伝票作ります。
 				if(lineCount == InputPOrderForm.CONST_SLIP_LINE_MAX_DEFAULT){
-					
+					//伝票発行と伝票番号の取得
 					orderResultLine.poSlipId = String.valueOf(outputRecommendListService.createSlipByParam(slipParam, lineParam));
 					orderResultLine.xlsFileName = getXlsFileName(orderResultLine.poSlipId);
 					orderResultLine.pdfFileName = getPdfFileName(orderResultLine.poSlipId);
 					orderResultLine.lineCount = lineCount;
 					lineCount = 0;
 					lineParam.clear();
-					
+					//結果用リスト
 					orderResultList.add(orderResultLine);
 					orderResultLine = new OutputRecommendOrderResultLine();
 					orderResultLine.poSlipId = null;
 					orderResultLine.lines = new ArrayList<OutputRecommendOrderResultSlipLine>();
 				}else if(lineCount > InputPOrderForm.CONST_SLIP_LINE_MAX_DEFAULT){
-					return null;	
+					return null;	//え？なんでここが呼ばれるの？
 				}
 			}
-			
+			//残りの伝票を作ります。
 			if(lineCount > 0){
-				
+				//伝票発行と伝票番号の取得
 				orderResultLine.poSlipId = String.valueOf(outputRecommendListService.createSlipByParam(slipParam, lineParam));
 				orderResultLine.xlsFileName = getXlsFileName(orderResultLine.poSlipId);
 				orderResultLine.pdfFileName = getPdfFileName(orderResultLine.poSlipId);
 				orderResultLine.lineCount = lineCount;
 				orderResultList.add(orderResultLine);
 			}
-			
+			//結果を渡す
 			outputRecommendListForm.orderResultList = orderResultList;
 			return "orderResult.jsp";
 		} catch (Exception e) {
@@ -234,12 +233,12 @@ public class OutputRecommendListAction extends CommonResources {
 	 */
 	private void makeList(){
 		try {
-			
+			//運送便区分プルダウンの値
 			List<CategoryJoin> categoryJoinList = this.categoryService
 					.findCategoryJoinById(Categories.TRANSPORT_CATEGORY);
 			for(CategoryJoin categoryTrnJoin : categoryJoinList) {
 
-				
+				// 補充発注画面では、運送便プルダウンでは委託在庫を選択できないようにする。(委託在庫発注は運送便プルダウンではなく、発注区分プルダウンにて行うため。)
 				if(CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(categoryTrnJoin.categoryCode)) {
 					continue;
 				}
@@ -249,9 +248,9 @@ public class OutputRecommendListAction extends CommonResources {
 				bean.setLabel(categoryTrnJoin.categoryCodeName);
 				this.transportCategoryList.add(bean);
 			}
-			
+			//this.transportCategoryList.add(0, new LabelValueBean());
 
-			
+			//仕入先プルダウン
 			List<Supplier> l_supplierList = this.outputRecommendListService
 				.findRecommendSuppliers();
 			for(Supplier l_supplier : l_supplierList) {
@@ -261,7 +260,7 @@ public class OutputRecommendListAction extends CommonResources {
 				this.supplierList.add(bean);
 			}
 
-			
+			//発注区分プルダウンの値
 			categoryJoinList = this.categoryService
 					.findCategoryJoinById(Categories.PO_CATEGORY);
 			for(CategoryJoin categoryTrnJoin : categoryJoinList) {
@@ -271,7 +270,7 @@ public class OutputRecommendListAction extends CommonResources {
 				this.poCategoryList.add(bean);
 			}
 
-			
+			//都度発注区分プルダウンの値
 			categoryJoinList = this.categoryService
 					.findCategoryJoinById(Categories.IMMEDIATELY_PO_CATEGORY);
 			for(CategoryJoin categoryTrnJoin : categoryJoinList) {

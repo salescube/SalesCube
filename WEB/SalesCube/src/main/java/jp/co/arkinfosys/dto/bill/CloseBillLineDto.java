@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.bill;
 
 import java.text.SimpleDateFormat;
@@ -20,16 +19,16 @@ import org.seasar.struts.util.MessageResourcesUtil;
  */
 public class CloseBillLineDto {
 
-	
+	// 実行チェック
 	public boolean closeCheck;
 
-	
+	// 顧客コード
 	public String customerCode;
 
-	
+	// 顧客名
 	public String customerName;
 
-	
+	// 前回請求締日
 	public String billCutoffDate;
 
 	static private SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);

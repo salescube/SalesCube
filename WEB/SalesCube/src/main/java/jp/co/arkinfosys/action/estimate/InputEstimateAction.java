@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.estimate;
 
 import java.text.DateFormat;
@@ -82,7 +81,7 @@ public class InputEstimateAction extends
 
 		try {
 
-			
+			// 敬称プルダウンリスト
 			submitPreList = categoryService
 					.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
 
@@ -102,7 +101,7 @@ public class InputEstimateAction extends
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
 		try {
-			
+			// 見積情報をロードする
 			InputEstimateDto dto = (InputEstimateDto) estimateSheetService
 					.loadBySlipId(inputEstimateForm.estimateSheetId);
 			if (dto == null) {
@@ -111,7 +110,7 @@ public class InputEstimateAction extends
 
 			Beans.copy(dto, inputEstimateForm).execute();
 
-			
+			// 見積明細情報をロードする
 			List<InputEstimateLineDto> lineDtoList = estimateLineService
 					.loadBySlip(dto);
 			dto.setLineDtoList(lineDtoList);
@@ -219,7 +218,7 @@ public class InputEstimateAction extends
 
 		String labelRemarks = MessageResourcesUtil.getMessage("labels.remarks");
 
-		
+		// 見積日＜＝有効期限
 		if (StringUtil.hasLength(inputEstimateForm.estimateDate)
 				&& StringUtil.hasLength(inputEstimateForm.validDate)) {
 			try {
@@ -230,50 +229,50 @@ public class InputEstimateAction extends
 
 				}
 			} catch (ParseException e) {
-				
+				// 型チェックは済んでいる
 			}
 		}
-		
+		// 存在する顧客か確認
 		if (StringUtil.hasLength(inputEstimateForm.customerCode)) {
 			if (customerService.isExistCustomerCode(inputEstimateForm.customerCode) == false) {
-				
+				// 顧客コードがXXのデータは存在しません
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.dataNotExist", labelCustomerCode, inputEstimateForm.customerCode));
 			}
 		}
 
-		
+		// 明細行
 		boolean inputLine = false;
 		for (InputEstimateLineDto line : inputEstimateForm.estimateLineTrnDtoList) {
-			
+			// 商品コードに入力がない場合は無視
 			if (!StringUtil.hasLength(line.productCode)) {
 				continue;
 			}
-			
+			// 明細行が1件以上、存在する
 			inputLine = true;
 
-			
-			
+			// 必須チェック
+			// 数量
 			if (!StringUtil.hasLength(line.quantity)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelQuantity));
 			}
 
-			
+			// 売上単価
 			if (!StringUtil.hasLength(line.unitRetailPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo,
 						labelUnitRetailPrice));
 			}
 
-			
+			// 売上金額
 			if (!StringUtil.hasLength(line.retailPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required", line.lineNo, labelRetailPrice));
 			}
 
-			
-			
+			// 長さチェック
+			// 商品コード
 			if (StringUtil.hasLength(line.productCode)) {
 				if (line.productCode.length() > 20) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -281,14 +280,14 @@ public class InputEstimateAction extends
 									line.lineNo, labelProductCode, "20"));
 				}
 			}
-			
+			// 商品名
 			if (StringUtil.hasLength(line.productAbstract)
 					&& line.productAbstract.length() > 60) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.maxlength", line.lineNo, labelProductName,
 						"60"));
 			}
-			
+			// 備考
 			if (StringUtil.hasLength(line.remarks)
 					&& line.remarks.length() > 120) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -296,13 +295,13 @@ public class InputEstimateAction extends
 						"120"));
 			}
 
-			
-			
-			
+			// 型チェック
+			// Float型
+			// 数量
 			if (StringUtil.hasLength(line.quantity)) {
 				try {
 
-					
+					// 数値０チェック
 					int iQuantity = ((Double) Double.parseDouble(line.quantity))
 							.intValue();
 					if (iQuantity == 0) {
@@ -317,12 +316,12 @@ public class InputEstimateAction extends
 				}
 			}
 
-			
+			// 仕入単価
 			if (StringUtil.hasLength(line.unitCost)) {
 				try {
 
-					
-					
+					// 数値０チェック
+					// 特殊コード商品の場合は0チェックを行わない
 					if (!DiscountUtil.isExceptianalProduct(line.productCode)) {
 						float funitCost = Float.parseFloat(line.unitCost);
 						if (Double.compare(funitCost, 0) == 0) {
@@ -337,11 +336,11 @@ public class InputEstimateAction extends
 									labelUnitCost));
 				}
 			}
-			
+			// 仕入金額
 			if (StringUtil.hasLength(line.cost)) {
 				try {
-					
-					
+					// 数値０チェック
+					// 特殊コード商品の場合は0チェックを行わない
 					if (!DiscountUtil.isExceptianalProduct(line.productCode)) {
 						float fCost = Float.parseFloat(line.cost);
 						if (Double.compare(fCost, 0) == 0) {
@@ -351,7 +350,7 @@ public class InputEstimateAction extends
 						}
 					}
 
-					
+					// 計算によって生成される項目の最大最小値チェック
 					if (StringUtil.hasLength(line.cost)) {
 						Long value = new Long(line.cost);
 						if ((value < Constants.LIMIT_VALUE.PRICE_MIN)
@@ -374,10 +373,10 @@ public class InputEstimateAction extends
 									labelCost));
 				}
 			}
-			
+			// 売上単価
 			if (StringUtil.hasLength(line.unitRetailPrice)) {
 				try {
-					
+					// 数値０チェック
 					float funitRetailPrice = Float
 							.parseFloat(line.unitRetailPrice);
 					if (Double.compare(funitRetailPrice, 0) == 0) {
@@ -397,10 +396,10 @@ public class InputEstimateAction extends
 									labelUnitRetailPrice));
 				}
 			}
-			
+			// 売価金額
 			if (StringUtil.hasLength(line.retailPrice)) {
 				try {
-					
+					// 数値０チェック
 					float fretailPrice = Float.parseFloat(line.retailPrice);
 					if (Double.compare(fretailPrice, 0) == 0) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -408,7 +407,7 @@ public class InputEstimateAction extends
 										line.lineNo, labelRetailPrice));
 					}
 
-					
+					// 計算によって生成される項目の最大最小値チェック
 					if (StringUtil.hasLength(line.retailPrice)) {
 						Long value = new Long(line.retailPrice);
 						if ((value < Constants.LIMIT_VALUE.PRICE_MIN)
@@ -431,10 +430,10 @@ public class InputEstimateAction extends
 				}
 			}
 
-			
+			// 値チェック　見積は商品が商品マスタに登録されていない可能性があるので存在チェックはしない
 
 		}
-		
+		// 明細行が1行以上、存在するかどうか
 		if (!inputLine) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.noline"));

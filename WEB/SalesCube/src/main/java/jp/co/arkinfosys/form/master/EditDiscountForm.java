@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ import org.seasar.struts.util.MessageResourcesUtil;
 @Component(instance = InstanceType.REQUEST)
 public class EditDiscountForm extends AbstractEditForm {
 
-	
+	// 基本情報
 	/** 割引コード */
 	@Required
 	public String discountId;
@@ -87,38 +86,38 @@ public class EditDiscountForm extends AbstractEditForm {
 		String labelDataTo = MessageResourcesUtil.getMessage("labels.discountTrn.dataTo");
 		String labelDiscountRate = MessageResourcesUtil.getMessage("labels.discountTrn.discountRate");
 
-		
-		
+		// 長さチェック
+		// 割引コード
 		checkMaxLength(discountId, 20, labelDiscountId, err);
-		
+		// 割引名
 		checkMaxLength(discountName, 60, labelDiscountName, err);
-		
+		// 備考
 		checkMaxLength(remarks, 120, labelRemarks, err);
 
-		
+		// 数量スライドの行数チェック
 		if (discountTrnList == null || discountTrnList.size() == 0) {
 			err.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.required", labelDiscountTrn));
 		}
 
-		
+		//必須・型チェック
 		int index = 0;
 		boolean isError = false;
 		for (DiscountTrnDto dto : discountTrnList) {
 			index++;
-			
+			// 開始
 			if (!checkRequired(index, dto.dataFrom, labelDataFrom, err)) {
 				isError = true;
 			}else if (!checkDecimal(index, dto.dataFrom, labelDataFrom, 9, 3, err)) {
 				isError = true;
 			}
-			
+			// 終了
 			if (!checkRequired(index, dto.dataTo, labelDataTo, err)) {
 				isError = true;
 			}else if (!checkDecimal(index, dto.dataTo, labelDataTo, 9, 3, err)) {
 				isError = true;
 			}
-			
+			// 割引率
 			if (!checkRequired(index, dto.discountRate, labelDiscountRate, err)) {
 				isError = true;
 			}else if (!checkDecimal(index, dto.discountRate, labelDiscountRate, 3, 3, err)) {
@@ -126,7 +125,7 @@ public class EditDiscountForm extends AbstractEditForm {
 			}
 		}
 
-		
+		//大小チェック
 		boolean isCrossError = false;
 		if(!isError){
 			index = 0;
@@ -142,28 +141,28 @@ public class EditDiscountForm extends AbstractEditForm {
 			}
 		}
 
-		
+		//重なりチェック  N^2ループなので組み合わせチェックのみ2パターンでよい
 		if(!isError && !isCrossError){
 			for (DiscountTrnDto dto : discountTrnList) {
 				BigDecimal dataFrom1 = new BigDecimal(dto.dataFrom);
 				BigDecimal dataTo1 =  new BigDecimal(dto.dataTo);
 				for (DiscountTrnDto dto2 : discountTrnList) {
 					if (dto.equals(dto2)) {
-						
+						// 同じものは比較対象外
 						continue;
 					}
 					BigDecimal dataFrom2 = new BigDecimal(dto2.dataFrom);
 					BigDecimal dataTo2 =  new BigDecimal(dto2.dataTo);
 					if (dataFrom1.compareTo(dataFrom2) <= 0 &&
 						dataTo1.compareTo(dataTo2) >= 0) {
-						
+						// dtoがdto2を内包する場合
 						err.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"errors.line.discounttrn.cross"));
 						isCrossError = true;
 						break;
 					} else if (dataFrom1.compareTo(dataFrom2) >= 0 &&
 							   dataTo1.compareTo(dataTo2) <= 0) {
-						
+						// dtoの開始がdto2に含まれる場合
 						err.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"errors.line.discounttrn.cross"));
 						isCrossError = true;

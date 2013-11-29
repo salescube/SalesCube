@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.math.BigDecimal;
@@ -62,7 +61,7 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 登録されているファイルを全て取得する
 		HashMap<String, Object> conditions = new HashMap<String, Object>();
 		conditions.put(FileInfoService.Param.OPEN_LEVEL,
 				super.userDto.fileOpenLevel);
@@ -70,7 +69,7 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 		List<FileInfoJoin> fileInfoList = this.fileInfoService.findByCondition(
 				conditions, AbstractService.Param.CRE_DATETM, false);
 
-		
+		// ファイル件数
 		this.fileInfoCount = fileInfoList.size();
 
 		for (FileInfoJoin fileInfo : fileInfoList) {
@@ -80,7 +79,7 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 					.execute();
 			fileInfoDtoList.add(fileInfoDto);
 
-			
+			// ファイルサイズをKB単位文字列に変換
 			if (fileInfo.fileSize == null) {
 				continue;
 			}
@@ -100,7 +99,7 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 		BigDecimal baseDec = new BigDecimal(Constants.FILE_SIZE.BLOCK_SIZE);
 		valueDec = valueDec.divide(baseDec, MathContext.UNLIMITED);
 
-		
+		// 端数切上げ、小数桁0、カンマ区切りのフォーマットを作成する
 		DecimalFormat kbFormat = NumberUtil.createDecimalFormat(
 				CategoryTrns.FLACT_CATEGORY_UP, 0, true);
 		return kbFormat.format(valueDec.doubleValue()) + Constants.FILE_SIZE.KB;

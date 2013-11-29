@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.porder;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class SearchPOrderAction extends AbstractSearchAction<List<Object>> {
 		this.searchPOrderForm.sortColumn = SearchPOrderService.Param.PO_SLIP_ID;
 		this.searchPOrderForm.sortOrderAsc = true;
 
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = searchPOrderService.createSearchPOrderResult(
 				null, null, searchPOrderForm.searchTarget);
 	}

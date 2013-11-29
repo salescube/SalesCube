@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -93,7 +92,7 @@ public class EditProductSetAction extends
 	@Execute(validator = true, validate = "validate", input = EditProductSetAction.Mapping.INPUT, stopOnValidationError = false)
 	public String update() throws Exception {
 		try {
-			
+			// 商品コードの存在チェック
 			boolean existsCodeError = false;
 
 			List<String> productCodeList = new ArrayList<String>();
@@ -117,7 +116,7 @@ public class EditProductSetAction extends
 				}
 			}
 			if (existsCodeError) {
-				
+				// 存在しない
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return EditProductSetAction.Mapping.INPUT;
 			}
@@ -127,7 +126,7 @@ public class EditProductSetAction extends
 					continue;
 				}
 				if (dto.deleted) {
-					
+					// 削除時
 					if(!dto.productCode.equals(dto.originalProductCode)) {
 						dto.productCode = dto.originalProductCode;
 					}
@@ -181,12 +180,12 @@ public class EditProductSetAction extends
 	protected AuditInfo loadData(String key) throws ServiceException {
 		this.editProductSetForm.reset();
 
-		
+		// セット商品情報を取得する
 		ProductJoin product = this.productService.findById(key);
 		if (product == null
 				|| !CategoryTrns.PRODUCT_SET_TYPE_SET
 						.equals(product.setTypeCategory)) {
-			
+			// セット商品が存在しない
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.notExist", MessageResourcesUtil
 							.getMessage("labels.setProduct")));
@@ -195,17 +194,17 @@ public class EditProductSetAction extends
 			this.editProductSetForm.isUpdate = false;
 		}
 
-		
+		// セット商品コード
 		this.editProductSetForm.setProductCode = product.productCode;
-		
+		// セット商品名
 		this.editProductSetForm.setProductName = product.productName;
 
-		
+		// 商品端数処理、数量小数桁
 		this.editProductSetForm.productFractCategory = super.mineDto.productFractCategory;
 		this.editProductSetForm.numDecAlignment = String
 				.valueOf(super.mineDto.numDecAlignment);
 
-		
+		// 数量の小数桁処理
 		NumberConverter conv = new NumberConverter(
 				super.mineDto.productFractCategory,
 				super.mineDto.numDecAlignment, false);
@@ -213,7 +212,7 @@ public class EditProductSetAction extends
 		List<ProductSetJoin> productSetJoinList = productSetService
 				.findProductSetByProductCode(key);
 		for (ProductSetJoin productSetJoin : productSetJoinList) {
-			
+			// 親商品の更新日を子商品の更新日に設定する
 			product.updDatetm = productSetJoin.updDatetm;
 
 			ProductSetDto dto = Beans.createAndCopy(ProductSetDto.class,

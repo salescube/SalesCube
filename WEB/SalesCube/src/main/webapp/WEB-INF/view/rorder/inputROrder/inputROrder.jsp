@@ -64,7 +64,7 @@
     	MainDefaultAction = $("form[name='" + MainFormName + "']").attr("action");
 
 		// 端数処理初期設定
-		applyNumeralStyles();
+		applyNumeralStyles(false);
 
         // 行追加用オブジェクト
         trCloneBase = $("#productRow_1").clone(true);
@@ -115,7 +115,7 @@
 		}
 	}
 
-	function applyNumeralStyles(){
+	function applyNumeralStyles(hasChanged){
 		for(var i=1; i<=maxLineCount; i++) {
 			// 丸めの少数桁と端数処理を設定する
 			applyNumeralStylesToObj(quantityCategory,quantityAlignment,$("#productRow_" + i + "_restQuantity"));
@@ -139,7 +139,7 @@
 		applyNumeralStylesToObj($("#priceFractCategory").val(),priceAlignment,$("#priceTotalDisp"));
 
 		// 下部の合計欄を計算する
-		calcSum();
+		calcSum(hasChanged);
 
 		// カンマをつける
 		_after_load($(".numeral_commas"));
@@ -349,9 +349,9 @@
 			);
         }
         // 端数処理設定
-		applyNumeralStyles();
+		applyNumeralStyles(true);
         // 合計金額を計算する
-        calcSum();
+        calcSum(true);
     }
 
 	//納入先情報フォームIDリスト
@@ -406,7 +406,7 @@
 		// 端数処理を変数に設定
 		$("#taxFractCategory").val(${mineDto.taxFractCategory});
 		$("#priceFractCategory").val(${mineDto.priceFractCategory});
-		applyNumeralStyles();
+		applyNumeralStyles(true);
 	}
 
 	//納入先情報の初期化
@@ -1055,7 +1055,7 @@
 
         _set_commas($("#" + id + "_cost").get(0));
 
-        calcSum();
+        calcSum(true);
     }
     function calcRetail(id) {
 
@@ -1080,7 +1080,7 @@
 
         _set_commas($("#" + id + "_retailPrice").get(0));
 
-        calcSum();
+        calcSum(true);
     }
     function calcCostAndRetail(id) {
 
@@ -1118,7 +1118,7 @@
 
         _set_commas($("#" + id + "_retailPrice").get(0));
 
-        calcSum();
+        calcSum(true);
     }
 
     function calcRetailPrice(id) {
@@ -1194,7 +1194,7 @@
         resetIds(lineNo);
         resetRowNo();
         maxLineCount--;
-        calcSum();
+        calcSum(true);
 
         // ボタンの有効・無効制御
         resetButtonDisabled();
@@ -1373,7 +1373,7 @@
         }
     }
 
-    function calcSum() {
+    function calcSum(hasChanged) {
         var tbodyObj = $("#tbodyLine").get(0);
         var rowNo = 1;
         var count = 0;
@@ -1387,38 +1387,24 @@
             sumCost += _Number($("#productRow_" + (i+1) + "_cost").val());
             var retailPrice = _Number($("#productRow_" + (i+1) + "_retailPrice").val());
             sumRetailPrice += retailPrice;
-            // 税率は％表記なので100.0で割る
-			var myTax = sumRetailPrice  * ${f:h(taxRate)} / 100.0;
-			var l_nCtaxPriceTotal = oBDCS( myTax.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString();
-            $("#productRow_" + (i+1) + "_ctaxPrice_hidden").val( l_nCtaxPriceTotal );
+            if(hasChanged){
+                // 税率は％表記なので100.0で割る
+    			var myTax = sumRetailPrice  * ${f:h(taxRate)} / 100.0;
+    			var l_nCtaxPriceTotal = oBDCS( myTax.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString();
+                $("#productRow_" + (i+1) + "_ctaxPrice_hidden").val( l_nCtaxPriceTotal );
+            }
+            	
         }
 
         // 表示する
         // 粗利益
         var gross = sumRetailPrice - sumCost;
+        $("#gross").val(gross);
+        $("#grossDisp").html(gross);
 
         // 粗利益率
         // 2010.04.22 update kaki 粗利益率は％表示するため、×100する。
         var grossRatio = gross / sumRetailPrice * 100;
-
-        // 金額合計
-        var retailPriceTotal = sumRetailPrice;
-
-        // 消費税
-        var ctaxPriceTotal = 0.0;
-        // 伝票合計
-        var priceTotal = retailPriceTotal;
-        // 外税の時のみ消費税を計算する
-        if ($("#taxShiftCategory").val() != <%=CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX%>) {
-            // 税率は％表記なので100.0で割る
-            ctaxPriceTotal = retailPriceTotal * ${f:h(taxRate)} / 100.0;
-            ctaxPriceTotal = _Number(oBDCS( ctaxPriceTotal.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString());
-            priceTotal += ctaxPriceTotal;
-        }
-
-        $("#gross").val(gross);
-        $("#grossDisp").html(gross);
-
         if (sumRetailPrice == 0) {
             $("#grossRatio").val("");
             $("#grossRatioDisp").html("");
@@ -1427,14 +1413,35 @@
             $("#grossRatioDisp").html(grossRatio);
         }
 
+        // 金額合計
+        var retailPriceTotal = sumRetailPrice;
         $("#retailPriceTotal").val(retailPriceTotal);
         $("#retailPriceTotalDisp").html(retailPriceTotal);
 
-        $("#ctaxPriceTotal").val(ctaxPriceTotal);
-        $("#ctaxPriceTotalDisp").html(ctaxPriceTotal);
+        // 消費税
+        var ctaxPriceTotal = 0.0;
+        // 伝票合計
+        var priceTotal = retailPriceTotal;
+        // 外税の時のみ消費税を計算する
+        if ($("#taxShiftCategory").val() != <%=CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX%>) {
+            // 税率は％表記なので100.0で割る
+           if(hasChanged){
+                ctaxPriceTotal = retailPriceTotal * ${f:h(taxRate)} / 100.0;
+                ctaxPriceTotal = _Number(oBDCS( ctaxPriceTotal.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString());
+                $("#ctaxPriceTotal").val(ctaxPriceTotal);
+                $("#ctaxPriceTotalDisp").html(ctaxPriceTotal);
 
-        $("#priceTotal").val(priceTotal);
-        $("#priceTotalDisp").html(priceTotal);
+                priceTotal += ctaxPriceTotal;
+                $("#priceTotal").val(priceTotal);
+                $("#priceTotalDisp").html(priceTotal);
+            }else{
+            	
+            	// 変更しない値をhtmlに設定
+                $("#ctaxPriceTotalDisp").html($("#ctaxPriceTotal").val());
+                $("#priceTotalDisp").html($("#priceTotal").val());
+            	
+            }
+        }
 
         $("#costTotal").val(sumCost);
 
@@ -1470,7 +1477,7 @@
 
     	// 商品コード列の設定
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_code");
+    	elemWork = elemTd.children().children("#productRow_1_code");
     	elemWork.attr("id", "productRow_" + lineNo + "_code");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].productCode");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1483,7 +1490,7 @@
     	elemWork.bind("blur", {"lineNo": lineNo}, function(e){ if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); searchProduct(e); } });
         elemWork.val("");
 
-    	elemWork = elemTd.children("#productRow_1_icon");
+    	elemWork = elemTd.children().children("#productRow_1_icon");
         elemWork.attr("id", "productRow_" + lineNo + "_icon");
     	elemWork.attr("tabindex", (++tabIdx));
     	elemWork.bind("click", {"lineNo": lineNo}, openSearchProduct);
@@ -1530,7 +1537,7 @@
     	elemWork.attr("id", "productRow_" + lineNo + "_name");
         elemWork.text("");
 
-    	elemWork = elemTd.children("#productRow_1_productRemarks");
+    	elemWork = elemTd.children().children("#productRow_1_productRemarks");
     	elemWork.attr("id", "productRow_" + lineNo + "_productRemarks");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].productRemarks");
         elemWork.text("");
@@ -1542,12 +1549,12 @@
 
     	// 棚番・数量列の設定
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_rack");
+    	elemWork = elemTd.children().children("#productRow_1_rack");
     	elemWork.attr("id", "productRow_" + lineNo + "_rack");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].rackCodeSrc");
     	elemWork.attr("tabindex", (++tabIdx));
         elemWork.val("");
-    	elemWork = elemTd.children("#productRow_1_quantity");
+    	elemWork = elemTd.children().children("#productRow_1_quantity");
     	elemWork.attr("id", "productRow_" + lineNo + "_quantity");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].quantity");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1569,24 +1576,24 @@
 
 
     	// 在庫ボタン
-    	elemWork = elemTd.children("#productRow_1_stockBtn");
+    	elemWork = elemTd.children().children("#productRow_1_stockBtn");
     	elemWork.attr("id", "productRow_" + lineNo + "_stockBtn");
     	elemWork.attr("tabindex", (++tabIdx));
     	elemWork.bind("click", {"lineNo": 'productRow_' + lineNo}, onStockButton);
 
         // 受注残数・完納区分の設定
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_restQuantity");
+    	elemWork = elemTd.children().children("#productRow_1_restQuantity");
     	elemWork.attr("id", "productRow_" + lineNo + "_restQuantity");
         elemWork.text("");
 //    	elemWork.attr("tabindex", (++tabIdx));
-    	elemWork = elemTd.children("#productRow_1_statusName");
+    	elemWork = elemTd.children().children("#productRow_1_statusName");
     	elemWork.attr("id", "productRow_" + lineNo + "_statusName");
         elemWork.text("");
 
 
         // 引当可能数
-    	elemWork = elemTd.children("#productRow_1_possibleDrawQuantity");
+    	elemWork = elemTd.children().children("#productRow_1_possibleDrawQuantity");
     	elemWork.attr("id", "productRow_" + lineNo + "_possibleDrawQuantity");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].possibleDrawQuantity");
         elemWork.val("");
@@ -1626,7 +1633,7 @@
 
     	// 仕入単価・仕入金額
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_unitCost");
+    	elemWork = elemTd.children().children("#productRow_1_unitCost");
     	elemWork.attr("id", "productRow_" + lineNo + "_unitCost");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].unitCost");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1639,7 +1646,7 @@
     	elemWork.unbind("blur");
     	elemWork.bind("blur", {"id": 'productRow_' + lineNo}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcCostEvent(e); } });
 
-    	elemWork = elemTd.children("#productRow_1_cost");
+    	elemWork = elemTd.children().children("#productRow_1_cost");
     	elemWork.attr("id", "productRow_" + lineNo + "_cost");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].cost");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1649,7 +1656,7 @@
 
     	// 売上単価・売価金額
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_unitRetailPrice");
+    	elemWork = elemTd.children().children("#productRow_1_unitRetailPrice");
     	elemWork.attr("id", "productRow_" + lineNo + "_unitRetailPrice");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].unitRetailPrice");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1662,7 +1669,7 @@
     	elemWork.unbind("blur");
     	elemWork.bind("blur", {"id": 'productRow_' + lineNo}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcRetailEvent(e); } });
 
-    	elemWork = elemTd.children("#productRow_1_retailPrice");
+    	elemWork = elemTd.children().children("#productRow_1_retailPrice");
     	elemWork.attr("id", "productRow_" + lineNo + "_retailPrice");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].retailPrice");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1672,14 +1679,14 @@
 
     	// 備考列の設定
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_remarks");
+    	elemWork = elemTd.children().children("#productRow_1_remarks");
     	elemWork.attr("id", "productRow_" + lineNo + "_remarks");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].remarks");
     	elemWork.attr("tabindex", (++tabIdx));
     	elemWork.attr("readonly", false);
     	elemWork.removeClass("c_disable");
         elemWork.val("");
-    	elemWork = elemTd.children("#productRow_1_eadRemarks");
+    	elemWork = elemTd.children().children("#productRow_1_eadRemarks");
     	elemWork.attr("id", "productRow_" + lineNo + "_eadRemarks");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].eadRemarks");
     	elemWork.attr("tabindex", (++tabIdx));
@@ -1687,12 +1694,12 @@
 
     	// ボタン列の設定
     	elemTd = elemTd.next();
-    	elemWork = elemTd.children("#productRow_1_deleteRowBtn");
+    	elemWork = elemTd.children().children("#productRow_1_deleteRowBtn");
     	elemWork.attr("id", "productRow_" + lineNo + "_deleteRowBtn");
     	elemWork.attr("tabindex", (++tabIdx));
     	elemWork.bind("click", {"lineId": "", "lineNo": lineNo}, deleteRow);
 
-    	elemWork = elemTd.children("#productRow_1_copyRowBtn");
+    	elemWork = elemTd.children().children("#productRow_1_copyRowBtn");
     	elemWork.attr("id", "productRow_" + lineNo + "_copyRowBtn");
     	elemWork.attr("tabindex", (++tabIdx));
     	elemWork.bind("click", {"lineNo": lineNo}, copyRow);
@@ -1787,7 +1794,7 @@
     	$("#productRow_" + lineNo + "_remarks").val($("#productRow_" + source + "_remarks").val());
     	$("#productRow_" + lineNo + "_eadRemarks").val($("#productRow_" + source + "_eadRemarks").val());
 
-        calcSum();
+        calcSum(true);
     }
 
  	// 明細行の空行判定
@@ -1869,15 +1876,15 @@
 	<script type="text/javascript" src="./scripts/order_customer_input.js"></script>
 	<script type="text/javascript" src="./scripts/jquery.bgiframe.min.js"></script>
 </head>
-<body onload="init()" onhelp="return false;">
-	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
+<body onload="init()" onhelp="return false;">
+<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
 <!-- メニュー -->
-	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
-		<jsp:param name="PARENT_MENU_ID" value="0003"/>
-		<jsp:param name="MENU_ID" value="<%=Constants.MENU_ID.INPUT_RORDER%>"/>
-	</jsp:include>
+<jsp:include page="/WEB-INF/view/common/menubar.jsp">
+	<jsp:param name="PARENT_MENU_ID" value="0003"/>
+	<jsp:param name="MENU_ID" value="<%=Constants.MENU_ID.INPUT_RORDER%>"/>
+</jsp:include>
 
 
 <!-- メイン機能 -->
@@ -1888,35 +1895,35 @@
 
 	<div class="function_buttons">
 		<button type="button" tabindex="2000" id="btnF1" onclick="onF1()">F1<br>初期化</button>
-<c:if test="${!newData}">
-    <c:if test="${menuUpdate}">
-        <c:if test="${deletable}">
-		<button type="button" tabindex="2001" id="btnF2" onclick="onF2()">F2<br>削除</button>
-        </c:if>
-		<c:if test="${!deletable}">
-		<button type="button" tabindex="2001" id="btnF2" disabled="disabled">F2<br>削除</button>
-        </c:if>
-		<c:if test="${statusUpdate}">
-    		<button type="button" tabindex="2002" id="btnF3" onclick="onF3()">F3<br>更新</button>
-        </c:if>
-		<c:if test="${!statusUpdate}">
-    		<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>更新</button>
-        </c:if>
-    </c:if>
-    <c:if test="${!menuUpdate}">
-		<button type="button" disabled="disabled" id="btnF2" tabindex="2001">F2<br>削除</button>
-		<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>更新</button>
-    </c:if>
-</c:if>
-<c:if test="${newData}">
-		<button type="button" disabled="disabled" id="btnF2" tabindex="2001">F2<br>削除</button>
-    <c:if test="${menuUpdate}">
-		<button type="button" tabindex="2002" id="btnF3" onclick="onF3()">F3<br>登録</button>
-    </c:if>
-    <c:if test="${!menuUpdate}">
-		<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>登録</button>
-    </c:if>
-</c:if>
+	<c:if test="${!newData}">
+	    <c:if test="${menuUpdate}">
+	        <c:if test="${deletable}">
+			<button type="button" tabindex="2001" id="btnF2" onclick="onF2()">F2<br>削除</button>
+	        </c:if>
+			<c:if test="${!deletable}">
+			<button type="button" tabindex="2001" id="btnF2" disabled="disabled">F2<br>削除</button>
+	        </c:if>
+			<c:if test="${statusUpdate}">
+	    		<button type="button" tabindex="2002" id="btnF3" onclick="onF3()">F3<br>更新</button>
+	        </c:if>
+			<c:if test="${!statusUpdate}">
+	    		<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>更新</button>
+	        </c:if>
+	    </c:if>
+	    <c:if test="${!menuUpdate}">
+			<button type="button" disabled="disabled" id="btnF2" tabindex="2001">F2<br>削除</button>
+			<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>更新</button>
+	    </c:if>
+	</c:if>
+	<c:if test="${newData}">
+			<button type="button" disabled="disabled" id="btnF2" tabindex="2001">F2<br>削除</button>
+	    <c:if test="${menuUpdate}">
+			<button type="button" tabindex="2002" id="btnF3" onclick="onF3()">F3<br>登録</button>
+	    </c:if>
+	    <c:if test="${!menuUpdate}">
+			<button type="button" disabled="disabled" id="btnF3" tabindex="2002">F3<br>登録</button>
+	    </c:if>
+	</c:if>
 		<button type="button" id="btnF4" disabled="disabled">F4<br>&nbsp;</button>
 		<button type="button" id="btnF5" disabled="disabled">F5<br>&nbsp;</button>
 		<button type="button" id="btnF6" disabled="disabled">F6<br>&nbsp;</button>
@@ -1926,8 +1933,9 @@
 		<button type="button" id="btnF10" disabled="disabled">F10<br>&nbsp;</button>
 		<button type="button" id="btnF11" disabled="disabled">F11<br>&nbsp;</button>
 		<button type="button" id="btnF12" disabled="disabled">F12<br>&nbsp;</button>
-	</div><br>
-
+	</div>
+	<br><br><br>
+		
 	<s:form onsubmit="return false;">
 		<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
 		<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
@@ -1936,310 +1944,328 @@
 		<html:hidden property="isImport" styleId="isImport" />
 
 		<div class="function_forms">
-	<div id="errors" style="color: red" style="padding-left: 20px"><html:errors/></div>
-	<div style="color: blue;">
-	<html:messages id="msg" message="true">
-		<bean:write name="msg" ignore="true"/><br>
-	</html:messages>
-	</div>
-	<br>
-		<span>受注伝票情報</span><br>
-        <html:hidden property="updDatetm"/>
-		<table id="order_info" class="forms" summary="受注伝票情報">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-			</colgroup>
-			<tr>
-				<th>受注番号</th>
-				<td><html:text styleId="roSlipId" property="roSlipId" tabindex="100" readonly="false" style="ime-mode:disabled;" styleClass=""  maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))) {findSlip();}"/></td>
-				<th>受注日<bean:message key='labels.must'/></th>
-				<td>
-                    <html:text styleId="roDate" maxlength="10" property="roDate" tabindex="101" style="text-align:center;ime-mode:disabled; width: 120px;" styleClass="date_input"/>
-                </td>
-				<th>出荷日</th>
-				<td><html:text maxlength="10" property="shipDate" tabindex="102" style="text-align:center;ime-mode:disabled; width: 120px;" styleClass="date_input"/></td>
-				<th>納期指定日</th>
-				<td>
-                    <html:text maxlength="10" property="deliveryDate" tabindex="103" style="text-align:center;ime-mode:disabled; width: 120px;" styleClass="date_input"/>
-                </td>
-			</tr>
-			<tr>
-				<th>受付番号</th>
-				<td>
-<c:if test="${isImport}">
-                    <html:text maxlength="30" property="receptNo" tabindex="104" style="ime-mode:disabled;" styleClass="c_disable" readonly="true"/>
-</c:if>
-<c:if test="${!isImport}">
-                    <html:text maxlength="30" property="receptNo" tabindex="104" style="ime-mode:disabled;"/>
-</c:if>
-                </td>
-				<th>客先伝票番号</th>
-				<td><html:text maxlength="30" property="customerSlipNo" tabindex="105" style="ime-mode:disabled;"/> </td>
-				<th>入力担当者</th>
-				<td colspan="3">
-                    <html:hidden property="userId"/>
-                    <html:text property="userName" tabindex="106" readonly="true" styleClass="c_disable"/>
-                    <html:hidden property="status" styleId="status" />
-                </td>
-
-			</tr>
-			<tr>
-				<th>摘要</th>
-				<td colspan="3">
-                    <html:text maxlength="50" property="remarks" style="width: 420px; ime-mode:active;" tabindex="107"/>
-                </td>
-				<th>配送業者</th>
-				<td>
-					<html:select tabindex="108" property="dcCategory"  styleId="dcCategory" >
-						<c:forEach var="dcl" items="${dcCategoryList}">
-							<html:option value="${dcl.value}">${dcl.label}</html:option>
-						</c:forEach>
-					</html:select>
-				</td>
-				<th>配送時間帯</th>
-				<td>
-					<html:select tabindex="109" property="dcTimezoneCategory"  styleId="dcTimezoneCategory" >
-						<c:forEach var="dctl" items="${dcTimeZoneCategoryList}">
-							<html:option value="${dctl.value}">${dctl.label}</html:option>
-						</c:forEach>
-					</html:select>
-				</td>
-			</tr>
-		</table>
-
-		<span>顧客情報</span><br>
-		<table id="customer_info" class="forms" summary="顧客情報">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 35%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 30%">
-			</colgroup>
-			<tr>
-				<th>顧客コード<bean:message key='labels.must'/></th>
-				<td>
-<c:if test="${isImport}">
-                    <html:text maxlength="13" styleId="customerCode" property="customerCode" style="width: 130px; ime-mode:disabled;" tabindex="200" readonly="true" styleClass="c_disable"/>
-</c:if>
-<c:if test="${!isImport}">
-                    <html:text maxlength="13" styleId="customerCode" property="customerCode" style="width: 130px; ime-mode:disabled;" tabindex="200"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ GetCustomerInfos(); }"/>
-                    <html:image tabindex="201" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;" onclick="openSearchCustomerDialog('customer', setCustomer);$('#customer_customerCode').val($('#customerCode').val());" />
-</c:if>
-                </td>
-				<th>顧客名</th>
-				<td colspan="3">
-                    <html:text styleId="customerName" property="customerName" style="width: 500px;" tabindex="202" readonly="true" styleClass="c_disable"/>
-                </td>
-			</tr>
-			<tr>
-				<th>税転嫁</th>
-				<td>
-					<html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="203" styleClass="c_disable">
-<c:if test="${newData}">
-						<html:option value=""></html:option>
-</c:if>
-						<html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-				</td>
-				<th>支払条件</th>
-				<td>
-                    <html:select styleId="cutoffGroupCategory" property="cutoffGroupCategory" tabindex="204" styleClass="c_disable">
-<c:if test="${newData}">
-                        <html:option value=""></html:option>
-</c:if>
-                        <html:options collection="cutOffList" property="value" labelProperty="label"/>
-                    </html:select>
-                </td>
-				<th>取引区分</th>
-				<td>
-                    <html:select styleId="salesCmCategory" property="salesCmCategory" tabindex="205" styleClass="c_disable">
-<c:if test="${newData}">
-                        <html:option value=""></html:option>
-</c:if>
-                        <html:options collection="salesCmCategoryList" property="value" labelProperty="label"/>
-                    </html:select>
-				</td>
-			</tr>
-			<tr>
-				<th>備考</th>
-				<td colspan="5">
-					<html:text property="customerRemarks" styleId="customerRemarks" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="206" />
-				</td>
-			</tr>
-			<tr>
-				<th>コメント</th>
-				<td colspan="5">
-					<html:text property="customerCommentData" styleId="customerCommentData" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="207" />
-				</td>
-			</tr>
-		</table>
-
-		<span>納入先情報</span><br>
-		<table id="delivery_info" class="forms" summary="納入先情報">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 12%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 17%">
-			</colgroup>
-			<tr>
-				<th>顧客納入先</th>
-				<td colspan="7">
+			<div id="errors" style="color: red" style="padding-left: 20px">
+				<html:errors/>
+			</div>
+			<div style="color: blue;">
+				<html:messages id="msg" message="true">
+					<bean:write name="msg" ignore="true"/><br>
+				</html:messages>
+			</div>
+			
+		    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span>受注伝票情報</span>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
 					
-                    <html:select styleId="deliveryCode" property="deliveryCode" tabindex="300" onchange="changeDelivery()"
-                    	style="${isOnlineOrder?'display: none;':''}" disabled="${isOnlineOrder}">
-                        <option value=""></option>
-                        <html:options collection="deliveryList" property="value" labelProperty="label"/>
-                    </html:select>
+			        <html:hidden property="updDatetm"/>
+			        
+			        <div id="order_section" class="section_body">
+					<table id="order_info" class="forms" summary="受注伝票情報">
+						<tr>
+							<th><div class="col_title_right">受注番号</div></th>
+							<td><html:text styleId="roSlipId" property="roSlipId" tabindex="100" readonly="false" style="ime-mode:disabled;" styleClass=""  maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))) {findSlip();}"/></td>
+							<th><div class="col_title_right">受注日<bean:message key='labels.must'/></div></th>
+							<td>
+			                    <html:text styleId="roDate" maxlength="10" property="roDate" tabindex="101" style="text-align:center;ime-mode:disabled; width: 135px;" styleClass="date_input"/>
+			                </td>
+							<th><div class="col_title_right">出荷日</div></th>
+							<td><html:text maxlength="10" property="shipDate" tabindex="102" style="text-align:center;ime-mode:disabled; width: 135px;" styleClass="date_input"/></td>
+							<th><div class="col_title_right">納期指定日</div></th>
+							<td>
+			                    <html:text maxlength="10" property="deliveryDate" tabindex="103" style="text-align:center;ime-mode:disabled; width: 135px;" styleClass="date_input"/>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">受付番号</div></th>
+							<td>
+								<c:if test="${isImport}">
+				                    <html:text maxlength="30" property="receptNo" tabindex="104" style="ime-mode:disabled;" styleClass="c_disable" readonly="true"/>
+								</c:if>
+								<c:if test="${!isImport}">
+				                    <html:text maxlength="30" property="receptNo" tabindex="104" style="ime-mode:disabled;"/>
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">客先伝票番号</div></th>
+							<td><html:text maxlength="30" property="customerSlipNo" tabindex="105" style="ime-mode:disabled;"/> </td>
+							<th><div class="col_title_right">入力担当者</div></th>
+							<td colspan="3">
+			                    <html:hidden property="userId"/>
+			                    <html:text property="userName" tabindex="106" readonly="true" styleClass="c_disable"/>
+			                    <html:hidden property="status" styleId="status" />
+			                </td>
+			
+						</tr>
+						<tr>
+							<th><div class="col_title_right">摘要</div></th>
+							<td colspan="3">
+			                    <html:text maxlength="50" property="remarks" style="width: 420px; ime-mode:active;" tabindex="107"/>
+			                </td>
+							<th><div class="col_title_right">配送業者</div></th>
+							<td>
+								<html:select tabindex="108" property="dcCategory"  styleId="dcCategory" >
+									<c:forEach var="dcl" items="${dcCategoryList}">
+										<html:option value="${dcl.value}">${dcl.label}</html:option>
+									</c:forEach>
+								</html:select>
+							</td>
+							<th><div class="col_title_right">配送時間帯</div></th>
+							<td>
+								<html:select tabindex="109" property="dcTimezoneCategory"  styleId="dcTimezoneCategory" >
+									<c:forEach var="dctl" items="${dcTimeZoneCategoryList}">
+										<html:option value="${dctl.value}">${dctl.label}</html:option>
+									</c:forEach>
+								</html:select>
+							</td>
+						</tr>
+					</table>
+					</div><!-- /.section_body -->
+				</div><!-- /.form_section -->
+			</div><!-- /.form_section_wrap -->
 
-                    <html:text styleId="deliveryName" property="deliveryName" tabindex="300"
-                    	style="width: 500px; ime-mode:active; ${!isOnlineOrder?'display: none;':''}" maxlength="60"/>
+		    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span>顧客情報</span>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
+					
+					<div id="order_section" class="section_body">
+					<table id="customer_info" class="forms" summary="顧客情報">
+						<colgroup>
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 35%">
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 30%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">顧客コード<bean:message key='labels.must'/></div></th>
+							<td>
+								<c:if test="${isImport}">
+			                    	<html:text maxlength="13" styleId="customerCode" property="customerCode" style="width: 130px; ime-mode:disabled;" tabindex="200" readonly="true" styleClass="c_disable"/>
+								</c:if>
+								<c:if test="${!isImport}">
+				                    <html:text maxlength="13" styleId="customerCode" property="customerCode" style="width: 130px; ime-mode:disabled;" tabindex="200"
+				                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ GetCustomerInfos(); }"/>
+				                    <html:image tabindex="201" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSearchCustomerDialog('customer', setCustomer);$('#customer_customerCode').val($('#customerCode').val());" />
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">顧客名</div></th>
+							<td colspan="3">
+			                    <html:text styleId="customerName" property="customerName" style="width: 500px;" tabindex="202" readonly="true" styleClass="c_disable"/>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">税転嫁</div></th>
+							<td>
+								<html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="203" styleClass="c_disable">
+								<c:if test="${newData}">
+									<html:option value=""></html:option>
+								</c:if>
+									<html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
+								</html:select>
+							</td>
+							<th><div class="col_title_right">支払条件</div></th>
+							<td>
+			                    <html:select styleId="cutoffGroupCategory" property="cutoffGroupCategory" tabindex="204" styleClass="c_disable">
+								<c:if test="${newData}">
+			                        <html:option value=""></html:option>
+								</c:if>
+			                        <html:options collection="cutOffList" property="value" labelProperty="label"/>
+			                    </html:select>
+			                </td>
+							<th><div class="col_title_right">取引区分</div></th>
+							<td>
+			                    <html:select styleId="salesCmCategory" property="salesCmCategory" tabindex="205" styleClass="c_disable">
+								<c:if test="${newData}">
+			                        <html:option value=""></html:option>
+								</c:if>
+			                        <html:options collection="salesCmCategoryList" property="value" labelProperty="label"/>
+			                    </html:select>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">備考</div></th>
+							<td colspan="5">
+								<html:text property="customerRemarks" styleId="customerRemarks" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="206" />
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">コメント</div></th>
+							<td colspan="5">
+								<html:text property="customerCommentData" styleId="customerCommentData" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="207" />
+							</td>
+						</tr>
+					</table>
+					</div><!-- /.section_body -->
+				</div><!-- /.form_section -->
+			</div><!-- /.form_section_wrap -->
 
-
-
-                    <html:hidden styleId="deliveryKana" property="deliveryKana"/>
-                    <html:hidden styleId="deliveryOfficeKana" property="deliveryOfficeKana"/>
-                    <html:hidden styleId="deliveryUrl" property="deliveryUrl"/>
-				</td>
-			</tr>
-			<tr>
-				<th>事業所名</th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryOfficeName" property="deliveryOfficeName" tabindex="301" style="width: 200px; ime-mode:active;" maxlength="60" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryOfficeName" property="deliveryOfficeName" tabindex="301" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
-</c:if>
-                </td>
-				<th>部署名</th>
-				<td colspan="3">
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryDeptName" property="deliveryDeptName" tabindex="302" style="width: 200px; ime-mode:active;" maxlength="60" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryDeptName" property="deliveryDeptName" tabindex="302" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
-</c:if>
-                </td>
-			</tr>
-			<tr>
-				<th>郵便番号<c:if test="${isOnlineOrder}">※</c:if></th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryZipCode" property="deliveryZipCode" tabindex="303" style="width: 70px; ime-mode:disabled;" maxlength="8" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect();} "/>
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryZipCode" property="deliveryZipCode" tabindex="303" style="width: 70px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="8" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}" />
-</c:if>
-					<html:image tabindex="304" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;" onclick="openZipCodeDialog();" />
-				</td>
-				<th>住所１<c:if test="${isOnlineOrder}">※</c:if></th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryAddress1" property="deliveryAddress1" tabindex="305" style="width: 200px; ime-mode:active;" maxlength="50"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(); }"/>
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryAddress1" property="deliveryAddress1" tabindex="305" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="50"
-                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(); }"/>
-</c:if>
-                </td>
-				<th>住所２</th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryAddress2" property="deliveryAddress2" tabindex="306" style="width: 200px; ime-mode:active;" maxlength="50" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryAddress2" property="deliveryAddress2" tabindex="306" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="50" />
-</c:if>
-                </td>
-			</tr>
-			<tr>
-				<th>担当者<c:if test="${isOnlineOrder}">※</c:if></th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryPcName" property="deliveryPcName" style="width: 150px; ime-mode:active;" tabindex="307" maxlength="60" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryPcName" property="deliveryPcName" style="width: 150px; ime-mode:active;" tabindex="307" readonly="true" styleClass="c_disable" maxlength="60" />
-</c:if>
-                </td>
-				<th>担当者カナ</th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryPcKana" property="deliveryPcKana" tabindex="308" style="width: 200px; ime-mode:active;"  maxlength="60" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryPcKana" property="deliveryPcKana" tabindex="308" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
-</c:if>
-                </td>
-				<th>敬称</th>
-				<td>
-<c:if test="${isOnlineOrder}">
-					<html:select styleId="deliveryPcPreCategory" property="deliveryPcPreCategory" tabindex="309" >
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-                    <html:hidden property="deliveryPcPre" styleId="deliveryPcPre"/>
-</c:if>
-<c:if test="${!isOnlineOrder}">
-					<html:select styleId="deliveryPcPreCategory" property="deliveryPcPreCategory" tabindex="309" styleClass="c_disable">
-<c:if test="${newData}">
-                        <html:option value=""></html:option>
-</c:if>
-                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
-					</html:select>
-                    <html:hidden property="deliveryPcPre" styleId="deliveryPcPre"/>
-</c:if>
-                </td>
-
-			</tr>
-			<tr>
-				<th>TEL<c:if test="${isOnlineOrder}">※</c:if></th>
-				<td>
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryTel" property="deliveryTel" tabindex="310" style="width: 150px; ime-mode:disabled;" maxlength="15" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryTel" property="deliveryTel" tabindex="310" style="width: 150px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="15" />
-</c:if>
-                </td>
-				<th>FAX</th>
-				<td colspan="3">
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryFax" property="deliveryFax" tabindex="311" style="width: 150px; ime-mode:disabled;" maxlength="15" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryFax" property="deliveryFax" tabindex="311" style="width: 150px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="15" />
-</c:if>
-                </td>
-			</tr>
-			<tr>
-				<th>E-MAIL</th>
-				<td colspan="5">
-<c:if test="${isOnlineOrder}">
-                    <html:text styleId="deliveryEmail" property="deliveryEmail" tabindex="312" style="width: 400px; ime-mode:disabled;" maxlength="255" />
-</c:if>
-<c:if test="${!isOnlineOrder}">
-                    <html:text styleId="deliveryEmail" property="deliveryEmail" tabindex="312" style="width: 400px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="255" />
-</c:if>
-                </td>
-			</tr>
-		</table>
-		<table summary="受注商品明細リスト" class="forms" style="margin-top: 20px;">
+		    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span>納入先情報</span>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
+					
+					<div id="order_section" class="section_body">
+					<table id="delivery_info" class="forms" summary="納入先情報">
+						<tr>
+							<th><div class="col_title_right">顧客納入先</div></th>
+							<td>
+								<%-- オンライン注文以外 --%>
+			                    <html:select styleId="deliveryCode" property="deliveryCode" tabindex="300" onchange="changeDelivery()"
+			                    	style="${isOnlineOrder?'display: none;':''}" disabled="${isOnlineOrder}">
+			                        <option value=""></option>
+			                        <html:options collection="deliveryList" property="value" labelProperty="label"/>
+			                    </html:select>
+			
+			                    <html:text styleId="deliveryName" property="deliveryName" tabindex="300"
+			                    	style="width: 500px; ime-mode:active; ${!isOnlineOrder?'display: none;':''}" maxlength="60"/>
+			                    <html:hidden styleId="deliveryKana" property="deliveryKana"/>
+			                    <html:hidden styleId="deliveryOfficeKana" property="deliveryOfficeKana"/>
+			                    <html:hidden styleId="deliveryUrl" property="deliveryUrl"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">事業所名</div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryOfficeName" property="deliveryOfficeName" tabindex="301" style="width: 200px; ime-mode:active;" maxlength="60" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryOfficeName" property="deliveryOfficeName" tabindex="301" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">部署名</div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryDeptName" property="deliveryDeptName" tabindex="302" style="width: 200px; ime-mode:active;" maxlength="60" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryDeptName" property="deliveryDeptName" tabindex="302" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
+								</c:if>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">郵便番号<c:if test="${isOnlineOrder}">※</c:if></div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryZipCode" property="deliveryZipCode" tabindex="303" style="width: 100px; ime-mode:disabled;" maxlength="8" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect();} "/>
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryZipCode" property="deliveryZipCode"  tabindex="303" style="width: 100px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="8" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}" />
+								</c:if>
+								<html:image tabindex="304" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openZipCodeDialog();" />
+							</td>
+							<th><div class="col_title_right">住所１<c:if test="${isOnlineOrder}">※</c:if></div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+				                    <html:text styleId="deliveryAddress1" property="deliveryAddress1" tabindex="305" style="width: 200px; ime-mode:active;" maxlength="50"
+				                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(); }"/>
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+				                    <html:text styleId="deliveryAddress1" property="deliveryAddress1" tabindex="305" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="50"
+				                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(); }"/>
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">住所２</div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryAddress2" property="deliveryAddress2" tabindex="306" style="width: 200px; ime-mode:active;" maxlength="50" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryAddress2" property="deliveryAddress2" tabindex="306" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="50" />
+								</c:if>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">担当者<c:if test="${isOnlineOrder}">※</c:if></div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryPcName" property="deliveryPcName" style="width: 200px; ime-mode:active;" tabindex="307" maxlength="60" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryPcName" property="deliveryPcName" style="width: 200px; ime-mode:active;" tabindex="307" readonly="true" styleClass="c_disable" maxlength="60" />
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">担当者カナ</div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryPcKana" property="deliveryPcKana" tabindex="308" style="width: 200px; ime-mode:active;"  maxlength="60" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryPcKana" property="deliveryPcKana" tabindex="308" style="width: 200px; ime-mode:active;" readonly="true" styleClass="c_disable" maxlength="60" />
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">敬称</div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+									<html:select styleId="deliveryPcPreCategory" property="deliveryPcPreCategory" tabindex="309" style="width: 200px;">
+				                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+									</html:select>
+				                    <html:hidden property="deliveryPcPre" styleId="deliveryPcPre"/>
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+									<html:select styleId="deliveryPcPreCategory" property="deliveryPcPreCategory" tabindex="309" styleClass="c_disable" style="width: 200px;">
+										<c:if test="${newData}">
+					                        <html:option value=""></html:option>
+										</c:if>
+				                        <html:options collection="preTypeCategoryList" property="value" labelProperty="label"/>
+									</html:select>
+				                    <html:hidden property="deliveryPcPre" styleId="deliveryPcPre"/>
+								</c:if>
+			                </td>
+			
+						</tr>
+						<tr>
+							<th><div class="col_title_right">TEL<c:if test="${isOnlineOrder}">※</c:if></div></th>
+							<td>
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryTel" property="deliveryTel" tabindex="310" style="width: 200px; ime-mode:disabled;" maxlength="15" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryTel" property="deliveryTel" tabindex="310" style="width: 200px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="15" />
+								</c:if>
+			                </td>
+							<th><div class="col_title_right">FAX</div></th>
+							<td colspan="3">
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryFax" property="deliveryFax" tabindex="311" style="width: 200px; ime-mode:disabled;" maxlength="15" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryFax" property="deliveryFax" tabindex="311" style="width: 200px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="15" />
+								</c:if>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">E-MAIL</div></th>
+							<td colspan="5">
+								<c:if test="${isOnlineOrder}">
+			                    	<html:text styleId="deliveryEmail" property="deliveryEmail" tabindex="312" style="width: 400px; ime-mode:disabled;" maxlength="255" />
+								</c:if>
+								<c:if test="${!isOnlineOrder}">
+			                    	<html:text styleId="deliveryEmail" property="deliveryEmail" tabindex="312" style="width: 400px; ime-mode:disabled;" readonly="true" styleClass="c_disable" maxlength="255" />
+								</c:if>
+			                </td>
+						</tr>
+					</table>
+					</div><!-- /.section_body -->
+				</div><!-- /.form_section -->
+			</div><!-- /.form_section_wrap -->
+			
+		<div id="order_detail_info_wrap">
+		<table summary="受注商品明細リスト" class="forms detail_info" style="margin-top: 20px;">
 			<colgroup>
 				<col span="1" style="width: 5%">
 				<col span="1" style="width: 13%">
@@ -2252,245 +2278,323 @@
 				<col span="1" style="width: 10%">
 			</colgroup>
             <thead>
-			<tr>
-				<th rowspan="3">No</th>
-				<th rowspan="3">商品コード<bean:message key='labels.must'/></th>
-				<th>商品名</th>
-				<th>棚番</th>
-				<th>未納数</th>
-				<th>仕入単価<bean:message key='labels.must'/></th>
-				<th>売上単価<bean:message key='labels.must'/></th>
-				<th>備考</th>
-				<th rowspan="3">&nbsp;</th>
-			</tr>
-			<tr>
-				<th rowspan="2">商品備考</th>
-				<th rowspan="2">数量<bean:message key='labels.must'/></th>
-				<th>完納区分</th>
-				<th rowspan="2">仕入金額<bean:message key='labels.must'/></th>
-				<th rowspan="2">売価金額<bean:message key='labels.must'/></th>
-				<th rowspan="2">ピッキング備考</th>
-			</tr>
-			<tr>
-				<th>引当可能数</th>
-			</tr>
+				<tr>
+					<th rowspan="3" class="rd_top_left" style="height: 60px; width: 30px;">No</th>
+					<th rowspan="3" style="height: 60px;">商品コード<bean:message key='labels.must'/></th>
+					<th style="height: 30px;">商品名</th>
+					<th style="height: 30px;">棚番</th>
+					<th style="height: 20px;">未納数</th>
+					<th style="height: 30px;">仕入単価<bean:message key='labels.must'/></th>
+					<th style="height: 30px;">売上単価<bean:message key='labels.must'/></th>
+					<th style="height: 30px;">備考</th>
+					<th rowspan="3" class="rd_top_right" style="height: 60px;">&nbsp;</th>
+				</tr>
+				<tr>
+					<th rowspan="2" style="height: 30px;">商品備考</th>
+					<th rowspan="2" style="height: 30px;">数量<bean:message key='labels.must'/></th>
+					<th style="height: 20px;">完納区分</th>
+					<th rowspan="2" style="height: 30px;">仕入金額<bean:message key='labels.must'/></th>
+					<th rowspan="2" style="height: 30px;">売価金額<bean:message key='labels.must'/></th>
+					<th rowspan="2" style="height: 30px;">ピッキング備考</th>
+				</tr>
+				<tr>
+					<th style="height: 20px;">引当可能数</th>
+				</tr>
             </thead>
+            
             <tbody id="tbodyLine">
-          <c:forEach var="lineList" varStatus="s" items="${lineList}">
+			<c:forEach var="lineList" varStatus="s" items="${lineList}">
 			<c:if test='${lineList.lineNo != null}'>
-			<tr id="productRow_${s.index+1}">
-
-				<td style="text-align: center" id="td${s.index+1}_1">${s.index+1}</td>
-				<td style="text-align: right;">
-<c:if test="${lineList.status == defaultStatusCode}" >
-                    <html:text maxlength="20" name="lineList" styleId="productRow_${s.index+1}_code" property="productCode" tabindex="${f:h(s.index*14+1000)}" style="width: 165px;ime-mode:disabled" indexed="true"/>
-</c:if>
-<c:if test="${lineList.status != defaultStatusCode}" >
-                    <html:text maxlength="20" name="lineList" styleId="productRow_${s.index+1}_code" property="productCode" tabindex="${f:h(s.index*14+1000)}" style="width: 165px;ime-mode:disabled" readonly="true" styleClass="c_disable" indexed="true"/>
-</c:if>
-                <br><html:image styleId="productRow_${s.index+1}_icon" tabindex="${f:h(s.index*20+1001)}" src='${f:url("/images/icon_04_02.gif")}'style="vertical-align: middle; cursor: pointer;"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roLineId" property="roLineId" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roLineNo" property="lineNo" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roItemId" property="roItemId" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_supplierPcode" property="supplierPcode" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roMaxNum" property="roMaxNum" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_customerPcode" property="customerPcode" indexed="true"/>
-                <html:hidden name="lineList" styleId="productRow_${s.index+1}_deletable" property="deletable" indexed="true"/>
-                </td>
-				<td  style="white-space: normal">
-                <div id="productRow_${s.index+1}_name" style="position: static; width: 120px; height: 55px; white-space: normal;" >${f:h(lineList.productAbstract)}</div>
-                <html:textarea name="lineList"  indexed="true" styleId="productRow_${s.index+1}_productRemarks" property="productRemarks"  style="width: 120px; height: 55px;" tabindex="${f:h(s.index*14+1002)}" readonly="true" styleClass="c_disable"/>
-                <html:hidden name="lineList" property="productAbstract" styleId="productRow_${s.index+1}_name_hidden" indexed="true"/>
-                </td>
-				<td style="text-align:center;">
-                    <html:text name="lineList" styleId="productRow_${s.index+1}_rack" property="rackCodeSrc" style="width: 80px;" tabindex="${f:h(s.index*14+1003)}" readonly="true" styleClass="c_disable" indexed="true"/><br>
-<c:if test="${lineList.status != 9}" >
-                    <html:text maxlength="6" name="lineList" styleId="productRow_${s.index+1}_quantity" property="quantity" style="text-align:right;width: 60px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1004)}" styleClass="numeral_commas" indexed="true"/><br>
-</c:if>
-<c:if test="${lineList.status == 9}" >
-                    <html:text maxlength="6" name="lineList" styleId="productRow_${s.index+1}_quantity" property="quantity" style="text-align:right;width: 60px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1004)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/><br>
-</c:if>
-				<html:hidden name="lineList" property="quantityDB" styleId="productRow_${s.index+1}_quantity_hidden" indexed="true"/>
-					<button id="productRow_${s.index+1}_stockBtn" tabindex="${f:h(s.index*14+1005)}">在庫</button></td>
-				<td style="text-align:center;">
-                <span class="numeral_commas " id="productRow_${s.index+1}_restQuantity" >${f:h(lineList.restQuantity)}</span><br>
-                <span id="productRow_${s.index+1}_statusName" >${f:h(lineList.statusName)}</span><br>
-                <html:hidden name="lineList" property="status" styleId="productRow_${s.index+1}_status" indexed="true"/>
-
-                <html:text name="lineList" styleId="productRow_${s.index+1}_possibleDrawQuantity" property="possibleDrawQuantity" indexed="true" readonly="true" styleClass="numeral_commas" style="border: 0px;text-align: center;width: 80px;" />
-
-                <html:hidden name="lineList" property="restQuantity" styleId="productRow_${s.index+1}_restQuantity_hidden" indexed="true"/>
-                <html:hidden name="lineList" property="restQuantityDB" styleId="productRow_${s.index+1}_restQuantity_db_hidden" indexed="true"/>
-                <html:hidden name="lineList" property="taxCategory" styleId="productRow_${s.index+1}_taxCategory_hidden" indexed="true"/>
-                <html:hidden name="lineList" property="ctaxRate" styleId="productRow_${s.index+1}_ctaxRate_hidden" indexed="true"/>
-                <html:hidden name="lineList" property="ctaxPrice" styleId="productRow_${s.index+1}_ctaxPrice_hidden" indexed="true"/>
-                <html:hidden name="lineList" property="stockCtlCategory" styleId="productRow_${s.index+1}_stockCtlCategory_hidden" indexed="true"/>
-                </td>
-				<td>
-<c:if test="${lineList.status == defaultStatusCode}" >
-                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitCost" property="unitCost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1006)}" styleClass="c_disable numeral_commas" indexed="true" readonly="true"  /><br>
-                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_cost" property="cost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1007)}" styleClass="c_disable numeral_commas" indexed="true" readonly="true" />
-</c:if>
-<c:if test="${lineList.status != defaultStatusCode}" >
-                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitCost" property="unitCost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*20+1007)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/><br>
-                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_cost" property="cost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*20+1008)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/>
-</c:if>
-                </td>
-				<td>
-<c:if test="${lineList.status == defaultStatusCode}" >
-	                <html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitRetailPrice" property="unitRetailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*14+1008)}" styleClass="numeral_commas" indexed="true"/><br>
-    	            <html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_retailPrice" property="retailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*14+1009)}" styleClass="numeral_commas" indexed="true"/>
-</c:if>
-<c:if test="${lineList.status != defaultStatusCode}" >
-	                <html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitRetailPrice" property="unitRetailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*20+1009)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/><br>
-    	            <html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_retailPrice" property="retailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*20+1010)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/>
-</c:if>
-                </td>
-				<td>
-<c:if test="${lineList.status != 9}" >
-                    <html:textarea name="lineList" styleId="productRow_${s.index+1}_remarks" property="remarks" style="width: 195px; height: 55px;" tabindex="${f:h(s.index*14+1010)}" indexed="true"/><br>
-</c:if>
-<c:if test="${lineList.status == 9}" >
-                    <html:textarea name="lineList" styleId="productRow_${s.index+1}_remarks" property="remarks" style="width: 195px; height: 55px;" tabindex="${f:h(s.index*14+1010)}" indexed="true" readonly="true" styleClass="c_disable"/><br>
-</c:if>
-<c:if test="${lineList.status == defaultStatusCode}" >
-                    <html:textarea name="lineList" styleId="productRow_${s.index+1}_eadRemarks" property="eadRemarks" style="width: 195px; height: 55px;" tabindex="${f:h(s.index*14+1011)}" indexed="true" readonly="true" styleClass="c_disable"/>
-</c:if>
-<c:if test="${lineList.status != defaultStatusCode}" >
-                    <html:textarea name="lineList" styleId="productRow_${s.index+1}_eadRemarks" property="eadRemarks" style="width: 195px; height: 55px;" tabindex="${f:h(s.index*20+1012)}" indexed="true" readonly="true" styleClass="c_disable"/>
-</c:if>
-                </td>
-				<td>
-<c:if test="${menuUpdate}">
-		<c:if test="${lineList.status == defaultStatusCode}" >
-				<button id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px">削除</button><br>
-		</c:if>
-		<c:if test="${lineList.status != defaultStatusCode}" >
-				<button  disabled="disabled" id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px">削除</button><br>
-		</c:if>
-</c:if>
-<c:if test="${!menuUpdate}">
-				<button  disabled="disabled" id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px">削除</button><br>
-</c:if>
-				<c:if test="${s.index == 0}">
-					<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled">前行複写</button>
-				</c:if>
-				<c:if test="${s.index > 0}">
-<c:if test="${menuUpdate}">
-		<c:if test="${lineList.status == defaultStatusCode}" >
-					<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;">前行複写</button>
-		</c:if>
-		<c:if test="${lineList.status != defaultStatusCode}" >
-					<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled">前行複写</button>
-		</c:if>
-</c:if>
-<c:if test="${!menuUpdate}">
-					<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled">前行複写</button>
-</c:if>
-				</c:if>
+				<tr id="productRow_${s.index+1}">
+	
+					<!-- No -->
+					<td style="text-align: center" id="td${s.index+1}_1">
+						<div class="box_1of1">
+							${s.index+1}
+						</div>
 					</td>
-
-
-			</tr>
-                <script type="text/javascript">
-                    // イベントの貼り付け
-                    $("#productRow_${s.index+1}_code").bind("focus", {lineNo: ${s.index+1}}, function(e){ this.curVal=this.value; });
-            		$("#productRow_${s.index+1}_code").bind("blur", {lineNo: ${s.index+1}}, function(e){ if(this.curVal!=this.value){ searchProduct(e); } });
-                    $("#productRow_${s.index+1}_icon").bind("click", {lineNo: ${s.index+1}}, openSearchProduct);
-                    $("#productRow_${s.index+1}_stockBtn").bind("click", {lineNo: 'productRow_${s.index+1}'}, onStockButton);
-                    if ($("#productRow_${s.index+1}_deletable").val() == "false") {
-                        $("#productRow_${s.index+1}_deleteRowBtn").attr("disabled", true);
-                        $("#productRow_${s.index+1}_copyRowBtn").attr("disabled", true);
-                    }
-                    $("#productRow_${s.index+1}_deleteRowBtn").bind("click", {lineId: '${lineList.roLineId}', lineNo: '${s.index+1}'}, deleteRow);
-                    $("#productRow_${s.index+1}_copyRowBtn").bind("click", {lineNo: '${s.index+1}'}, copyRow);
-//                    $("#productRow_${s.index+1}_quantity").bind("change", {id: 'productRow_${s.index+1}'}, onChangeQuantity);
-                    $("#productRow_${s.index+1}_quantity").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
-            		$("#productRow_${s.index+1}_quantity").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ onChangeQuantity(e,this.curVal); } });
-//                    $("#productRow_${s.index+1}_unitCost").bind("change", {id: 'productRow_${s.index+1}'}, calcCostEvent);
-//                    $("#productRow_${s.index+1}_unitRetailPrice").bind("change", {id: 'productRow_${s.index+1}'}, calcRetailEvent);
-                    $("#productRow_${s.index+1}_unitCost").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
-            		$("#productRow_${s.index+1}_unitCost").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcCostEvent(e); } });
-                    $("#productRow_${s.index+1}_unitRetailPrice").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
-            		$("#productRow_${s.index+1}_unitRetailPrice").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcRetailEvent(e); } });
-                    maxLineCount = ${s.index+1};
-                </script>
+					
+					<!-- 商品コード -->
+					<td>
+						<div class="box_1of1" style="margin: 5px;">
+							<c:if test="${lineList.status == defaultStatusCode}" >
+		                    	<html:text maxlength="20" name="lineList" styleId="productRow_${s.index+1}_code" property="productCode" tabindex="${f:h(s.index*14+1000)}" style="width: 140px;ime-mode:disabled" indexed="true"/>
+							</c:if>
+							<c:if test="${lineList.status != defaultStatusCode}" >
+		                    	<html:text maxlength="20" name="lineList" styleId="productRow_${s.index+1}_code" property="productCode" tabindex="${f:h(s.index*14+1000)}" style="width: 140px;ime-mode:disabled" readonly="true" styleClass="c_disable" indexed="true"/>
+							</c:if>
+		                	<html:image styleId="productRow_${s.index+1}_icon" tabindex="${f:h(s.index*20+1001)}" src='${f:url("/images//customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer;"/>
+	                	</div>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roLineId" property="roLineId" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roLineNo" property="lineNo" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roItemId" property="roItemId" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_supplierPcode" property="supplierPcode" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_roMaxNum" property="roMaxNum" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_customerPcode" property="customerPcode" indexed="true"/>
+		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_deletable" property="deletable" indexed="true"/>
+	                </td>
+					
+	                <!-- 商品名・商品備考 -->
+					<td>
+		                <div class="box_1of2" id="productRow_${s.index+1}_name" style="position: static; white-space: normal;" >
+		                	${f:h(lineList.productAbstract)}
+		                </div>
+		                <div class="box_2of2">
+		                	<html:textarea name="lineList"  indexed="true" styleId="productRow_${s.index+1}_productRemarks" property="productRemarks"  style="width: 195px;" tabindex="${f:h(s.index*14+1002)}" readonly="true" styleClass="c_disable"/>
+		                </div>
+		                <html:hidden name="lineList" property="productAbstract" styleId="productRow_${s.index+1}_name_hidden" indexed="true"/>
+	                </td>
+					
+	                <!-- 棚版・数量 -->
+					<td>
+						<div class="box_1of3">
+	                    	<html:text name="lineList" styleId="productRow_${s.index+1}_rack" property="rackCodeSrc" style="margin: 3px; height: 24px;" tabindex="${f:h(s.index*14+1003)}" readonly="true" styleClass="c_disable" indexed="true"/><br>
+	                    </div>
+	                    <div class="box_2of3" style="border-bottom: 0;">
+							<c:if test="${lineList.status != 9}" >
+		                    	<html:text maxlength="6" name="lineList" styleId="productRow_${s.index+1}_quantity" property="quantity" style="text-align:right; ime-mode:disabled; margin: 3px; height: 24px;" tabindex="${f:h(s.index*14+1004)}" styleClass="numeral_commas" indexed="true"/>
+							</c:if>
+							<c:if test="${lineList.status == 9}" >
+		                    	<html:text maxlength="6" name="lineList" styleId="productRow_${s.index+1}_quantity" property="quantity" style="text-align:right; ime-mode:disabled; margin: 3px; height: 24px;" tabindex="${f:h(s.index*14+1004)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/>
+							</c:if>
+						</div>
+						<html:hidden name="lineList" property="quantityDB" styleId="productRow_${s.index+1}_quantity_hidden" indexed="true"/>
+						<div class="box_3of3">
+							<button id="productRow_${s.index+1}_stockBtn" tabindex="${f:h(s.index*14+1005)}" class="btn_small" style="margin: 3px;">在庫</button>
+						</div>
+					</td>
+	
+					<!-- 未納数・完納区分・引当可能数 -->
+					<td style="text-align:center;">
+						<div class="box_1of3">
+		                	<span class="numeral_commas " id="productRow_${s.index+1}_restQuantity" >${f:h(lineList.restQuantity)}</span>
+		                </div>
+		                <div class="box_2of3">
+		                	<span id="productRow_${s.index+1}_statusName" >${f:h(lineList.statusName)}</span>
+		                </div>
+		                <html:hidden name="lineList" property="status" styleId="productRow_${s.index+1}_status" indexed="true"/>
+		                <div class="box_3of3">
+		                	<html:text name="lineList" styleId="productRow_${s.index+1}_possibleDrawQuantity" property="possibleDrawQuantity" indexed="true" readonly="true" styleClass="numeral_commas" style="border: 0px;text-align: center;width: 80px; margin: 3px; height: 24px;" />
+						</div>
+		                <html:hidden name="lineList" property="restQuantity" styleId="productRow_${s.index+1}_restQuantity_hidden" indexed="true"/>
+		                <html:hidden name="lineList" property="restQuantityDB" styleId="productRow_${s.index+1}_restQuantity_db_hidden" indexed="true"/>
+		                <html:hidden name="lineList" property="taxCategory" styleId="productRow_${s.index+1}_taxCategory_hidden" indexed="true"/>
+		                <html:hidden name="lineList" property="ctaxRate" styleId="productRow_${s.index+1}_ctaxRate_hidden" indexed="true"/>
+		                <html:hidden name="lineList" property="ctaxPrice" styleId="productRow_${s.index+1}_ctaxPrice_hidden" indexed="true"/>
+		                <html:hidden name="lineList" property="stockCtlCategory" styleId="productRow_${s.index+1}_stockCtlCategory_hidden" indexed="true"/>
+	                </td>
+	
+	                <!-- 仕入単価・仕入れ金額 -->
+					<td>
+						<c:if test="${lineList.status == defaultStatusCode}" >
+							<div class="box_1of2">
+		                		<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitCost" property="unitCost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1006)}" styleClass="c_disable numeral_commas" indexed="true" readonly="true"  /><br>
+		                	</div>
+		                	<div class="box_2of2">
+		                		<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_cost" property="cost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*14+1007)}" styleClass="c_disable numeral_commas" indexed="true" readonly="true" />
+		                	</div>
+						</c:if>
+						<c:if test="${lineList.status != defaultStatusCode}" >
+							<div class="box_1of2">
+		                		<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitCost" property="unitCost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*20+1007)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/><br>
+		                	</div>
+		                	<div class="box_2of2">
+		                		<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_cost" property="cost" style="text-align:right;width: 75px;ime-mode:disabled;" tabindex="${f:h(s.index*20+1008)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/>
+		                	</div>
+						</c:if>
+	                </td>
+	
+	                <!-- 売上単価・売価金額 -->
+					<td>
+						<c:if test="${lineList.status == defaultStatusCode}" >
+							<div class="box_1of2">
+			                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitRetailPrice" property="unitRetailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*14+1008)}" styleClass="numeral_commas" indexed="true"/><br>
+			                </div>
+			                <div class="box_2of2">
+		    	            	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_retailPrice" property="retailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*14+1009)}" styleClass="numeral_commas" indexed="true"/>
+		    	            </div>
+						</c:if>
+						<c:if test="${lineList.status != defaultStatusCode}" >
+							<div class="box_1of2">
+			                	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_unitRetailPrice" property="unitRetailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*20+1009)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/><br>
+			                </div>
+			                <div class="box_2of2">
+		    	            	<html:text maxlength="9" name="lineList" styleId="productRow_${s.index+1}_retailPrice" property="retailPrice" style="text-align:right;width: 75px;" tabindex="${f:h(s.index*20+1010)}" readonly="true" styleClass="c_disable numeral_commas" indexed="true"/>
+		    	            </div>
+						</c:if>
+	                </td>
+	
+	                <!-- 備考・ピッキング備考 -->
+					<td>
+						<c:if test="${lineList.status != 9}" >
+							<div class="box_1of2">
+	                    		<html:textarea name="lineList" styleId="productRow_${s.index+1}_remarks" property="remarks" style="width: 195px;" tabindex="${f:h(s.index*14+1010)}" indexed="true"/><br>
+	                    	</div>
+						</c:if>
+						<c:if test="${lineList.status == 9}" >
+							<div class="box_1of2">
+	                    		<html:textarea name="lineList" styleId="productRow_${s.index+1}_remarks" property="remarks" style="width: 195px;" tabindex="${f:h(s.index*14+1010)}" indexed="true" readonly="true" styleClass="c_disable"/><br>
+	                    	</div>
+						</c:if>
+						<c:if test="${lineList.status == defaultStatusCode}" >
+							<div class="box_2of2">
+	                    		<html:textarea name="lineList" styleId="productRow_${s.index+1}_eadRemarks" property="eadRemarks" style="width: 195px;" tabindex="${f:h(s.index*14+1011)}" indexed="true" readonly="true" styleClass="c_disable"/>
+	                    	</div>
+						</c:if>
+						<c:if test="${lineList.status != defaultStatusCode}" >
+							<div class="box_2of2">
+	                    		<html:textarea name="lineList" styleId="productRow_${s.index+1}_eadRemarks" property="eadRemarks" style="width: 195px;" tabindex="${f:h(s.index*20+1012)}" indexed="true" readonly="true" styleClass="c_disable"/>
+	                    	</div>
+						</c:if>
+	                </td>
+	
+	                <!-- ボタン -->
+					<td>
+						<div class="box_1of2">
+							<c:if test="${menuUpdate}">
+								<c:if test="${lineList.status == defaultStatusCode}" >
+									<button id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px" class="btn_small">削除</button>
+								</c:if>
+								<c:if test="${lineList.status != defaultStatusCode}" >
+									<button  disabled="disabled" id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px" class="btn_small">削除</button>
+								</c:if>
+							</c:if>
+							<c:if test="${!menuUpdate}">
+								<button  disabled="disabled" id="productRow_${s.index+1}_deleteRowBtn" tabindex="${f:h(s.index*14+1012)}" style="width: 80px" class="btn_small">削除</button>
+							</c:if>
+						</div>
+						<div class="box_2of2">
+							<c:if test="${s.index == 0}">
+								<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled" class="btn_small">前行複写</button>
+							</c:if>
+							<c:if test="${s.index > 0}">
+								<c:if test="${menuUpdate}">
+									<c:if test="${lineList.status == defaultStatusCode}" >
+										<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" class="btn_small">前行複写</button>
+									</c:if>
+									<c:if test="${lineList.status != defaultStatusCode}" >
+										<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled" class="btn_small">前行複写</button>
+									</c:if>
+								</c:if>
+								<c:if test="${!menuUpdate}">
+									<button id="productRow_${s.index+1}_copyRowBtn" tabindex="${f:h(s.index*14+1013)}" style="width: 80px;" disabled="disabled" class="btn_small">前行複写</button>
+								</c:if>
+							</c:if>
+						</div>
+					</td>
+				</tr>
+				
+				<script type="text/javascript">
+	                // イベントの貼り付け
+	                $("#productRow_${s.index+1}_code").bind("focus", {lineNo: ${s.index+1}}, function(e){ this.curVal=this.value; });
+	                $("#productRow_${s.index+1}_code").bind("blur", {lineNo: ${s.index+1}}, function(e){ if(this.curVal!=this.value){ searchProduct(e); } });
+	                $("#productRow_${s.index+1}_icon").bind("click", {lineNo: ${s.index+1}}, openSearchProduct);
+	                $("#productRow_${s.index+1}_stockBtn").bind("click", {lineNo: 'productRow_${s.index+1}'}, onStockButton);
+	                if ($("#productRow_${s.index+1}_deletable").val() == "false") {
+	                    $("#productRow_${s.index+1}_deleteRowBtn").attr("disabled", true);
+	                    $("#productRow_${s.index+1}_copyRowBtn").attr("disabled", true);
+	                }
+	                $("#productRow_${s.index+1}_deleteRowBtn").bind("click", {lineId: '${lineList.roLineId}', lineNo: '${s.index+1}'}, deleteRow);
+	                $("#productRow_${s.index+1}_copyRowBtn").bind("click", {lineNo: '${s.index+1}'}, copyRow);
+	//                    $("#productRow_${s.index+1}_quantity").bind("change", {id: 'productRow_${s.index+1}'}, onChangeQuantity);
+	                $("#productRow_${s.index+1}_quantity").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
+	                $("#productRow_${s.index+1}_quantity").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ onChangeQuantity(e,this.curVal); } });
+	//                    $("#productRow_${s.index+1}_unitCost").bind("change", {id: 'productRow_${s.index+1}'}, calcCostEvent);
+	//                    $("#productRow_${s.index+1}_unitRetailPrice").bind("change", {id: 'productRow_${s.index+1}'}, calcRetailEvent);
+	                $("#productRow_${s.index+1}_unitCost").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
+	                $("#productRow_${s.index+1}_unitCost").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcCostEvent(e); } });
+	                $("#productRow_${s.index+1}_unitRetailPrice").bind("focus", {id: 'productRow_${s.index+1}'}, function(e){ this.curVal=this.value; });
+	                $("#productRow_${s.index+1}_unitRetailPrice").bind("blur", {id: 'productRow_${s.index+1}'}, function(e){ if(dec_numeral_commas(this.curVal)!=dec_numeral_commas(this.value)){ calcRetailEvent(e); } });
+	                maxLineCount = ${s.index+1};
+	            </script>
 			</c:if>
-         </c:forEach>
+         	</c:forEach>
+         	
+         	<!-- 追加ボタン -->
 			<tr id="trAddLine">
-				<td style="text-align: right" colspan="9">
-    <c:if test="${menuUpdate}">
-                    <button tabindex="1999" onclick="addRow()">行追加</button>
-	</c:if>
-    <c:if test="${!menuUpdate}">
-                    <button tabindex="1999" disabled="disabled">行追加</button>
-	</c:if>
+				<td style="height: 60px; text-align: center" colspan="9" class="rd_bottom_left rd_bottom_right">
+    				<c:if test="${menuUpdate}">
+                    	<button tabindex="1999" onclick="addRow()">
+                    		<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+                    	</button>
+					</c:if>
+    				<c:if test="${!menuUpdate}">
+                    	<button tabindex="1999" disabled="disabled">
+                    		<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+                    	</button>
+					</c:if>
                 </td>
 			</tr>
             </tbody>
 		</table>
-		<br>
+		</div>
 
-        <html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-		<div id="information" class="information" style="margin-top: 20px;">
-			<table class="forms" summary="伝票情報" style="width: 450px; position: absolute; top: 0px; left: 460px;">
-				<colgroup>
-					<col span="5" style="width: 20%">
-				</colgroup>
+		<html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
+	        
+		<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
+        <div id="information" class="information" style="">
+			<table id="voucher_info" class="forms" summary="伝票情報" style="">
 				<tr>
-					<th>粗利益</th>
+					<th style="height: 60px;" class="rd_top_left">粗利益</th>
 					<th>粗利益率</th>
 					<th>金額合計</th>
 					<th>消費税</th>
-					<th>伝票合計</th>
+					<th class="rd_top_right">伝票合計</th>
 				</tr>
 				<tr>
-					<td id="grossDisp" style="text-align:right;" class="numeral_commas">&nbsp;${f:h(gross)}</td>
-					<td id="grossRatioDisp" style="text-align:right;" class="numeral_commas" >&nbsp;${f:h(grossRatio)}</td>
-					<td id="retailPriceTotalDisp" style="text-align:right;" class="numeral_commas" >&nbsp;${f:h(retailPriceTotal)}</td>
-					<td id="ctaxPriceTotalDisp" style="text-align:right;" class="numeral_commas" >&nbsp;${f:h(ctaxPriceTotal)}</td>
-					<td id="priceTotalDisp" style="text-align:right;" class="numeral_commas" >&nbsp;${f:h(priceTotal)}</td>
+					<td id="grossDisp" style="text-align:center; height: 100px;" class="numeral_commas">&nbsp;${f:h(gross)}</td>
+					<td id="grossRatioDisp" style="text-align:center;" class="numeral_commas" >&nbsp;${f:h(grossRatio)}</td>
+					<td id="retailPriceTotalDisp" style="text-align:center;" class="numeral_commas" >&nbsp;${f:h(retailPriceTotal)}</td>
+					<td id="ctaxPriceTotalDisp" style="text-align:center;" class="numeral_commas" >&nbsp;${f:h(ctaxPriceTotal)}</td>
+					<td id="priceTotalDisp" style="text-align:center;" class="numeral_commas" >&nbsp;${f:h(priceTotal)}</td>
 				</tr>
 			</table>
-                    <html:hidden property="gross" styleId="gross"/>
-                    <html:hidden property="grossRatio" styleId="grossRatio"/>
-                    <html:hidden property="retailPriceTotal" styleId="retailPriceTotal"/>
-                    <html:hidden property="ctaxPriceTotal" styleId="ctaxPriceTotal"/>
-                    <html:hidden property="priceTotal" styleId="priceTotal"/>
-                    <html:hidden property="costTotal" styleId="costTotal"/>
-                    <html:hidden property="newData" />
+			
+			<html:hidden property="gross" styleId="gross"/>
+			<html:hidden property="grossRatio" styleId="grossRatio"/>
+			<html:hidden property="retailPriceTotal" styleId="retailPriceTotal"/>
+			<html:hidden property="ctaxPriceTotal" styleId="ctaxPriceTotal"/>
+			<html:hidden property="priceTotal" styleId="priceTotal"/>
+			<html:hidden property="costTotal" styleId="costTotal"/>
+			<html:hidden property="newData" />
 		</div>
-				<br>
-				<br>
-				<br>
-				<div style="text-align: right; width: 910px">
-					<c:if test="${!newData}">
-					    <c:if test="${menuUpdate}">
-							<c:if test="${statusUpdate}">
-					    		<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3()">更新</button>
-					        </c:if>
-							<c:if test="${!statusUpdate}">
-					    		<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">更新</button>
-					        </c:if>
-					    </c:if>
-					    <c:if test="${!menuUpdate}">
-							<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">更新</button>
-					    </c:if>
-					</c:if>
-					<c:if test="${newData}">
-					    <c:if test="${menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3()">登録</button>
-					    </c:if>
-					    <c:if test="${!menuUpdate}">
-							<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">登録</button>
-					    </c:if>
-					</c:if>
-				</div>
-
+		</div>
+	
+		<div style="width: 1160px; text-align: center; margin-top: 10px;">
+			<c:if test="${!newData}">
+			    <c:if test="${menuUpdate}">
+					<c:if test="${statusUpdate}">
+			    		<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3()">
+			    			<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+			    		</button>
+			        </c:if>
+					<c:if test="${!statusUpdate}">
+			    		<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">
+			    			<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+			    		</button>
+			        </c:if>
+			    </c:if>
+			    <c:if test="${!menuUpdate}">
+					<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">
+						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+			    </c:if>
+			</c:if>
+			<c:if test="${newData}">
+			    <c:if test="${menuUpdate}">
+					<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3()">
+						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+			    </c:if>
+			    <c:if test="${!menuUpdate}">
+					<button type="button" disabled="disabled" id="btnF3btm" tabindex="1999">
+						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					</button>
+			    </c:if>
+			</c:if>
+		</div>
 	</div>
-
 	</s:form>
 </div>
 </body>
-
 </html>

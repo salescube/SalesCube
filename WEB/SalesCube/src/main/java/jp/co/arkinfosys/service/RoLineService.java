@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 	 *
 	 */
 	public static class Param {
-		
+		// 受注伝票明細行
 		public static final String RO_LINE_ID = "roLineId";
 		public static final String STATUS = "status";
 		public static final String RO_SLIP_ID = "roSlipId";
@@ -136,7 +135,7 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 		if (dto == null || dto.roSlipId == null) {
 			return new ArrayList<ROrderLineDto>();
 		}
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(RoSlipService.Param.RO_SLIP_ID, dto.roSlipId);
 		param.put(RoSlipService.Param.CATEGORY_ID, SlipStatusCategories.RO_LINE_STATUS);
@@ -170,10 +169,10 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 			short lineno = 0;
 			if (lineList != null && lineList.size() > 0) {
 				for (ROrderLineDto dto : lineList) {
-					
+					// 行番号は、1から通番
 					lineno++;
 
-					
+					// 受注伝票番号を明細に設定する。
 					dto.roSlipId = slipDto.roSlipId;
 
 					RoLineTrn entity = Beans
@@ -182,12 +181,12 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 							.execute();
 
 					if (dto.roLineId == null || dto.roLineId.length() == 0) {
-						
+						// 見積伝票明細番号を採番
 						dto.roLineId = Long.toString(seqMakerService
 								.nextval(Table.RO_LINE_TRN));
 						entity.roLineId = Integer.parseInt(dto.roLineId);
 
-						
+						// 新規の場合のみ行番号を設定
 						entity.lineNo = lineno;
 
 						insertRecord(entity);

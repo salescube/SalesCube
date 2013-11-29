@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import org.seasar.framework.beans.util.Beans;
  *
  */
 public class DiscountTrnService extends AbstractService<DiscountTrn> {
-	
+	// サービス群
 	@Resource
 	private SeqMakerService seqMakerService;
 
@@ -72,7 +71,7 @@ public class DiscountTrnService extends AbstractService<DiscountTrn> {
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 割引ID
 			param.put(DiscountService.Param.DISCOUNT_ID, discountId);
 			return this.selectBySqlFile(DiscountTrnDto.class,
 					"discounttrn/FindDiscountTrnByDiscountId.sql", param)
@@ -93,10 +92,10 @@ public class DiscountTrnService extends AbstractService<DiscountTrn> {
 			return -1;
 		}
 		try {
-			
+			// 登録
 			Map<String, Object> param = super.createSqlParam();
 
-			
+			// 発番
 			long discountDataId = seqMakerService.nextval(DiscountTrn.TABLE_NAME);
 			discountTrnDto.discountDataId = Integer.valueOf((int) discountDataId);
 			BeanMap discountTrnInfo = Beans.createAndCopy(BeanMap.class, discountTrnDto)
@@ -125,7 +124,7 @@ public class DiscountTrnService extends AbstractService<DiscountTrn> {
 			return;
 		}
 
-		
+		// 更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap discountTrnInfo = Beans.createAndCopy(BeanMap.class, discountTrnDto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP)
@@ -144,7 +143,7 @@ public class DiscountTrnService extends AbstractService<DiscountTrn> {
 	public void deleteDiscountTrnByDiscountDataId(String discountDataId)
 			throws Exception {
 
-		
+		// 履歴を登録
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.DISCOUNT_DATA_ID, discountDataId);
 		super.updateAudit(DiscountTrn.TABLE_NAME,

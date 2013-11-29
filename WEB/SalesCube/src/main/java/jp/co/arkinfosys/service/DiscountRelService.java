@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -30,10 +29,10 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 	 */
 	public static class Param extends AbstractService.Param {
 		public static final String DISCOUNT_ID = "discountId";
-		private static final String PRODUCT_CODE = "productCode"; 
-		private static final String QUANTITY = "quantity"; 
-		private static final String ROW_COUNT = "rowCount"; 
-		private static final String OFFSET_ROW = "offsetRow"; 
+		private static final String PRODUCT_CODE = "productCode"; // 商品コード
+		private static final String QUANTITY = "quantity"; // 数量
+		private static final String ROW_COUNT = "rowCount"; // 取得件数
+		private static final String OFFSET_ROW = "offsetRow"; // 取得件数
 
 	}
 
@@ -58,9 +57,9 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 		}
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
-		
+		// 条件設定
+		// 商品コードが一致
+		// 数量が範囲内で１件取得
 		conditions.put(Param.PRODUCT_CODE, productCode);
 		conditions.put(Param.QUANTITY, quantity);
 
@@ -86,9 +85,9 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 		}
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
-		
+		// 条件設定
+		// 商品コードが一致
+		// 数量が範囲内で１件取得
 		conditions.put(Param.PRODUCT_CODE, productCode);
 
 		List<DiscountRelJoin> listRel = findByCondition(conditions, params,
@@ -132,7 +131,7 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 	public int updateDiscountRel(String productCode, String discountId,
 			String updDatetm) throws ServiceException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> params = super.createSqlParam();
 			params.put(Param.PRODUCT_CODE, productCode);
 			params.put(Param.DISCOUNT_ID, null);
@@ -170,7 +169,7 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 	public int deleteDiscountRel(String productCode, String discountId,
 			String updDatetm) throws ServiceException, UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> params = super.createSqlParam();
 			params.put(Param.PRODUCT_CODE, productCode);
 			params.put(Param.DISCOUNT_ID, discountId);
@@ -204,32 +203,32 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 	 */
 	public Double getBulkDiscountUnitPrice(Double quantity,
 			Double unitRetailPrice, String productCode) {
-		
+		// 割引額
 		if (!StringUtil.hasLength(productCode)) {
 			return unitRetailPrice;
 		}
-		
-		
+		// 数量割引対象チェック
+		// 割引マスタに対象データがあるか確認
 		DiscountRelJoin discountRelJoin;
 		try {
 			discountRelJoin = findDiscountTrnByProductAndQuantity(productCode,
 					quantity.toString());
 		} catch (ServiceException e) {
 			e.printStackTrace();
-			
+			// 無かったら最初の単価を返す
 			return unitRetailPrice;
 		}
 		if (discountRelJoin != null) {
-			
+			// あったら、割り引いた単価を返す
 			Double rate = discountRelJoin.discountRate.doubleValue();
 			Double discountUnitRetailPrice = unitRetailPrice
-					- (unitRetailPrice * rate / 100.0); 
-			
+					- (unitRetailPrice * rate / 100.0); // レートは％値が入っている
+			// 単価は円単位で切り捨てる
 			BigDecimal bd = new BigDecimal(discountUnitRetailPrice);
-			
+			// 単価は円単位で切り上げる　2010.05.17 update kaki
 			return bd.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 		} else {
-			
+			// 無かったら最初の単価を返す
 			return unitRetailPrice;
 		}
 	}
@@ -243,23 +242,23 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 	 */
 	public Boolean isBulkDiscountUnit(Double quantity, Double unitRetailPrice,
 			String productCode) {
-		
+		// 割引額
 		if (!StringUtil.hasLength(productCode)) {
 			return false;
 		}
-		
-		
+		// 数量割引対象チェック
+		// 割引マスタに対象データがあるか確認
 		DiscountRelJoin discountRelJoin;
 		try {
 			discountRelJoin = findDiscountTrnByProductAndQuantity(productCode,
 					quantity.toString());
 		} catch (ServiceException e) {
 			e.printStackTrace();
-			
+			// 無かったら最初の単価を返す
 			return false;
 		}
 		if (discountRelJoin != null) {
-			
+			// あったら、割引率を取得し、0より大きい場合は、対象
 			Double rate = discountRelJoin.discountRate.doubleValue();
 			if (Double.compare(rate, 0) > 0) {
 				return true;
@@ -268,4 +267,32 @@ public class DiscountRelService extends AbstractService<DiscountRelJoin> {
 		}
 		return false;
 	}
+
+	/**
+	 * 商品コードを指定して、数量割引商品かどうか判断します。
+	 * @param productCode 商品コード
+	 * @return 数量割引商品かどうか
+	 * @throws ServiceException
+	 */
+	public Boolean isDiscountMstByProduct(String productCode)
+			throws ServiceException {
+
+		if (!StringUtil.hasLength(productCode)) {
+			return false;
+		}
+		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
+
+		// 条件設定
+		// 商品コードが一致
+		// 数量が範囲内で１件取得
+		conditions.put(Param.PRODUCT_CODE, productCode);
+
+		List<DiscountRelJoin> listRel = findByCondition(conditions, params,
+				"discount/FindDiscountMstByProductCode.sql");
+		if (listRel.size() != 1) {
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import javax.annotation.Resource;
@@ -45,7 +44,7 @@ public class CheckZipCodeAndAddressAjaxAction extends CommonAjaxResources {
 		try {
 			boolean result = true;
 			if(zipCode != null && zipAddress1 != null) {
-				
+				// 郵便番号と住所両方が指定された場合のみチェックする
 				result = zipService.checkZipCodeAndAddress(zipCode,
 						zipAddress1);
 			}
@@ -53,7 +52,7 @@ public class CheckZipCodeAndAddressAjaxAction extends CommonAjaxResources {
 		} catch (Exception e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.dialog;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class SearchDiscountDialogAction extends
 	 */
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// 有効無効リスト
 		this.searchDiscountDialogForm.useFlagList = this.categoryService
 				.findCategoryLabelValueBeanListById(Categories.USE_FLAG);
 		this.searchDiscountDialogForm.useFlagList.add(0, new LabelValueBean());

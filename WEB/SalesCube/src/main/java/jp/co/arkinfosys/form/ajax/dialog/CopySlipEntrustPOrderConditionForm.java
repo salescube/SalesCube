@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.dialog;
 
 import java.text.DateFormat;
@@ -92,7 +91,7 @@ public class CopySlipEntrustPOrderConditionForm {
 			}
 		}
 
-		
+		// 委託入出庫区分が選択されていない場合エラー
 		if("".equals(targetPoLineStatus) ) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 			"errors.noEntrustEadCategory"));

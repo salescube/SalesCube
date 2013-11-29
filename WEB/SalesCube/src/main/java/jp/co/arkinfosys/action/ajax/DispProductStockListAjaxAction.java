@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.List;
@@ -77,7 +76,7 @@ public class DispProductStockListAjaxAction extends CommonAjaxResources {
 		try {
 			this.stockInfoDto = this.productStockService
 					.calcStockQuantityByProductCode(dispProductStockForm.productCode);
-			
+			// 該当がないのでエラーにする
 			if (this.stockInfoDto.productCode==null || this.stockInfoDto.productName==null) {
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.dispProductPrice.none.productCode"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -90,7 +89,7 @@ public class DispProductStockListAjaxAction extends CommonAjaxResources {
 		} catch (Exception e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

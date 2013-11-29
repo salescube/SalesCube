@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.stock;
 
 import java.io.Serializable;
@@ -20,7 +19,7 @@ public class EadSlipTrnDto extends AbstractSlipDto<EadLineTrnDto> implements
 
 	private static final long serialVersionUID = 1L;
 
-	
+	// 新規作成状態の管理フラグ
 	public Boolean newData;
 
 	public String eadSlipId;
@@ -89,7 +88,7 @@ public class EadSlipTrnDto extends AbstractSlipDto<EadLineTrnDto> implements
 	 */
 	public EadSlipTrnDto createStockDto() {
 		EadSlipTrnDto stockDto = new EadSlipTrnDto();
-		
+		// 共通
 		stockDto.eadDate = this.eadDate;
 		stockDto.eadAnnual = this.eadAnnual;
 		stockDto.eadMonthly = this.eadMonthly;
@@ -109,10 +108,10 @@ public class EadSlipTrnDto extends AbstractSlipDto<EadLineTrnDto> implements
 		stockDto.updDatetm = this.updDatetm;
 		stockDto.updUser = this.updUser;
 
-		
+		// 差分
 		stockDto.eadSlipId = this.moveDepositSlipId;
 		stockDto.moveDepositSlipId = this.eadSlipId;
-		stockDto.eadCategory = CategoryTrns.EAD_CATEGORY_ENTER;
+		stockDto.eadCategory = CategoryTrns.EAD_CATEGORY_ENTER;//入庫
 
 		return stockDto;
 	}

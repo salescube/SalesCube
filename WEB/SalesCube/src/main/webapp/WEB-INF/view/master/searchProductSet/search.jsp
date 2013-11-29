@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 	<!--
     var paramDataTmp = null;
-	
+
 	$(
 		function() {
 			$("#setProductCode").focus();
@@ -38,9 +38,7 @@
 
 	// 検索
 	function search_productSet(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData(), true);
 	}
 
@@ -225,41 +223,42 @@
 
 </head>
 <body onhelp="return false;">
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0013"/>
 		<jsp:param name="MENU_ID" value="1301"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能 --%>
 	<div id="main_function">
 		<span class="title">セット商品</span>
 
-		
+		<%-- フォームスタート --%>
 		<s:form onsubmit="return false;">
 
-			
+			<%-- Fキー群 --%>
 			<div class="function_buttons">
-				<button type="button" tabindex="2000" onclick="init_screen();">F1<br>初期化</button><button
-					type="button" tabindex="2001" onclick="search_productSet();">F2<br>検索</button><button
-					type="button" disabled="disabled">F3<br>&nbsp;</button><button
-					type="button" disabled="disabled">F4<br>&nbsp;</button><button
-					type="button" disabled="disabled">F5<br>&nbsp;</button><button
-					type="button" disabled="disabled">F6<br>&nbsp;</button><button
-					type="button" disabled="disabled">F7<br>&nbsp;</button><button
-					type="button" disabled="disabled">F8<br>&nbsp;</button><button
-					type="button" disabled="disabled">F9<br>&nbsp;</button><button
-					type="button" disabled="disabled">F10<br>&nbsp;</button><button
-					type="button" disabled="disabled">F11<br>&nbsp;</button><button
-					type="button" disabled="disabled">F12<br>&nbsp;</button>
+				<button type="button" tabindex="2000" onclick="init_screen();">F1<br>初期化</button>
+				<button type="button" tabindex="2001" onclick="search_productSet();">F2<br>検索</button>
+				<button type="button" disabled="disabled">F3<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F4<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F5<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F8<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+				<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 			</div>
-
+			<br><br><br>
 			
+			<%-- 入力メイン --%>
 			<div class="function_forms">
-				
+				<%-- エラー表示部分 --%>
 				<div style="color:red; padding-left: 20px">
 					<span id="ajax_errors">
 						<html:errors/>
@@ -269,86 +268,100 @@
 					</span>
 				</div>
 
-				<span>セット商品情報</span><br>
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span>セット商品情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
 
-				
-				<table class="forms" summary="セット商品">
-					<colgroup>
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 25%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 45%">
-					</colgroup>
-					<tr>
-						<th>セット商品コード</th>
-						<td>
-							<html:text styleId="setProductCode" property="setProductCode"
-								style="width: 170px; ime-mode: disabled;" tabindex="100"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch($('#setProductCode'),true);" tabindex="101"/>
-						</td>
-						<th>セット商品名</th>
-						<td><html:text styleId="setProductName" property="setProductName"
-								style="width: 400px" tabindex="102" />
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch($('#setProductName'),true);" tabindex="103"/>
-						</td>
-					</tr>
-				</table>
+						<div id="search_info" class="section_body">
+						
+						<%-- 検索条件1 --%>
+						<table class="forms" summary="セット商品">
+							<tr>
+								<th><div class="col_title_right">セット商品コード</div></th>
+								<td>
+									<html:text styleId="setProductCode" property="setProductCode"
+										style="width: 170px; ime-mode: disabled;" tabindex="100"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="productSearch($('#setProductCode'),true);" tabindex="101"/>
+								</td>
+								<th><div class="col_title_right">セット商品名</div></th>
+								<td><html:text styleId="setProductName" property="setProductName"
+										style="width: 400px" tabindex="102" />
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="productSearch($('#setProductName'),true);" tabindex="103"/>
+								</td>
+							</tr>
+						</table>
+				        </div>
+			    	</div><!-- /.form_section -->
+			    </div><!-- /.form_section_wrap -->
+			    
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span>セット内容</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
 
-				
-				<table class="forms" summary="セット内容">
-					<colgroup>
-						<col span="1" style="width: 7%">
-						<col span="1" style="width: 8%">
-						<col span="1" style="width: 85%">
-					</colgroup>
-					<tr>
-						<th rowspan="2">セット内容</th>
-						<th>商品コード</th>
-						<td><html:text styleId="productCode" property="productCode"
-								style="width: 170px; ime-mode: disabled;" tabindex="200"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+						<div id="search_info" class="section_body">
 
-						<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="productSearch($('#productCode'));" tabindex="201"/>
+						<%-- 検索条件２ --%>
+						<table class="forms" summary="セット内容">
+							<tr>
+								<th><div class="col_title_right">商品コード</div></th>
+								<td><html:text styleId="productCode" property="productCode"
+										style="width: 170px; ime-mode: disabled;" tabindex="200"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+		
+								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="productSearch($('#productCode'));" tabindex="201"/>
+		
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">商品名</div></th>
+								<td>
+									<html:text styleId="productName" property="productName"
+										style="width: 400px" tabindex="202" />
+		
+									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+										onclick="productSearch($('#productName'));" tabindex="203"/>
+		
+								</td>
+							</tr>
+						</table>
+				        </div>
+			    	</div><!-- /.form_section -->
+			    </div><!-- /.form_section_wrap -->
 
-						</td>
-					</tr>
-					<tr>
-						<th>商品名</th>
-						<td>
-							<html:text styleId="productName" property="productName"
-								style="width: 400px" tabindex="202" />
-
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch($('#productName'));" tabindex="203"/>
-
-						</td>
-					</tr>
-				</table>
-
-				<div style="width: 910px; text-align: right">
-					<button type="button" tabindex="250" style="width:80px" onclick="init_screen();">初期化</button>
-					<button type="button" tabindex="251" style="width:80px" onclick="search_productSet();">検索</button>
+				<div style="width: 1160px; text-align: right">
+					<button type="button" tabindex="250" style="width:80px" onclick="init_screen();" class="btn_medium">初期化</button>
+					<button type="button" tabindex="251" style="width:80px" onclick="search_productSet();" class="btn_medium">検索</button>
 				</div>
 
 				<div id="ListContainer">
-					<div style="width: 910px; height: 25px;">
+					<div style="width: 1010px; height: 25px;">
 							<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
 		                    <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 					</div>
-					<table id="List" summary="セット商品検索結果"  class="forms" style="width: 910px">
+					<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 						<colgroup>
 							<col span="1" style="width: 20%">
 							<col span="1" style="width: 70%">
 							<col span="1" style="width: 10%">
 						</colgroup>
 						<tr>
-							<th style="cursor: pointer">セット商品コード</th>
-							<th style="cursor: pointer">セット商品名</th>
-							<th style="cursor: pointer">&nbsp;</th>
+							<th class="rd_top_left" style="cursor: pointer; height: 30px;">セット商品コード</th>
+							<th class="xl64" style="cursor: pointer; height: 30px;">セット商品名</th>
+							<th class="rd_top_right" style="height: 30px;">&nbsp;</th>
 						</tr>
 					</table>
 				</div>
@@ -362,7 +375,7 @@
 		<s:form styleId="editForm" action="/master/editProductSet/edit" >
 			<input type="hidden" id="setProductCode" name="setProductCode">
 		</s:form>
-		
+		<%-- フォーム終了 --%>
 	</div>
 </body>
 

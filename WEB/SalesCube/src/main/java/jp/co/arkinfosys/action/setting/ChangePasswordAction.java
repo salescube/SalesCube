@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import javax.annotation.Resource;
@@ -54,7 +53,7 @@ public class ChangePasswordAction extends CommonResources {
 	public String index() throws Exception {
 		if (super.mineDto.passwordValidDays != null
 				&& this.userDto.isPasswordExpired()) {
-			
+			// パスワード有効期限切れ
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("warns.password.expired"));
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -77,7 +76,7 @@ public class ChangePasswordAction extends CommonResources {
 		User user = this.userService.findUserByIdAndPassword(
 				changePasswordForm.userId, changePasswordForm.oldPassword);
 		if (user == null) {
-			
+			// 現在のパスワード誤り
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.invalid.password"));
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
@@ -89,11 +88,11 @@ public class ChangePasswordAction extends CommonResources {
 			return ChangePasswordAction.Mapping.INPUT;
 		}
 
-		
+		// パスワードを更新する
 		this.userService.updatePassword(super.userDto.userId,
 				changePasswordForm.newPassword);
 
-		
+		// 更新したユーザー情報でセッションのDTOを更新する
 		user = this.userService.findUserByIdAndPassword(
 				changePasswordForm.userId, changePasswordForm.newPassword);
 		Beans.copy(user, super.userDto).execute();

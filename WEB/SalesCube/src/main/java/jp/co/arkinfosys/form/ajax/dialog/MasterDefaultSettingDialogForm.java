@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.ajax.dialog;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class MasterDefaultSettingDialogForm {
 						.equals(dto.useDataType)) {
 					if (dto.strData != null
 							&& dto.strData.length() > dto.useStrSize.intValue()) {
-						
+						// 長さチェック
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("errors.length", dto.title,
 										dto.useStrSize));

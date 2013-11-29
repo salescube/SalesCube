@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.report;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class ReferenceMstFormDto implements Serializable  {
 		 */
 	    public String outputTarget;
 
-	    ////////
+	    ////////// 顧客マスタ
 	    /**
 	     * 顧客コードFrom
 	     */

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity;
 
 import java.math.BigDecimal;
@@ -25,11 +24,11 @@ import javax.persistence.Transient;
 @Entity
 public class DepositLine {
 	@Transient
-	static final public String TABLE_NAME = "DEPOSIT_LINE_TRN"; 
+	static final public String TABLE_NAME = "DEPOSIT_LINE_TRN"; // 入金伝票明細行
 	@Transient
-	static final public String STATUS_INIT = "0"; 
+	static final public String STATUS_INIT = "0"; // 入金状態
 	@Transient
-	static final public String STATUS_CLOSE = "9"; 
+	static final public String STATUS_CLOSE = "9"; // 入金締終了状態
 
 	@Id
 	@GeneratedValue

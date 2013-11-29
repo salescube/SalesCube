@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
 package jp.co.arkinfosys.form.ajax;
 
@@ -22,7 +22,7 @@ public class CommonSupplierForm {
 	 */
 	@Required
 	@Mask(mask = Constants.CODE_MASK.SUPPLIER_MASK , msg = @Msg(key = "errors.invalid"), args = @Arg(key = "labels.supplierCode", resource = true, position = 0))
-
+//	@Validwhen(test = "(customerIsExist == 1)", msg = @Msg(key = "errors.invalid"), args = @Arg(key = "labels.customerCode", resource = true, position = 0))
 	public String supplierCode;
 
 

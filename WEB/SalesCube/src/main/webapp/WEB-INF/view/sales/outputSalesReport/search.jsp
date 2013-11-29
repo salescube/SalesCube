@@ -43,10 +43,6 @@
 
 		// 検索
 		function onF2(){
-			// 「この条件で検索しますか？」
-			if(!confirm('<bean:message key="confirm.search" />')){
-				return;
-			}
 
 			// 検索条件を設定する
 			data = createParamData();
@@ -711,16 +707,16 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0004"/>
 		<jsp:param name="MENU_ID" value="0402"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<!-- タイトル -->
@@ -728,20 +724,21 @@
 
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button type="button" id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/>
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3()" ${searchResultExist ? "onclick='onF3()'" : "disabled='disabled'"}>F3<br><bean:message key='words.name.pdf'/>
-			</button><button type="button" id="btnF4" tabindex="2003" disabled="disabled">F4<br>&nbsp;
-			</button><button type="button" id="btnF5" tabindex="2004" disabled="disabled">F5<br>&nbsp;
-			</button><button type="button" id="btnF6" tabindex="2005" disabled="disabled">F6<br>&nbsp;
-			</button><button type="button" id="btnF7" tabindex="2006" disabled="disabled">F7<br>&nbsp;
-			</button><button type="button" id="btnF8" tabindex="2007" disabled="disabled">F8<br>&nbsp;
-			</button><button type="button" id="btnF9" tabindex="2008" disabled="disabled">F9<br>&nbsp;
-			</button><button type="button" id="btnF10" tabindex="2009" disabled="disabled">F10<br>&nbsp;
-			</button><button type="button" id="btnF11" tabindex="2010" disabled="disabled">F11<br>&nbsp;
-			</button><button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button type="button" id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/></button>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3()" ${searchResultExist ? "onclick='onF3()'" : "disabled='disabled'"}>F3<br><bean:message key='words.name.pdf'/></button>
+			<button type="button" id="btnF4" tabindex="2003" disabled="disabled">F4<br>&nbsp;</button>
+			<button type="button" id="btnF5" tabindex="2004" disabled="disabled">F5<br>&nbsp;</button>
+			<button type="button" id="btnF6" tabindex="2005" disabled="disabled">F6<br>&nbsp;</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled="disabled">F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled="disabled">F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled="disabled">F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled="disabled">F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled="disabled">F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form onsubmit="return false;">
 
 		<html:hidden property="sortColumn" styleId="sortColumn" />
@@ -752,69 +749,114 @@
 				<html:errors/>
 			</div>
 
-			<span><bean:message key='labels.outputCondition'/></span><br>
-			<div id="search_info">
-				<table id="search_info1" class="forms" style="width: 750px" summary="出力条件">
-					<colgroup>
-						<col span="1" style="width: 25%">
-						<col span="1" style="width: 75%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.salesDate'/></th><!-- 売上日 -->
-						<td><html:text styleId="salesDateFrom" property="salesDateFrom" styleClass="date_input" tabindex="100" />
-						 ～
-						<html:text styleId="salesDateTo" property="salesDateTo" styleClass="date_input" tabindex="101"/></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.roSlipId'/></th><!-- 受注番号 -->
-						<td><html:text styleId="roSlipIdFrom" property="roSlipIdFrom" style="ime-mode:disabled;" tabindex="102"/>
-						～
-						<html:text styleId="roSlipIdTo" property="roSlipIdTo" style="ime-mode:disabled;" tabindex="103"/></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.salesSlipId'/></th><!-- 売上番号 -->
-						<td><html:text styleId="salesSlipIdFrom" property="salesSlipIdFrom" style="ime-mode:disabled;" tabindex="104"/>
-						～
-						<html:text styleId="salesSlipIdTo" property="salesSlipIdTo" style="ime-mode:disabled;" tabindex="105"/></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.receptNo'/></th><!-- 受付番号 -->
-						<td><html:text styleId="receptNo" property="receptNo" style="ime-mode:disabled;" tabindex="106"/></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.salesCmCategory'/></th><!-- 取引区分 -->
-						<td>
-						<c:forEach var="salesCategory" varStatus="s" items="${salesCategoryList}">
-							<input type="checkbox" name="salesCategoryList" id="salesCategoryList${s.index}" tabindex="107" value="${salesCategory.value}" checked>
-							<label for="salesCategoryList${s.index}">${salesCategory.label}</label>
-						</c:forEach>
-						</td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.excludingOutputAll'/></th><!-- 全て出力済を除く -->
-						<td><html:checkbox styleId="excludingOutputAll" property="excludingOutputAll" tabindex="108"/></td>
-					</tr>
-				</table>
+		    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span><bean:message key='labels.outputCondition'/></span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+					
+				<div id="search_info" class="section_body">
+					<table id="search_info1" class="forms" style="width: 750px; width: auto;" summary="出力条件">
+						<tr>
+
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.salesDate'/></div></th><!-- 売上日 -->
+							<!-- 
+							<td><html:text styleId="salesDateFrom" property="salesDateFrom" styleClass="date_input" tabindex="100" />
+							 ～
+							<html:text styleId="salesDateTo" property="salesDateTo" styleClass="date_input" tabindex="101"/></td>
+							 -->
+							<td style="padding-right: 0;">
+								<div class="pos_r">
+									<html:text styleId="salesDateFrom" property="salesDateFrom" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="100" />
+								</div>
+							</td>
+							<td style="text-align: center; width:30px; padding-right: 0;">
+								<bean:message key='labels.betweenSign'/> <!-- ～ -->
+							</td>
+							<td>
+								<div class="pos_r">
+									<html:text styleId="salesDateTo" property="salesDateTo" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="101"/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.roSlipId'/></div></th><!-- 受注番号 -->
+							<td style="padding-right: 0;">
+								<div class="pos_r">
+									<html:text styleId="roSlipIdFrom" property="roSlipIdFrom" style="width: 175px; ime-mode:disabled;" tabindex="102"/>
+								</div>
+							</td>
+							<td style="text-align: center; width:30px; padding-right: 0;">
+								<bean:message key='labels.betweenSign'/> <!-- ～ -->
+							</td>
+							<td>
+								<div class="pos_r">
+									<html:text styleId="roSlipIdTo" property="roSlipIdTo" style="width: 175px; ime-mode:disabled;" tabindex="103"/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.salesSlipId'/></div></th><!-- 売上番号 -->
+							<td style="padding-right: 0;">
+								<div class="pos_r">
+									<html:text styleId="salesSlipIdFrom" property="salesSlipIdFrom" style="width: 175px; ime-mode:disabled;" tabindex="104"/>
+								</div>
+							</td>
+							<td style="text-align: center; width:30px; padding-right: 0;">
+								<bean:message key='labels.betweenSign'/> <!-- ～ -->
+							</td>
+							<td>
+								<div class="pos_r">
+									<html:text styleId="salesSlipIdTo" property="salesSlipIdTo" style="width: 175px; ime-mode:disabled;" tabindex="105"/>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<table id="search_info2" class="forms" style="width: 750px; width: auto;" summary="出力条件">
+						<tr>
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.receptNo'/></div></th><!-- 受付番号 -->
+							<td><html:text styleId="receptNo" property="receptNo" style="width: 175px; ime-mode:disabled;" tabindex="106"/></td>
+						</tr>
+						<tr>
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.salesCmCategory'/></div></th><!-- 取引区分 -->
+							<td>
+							<c:forEach var="salesCategory" varStatus="s" items="${salesCategoryList}">
+								<input type="checkbox" name="salesCategoryList" id="salesCategoryList${s.index}" tabindex="107" value="${salesCategory.value}" checked>
+								<label for="salesCategoryList${s.index}">${salesCategory.label}</label>
+							</c:forEach>
+							</td>
+						</tr>
+						<tr>
+							<th width="100px"><div class="col_title_right"><bean:message key='labels.excludingOutputAll'/></div></th><!-- 全て出力済を除く -->
+							<td><html:checkbox styleId="excludingOutputAll" property="excludingOutputAll" tabindex="108"/></td>
+						</tr>
+					</table>
+				</div>
+	    	</div><!-- /.form_section -->
+	    	</div><!-- /.form_section_wrap -->
+	    	
+			<div style="width: 1160px; text-align :right;">
+				<button type="button" onclick="onF1()" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
+				<button type="button" onclick="onF2()" tabindex="151" class="btn_medium"><bean:message key='words.action.search'/></button><!-- 検索 -->
 			</div>
 
-			<div style="width: 750px; text-align :right;">
-				<button type="button" onclick="onF1()" tabindex="150"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
-				<button type="button" onclick="onF2()" tabindex="151"><bean:message key='words.action.search'/></button><!-- 検索 -->
-			</div>
-
-			<div style="width: 910px; text-align :right">
-				<html:select styleId="reportSelection" property="reportSelection" tabindex="1000">
+			<div style="width: 1160px; text-align :right">
+				<html:select styleId="reportSelection" property="reportSelection" tabindex="1000" style="width: 350px">
 					<html:options collection="reportSelectionList" property="value" labelProperty="label"/>
 				</html:select>
 				の
-				<html:select styleId="statusSelection" property="statusSelection" tabindex="1001">
+				<html:select styleId="statusSelection" property="statusSelection" tabindex="1001" style="width: 350px">
 					<html:options collection="statusSelectionList" property="value" labelProperty="label"/>
 				</html:select>
 				を
-				<button type="button" tabindex="1002" onclick="setCheckBox(true)"><bean:message key='words.action.select'/></button>
-				<button type="button" tabindex="1003" onclick="setCheckBox(false)"><bean:message key='words.action.cancel'/></button>
+				<button type="button" tabindex="1002" onclick="setCheckBox(true)" class="btn_medium"><bean:message key='words.action.select'/></button>
+				<button type="button" tabindex="1003" onclick="setCheckBox(false)" class="btn_medium"><bean:message key='words.action.cancel'/></button>
 			</div>
 		</div>
+		
 		<!-- 検索結果表示エリア -->
 		<span id="listContainer">
 			<%@ include file="/WEB-INF/view/ajax/sales/searchOutputSalesReportAjax/result.jsp" %>

@@ -1,8 +1,7 @@
+
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
-
 package jp.co.arkinfosys.action.ajax.bill;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class SearchCloseBillResultAjaxAction extends
 			closeBillForm.lastCutOffDate = closeBillForm.otherUser.billCutoffDate;
 		}
 
-		
+		// 支払条件の分割
 		devideCutoffGroupCategory();
 	}
 

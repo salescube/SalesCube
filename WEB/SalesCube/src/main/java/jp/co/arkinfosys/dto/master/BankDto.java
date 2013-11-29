@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.master;
 
 /**
@@ -38,6 +37,10 @@ public class BankDto implements MasterEditDto {
 	/** 備考 */
 	public String remarks;
 
+	/** 有効 */
+	public String valid;
+
+	
 	/** 更新日時（排他制御用）*/
 	public String updDatetm;
 

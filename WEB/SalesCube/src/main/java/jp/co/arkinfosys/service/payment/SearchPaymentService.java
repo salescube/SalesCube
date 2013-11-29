@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.payment;
 
 import java.util.List;
@@ -83,10 +82,10 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 		try {
 			Integer count = Integer.valueOf(0);
 
-			
+			// 検索対象を取得する
 			String searchTarget = (String)params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				count = findSlipCntByCondition(params);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -109,10 +108,10 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 	 */
 	public List<BeanMap> getSearchResult(BeanMap params) throws ServiceException {
 		try {
-			
+			// 検索対象を取得する
 			String searchTarget = (String)params.get(Param.SEARCH_TARGET);
 
-			
+			// 伝票単位か明細単位か
 			if(Constants.SEARCH_TARGET.VALUE_SLIP.equals(searchTarget)) {
 				return findSlipByCondition(params);
 			} else if(Constants.SEARCH_TARGET.VALUE_LINE.equals(searchTarget)) {
@@ -205,20 +204,20 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// 特定のカラムがsortキーに指定された場合は伝票、行番をキーにする
 			String sortColumn = (String)param.get(Param.SORT_COLUMN);
 			if (Column.SUPPLIER_LINE_ID.equals(sortColumn)) {
-				
+				// 仕入番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_SUPPLIER_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_SUPPLIER_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
 			}else if(Column.PO_LINE_ID.equals(sortColumn)){
-				
+				// 発注番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_PO_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_PO_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
 			}else if(Column.PAYMENT_SLIP_ID.equals(sortColumn)){
-				
+				// 支払番号 - 行
 				param.put(Param.SORT_COLUMN_SLIP, Column.SORT_PAYMENT_SLIP_ID);
 				param.put(Param.SORT_COLUMN_LINE, Column.SORT_PAYMENT_LINE_NO);
 				param.put(Param.SORT_COLUMN, null);
@@ -272,42 +271,42 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 支払番号
 		if (conditions.containsKey(Param.PAYMENT_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PAYMENT_SLIP_ID))) {
 				param.put(Param.PAYMENT_SLIP_ID,new Long((String)conditions.get(Param.PAYMENT_SLIP_ID)));
 			}
 		}
 
-		
+		// 発注番号
 		if (conditions.containsKey(Param.PO_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PO_SLIP_ID))) {
 				param.put(Param.PO_SLIP_ID,new Long((String)conditions.get(Param.PO_SLIP_ID)));
 			}
 		}
 
-		
+		// 仕入番号
 		if (conditions.containsKey(Param.SUPPLIER_SLIP_ID)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SUPPLIER_SLIP_ID))) {
 				param.put(Param.SUPPLIER_SLIP_ID,new Long((String)conditions.get(Param.SUPPLIER_SLIP_ID)));
 			}
 		}
 
-		
+		// 支払日From
 		if (conditions.containsKey(Param.PAYMENT_DATE_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PAYMENT_DATE_FROM))) {
 				param.put(Param.PAYMENT_DATE_FROM,(String)conditions.get(Param.PAYMENT_DATE_FROM));
 			}
 		}
 
-		
+		// 支払日To
 		if (conditions.containsKey(Param.PAYMENT_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PAYMENT_DATE_TO))) {
 				param.put(Param.PAYMENT_DATE_TO,(String)conditions.get(Param.PAYMENT_DATE_TO));
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SUPPLIER_CODE))) {
 				param.put(Param.SUPPLIER_CODE,
@@ -315,7 +314,7 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SUPPLIER_NAME))) {
 				param.put(Param.SUPPLIER_NAME,
@@ -323,7 +322,7 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(Param.PRODUCT_CODE)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT_CODE))) {
 				param.put(Param.PRODUCT_CODE,
@@ -331,7 +330,7 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(Param.PRODUCT_ABSTRACT)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT_ABSTRACT))) {
 				param.put(Param.PRODUCT_ABSTRACT,
@@ -339,28 +338,28 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
-		
+		// 分類（大）
 		if (conditions.containsKey(Param.PRODUCT1)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT1))) {
 				param.put(Param.PRODUCT1,(String)conditions.get(Param.PRODUCT1));
 			}
 		}
 
-		
+		// 分類（中）
 		if (conditions.containsKey(Param.PRODUCT2)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT2))) {
 				param.put(Param.PRODUCT2,(String)conditions.get(Param.PRODUCT2));
 			}
 		}
 
-		
+		// 分類（小）
 		if (conditions.containsKey(Param.PRODUCT3)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PRODUCT3))) {
 				param.put(Param.PRODUCT3,(String)conditions.get(Param.PRODUCT3));
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SORT_COLUMN))) {
 				param.put(Param.SORT_COLUMN,
@@ -368,7 +367,7 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean)conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.ASC);
@@ -376,13 +375,13 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT,
 					conditions.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW,conditions.get(Param.OFFSET_ROW));
 		}

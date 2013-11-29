@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.master;
 
 import java.io.Serializable;
@@ -213,19 +212,19 @@ public class ProductExcelRowDto implements Serializable {
 			return new String[0];
 		}
 
-		
+		// 空白を除去する
 		for (int i = 0; i < columns.length; i++) {
 			columns[i] = StringUtil.trimBlank(columns[i]);
 		}
 
-		
+		// エンティティクラスのプロパティ名に変換して返却する
 		BeanDesc beanDesc = BeanDescFactory.getBeanDesc(ProductJoin.class);
 		List<String> propertyNameList = new ArrayList<String>();
 		for (int i = 0; i < columns.length; i++) {
 			PropertyDesc propertyDesc = beanDesc.getPropertyDesc(columns[i]
 					.replace("_", ""));
 			if (propertyDesc == null) {
-				
+				// 変換できない場合は除外
 				continue;
 			}
 			propertyNameList.add(propertyDesc.getPropertyName());
@@ -341,7 +340,7 @@ public class ProductExcelRowDto implements Serializable {
 				continue;
 			}
 
-			
+			// Excel値を文字列として取得する
 			String value = null;
 			int type = c.getCellType();
 			if (type == HSSFCell.CELL_TYPE_STRING) {
@@ -352,7 +351,7 @@ public class ProductExcelRowDto implements Serializable {
 				} else {
 					double dValue = c.getNumericCellValue();
 					if (Double.compare(dValue, Math.floor(dValue)) == 0) {
-						
+						// 小数桁に値がない場合は整数として扱う(フラグなどが1.0として取得される場合の対処)
 						value = String.valueOf((long) dValue);
 					} else {
 						value = String.valueOf(c.getNumericCellValue());
@@ -368,7 +367,7 @@ public class ProductExcelRowDto implements Serializable {
 			}
 
 			if (!StringUtil.hasLength(value)) {
-				
+				// 空白値の場合、エンティティが文字型であれば空文字とする
 				if (targetClass == String.class) {
 					value = "";
 				} else {
@@ -393,7 +392,7 @@ public class ProductExcelRowDto implements Serializable {
 			return messages;
 		}
 
-		
+		// 必須入力チェック
 		this.validateRequired(messages, this.productCode,
 				ProductService.Param.PRODUCT_CODE);
 		this.validateRequired(messages, this.productName,
@@ -401,7 +400,7 @@ public class ProductExcelRowDto implements Serializable {
 		this.validateRequired(messages, this.stockCtlCategory,
 				ProductService.Param.STOCK_CTL_CATEGORY);
 
-		
+		// 単品の場合の必須チェック
 		if (CategoryTrns.PRODUCT_SET_TYPE_SINGLE.equals(this.setTypeCategory)) {
 			this.validateRequired(messages, this.supplierCode,
 					ProductService.Param.SUPPLIER_CODE);
@@ -409,10 +408,10 @@ public class ProductExcelRowDto implements Serializable {
 					ProductService.Param.RACK_CODE);
 		}
 
-		
+		// 在庫管理区分
 		if (CategoryTrns.PRODUCT_STOCK_CTL_YES.equals(this.stockCtlCategory)) {
 			if (CategoryTrns.PRODUCT_SET_TYPE_SET.equals(this.setTypeCategory)) {
-				
+				// 在庫管理するセット商品は許可しない
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.product.stockctl.set", this.lineNo + 1));
 			} else {
@@ -459,12 +458,12 @@ public class ProductExcelRowDto implements Serializable {
 
 			String value = (String) dtoField.get(this);
 			if (!StringUtil.hasLength(value)) {
-				
+				// 空の場合は不要
 				continue;
 			}
 
 			if (targetClass == String.class) {
-				
+				// サイズチェック
 				Column column = entityField.getAnnotation(Column.class);
 				this.validateMaxlength(messages, value, column.length(),
 						propertyNames[i]);

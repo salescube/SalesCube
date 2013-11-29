@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class EditCategoryAction extends
 	 */
 	@Override
 	protected AuditInfo loadData(String key) throws ServiceException {
-		
+		// ベースとなる区分マスタレコードを取得する
 		Category category = categoryService.findCategoryById(key);
 		if (category == null) {
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -74,7 +73,7 @@ public class EditCategoryAction extends
 			return null;
 		}
 
-		
+		// フォーム設定
 		this.editCategoryForm.category = category;
 
 		List<CategoryJoin> categoryTrns = categoryService
@@ -99,7 +98,7 @@ public class EditCategoryAction extends
 	 */
 	@Execute(validator = true, validate = "validate", input = Mapping.INPUT, stopOnValidationError = false)
 	public String update() throws Exception {
-		
+		// ベースとなる区分マスタレコードを取得する
 		Category category = categoryService.findCategoryById(this.getKey());
 		if (category == null) {
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -108,14 +107,14 @@ public class EditCategoryAction extends
 			return this.getSearchURL();
 		}
 
-		
+		// 区分マスタを更新する
 		try {
 			categoryService.updateMasterRecordUpdDatetm(Integer.parseInt(this
 					.getKey()), this.editCategoryForm.updDatetm);
 		} catch (UnabledLockException e) {
 			super.errorLog(e);
 
-			
+			// ロックエラー
 			ActionMessages errors = new ActionMessages();
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e
 					.getKey()));
@@ -124,7 +123,7 @@ public class EditCategoryAction extends
 			return this.getInputURL();
 		}
 
-		
+		// 既存レコードを削除する
 		List<CategoryJoin> categoryTrns = categoryService
 				.findCategoryJoinById(Integer.parseInt(this.getKey()));
 
@@ -136,7 +135,7 @@ public class EditCategoryAction extends
 			categoryService.deleteRecord(dto);
 		}
 
-		
+		// 画面上のレコードを登録する
 		for (CategoryDto dto : this.editCategoryForm.categoryTrnList) {
 			dto.categoryId = this.getKey();
 			categoryService.insertRecord(dto);
@@ -144,7 +143,7 @@ public class EditCategoryAction extends
 
 		super.init(this.getKey());
 
-		
+		// メッセージ設定
 		this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 				"infos.update"));
 		ActionMessagesUtil.addMessages(this.httpRequest, this.messages);

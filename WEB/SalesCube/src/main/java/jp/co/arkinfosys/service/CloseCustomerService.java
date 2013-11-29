@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.LinkedHashMap;
@@ -58,8 +57,8 @@ public class CloseCustomerService extends AbstractService<CloseCustomer> {
 		LinkedHashMap<String, Object> conditions =
 			new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(	Param.SALES_DATE,cutoffDate);
 		conditions.put(	Param.DEPOSIT_DATE,cutoffDate);
 		return findByCondition( conditions, params, "customer/FindCloseCustomerOther.sql" );
@@ -78,8 +77,8 @@ public class CloseCustomerService extends AbstractService<CloseCustomer> {
 		LinkedHashMap<String, Object> conditions =
 			new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(	Param.LAST_CUTOFF_DATE,lastCutOffDate);
 
 		return findByCondition( conditions, params, "customer/FindReOpenCustomerOther.sql" );

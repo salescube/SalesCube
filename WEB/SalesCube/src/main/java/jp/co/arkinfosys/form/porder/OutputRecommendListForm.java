@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.porder;
 
 import java.io.Serializable;
@@ -34,8 +33,8 @@ public class OutputRecommendListForm implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public int ML_DATE;			
-	public int ML_QUANTITY; 	
+	public int ML_DATE;			//日付用
+	public int ML_QUANTITY; 	//数量用
 
 	/**
 	 * 仕入先
@@ -199,8 +198,8 @@ public class OutputRecommendListForm implements Serializable {
 	 */
 	public void reset(){
 
-		ML_DATE = 10;			
-		ML_QUANTITY = 6; 		
+		ML_DATE = 10;			//日付用
+		ML_QUANTITY = 6; 		//数量用
 
 		supplierCode = null;
 		deliveryDate = null;
@@ -210,10 +209,10 @@ public class OutputRecommendListForm implements Serializable {
 		validInputPOrder = false;
 		updateOutputRecommendList = false;
 
-		
+		//初期選択固定値：AIR便:仕様書より
 		transportCategory = CategoryTrns.TRANSPORT_CATEGORY_AIR;
 
-		
+		// 初期選択固定値：発注区分、都度発注区分
 		poCategory = CategoryTrns.IMMEDIATELY_PORDER;
 		immediatelyPOCategory = CategoryTrns.NORMAL_PORDER;
 
@@ -221,11 +220,11 @@ public class OutputRecommendListForm implements Serializable {
 		excludeAvgShipCountZero = true;
 		excludeAvgLessThanHoldingStock = true;
 
-		
+		// ソートカラムの初期値を設定
 		sortColumn = null;
 		sortOrderAsc = true;
 
-		
+		//検索結果件数を初期化
 		searchResultCount = 0;
 
     	this.searchSupplierCode = null;
@@ -249,7 +248,7 @@ public class OutputRecommendListForm implements Serializable {
     public ActionErrors validate() {
 		ActionErrors errors = new ActionErrors();
 
-		
+		//商品未選択あるいは有効発注数が0
 		int l_validLineCount = 0;
 		int lineCount = 0;
 
@@ -257,12 +256,12 @@ public class OutputRecommendListForm implements Serializable {
 			for(OutputRecommendListFormDto l_RowData : searchResultList){
 				lineCount++;
 
-				
+				//チェックが付いている行のみをバリデート対象とする
 				if(Null2Bool(l_RowData.validRow)){
 					String l_productCode = l_RowData.productCode;
 					String l_pOrderQuantity = l_RowData.pOrderQuantity;
 
-					
+					// 発注数の正数チェック
 					try{
 						if(Integer.valueOf(l_pOrderQuantity).intValue() <= 0) {
 							errors.add(ActionMessages.GLOBAL_MESSAGE,

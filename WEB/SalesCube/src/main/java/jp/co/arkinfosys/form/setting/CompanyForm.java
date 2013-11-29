@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.setting;
 
 import org.apache.struts.action.ActionMessage;
@@ -41,6 +40,12 @@ public class CompanyForm {
     @Required
     @Maxlength(maxlength = 14)
     public String companyCeoName;
+	/**
+     * 代表者肩書
+     */
+    @Required
+    @Maxlength(maxlength = 20)
+    public String companyCeoTitle;
 	/**
      * 会社ロゴファイル名
      */
@@ -115,9 +120,9 @@ public class CompanyForm {
 		if(this.logoImgPath == null || this.logoImgPath.getFileSize() == 0){
 			return errors;
 		}
-		
+
 		String selectFileType = this.logoImgPath.getContentType();
-		if(!selectFileType.startsWith("image/") && !selectFileType.endsWith("gif") && 
+		if(!selectFileType.startsWith("image/") && !selectFileType.endsWith("gif") &&
 				!selectFileType.endsWith("png") && !selectFileType.endsWith("jpeg")) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.company.logoFileFormat"));

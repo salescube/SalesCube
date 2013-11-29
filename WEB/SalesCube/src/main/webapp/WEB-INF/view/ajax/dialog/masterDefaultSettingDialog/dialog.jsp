@@ -3,6 +3,7 @@
 	</span>
 
 	<form>
+		<div style="padding: 20px 20px 0 20px;">
 		<table class="forms" style="width: 450px;">
 			<c:forEach var="dto" items="${initMstDtoList}" varStatus="status">
 			<tr>
@@ -34,7 +35,7 @@
 						value="${dto.title}" />
 
 					<c:if test="${dto.useDataType == '1' && !empty dto.masterList}">
-						
+						<%-- 区分 --%>
 						<select id="${dialogId}_initMstDtoList[${status.index}].strData"
 							name="${dialogId}_initMstDtoList[${status.index}].strData">
 							<c:forEach var="bean" items="${dto.masterList}" varStatus="status2">
@@ -49,14 +50,14 @@
 					</c:if>
 
 					<c:if test="${dto.useDataType == '1' && empty dto.masterList}">
-						
+						<%-- 文字列 --%>
 						<input type="text" id="${dialogId}_initMstDtoList[${status.index}].strData"
 							name="${dialogId}_initMstDtoList[${status.index}].strData"
 							value="${dto.strData}" tabindex="${status.index + 15000}">
 					</c:if>
 
 					<c:if test="${dto.useDataType == '2'}">
-						
+						<%-- 整数 --%>
 						<input type="text" id="${dialogId}_initMstDtoList[${status.index}].numData"
 							name="${dialogId}_initMstDtoList[${status.index}].numData"
 							value="${dto.numData}" tabindex="${status.index + 15000}"
@@ -65,7 +66,7 @@
 					</c:if>
 
 					<c:if test="${dto.useDataType == '3'}">
-						
+						<%-- 小数 --%>
 						<input type="text" id="${dialogId}_initMstDtoList[${status.index}].fltData"
 							name="${dialogId}_initMstDtoList[${status.index}].fltData"
 							value="${dto.fltData}" tabindex="${status.index + 15000}"
@@ -85,6 +86,7 @@
 			</tr>
 			</c:forEach>
 		</table>
+		</div>
 
 		<div style="width: 450px; text-align: right">
 			<button id="${dialogId}_initButton" type="reset" style="width: 70px"

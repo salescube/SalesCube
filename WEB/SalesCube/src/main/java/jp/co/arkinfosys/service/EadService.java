@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 * カラム定義クラスです.
 	 */
 	public static class Column {
-		
+		// 伝票
 		public static final String SRC_FUNC = "SRC_FUNC";
 		public static final String EAD_SLIP_ID = "EAD_SLIP_ID";
 		public static final String EAD_DATE = "EAD_DATE";
@@ -111,7 +110,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 		public static final String EAD_CATEGORY = "EAD_CATEGORY";
 		public static final String USER_NAME = "USER_NAME";
 
-		
+		// 明細
 		public static final String PRODUCT_CODE = "PRODUCT_CODE";
 		public static final String PRODUCT_NAME = "PRODUCT_NAME";
 		public static final String RACK_CODE = "RACK_CODE";
@@ -143,7 +142,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	public EadSlipTrn findSlipByEadSlipId(Integer eadSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.EAD_SLIP_ID, eadSlipId);
 
@@ -165,7 +164,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	public EadSlipTrn findSlipBySalesSlipId(Integer salesSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.SALES_SLIP_ID, salesSlipId);
 
@@ -187,7 +186,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	public EadSlipTrn findSlipBySupplierSlipId(Integer supplierSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.SUPPLIER_SLIP_ID, supplierSlipId);
 
@@ -209,7 +208,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	public List<EadLineTrn> findLineByEadSlipId(Integer eadSlipId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.EAD_SLIP_ID, eadSlipId);
 
@@ -236,23 +235,23 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	public void insertSlipAndLine(EadSlipTrnDto eadSlipTrnDto)
 			throws ServiceException {
 		try {
-			
+			// 入出庫伝票の処理
 			EadSlipTrn eadSlipTrn = Beans.createAndCopy(EadSlipTrn.class,
 					eadSlipTrnDto).execute();
 
-			
+			// Insert
 			insertSlip(eadSlipTrn);
 
-			
+			// 入出庫伝票明細の処理
 			for (EadLineTrnDto eadLineTrnDto : eadSlipTrnDto.getLineDtoList()) {
-				
+				// 商品コードに入力のない行は処理しない
 				if (!StringUtil.hasLength(eadLineTrnDto.productCode)) {
 					continue;
 				}
 				EadLineTrn eadLineTrn = Beans.createAndCopy(EadLineTrn.class,
 						eadLineTrnDto).execute();
 
-				
+				// Insert
 				insertLine(eadLineTrn);
 			}
 		} catch (Exception e) {
@@ -270,7 +269,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int insertSlip(EadSlipTrn eadSlipTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(eadSlipTrn);
 			return this.updateBySqlFile("ead/InsertSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -288,7 +287,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int insertLine(EadLineTrn eadLineTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(eadLineTrn);
 			return this.updateBySqlFile("ead/InsertLine.sql", param).execute();
 		} catch (Exception e) {
@@ -306,7 +305,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int updateSlip(EadSlipTrn eadSlipTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(eadSlipTrn);
 			return this.updateBySqlFile("ead/UpdateSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -324,7 +323,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int updateLine(EadLineTrn eadLineTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createLineSqlParam(eadLineTrn);
 			return this.updateBySqlFile("ead/UpdateLine.sql", param).execute();
 		} catch (Exception e) {
@@ -343,7 +342,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int deleteSlipByEadSlipId(Integer eadSlipId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.EAD_SLIP_ID, eadSlipId);
 
@@ -369,7 +368,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int deleteLineByEadLineId(Integer eadLineId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.EAD_LINE_ID, eadLineId);
 
@@ -394,7 +393,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int deleteLineByEadSlipId(String eadSlipId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EadService.Param.EAD_SLIP_ID, eadSlipId);
 
@@ -467,21 +466,21 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			boolean ownRack) throws ServiceException {
 		try {
 			Map<String, Object> params = super.createSqlParam();
-			
+			// 商品コード
 			params.put(EadService.Param.PRODUCT_CODE, productCode);
 
-			
+			// 入出庫区分
 			params.put(EadService.Param.E_CATEGORY,
 					CategoryTrns.EAD_CATEGORY_ENTER);
 			params.put(EadService.Param.D_CATEGORY,
 					CategoryTrns.EAD_CATEGORY_DISPATCH);
 
 			if (ownRack) {
-				
+				// 自社棚
 				params.put(RackService.Param.RACK_CATEGORY,
 						CategoryTrns.RACK_CATEGORY_OWN);
 			} else {
-				
+				// 預け棚
 				params.put(RackService.Param.RACK_CATEGORY,
 						CategoryTrns.RACK_CATEGORY_ENTRUST);
 			}
@@ -517,7 +516,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// ソートカラムを設定する
 			if (Param.SRC_FUNC.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SRC_FUNC, Column.SRC_FUNC);
 			} else if (Param.EAD_SLIP_ID.equals(sortColumn)) {
@@ -542,7 +541,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 				param.put(Param.SORT_COLUMN_LINE, Column.QUANTITY);
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -594,7 +593,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			setEmptyCondition(param);
 			setConditionParam(conditions, param);
 
-			
+			// ソートカラムを設定する
 			if (Param.SRC_FUNC.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN_SRC_FUNC, Column.SRC_FUNC);
 			} else if (Param.EAD_SLIP_ID.equals(sortColumn)) {
@@ -619,7 +618,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 				param.put(Param.SORT_COLUMN_LINE, Column.QUANTITY);
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -663,11 +662,11 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
-		
+		// 入出庫区分の区分コードを設定
 		param.put(Param.EAD_SLIP_CATEGORY_ID, Categories.EAD_SLIP_CATEGORY);
 		param.put(Param.EAD_CATEGORY_ID, Categories.EAD_CATEGORY);
 
-		
+		// 対象外(入出庫区分=入庫 かつ 登録機能=在庫移動)
 		if (conditions.containsKey(Param.NO_TARGET)) {
 			param.put(Param.NO_TARGET, Param.NO_TARGET);
 			param.put(Param.NO_TARGET_EAD_CATEGORY,
@@ -676,14 +675,14 @@ public class EadService extends AbstractService<EadSlipTrn> {
 					Constants.SRC_FUNC.STOCK_TRANSFER);
 		}
 
-		
+		// 登録元伝票番号
 		if (conditions.containsKey(Param.SRC_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.SRC_SLIP_ID))) {
 				param.put(Param.SRC_SLIP_ID, new Integer((String) conditions.get(Param.SRC_SLIP_ID)));
 			}
 		}
 
-		
+		// 登録元機能
 		List<String> srcFuncList = new ArrayList<String>();
 		if (conditions.containsKey(Param.SRC_FUNC_STOCK)) {
 			if ((Boolean) conditions.get(Param.SRC_FUNC_STOCK)) {
@@ -709,7 +708,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			param.put(Param.SRC_FUNC, srcFuncList);
 		}
 
-		
+		// 担当者名
 		if (conditions.containsKey(Param.USER_NAME)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_NAME))) {
 				param.put(Param.USER_NAME, super
@@ -718,7 +717,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 入出庫伝票区分
 		if (conditions.containsKey(Param.EAD_SLIP_CATEGORY)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.EAD_SLIP_CATEGORY))) {
@@ -727,7 +726,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 入出庫日（開始）
 		if (conditions.containsKey(Param.EAD_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.EAD_DATE_FROM))) {
@@ -736,7 +735,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 入出庫日（終了）
 		if (conditions.containsKey(Param.EAD_DATE_TO)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.EAD_DATE_TO))) {
@@ -745,7 +744,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 理由
 		if (conditions.containsKey(Param.REMARKS)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.REMARKS))) {
 				param.put(Param.REMARKS, super
@@ -754,7 +753,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先コード
 		if (conditions.containsKey(Param.SUPPLIER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_CODE))) {
@@ -764,7 +763,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(Param.SUPPLIER_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_NAME))) {
@@ -774,7 +773,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 棚番コード
 		if (conditions.containsKey(Param.RACK_CODE)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.RACK_CODE))) {
 				param.put(Param.RACK_CODE, super
@@ -783,7 +782,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 商品コード
 		if (conditions.containsKey(Param.PRODUCT_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_CODE))) {
@@ -793,7 +792,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(Param.PRODUCT_ABSTRACT)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PRODUCT_ABSTRACT))) {
@@ -803,7 +802,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（大）
 		if (conditions.containsKey(Param.PRODUCT1)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT1))) {
 				param.put(Param.PRODUCT1, (String) conditions
@@ -811,7 +810,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（中）
 		if (conditions.containsKey(Param.PRODUCT2)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT2))) {
 				param.put(Param.PRODUCT2, (String) conditions
@@ -819,7 +818,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 分類（小）
 		if (conditions.containsKey(Param.PRODUCT3)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PRODUCT3))) {
 				param.put(Param.PRODUCT3, (String) conditions
@@ -827,7 +826,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 売上伝票番号
 		if (conditions.containsKey(Param.SALES_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.SALES_SLIP_ID))) {
 				param.put(Param.SALES_SLIP_ID, (String) conditions
@@ -835,7 +834,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 売上伝票明細行番号
 		if (conditions.containsKey(Param.SALES_LINE_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.SALES_LINE_ID))) {
 				param.put(Param.SALES_LINE_ID, (String) conditions
@@ -843,13 +842,13 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}
@@ -994,25 +993,25 @@ public class EadService extends AbstractService<EadSlipTrn> {
 		try {
 			Map<String, Object> params = super.createSqlParam();
 
-			
+			// 棚区分コード
 			if (conditions.containsKey(EadService.Param.RACK_CATEGORY)) {
 				params.put(EadService.Param.RACK_CATEGORY, conditions
 						.get(EadService.Param.RACK_CATEGORY));
 			}
 
-			
+			// 棚コード
 			if (conditions.containsKey(EadService.Param.RACK_CODE)) {
 				params.put(EadService.Param.RACK_CODE, conditions
 						.get(EadService.Param.RACK_CODE));
 			}
 
-			
+			// 商品コード
 			if (conditions.containsKey(EadService.Param.PRODUCT_CODE)) {
 				params.put(EadService.Param.PRODUCT_CODE, conditions
 						.get(EadService.Param.PRODUCT_CODE));
 			}
 
-			
+			// 入出庫区分
 			params.put(EadService.Param.E_CATEGORY,
 					CategoryTrns.EAD_CATEGORY_ENTER);
 			params.put(EadService.Param.D_CATEGORY,
@@ -1038,15 +1037,15 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			String rackCode, String productCode, String cutoffdate) throws ServiceException {
 		try {
 			Map<String, Object> params = super.createSqlParam();
-			
+			// 棚コード
 			if (rackCode != null) {
 				params.put(EadService.Param.RACK_CODE, rackCode);
 			}
-			
+			// 商品コード
 			if (productCode != null) {
 				params.put(EadService.Param.PRODUCT_CODE, productCode);
 			}
-			
+			// 在庫締処理日
 			params.put(Param.EAD_DATE, cutoffdate);
 
 			return this.selectBySqlFile(EadSlipLineJoin.class,
@@ -1068,7 +1067,7 @@ public class EadService extends AbstractService<EadSlipTrn> {
 	 */
 	public int updateSlipStockPdateByEadSlipId(String stockPdate, Integer eadSlipId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.STOCK_PDATE, stockPdate);
 			param.put(Param.EAD_SLIP_ID, eadSlipId);

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.sql.Date;
@@ -118,7 +117,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	@Override
 	public SupplierJoin findById(String SupplierCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SupplierService.Param.SUPPLIER_CODE, SupplierCode);
 			param.put(SupplierService.Param.PRE_TYPE_CATEGORY_ID,
@@ -142,7 +141,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 */
 	public List<String> getCUnitSignList() throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			return this.selectBySqlFile(String.class,
 					"supplier/FindCUnitSigns.sql", param).getResultList();
@@ -167,7 +166,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -200,7 +199,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 
 			setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -251,64 +250,64 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 仕入先コード
 		if (conditions.containsKey(SupplierService.Param.SUPPLIER_CODE)) {
 			param.put(SupplierService.Param.SUPPLIER_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(SupplierService.Param.SUPPLIER_CODE)));
 		}
 
-		
+		// 仕入先名
 		if (conditions.containsKey(SupplierService.Param.SUPPLIER_NAME)) {
 			param.put(SupplierService.Param.SUPPLIER_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(SupplierService.Param.SUPPLIER_NAME)));
 		}
 
-		
+		// 仕入先名カナ
 		if (conditions.containsKey(SupplierService.Param.SUPPLIER_KANA)) {
 			param.put(SupplierService.Param.SUPPLIER_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(SupplierService.Param.SUPPLIER_KANA)));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(SupplierService.Param.REMARKS)) {
 			param.put(SupplierService.Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(SupplierService.Param.REMARKS)));
 		}
 
-		
+		// 区分IDは固定で仕入取引区分を指定する
 		param.put(SupplierService.Param.CATEGORY_ID,
 				Categories.SUPPLIER_CM_CATEGORY);
 
-		
+		// ソートカラムを設定する
 		if (SupplierService.Param.SUPPLIER_CODE.equals(sortColumn)) {
-			
+			// 仕入先コード
 			param.put(SupplierService.Param.SORT_COLUMN,
 					SupplierService.COLUMN_SUPPLIER_CODE);
 		} else if (SupplierService.Param.SUPPLIER_NAME.equals(sortColumn)) {
-			
+			// 仕入先名
 			param.put(SupplierService.Param.SORT_COLUMN,
 					SupplierService.COLUMN_SUPPLIER_NAME);
 		} else if (SupplierService.Param.SUPPLIER_CM_CATEGORY
 				.equals(sortColumn)) {
-			
+			// 仕入先担当者名
 			param.put(SupplierService.Param.SORT_COLUMN,
 					SupplierService.COLUMN_SUPPLIER_CM_CATEGORY);
 		} else if (SupplierService.Param.SUPPLIER_PC_NAME.equals(sortColumn)) {
-			
+			// 仕入取引区分
 			param.put(SupplierService.Param.SORT_COLUMN,
 					SupplierService.COLUMN_SUPPLIER_PC_NAME);
 		} else if (SupplierService.Param.SUPPLIER_CM_CATEGORY_NAME
 				.equals(sortColumn)) {
-			
+			// 仕入先取引区分名
 			param.put(SupplierService.Param.SORT_COLUMN,
 					SupplierService.SUPPLIER_CM_CATEGORY_NAME);
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(SupplierService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -343,7 +342,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	public SupplierJoin findSupplierRateByCodeDate(String supplierCode,
 			Date targeDate) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SupplierService.Param.SUPPLIER_CODE, supplierCode);
 			param.put(SupplierService.Param.TARGET_DATE, targeDate);
@@ -363,7 +362,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 */
 	public List<Supplier> findAllSupplier() throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			return this.selectBySqlFile(Supplier.class,
 					"supplier/FindAllSuppliere.sql", param).getResultList();
@@ -393,13 +392,13 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 			String timestamp) throws ServiceException, UnabledLockException {
 
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.SUPPLIER_CODE, supplierCode);
 			this.lockRecordBySqlFile("supplier/LockSupplierBySupplierCode.sql",
 					param, timestamp);
 
-			
+			// 削除
 			param = super.createSqlParam();
 			param.put(Param.SUPPLIER_CODE, supplierCode);
 			this.updateBySqlFile("supplier/DeleteSupplierBySupplierCode.sql",
@@ -422,7 +421,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 			return;
 		}
 		try {
-			
+			// 顧客情報の登録
 			Map<String, Object> param = super.createSqlParam();
 
 			BeanMap supplierInfo = Beans.createAndCopy(BeanMap.class,
@@ -455,15 +454,15 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.SUPPLIER_CODE, supplierDto.supplierCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("supplier/LockSupplierBySupplierCode.sql",
 				lockParam, supplierDto.updDatetm);
 
-		
+		// 顧客情報の更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap supplierInfo = Beans.createAndCopy(BeanMap.class, supplierDto)
 				.excludes(AbstractService.Param.CRE_FUNC,
@@ -486,7 +485,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 * @param cutoffDate 締年月日
 	 */
 	public void updateLastCutoffDate(String supplierCode, Date cutoffDate) {
-		
+		// 最終締処理日(LAST_CUTOFF_DATE)のみ更新するため、super.createSqlParam()を使用しない
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put(DomainService.Param.DOMAIN_ID, this.domainDto.domainId);
 		param.put(Param.SUPPLIER_CODE, supplierCode);
@@ -522,7 +521,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 */
 	public SupplierJoin findSupplierRateByProductCode(String productCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SupplierService.Param.PRODUCT_CODE, productCode);
 
@@ -542,7 +541,7 @@ public class SupplierService extends AbstractMasterEditService<SupplierDto, Supp
 	 */
 	public SupplierJoin findSupplierRateBySupplierCode(String supplierCode) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(SupplierService.Param.SUPPLIER_CODE, supplierCode);
 

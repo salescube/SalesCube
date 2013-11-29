@@ -1,8 +1,7 @@
+
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
-
 package jp.co.arkinfosys.action.ajax.bill;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class MakeOutBillAjaxAction extends
 	@Override
 	protected List<MakeOutBillSearchResultDto> exchange(List<BeanMap> entityList)
 			throws Exception {
-		
+		// 請求書発行日の型変換util.Date→sql.Date
 		for (BeanMap map : entityList) {
 			map.put("lastPrintDate", this.billJoinService
 					.convertUtilDateToSqlDate((Date) map.get("lastPrintDate")));

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.porder;
 
 import jp.co.arkinfosys.common.StringUtil;
@@ -22,6 +21,7 @@ public class InputPOrderLineDto extends AbstractLineDto {
 	public String supplierPcode;
 	public String productAbstract;
 	public String quantity;
+	public String quantityDB;
 	public String tempUnitPriceCategory;
 	public String taxCategory;
 	public String supplierCmCategory;

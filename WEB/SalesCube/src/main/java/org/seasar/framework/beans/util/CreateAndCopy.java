@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package org.seasar.framework.beans.util;
 
 import java.util.HashMap;
@@ -117,7 +116,7 @@ public class CreateAndCopy<T> extends AbstractCopy<CreateAndCopy<T>> {
 			return value;
 		}
 		if (this.lrTrim && value instanceof String) {
-			
+			// トリム指定された文字列であればトリムする
 			return StringUtil.trimBlank((String) value);
 		}
 		return value;

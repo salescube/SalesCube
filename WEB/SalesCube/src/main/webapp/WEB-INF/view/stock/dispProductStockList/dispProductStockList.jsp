@@ -44,9 +44,6 @@
 			if ($("#productCode").val().length==0) {
 				return;
 			}
-			if(!confirm('<bean:message key="confirm.search" />')){
-				return;
-			}
 
 			// 検索条件を設定する
 			var data = createParamData();
@@ -105,25 +102,26 @@
 
 	<!-- メイン機能 -->
 	<div id="main_function">
+	
 		<!-- タイトル -->
 		<span class="title"><bean:message key='titles.dispProductStockList'/></span>
 
 		<!-- ファンクションボタン -->
 		<div class="function_buttons">
-			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/>
-			</button><button disabled="disabled">F3<br>&nbsp;
-			</button><button disabled="disabled">F4<br>&nbsp;
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;
-			</button>
+			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button id="btnF2" tabindex="2001" onclick="onF2()">F2<br><bean:message key='words.action.search'/></button>
+			<button disabled="disabled">F3<br>&nbsp;</button>
+			<button disabled="disabled">F4<br>&nbsp;</button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form onsubmit="return false;">
 
@@ -133,29 +131,37 @@
 					<html:errors/>
 				</div>
 
-				<bean:message key='labels.searchCondition'/><br>
-				<div id="search_info">
-					<table id="product_info" class="forms" summary="productInfo">
-						<colgroup>
-							<col span="1" style="width: 13%">
-							<col span="1" style="width: 87%">
-						</colgroup>
-						<tr>
-							<th><bean:message key='labels.productCode'/></th><!-- 商品コード -->
-							<td>
-								<html:text property="productCode" styleId="productCode" style="width: 165px; ime-mode: disabled;" tabindex="100"
-									onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
-								<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog()" tabindex="101" />
-							</td>
-						</tr>
-					</table>
-				</div>
+
+				<div class="form_section_wrap">
+					<div class="form_section">
+						<div class="section_title">
+							<bean:message key='labels.searchCondition'/><br>
+						</div><!-- /.section_title -->
+						
+						<div id="search_info" class="section_body">
+							<table id="product_info" class="forms" summary="productInfo">
+								<colgroup>
+									<col span="1" style="width: 13%">
+									<col span="1" style="width: 87%">
+								</colgroup>
+								<tr>
+									<th><div class="col_title_right"><bean:message key='labels.productCode'/></div></th><!-- 商品コード -->
+									<td>
+										<html:text property="productCode" styleId="productCode" style="width: 165px; ime-mode: disabled;" tabindex="100"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
+										<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openProductSearchDialog()" tabindex="101" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
 			</div>
 		</s:form>
 
-		<div style="width: 910px; text-align: right">
-			<button type="button" tabindex="450" onclick="onF1();"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
-			<button type="button" tabindex="451" onclick="onF2();"><bean:message key='words.action.search'/></button> <!-- 検索 -->
+		<div style="width: 1160px; text-align: right">
+			<button type="button" tabindex="450" onclick="onF1();" class="btn_medium"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
+			<button type="button" tabindex="451" onclick="onF2();" class="btn_medium"><bean:message key='words.action.search'/></button> <!-- 検索 -->
 		</div>
 		<br>
 		<span id="listContainer">

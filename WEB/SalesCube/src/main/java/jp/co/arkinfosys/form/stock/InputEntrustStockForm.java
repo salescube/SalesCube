@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.stock;
 
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class InputEntrustStockForm extends AbstractSlipEditForm<EntrustEadLineTr
 	 */
 	public Boolean isEntrustDispatch = false;
 
-	public String copySlipId; 
+	public String copySlipId; // 複写伝票番号
 
 	/**
 	 * 仕入日
@@ -175,7 +174,7 @@ public class InputEntrustStockForm extends AbstractSlipEditForm<EntrustEadLineTr
 	 */
 	@Override
 	public void initializeScreenInfo() {
-		
+		// Formを初期化
 		reset();
 
 		menuUpdate = userDto.isMenuUpdate(Constants.MENU_ID.INPUT_STOCK);
@@ -205,7 +204,7 @@ public class InputEntrustStockForm extends AbstractSlipEditForm<EntrustEadLineTr
 	 */
 	@Override
 	public void setDefaultSelected(AbstractSlipDto<EntrustEadLineTrnDto> dto) {
-		
+		// 明細行を再設定する
 		if (this.entrustEadLineTrnDtoList == null) {
 			this.entrustEadLineTrnDtoList = new ArrayList<EntrustEadLineTrnDto>();
 		}

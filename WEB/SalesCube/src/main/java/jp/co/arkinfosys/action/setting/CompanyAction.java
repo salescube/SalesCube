@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.setting;
 
 import java.io.InputStream;
@@ -55,7 +54,7 @@ public class CompanyAction extends CommonResources {
 	 */
 	@Execute(validator = false)
 	public String index() throws Exception {
-		
+		// サイズエラーチェック
 		uploadErrorCheck();
 
 		init();
@@ -72,15 +71,15 @@ public class CompanyAction extends CommonResources {
 		SizeLimitExceededException e = (SizeLimitExceededException) super.httpRequest
 				.getAttribute(S2MultipartRequestHandler.SIZE_EXCEPTION_KEY);
 		if (e != null) {
-			
+			// 他のエラーは削除
 			super.httpRequest.setAttribute(Globals.ERROR_KEY, null);
-			
+			// ファイルサイズエラーを書き込み
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.upload.size", e
 							.getPermittedSize()));
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 
-			
+			// 読みかけのファイルの残りを読む
 			InputStream is = null;
 			try {
 				is = this.httpRequest.getInputStream();
@@ -100,7 +99,7 @@ public class CompanyAction extends CommonResources {
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新処理を行います.<br>
 	 * 更新完了時および何かしらの問題があった場合に、画面にメッセージを表示します.<br>
@@ -108,10 +107,13 @@ public class CompanyAction extends CommonResources {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validate = "validate", validator = true, input = "index")
+	@Execute(validate = "validate", validator = true, input = CompanyAction.Mapping.INPUT)
 	public String update() throws Exception {
+		// サイズエラーチェック
+		uploadErrorCheck();
 		
-		
+		// 自社情報を更新する
+		// 排他制御
 		Mine mine = this.mineService.getMine();
 		if (mine != null) {
 
@@ -127,7 +129,7 @@ public class CompanyAction extends CommonResources {
 
 		}
 		this.mineService.updateMine(companyForm.companyName, companyForm.companyAbbr, companyForm.companyKana,
-				companyForm.companyCeoName, companyForm.logoImgPath, companyForm.logoInit, companyForm.companyZipCode , companyForm.companyAddress1,
+				companyForm.companyCeoName, companyForm.companyCeoTitle, companyForm.logoImgPath, companyForm.logoInit, companyForm.companyZipCode , companyForm.companyAddress1,
 				companyForm.companyAddress2, companyForm.companyTel, companyForm.companyFax, companyForm.companyEmail,
 				companyForm.companyWebSite, companyForm.cutoffGroup, companyForm.closeMonth );
 
@@ -160,18 +162,19 @@ public class CompanyAction extends CommonResources {
 	 */
 	private void init() throws Exception {
 		this.companyForm.isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_COMPANY );
-		
-		
+
+		// 自社マスタの情報を取得する
 		Mine mine = this.mineService.getMine();
-		
-		
+
+		// 自社情報をセッション管理DTOに格納する
 		Beans.copy(mine, super.mineDto).execute();
-		
+
 		if (mine != null) {
 			companyForm.companyName = mine.companyName;
 			companyForm.companyAbbr = mine.companyAbbr;
 			companyForm.companyKana = mine.companyKana;
 			companyForm.companyCeoName = mine.companyCeoName;
+			companyForm.companyCeoTitle = mine.companyCeoTitle;
 			companyForm.logoImgPath = null;
 			companyForm.logoInit = false;
 			companyForm.companyZipCode = mine.companyZipCode;

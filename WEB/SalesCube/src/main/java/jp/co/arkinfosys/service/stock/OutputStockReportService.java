@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.math.BigDecimal;
@@ -47,21 +46,21 @@ public class OutputStockReportService extends AbstractService<EadSlipTrn> {
 				ProductStockJoinDto productStockJoinDto =
 					Beans.createAndCopy(ProductStockJoinDto.class, productStockJoin).excludes("allStockNum", "supplierPriceYen").execute();
 
-				
+				// 在庫数
 				if(productStockJoin.allStockNum != null) {
 					productStockJoin.allStockNum =
 						productStockJoin.allStockNum.setScale(super.mineDto.numDecAlignment, NumberUtil.getRoundingMode(super.mineDto.productFractCategory));
 					productStockJoinDto.allStockNum = productStockJoin.allStockNum.toString();
 				}
 
-				
+				// 仕入単価
 				if(productStockJoin.supplierPriceYen != null) {
 					productStockJoin.supplierPriceYen =
 						productStockJoin.supplierPriceYen.setScale(0, BigDecimal.ROUND_DOWN);
 					productStockJoinDto.supplierPriceYen = productStockJoin.supplierPriceYen.toString();
 				}
 
-				
+				// 在庫高
 				BigDecimal stockPrice = null;
 				if(productStockJoin.supplierPriceYen != null && productStockJoin.allStockNum != null) {
 					stockPrice = productStockJoin.allStockNum;

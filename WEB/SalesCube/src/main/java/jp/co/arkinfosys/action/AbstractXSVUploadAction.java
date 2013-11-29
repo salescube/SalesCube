@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action;
 
 import java.io.BufferedInputStream;
@@ -37,7 +36,7 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 		public static final String TAB = "\t";
 	}
 
-	public static final String LINE_SEPARATOR = "\r\n";	
+	public static final String LINE_SEPARATOR = "\r\n";	// parasoft-suppress PB.CUB.FLVA "意図されたコード"
 
 	protected boolean isReadStop = false;
 
@@ -89,7 +88,7 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 
 			String fileCharSet = this.getCharacterSet();
 			if (!StringUtil.hasLength(fileCharSet)) {
-				
+				// 文字コードが指定されていない場合、先頭8kで判別する
 				UniversalDetector detector = new UniversalDetector(null);
 				byte[] buff = new byte[1024];
 				int size = 0;
@@ -101,9 +100,9 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 				}
 				detector.dataEnd();
 
-				
+				// 全く読込めなかった！
 				if (count == 0) {
-					
+					// 無理矢理１行チェックを実施
 					processLine(1, "", new String[0]);
 				}
 
@@ -123,12 +122,12 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 					break;
 				}
 
-				
+				//空の行をとばす
 				if (line.length()==0){
 					continue;
 				}
 
-				
+				// 改行対応（ダブルクォーテーションが偶数個になるまで追加）
 				int np = this.countChar(line,"\"");
 				while (np % 2 != 0) {
 					String lineEx = lnr.readLine();
@@ -140,10 +139,10 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 					np += nn;
 				}
 
-				
+				// 区切り文字でカットする
 				String[] values = line.split(this.getSeparator(), -1);
 
-				
+				// ダブルクォーテーション内に区切り文字がある場合の対応（ダブルクォーテーションが偶数個になるまで結合）
 				List<String> valList = new ArrayList<String>();
 				for (int i=0;i<values.length;i++) {
 					String val = values[i];
@@ -152,7 +151,7 @@ public abstract class AbstractXSVUploadAction extends CommonResources {
 						if (i>=values.length) {
 							throw new Exception("Bad format XSV!");
 						}
-						i++;  
+						i++;  // parasoft-suppress PB.CUB.FLVA "意図されたコード"
 						int nn = this.countChar(values[i], "\"");
 						val = val + this.getSeparator() + values[i];
 						np += nn;

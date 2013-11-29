@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.io.BufferedInputStream;
@@ -15,7 +14,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
-import jp.co.arkinfosys.dto.setting.MineDto;
 import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
@@ -25,23 +23,24 @@ import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * 自社マスタサービスクラスです.
- * 
+ *
  * @author tochitani
- * 
+ *
  */
 public class MineService extends AbstractService<Mine> {
 
 	/**
 	 * パラメータマッピングクラスです.
-	 * 
+	 *
 	 * @author Ark Information Systems
-	 * 
+	 *
 	 */
 	public static class Param {
 		public static final String COMPANY_NAME = "companyName";
 		public static final String COMPANY_KANA = "companyKana";
 		public static final String COMPANY_ABBR = "companyAbbr";
 		public static final String COMPANY_CEO_NAME = "companyCeoName";
+		public static final String COMPANY_CEO_TITLE = "companyCeoTitle";
 		public static final String LOGO_IMG_PATH = "logoImgPath";
 		public static final String COMPANY_ZIP_CODE = "companyZipCode";
 		public static final String COMPANY_ADDRESS_1 = "companyAddress1";
@@ -82,12 +81,9 @@ public class MineService extends AbstractService<Mine> {
 	@Resource
 	private ServletContext application;
 
-	@Resource
-	private MineDto mineDto;
-
 	/**
 	 * 自社マスタ情報を返します.
-	 * 
+	 *
 	 * @return 自社マスタ情報
 	 * @throws ServiceException
 	 */
@@ -102,7 +98,7 @@ public class MineService extends AbstractService<Mine> {
 
 	/**
 	 * 自社マスタ情報を返します.
-	 * 
+	 *
 	 * @return 自社マスタ情報の{@link BeanMap}
 	 * @throws ServiceException
 	 */
@@ -117,7 +113,7 @@ public class MineService extends AbstractService<Mine> {
 
 	/**
 	 * 自社マスタを更新します.
-	 * 
+	 *
 	 * @param Name
 	 *            会社名
 	 * @param Abbr
@@ -126,6 +122,8 @@ public class MineService extends AbstractService<Mine> {
 	 *            会社名カナ
 	 * @param CeoName
 	 *            代表取締役名
+	 * @param CeoTitle
+	 *            代表取締役肩書
 	 * @param LogoImgPath
 	 *            LOGOパス
 	 * @param ZipCode
@@ -149,7 +147,7 @@ public class MineService extends AbstractService<Mine> {
 	 * @throws ServiceException
 	 */
 	public void updateMine(String Name, String Abbr, String Kana,
-			String CeoName, FormFile LogoImgPath, boolean LogoInit, String ZipCode, String Addr1,
+			String CeoName, String CeoTitle,FormFile LogoImgPath, boolean LogoInit, String ZipCode, String Addr1,
 			String Addr2, String Tel, String Fax, String EMail, String WebSite,
 			String CutffGroup, String CloseMonth) throws ServiceException {
 		try {
@@ -160,7 +158,7 @@ public class MineService extends AbstractService<Mine> {
 			if(LogoInit){
 				uploadedFilePath = DEFAULT_LOGO_PATH;
 			} else if (LogoImgPath != null && 0 < LogoImgPath.getFileSize()) {
-				
+				// 内部管理用ファイルLOGO
 				/** アップロードディレクトリ */
 				File logoDir = new File(
 						this.application
@@ -170,11 +168,11 @@ public class MineService extends AbstractService<Mine> {
 				File uploadedFile = File.createTempFile(
 						MineService.FILE_PREFIX, "", logoDir);
 
-				
+				// ドメインフォルダが存在しなかったら作成する
 				if (!logoDir.exists()) {
 					logoDir.mkdir();
 				}
-				
+				// ファイルが存在しなかったら作成する
 				if (!uploadedFile.exists()) {
 					uploadedFile.createNewFile();
 				}
@@ -183,7 +181,7 @@ public class MineService extends AbstractService<Mine> {
 				BufferedOutputStream os = null;
 
 				try {
-					
+					// アップロードファイルをコピー
 					is = new BufferedInputStream(LogoImgPath.getInputStream());
 					os = new BufferedOutputStream(new FileOutputStream(
 							uploadedFile));
@@ -198,14 +196,15 @@ public class MineService extends AbstractService<Mine> {
 
 			}
 
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(MineService.Param.COMPANY_NAME, Name);
 			param.put(MineService.Param.COMPANY_KANA, Kana);
 			param.put(MineService.Param.COMPANY_ABBR, Abbr);
 			param.put(MineService.Param.COMPANY_CEO_NAME, CeoName);
+			param.put(MineService.Param.COMPANY_CEO_TITLE, CeoTitle);
 			if (uploadedFilePath == null) {
-				param.put(MineService.Param.LOGO_IMG_PATH, mineDto.logoImgPath);
+				param.put(MineService.Param.LOGO_IMG_PATH, super.mineDto.logoImgPath);
 			} else {
 				param.put(MineService.Param.LOGO_IMG_PATH, uploadedFilePath);
 			}
@@ -221,13 +220,13 @@ public class MineService extends AbstractService<Mine> {
 
 			this.updateBySqlFile("mine/UpdateMine.sql", param).execute();
 
-			
+			// ロゴを更新する
 			if (uploadedFilePath != null) {
-				
+				// アップロードが無事完了したら、古いロゴを削除する。
 				File deleteFile = new File(
-						this.application.getRealPath(mineDto.logoImgPath));
-				
-				if (!mineDto.logoImgPath.equals(DEFAULT_LOGO_PATH)
+						this.application.getRealPath(super.mineDto.logoImgPath));
+				// デフォルトのロゴでなく、ファイルが存在する場合、そのファイルを削除する。
+				if (!super.mineDto.logoImgPath.equals(DEFAULT_LOGO_PATH)
 						&& deleteFile.exists()) {
 					deleteFile.delete();
 				}
@@ -239,7 +238,7 @@ public class MineService extends AbstractService<Mine> {
 
 	/**
 	 * 在庫管理情報を更新します.
-	 * 
+	 *
 	 * @param stockHoldTermCalcCategory
 	 *            月平均出荷数の計算期間
 	 * @param stockHoldDays
@@ -263,7 +262,7 @@ public class MineService extends AbstractService<Mine> {
 			int maxPoNumcalcDays, int minPoNum, double deficiencyRate,
 			int maxEntrustPoTimelag) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(MineService.Param.STOCK_HOLD_TERM_CALC_CATEGORY,
 					stockHoldTermCalcCategory);

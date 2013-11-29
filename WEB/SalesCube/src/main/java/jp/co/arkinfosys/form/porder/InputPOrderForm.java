@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.porder;
 
 import java.text.SimpleDateFormat;
@@ -39,9 +38,9 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	 * 伝票明細行の行数制御
 	 */
 	public static final int CONST_SLIP_LINE_DEFAULT = 6;
-	
+	//他の画面(現状：補充発注推奨リストのみ)から、CONST_SLIP_LINE_MAXを元に戻す際の値
 	public static final int CONST_SLIP_LINE_MAX_DEFAULT = 35;
-	
+	//発注入力画面でのみ利用する明細行上限
 	public int CONST_SLIP_LINE_MAX = CONST_SLIP_LINE_MAX_DEFAULT;
 	/**
 	 * 日付の形式指定
@@ -56,25 +55,25 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	public static final int ML_SUPPLIERCODE = 9;
 	public static final int ML_REMARK = 120;
 	public static final int ML_PRODUCT_REMARK = 120;
-	public static final int ML_DATE = 10;			
-	public static final int ML_S_UNITPRICE = 9;		
-	public static final int ML_S_PRICE = 9;			
-	public static final int ML_S_QUANTITY = 6; 		
-	public static final int ML_UNITPRICE = 9;		
-	public static final int ML_PRICE = 9;			
-	public static final int ML_QUANTITY = 6; 		
+	public static final int ML_DATE = 10;			//日付用 1234/67/90			=10
+	public static final int ML_S_UNITPRICE = 9;		//単価用 -23,567,901.34		=14
+	public static final int ML_S_PRICE = 9;			//金額用 -23,567,901,345.78	=18
+	public static final int ML_S_QUANTITY = 6; 		//数量用 -23,567				=7
+	public static final int ML_UNITPRICE = 9;		//単価用 符号なし				=13
+	public static final int ML_PRICE = 9;			//金額用 符号なし				=17
+	public static final int ML_QUANTITY = 6; 		//数量用 符号なし				=6
 
 	/**
 	 * 発注伝票の状態フラグ初期値
 	 *
 	 */
-	public static final String DEFAULT_STATUS_CODE = Constants.STATUS_PORDER_SLIP.ORDERED; 	
+	public static final String DEFAULT_STATUS_CODE = Constants.STATUS_PORDER_SLIP.ORDERED; 	//"発注"
 
-	
+	// 各種コードの存在フラグ
 	public static final int CODE_NOEXIST = 0;
 	public static final int CODE_EXIST = 1;
 
-	
+	// モード制御用
 	public boolean newMode;
 	public boolean lockMode;
 	public boolean ROMode;
@@ -96,7 +95,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	public int slipLineMax;
 	public int slipLineActive;
 
-	
+	// 仕入完了の文字列
 	public String lineStatusPurchased;
 
 	/************************************
@@ -197,7 +196,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	public String defProductFractCategory;
 	public String defNumDecAlignment;
 
-	
+	// 明細行のタブ移動可能項目数
 	public int lineElementCount = 20;
 
 	/**
@@ -246,7 +245,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	/************************************
 	 * 明細行
 	 */
-	
+	// 売上伝票明細行
 	public List<InputPOrderLineDto> poLineList;
 
 	/**
@@ -273,7 +272,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 		userId = userDto.userId;
 		userName = userDto.nameKnj;
 		remarks = null;
-		
+		//初期選択固定値：AIR便:仕様書より
 		transportCategory = CategoryTrns.TRANSPORT_CATEGORY_AIR;
 		/**
 		 * 仕入先コード
@@ -328,7 +327,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 		slipLineMax = CONST_SLIP_LINE_MAX;
 		slipLineActive = CONST_SLIP_LINE_DEFAULT;
 
-		
+		//初期値の端数処理
 		defTaxFractCategory = mineDto.taxFractCategory;
 		defTaxPriceDecAlignment = String.valueOf(0);
 
@@ -387,33 +386,33 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 		/**
 		 * 伝票
 		 */
-		
+		//発注伝票番号の消去
 		poSlipId = null;
-		
+		//伝票状態の消去
 		status = null;
-		
+		//発注日の初期値=システム日付
 		poDate = DF_YMD.format(new Date());
-		
+		//伝票納期の初期化
 		deliveryDate = null;
-		
+		//ユーザIDの設定
 		userId = userDto.userId;
-		
+		//入力担当者の設定
 		userName = userDto.nameKnj;
-		
-		
-		
+		//仕入先情報読込み	JSP側で
+		//仕入先レート設定		JSP側で
+		//伝票合計の計算		JSP側で
 		/**
 		 * 明細行
 		 */
 		for(int i=0;i<=poLineList.size();i++){
-			
+			//伝票明細行IDの初期化
 			InputPOrderLineDto ipld = poLineList.get(i);
 			ipld.poLineId = null;
-			
+			//明細行状態の初期化
 			ipld.status = null;
-			
+			//商品情報の補完		JSP側で
 
-			
+			//明細行納期の初期化
 			ipld.deliveryDate = null;
 		}
 	}
@@ -430,7 +429,7 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 		slipLineMax = CONST_SLIP_LINE_MAX;
 		slipLineActive = CONST_SLIP_LINE_DEFAULT;
 
-		
+		//初期値の端数処理
 		defTaxFractCategory = mineDto.taxFractCategory;
 		defTaxPriceDecAlignment = String.valueOf(0);
 

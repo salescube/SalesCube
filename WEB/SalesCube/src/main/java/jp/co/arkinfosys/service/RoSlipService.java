@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 	public static class Param {
 		private static final String PRODUCT_CODE = "productCode";
 
-		
+		// 受注伝票
 		public static final String RO_SLIP_ID = "roSlipId";
 		public static final String STATUS = "status";
 		public static final String RO_ANNUAL = "roAnnual";
@@ -123,7 +122,7 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 	 */
 	protected RoSlipTrn getRoSlipTrn(String slipId) throws ServiceException {
 
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(RoSlipService.Param.RO_SLIP_ID, slipId);
 
@@ -219,13 +218,13 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 		try {
 			Map<String, Object> params = super.createSqlParam();
 
-			
+			// 商品コード
 			params.put(RoSlipService.Param.PRODUCT_CODE, productCode);
 
-			
+			// 指定商品コードの全親品番を取得する
 			List<ProductSetJoin> setProductList = productSetService.findProductSetByChildProductCode(productCode);
 
-			
+			// 親品番を設定
 			List<String> setProductCode = null;
 			Iterator<ProductSetJoin> it = setProductList.iterator();
 			while (it.hasNext()) {
@@ -262,20 +261,20 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 			return null;
 		}
 
-		
+		// 受注伝票データ取得
 		RoSlipTrn record = getRoSlipTrn(id);
 
-		
+		// 検索結果が０件の場合はnullを返す
 		if (record == null) {
 			return null;
 		}
 
-		
+		// Entity情報をDTOにコピーする
 		ROrderSlipDto trnDto = Beans.createAndCopy(ROrderSlipDto.class, record)
 				.dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm")
 				.execute();
 
-		
+		// 支払条件の調整
 		trnDto.cutoffGroupCategory = trnDto.cutoffGroup + trnDto.paybackCycleCategory;
 
 		return trnDto;
@@ -296,11 +295,11 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 
 		if (dto.roSlipId == null || dto.roSlipId.length() == 0) {
 
-			
+			// 受注伝票を登録する
 			insertRecord(dto);
 		} else {
 
-			
+			// 受注伝票を更新する
 			lockResult = updateRecord(dto);
 		}
 		return lockResult;
@@ -315,7 +314,7 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 	@Override
 	protected int insertRecord(ROrderSlipDto dto) throws ServiceException {
 
-		
+		// 受注伝票番号を採番
 		dto.roSlipId = Long.toString(seqMakerService
 				.nextval(RoSlipService.Table.RO_SLIP_TRN));
 		NumberConverter convUP = createUnitPriceConverter( dto.priceFractCategory );
@@ -330,13 +329,13 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 						"validDate").dateConverter(Constants.FORMAT.DATE,
 						"deliveryDate", "validDate").execute();
 
-		
+		// 締日グループと回収間隔を調整
 		if (dto.cutoffGroupCategory != null
 				&& dto.cutoffGroupCategory.length() == 3) {
-			
+			// 前２桁は締日グループ
 			entity.cutoffGroup = dto.cutoffGroupCategory.substring(0, 2);
 
-			
+			// 後ろ１桁が回収間隔
 			entity.paybackCycleCategory = dto.cutoffGroupCategory
 					.substring(2, 3);
 		}
@@ -365,18 +364,18 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 				"validDate").dateConverter(Constants.FORMAT.TIMESTAMP,
 				"updDatetm").execute();
 
-		
+		// 締日グループと回収間隔を調整
 		if (dto.cutoffGroupCategory != null
 				&& dto.cutoffGroupCategory.length() == 3) {
-			
+			// 前２桁は締日グループ
 			entity.cutoffGroup = dto.cutoffGroupCategory.substring(0, 2);
 
-			
+			// 後ろ１桁が回収間隔
 			entity.paybackCycleCategory = dto.cutoffGroupCategory.substring(2,
 					3);
 		}
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(RoSlipService.Param.RO_SLIP_ID, entity.roSlipId.toString(), entity.updDatetm, "rorder/LockSlip.sql");
 
 		Map<String, Object> param = setEntityToParam(entity);
@@ -397,10 +396,10 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 	public int deleteById(String id, String updDatetm) throws ServiceException,
 			UnabledLockException {
 
-		
+		// 排他制御
 		int lockResult = this.lockRecord(RoSlipService.Param.RO_SLIP_ID, id, updDatetm, "rorder/LockSlip.sql");
 
-		
+		// 伝票番号を指定して、見積を削除する
 		Map<String, Object> param = createSqlParam();
 		param.put(RoSlipService.Param.RO_SLIP_ID, id);
 		this.updateBySqlFile("rorder/DeleteSlip.sql", param).execute();

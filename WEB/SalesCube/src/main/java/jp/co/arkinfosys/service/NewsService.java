@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.security.GeneralSecurityException;
@@ -46,7 +45,7 @@ public class NewsService extends AbstractService<News> {
      */
     public int insertNews(String description) throws SQLException,
 		GeneralSecurityException {
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(NewsService.Param.DESCRIPTION, description);
 		return this.updateBySqlFile("news/InsertNews.sql", param).execute();
@@ -61,7 +60,7 @@ public class NewsService extends AbstractService<News> {
      */
     public int updateNews(String description) throws SQLException,
 		GeneralSecurityException {
-		
+		// SQLパラメータを構築する
 		Map<String, Object> param = super.createSqlParam();
 		param.put(NewsService.Param.DESCRIPTION, description);
 		return this.updateBySqlFile("news/UpdateNews.sql", param).execute();

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.sql.Timestamp;
@@ -191,56 +190,56 @@ public class CustomerService extends
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
-		
+		// 顧客コード
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_CODE)) {
 			param.put(CustomerService.Param.CUSTOMER_CODE, super
 					.createPrefixSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_CODE)));
 		}
 
-		
+		// 顧客名
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_NAME)) {
 			param.put(CustomerService.Param.CUSTOMER_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_NAME)));
 		}
 
-		
+		// 顧客名カナ
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_KANA)) {
 			param.put(CustomerService.Param.CUSTOMER_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_KANA)));
 		}
 
-		
+		// 事業所名
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_OFFICE_NAME)) {
 			param.put(CustomerService.Param.CUSTOMER_OFFICE_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_OFFICE_NAME)));
 		}
 
-		
+		// 事業所名カナ
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_OFFICE_KANA)) {
 			param.put(CustomerService.Param.CUSTOMER_OFFICE_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_OFFICE_KANA)));
 		}
 
-		
+		// 担当者
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_PC_NAME)) {
 			param.put(CustomerService.Param.CUSTOMER_PC_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_PC_NAME)));
 		}
 
-		
+		// 担当者カナ
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_PC_KANA)) {
 			param.put(CustomerService.Param.CUSTOMER_PC_KANA, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.CUSTOMER_PC_KANA)));
 		}
 
-		
+		// TEL
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_TEL)) {
 			String value = StringUtil.trimBlank((String) conditions
 					.get(CustomerService.Param.CUSTOMER_TEL));
@@ -250,7 +249,7 @@ public class CustomerService extends
 			}
 		}
 
-		
+		// FAX
 		if (conditions.containsKey(CustomerService.Param.CUSTOMER_FAX)) {
 			String value = StringUtil.trimBlank((String) conditions
 					.get(CustomerService.Param.CUSTOMER_FAX));
@@ -260,43 +259,43 @@ public class CustomerService extends
 			}
 		}
 
-		
+		// 顧客ランク
 		if (conditions
 				.containsKey(CustomerService.Param.CUSTOMER_RANK_CATEGORY)) {
 			param.put(CustomerService.Param.CUSTOMER_RANK_CATEGORY, conditions
 					.get(CustomerService.Param.CUSTOMER_RANK_CATEGORY));
 		}
 
-		
+		// 支払条件
 		if (conditions.containsKey(CustomerService.Param.CUTOFF_GROUP)) {
-			
+			// 締日と回収間隔に振り分ける
 			String value = (String) conditions
 					.get(CustomerService.Param.CUTOFF_GROUP);
 			if (value != null) {
-				
+				// 締日グループ
 				param.put(CustomerService.Param.CUTOFF_GROUP, value.substring(
 						0, 2));
-				
+				// 回収サイクル
 				param.put(CustomerService.Param.PAYBACK_CYCLE_CATEGORY, value
 						.substring(2, value.length()));
 			}
 		}
 
-		
+		// 振込名義
 		if (conditions.containsKey(CustomerService.Param.PAYMENT_NAME)) {
 			param.put(CustomerService.Param.PAYMENT_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.PAYMENT_NAME)));
 		}
 
-		
+		// 備考
 		if (conditions.containsKey(CustomerService.Param.REMARKS)) {
 			param.put(CustomerService.Param.REMARKS, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.REMARKS)));
 		}
 
-		
+		// 敬称
 		if (conditions
 				.containsKey(CustomerService.Param.CUSTOMER_PC_PRE_CATEGORY_NAME)) {
 			param
@@ -312,22 +311,22 @@ public class CustomerService extends
 							.get(CustomerService.Param.CATEGORY_ID4)));
 		}
 
-		
+		// 売上伝票種別
 		if (conditions.containsKey(CustomerService.Param.SALES_SLIP_CATEGORY)) {
 			param.put(CustomerService.Param.SALES_SLIP_CATEGORY, super
 					.createPartialSearchCondition((String) conditions
 							.get(CustomerService.Param.SALES_SLIP_CATEGORY)));
 		}
 
-		
+		// 固定の区分ＩＤを設定
 		setCategoriesCondition(param);
 
-		
+		// ソートカラムを設定する
 		if (sortColumn != null) {
 			param.put(CustomerService.Param.SORT_COLUMN_CUSTOMER, StringUtil
 					.convertColumnName(sortColumn));
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(CustomerService.Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -341,7 +340,7 @@ public class CustomerService extends
 	 * @param param 検索条件マップ
 	 */
 	private void setCategoriesCondition(Map<String, Object> param) {
-		
+		// 区分IDは支払条件、税転嫁、売上取引区分を指定する
 		param.put(CustomerService.Param.CATEGORY_ID, Categories.CUTOFF_GROUP);
 		param.put(CustomerService.Param.CATEGORY_ID2,
 				Categories.ART_TAX_SHIFT_CATEGORY);
@@ -385,8 +384,8 @@ public class CustomerService extends
 		try {
 			LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-			
-			
+			// 条件設定
+			// 顧客コードが一致
 			conditions.put(Param.CUSTOMER_CODE, customerCode);
 
 			List<CustomerJoin> listCust = findByCondition(conditions,
@@ -413,8 +412,8 @@ public class CustomerService extends
 			throws ServiceException {
 
 		try {
-			
-			
+			// 条件設定
+			// 顧客コードが一致
 			Map<String, Object> conditions = super.createSqlParam();
 			conditions.put(Param.CUSTOMER_CODE, customerCode);
 			setCategoriesCondition(conditions);
@@ -446,14 +445,14 @@ public class CustomerService extends
 			String customerCodeTo) throws ServiceException {
 
 		try {
-			
-			
+			// 条件設定
+			// 顧客コードが一致
 			Map<String, Object> conditions = super.createSqlParam();
 			conditions.put(Param.CUSTOMER_CODE_FROM, customerCodeFrom);
 			conditions.put(Param.CUSTOMER_CODE_TO, customerCodeTo);
 			conditions.put(Param.ART_BALANCE_CHECK_DATE, artBalanceCheckDate);
 
-			
+			//			setCategoriesCondition(conditions);
 
 			List<String> customerCodeList = this.selectBySqlFile(String.class,
 					"customer/FindExistArtBalanceCustomerCodeList.sql",
@@ -485,7 +484,7 @@ public class CustomerService extends
 	public Map<String, Object> countRelations(String customerCode)
 			throws ServiceException {
 		try {
-			
+			// 関連データの存在チェック
 			Map<String, Object> param = super.createSqlParam();
 			param.put(CustomerService.Param.CUSTOMER_CODE, customerCode);
 			BeanMap result = this.selectBySqlFile(BeanMap.class,
@@ -513,26 +512,26 @@ public class CustomerService extends
 	public void deleteRecord(CustomerDto dto) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			Map<String, Object> param = super.createSqlParam();
 			param.put(CustomerService.Param.CUSTOMER_CODE, dto.customerCode);
 			this.lockRecordBySqlFile("customer/LockCustomerByCustomerCode.sql",
 					param, dto.updDatetm);
 
-			
+			// 納入先を先に処理
 			List<CustomerRel> list = customerRelService
 					.findCustomerRelByCustomerCode(dto.customerCode);
 
 			for (CustomerRel cr : list) {
-				
+				// 納入先を削除
 				deliveryService.deleteDelivery(cr.relCode);
 
-				
+				// 関連を削除
 				customerRelService.deleteCustomerRel(cr.customerCode,
 						cr.relCode, cr.custRelCategory);
 			}
 
-			
+			// 顧客の削除
 			param = super.createSqlParam();
 			param.put(CustomerService.Param.CUSTOMER_CODE, dto.customerCode);
 			this.updateBySqlFile("customer/DeleteCustomerByCustomerCode.sql",
@@ -556,10 +555,10 @@ public class CustomerService extends
 			return;
 		}
 		try {
-			
+			// 顧客情報の登録
 			Map<String, Object> param = super.createSqlParam();
 
-			
+			// 振込人名義の変換
 			customerDto.paymentName = StringUtil
 					.convertPaymentName(customerDto.paymentName);
 
@@ -575,7 +574,7 @@ public class CustomerService extends
 							AbstractService.Param.UPD_DATETM,
 							AbstractService.Param.UPD_USER).execute();
 
-			
+			// 支払条件の調整
 			if (customerDto.cutoffGroupCategory != null
 					&& customerDto.cutoffGroupCategory.length() > 2) {
 				customerInfo.put(CustomerService.Param.CUTOFF_GROUP,
@@ -608,20 +607,20 @@ public class CustomerService extends
 			return;
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(CustomerService.Param.CUSTOMER_CODE,
 				customerDto.customerCode);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("customer/LockCustomerByCustomerCode.sql",
 				lockParam, customerDto.updDatetm);
 
-		
+		// 振込人名義の変換
 		customerDto.paymentName = StringUtil
 				.convertPaymentName(customerDto.paymentName);
 
-		
+		// 顧客情報の更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap customerInfo = Beans.createAndCopy(BeanMap.class, customerDto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
@@ -635,7 +634,7 @@ public class CustomerService extends
 						AbstractService.Param.UPD_DATETM,
 						AbstractService.Param.UPD_USER).execute();
 
-		
+		// 支払条件の調整
 		if (customerDto.cutoffGroupCategory != null
 				&& customerDto.cutoffGroupCategory.length() > 2) {
 			customerInfo.put(CustomerService.Param.CUTOFF_GROUP,
@@ -664,7 +663,7 @@ public class CustomerService extends
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 検索条件を設定する
 			this.setCondition(conditions, null, false, param);
 
 			return this.selectBySqlFile(Integer.class,
@@ -700,7 +699,7 @@ public class CustomerService extends
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(CustomerService.Param.ROW_COUNT, rowCount);
 				param.put(CustomerService.Param.OFFSET, offset);
@@ -729,26 +728,26 @@ public class CustomerService extends
 
 		int SuccessedLineCount = 0;
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.LAST_CUTOFF_DATE, closeDate);
 
-		
+		//条件をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, conditions)
 				.execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		//SQLクエリを投げる
 		SuccessedLineCount = this.updateBySqlFile(
 				"customer/UpdateLastCutoffDate.sql", param).execute();
 		return SuccessedLineCount;
@@ -767,26 +766,26 @@ public class CustomerService extends
 
 		int SuccessedLineCount = 0;
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.LAST_SALES_CUTOFF_DATE, closeDate);
 
-		
+		//条件をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, conditions)
 				.execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
-		
+		//SQLクエリを投げる
 		SuccessedLineCount = this.updateBySqlFile(
 				"customer/UpdateLastSalesCutoffDate.sql", param).execute();
 		return SuccessedLineCount;
@@ -804,27 +803,27 @@ public class CustomerService extends
 	 * @throws ServiceException
 	 */
 	public List<CustomerJoin> findCustomerForCloseBill(
-			Boolean art, 
+			Boolean art, // 売掛
 			String customerCode, String customerName, String cutoffGroup,
-			String paybackCycleCategory, Boolean notYetRequestedCheck 
+			String paybackCycleCategory, Boolean notYetRequestedCheck // 請求漏れチェックがチェックされているかどうか
 	) throws ServiceException {
 
-		
+		// 請求漏れチェックで無い場合、nullかfalseがくるのでfalseに寄せる
 		if (notYetRequestedCheck == null) {
 			notYetRequestedCheck = false;
 		}
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 
-		
+		// 顧客コード
 		if (StringUtil.hasLength(customerCode)) {
 			conditions.put(Param.CUSTOMER_CODE, super
 					.createPrefixSearchCondition(customerCode));
 		}
-		
+		// 顧客名
 		if (StringUtil.hasLength(customerName)) {
 			conditions.put(Param.CUSTOMER_NAME, super
 					.createPartialSearchCondition(customerName));
@@ -840,11 +839,11 @@ public class CustomerService extends
 		conditions.put(Param.NOT_YET_REQUESTED_CHECK, notYetRequestedCheck);
 
 		if (art) {
-			
+			// 現状の取引区分が掛売で、請求書の最も新しい日付を取得。
 			return findByCondition(conditions, paramNames,
 					"customer/FindCustomerForCloseBillArt.sql");
 		}
-		
+		// 現状の取引区分が掛売以外で、売掛残高の取引区分が売掛以外かつ最も新しい日付を取得。
 		return findByCondition(conditions, paramNames,
 				"customer/FindCustomerForCloseBillOther.sql");
 
@@ -882,7 +881,7 @@ public class CustomerService extends
 			}
 		}
 
-		
+		// 数字以外の文字を除去し、先頭文字を置き換えて顧客コード生成
 		String customerCodeTemp = telNo.replaceAll("[^\\d]", "").replaceFirst(
 				"[\\d]", prefix);
 		if (customerCodeTemp.length() > 10) {
@@ -902,8 +901,8 @@ public class CustomerService extends
 		try {
 			LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-			
-			
+			// 条件設定
+			// 振込名義が一致
 			conditions.put(Param.PAYMENT_NAME, paymentName);
 
 			return findByCondition(conditions, paramNames,

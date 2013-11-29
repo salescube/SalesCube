@@ -119,10 +119,10 @@ function pdf(slipId){
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0007"/>
 		<jsp:param name="MENU_ID" value="0704"/>
@@ -135,20 +135,21 @@ function pdf(slipId){
 	<span class="title"><bean:message key='titles.outputRecommendList'/></span>
 
 	<div class="function_buttons">
-		   <button                             disabled="disabled" tabindex="2000">F1<br><bean:message key='words.action.none'/></button><!--
-		--><button id="btnF2" onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.retrun'/></button><!--戻る
-		--><button                             disabled="disabled" tabindex="2002">F3<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2003">F4<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!--
-		--><button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
+		<button                             disabled="disabled" tabindex="2000">F1<br><bean:message key='words.action.none'/></button><!---->
+		<button id="btnF2" onclick="onF2()"                     tabindex="2001">F2<br><bean:message key='words.action.retrun'/></button><!--戻る-->
+		<button                             disabled="disabled" tabindex="2002">F3<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2003">F4<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2004">F5<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2005">F6<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2006">F7<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2007">F8<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2008">F9<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2009">F10<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2010">F11<br><bean:message key='words.action.none'/></button><!---->
+		<button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
 
 	<div id="errors" style="color: red">

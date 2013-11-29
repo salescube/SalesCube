@@ -2,7 +2,7 @@
 var datePickcerSetting = {
 		dateFormat : 'yy/mm/dd',
 		showOn: 'button',
-		buttonImage: contextRoot + '/images/calendar.png',
+		buttonImage: contextRoot + '/images/customize/calendar.png',
 		buttonImageOnly: true,
 		buttonText: 'カレンダー',
 		speed: 'fast'

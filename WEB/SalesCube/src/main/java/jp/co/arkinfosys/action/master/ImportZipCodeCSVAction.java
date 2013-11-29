@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.io.UnsupportedEncodingException;
@@ -57,7 +56,7 @@ public class ImportZipCodeCSVAction extends AbstractXSVUploadAction {
 		SizeLimitExceededException e = (SizeLimitExceededException) super.httpRequest
 				.getAttribute(S2MultipartRequestHandler.SIZE_EXCEPTION_KEY);
 		if (e != null) {
-			
+			// 他のメッセージをクリアする
 			super.httpRequest.removeAttribute(Globals.ERROR_KEY);
 
 			super.messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -78,17 +77,17 @@ public class ImportZipCodeCSVAction extends AbstractXSVUploadAction {
 	@Execute(validator = true, validate = "validate", input = "index")
 	public String upload() throws Exception {
 		try {
-			
+			// ZIP_MSTを全行削除
 			zipService.deleteAllRecords();
 
-			
+			// アクションフォームを初期化する
 			this.readXSV(this.importZipCodeCSVForm.zipCodeCSV);
 
 			if (this.messages.size() > 0) {
 				return ImportZipCodeCSVAction.Mapping.INPUT;
 			}
 
-			
+			// メッセージ設定
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"infos.insert"));
 			ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
@@ -122,28 +121,28 @@ public class ImportZipCodeCSVAction extends AbstractXSVUploadAction {
 	@Override
 	protected void processLine(int index, String line, String[] values)
 			throws Exception {
-		
+		// カラム数
 		if (values == null
 				|| values.length != Constants.ZIP_CODE_CSV.COLUMN_COUNT) {
 			throw new Exception(line);
 		}
 
-		String zipCode = values[2]; 
-		String addr1 = values[6]; 
-		String addr2 = values[7]; 
-		String addr3 = values[8]; 
+		String zipCode = values[2]; // 郵便番号
+		String addr1 = values[6]; // 住所１
+		String addr2 = values[7]; // 住所１
+		String addr3 = values[8]; // 住所１
 
-		
+		// 郵便番号を整形
 		zipCode = zipCode.substring(0, 3) + "-" + zipCode.substring(3);
 
-		
+		// 住所を整形
 		String address = addr1 + addr2;
 		if (addr3 != null && !addr3.endsWith(Constants.ZIP_CODE_CSV.CASE_1)
 				&& !addr3.endsWith(Constants.ZIP_CODE_CSV.CASE_2)) {
 			address = address + addr3;
 		}
 
-		
+		// 行追加
 		zipService.insertRecord(index + 1, zipCode, address);
 	}
 

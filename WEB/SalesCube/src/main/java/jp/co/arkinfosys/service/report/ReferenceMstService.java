@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.report;
 
 import java.util.List;
@@ -50,10 +49,10 @@ public class ReferenceMstService extends AbstractService<BeanMap> {
 	 */
 	public List<BeanMap> getMasterListByCondition(BeanMap params) throws ServiceException {
 		try {
-			
+			// 出力対象を取得する
 			String outputTarget = (String)params.get(Param.OUTPUT_TARGET);
 
-			
+			// 出力対象毎に処理を分岐
 			String sql = null;
 			if (REFERENCE_MST_TARGET.VALUE_CUSTOMER.equals(outputTarget)) {
 				sql="report/FindCustomerByCondition4MstList.sql";
@@ -77,23 +76,23 @@ public class ReferenceMstService extends AbstractService<BeanMap> {
 
 		try {
 
-			
+			// 出力対象を取得する
 			String outputTarget = (String)params.get(Param.OUTPUT_TARGET);
 
-			
-			
+			// 出力対象毎に処理を分岐
+			//String sql = null;
 
 			if (REFERENCE_MST_TARGET.VALUE_CUSTOMER.equals(outputTarget)) {
-				
+				//sql="report/FindDeliveryCondition.sql";
 			}
 			else {
 				return null;
 			}
 
 			return null;
-			
-		
-		
+			//return findRecordByCondition(sql, params);
+		//} catch (ServiceException e) {
+		//	throw e;
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

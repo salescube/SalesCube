@@ -34,9 +34,7 @@
 	}
 
     function searchProductClass() {
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
     }
 
@@ -276,10 +274,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1311"/>
@@ -309,6 +307,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
+<br><br><br>
 
 	<div class="function_forms">
 		<div style="padding-left: 20px">
@@ -316,91 +315,105 @@
 			<span id="ajax_errors"></span>
 		</div>
 
-		<span>検索条件</span><br>
-		<table id="user_info" class="forms" summary="検索条件" style="width: 600px">
-			<colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 15%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 65%">
-			</colgroup>
-			<tr>
-				<th>分類（大）</th>
-				<td colspan="3">
-				<html:select styleId="classCode1" property="classCode1" style="width:500px" onchange="changeProductClass1()" tabindex="100">
-					<html:options collection="classCode1List" property="value" labelProperty="label"/>
-				</html:select>
-				</td>
-			</tr>
-			<tr>
-				<th>分類（中）</th>
-				<td colspan="3">
-				<html:select styleId="classCode2" property="classCode2" style="width:500px" onchange="changeProductClass2()" tabindex="101">
-					<html:options collection="classCode2List" property="value" labelProperty="label"/>
-				</html:select>
-                </td>
-			</tr>
-			<tr>
-				<th>分類（小）</th>
-				<td colspan="3">
-				<html:select styleId="classCode3" property="classCode3" style="width:500px" tabindex="102">
-					<html:options collection="classCode3List" property="value" labelProperty="label"/>
-				</html:select>
-				</td>
-			</tr>
-			<tr>
-				<th>分類コード</th>
-				<td><html:text styleId="classCode" property="classCode" style="width: 100px" tabindex="103"/>
-				</td>
-				<th>分類名</th>
-				<td><html:text styleId="className" property="className" style="width: 250px" tabindex="104"/></td>
-			</tr>
-		</table>
-		</table>
+			<div class="form_section_wrap">
+				<div class="form_section">
+					<div class="section_title">
+						<span>検索条件</span>
+						<button class="btn_toggle">
+	           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	      		</button>
+	      		<br>
+				</div><!-- /.section_title -->
+				<div class="section_body">
 
-		<div style="text-align: right; width: 600px">
-			<button tabindex="150" style="width:80px" onclick="initForm()">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchProductClass()">検索</button>
+					<table id="user_info" class="forms" summary="検索条件" style="width: 600px">
+						<colgroup>
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 15%">
+							<col span="1" style="width: 10%">
+							<col span="1" style="width: 65%">
+						</colgroup>
+						<tr>
+							<th><div class="col_title_right">分類（大）</div></th>
+							<td colspan="3">
+							<html:select styleId="classCode1" property="classCode1" style="width:500px" onchange="changeProductClass1()" tabindex="100">
+								<html:options collection="classCode1List" property="value" labelProperty="label"/>
+							</html:select>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">分類（中）</div></th>
+							<td colspan="3">
+							<html:select styleId="classCode2" property="classCode2" style="width:500px" onchange="changeProductClass2()" tabindex="101">
+								<html:options collection="classCode2List" property="value" labelProperty="label"/>
+							</html:select>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">分類（小）</div></th>
+							<td colspan="3">
+							<html:select styleId="classCode3" property="classCode3" style="width:500px" tabindex="102">
+								<html:options collection="classCode3List" property="value" labelProperty="label"/>
+							</html:select>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">分類コード</div></th>
+							<td><html:text styleId="classCode" property="classCode" style="width: 100px" tabindex="103"/>
+							</td>
+							<th><div class="col_title_right">分類名</div></th>
+							<td><html:text styleId="className" property="className" style="width: 250px" tabindex="104"/></td>
+						</tr>
+					</table>
+
+				</div><!-- /.section_body -->
+    		</div><!-- /.form_section -->
+   		</div><!-- /.form_section_wrap -->
+
+		<div style="text-align: right; width: 1160px">
+			<button class="btn_medium" tabindex="150" style="width:80px" onclick="initForm()">初期化</button>
+			<button class="btn_medium" tabindex="151" style="width:80px" onclick="searchProductClass()">検索</button>
 		</div>
 
 		<div id="ListContainer">
-			<div style="width: 800px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
                     <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
 
-
-    		<table id="List" summary="検索結果" class="forms" style="width: 800px">
+		<div id="searchResultList">
+    		<table id="search_result" summary="検索結果" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
     			<colgroup>
-    				<col span="1" style="width: 45px">
-    				<col span="1" style="width:180px">
+    				<col span="1" style="width: 50px">
+    				<col span="1" style="width:175px">
 
-    				<col span="1" style="width: 45px">
-    				<col span="1" style="width:180px">
+    				<col span="1" style="width: 50px">
+    				<col span="1" style="width:175px">
 
-    				<col span="1" style="width: 45px">
-    				<col span="1" style="width:180px">
+    				<col span="1" style="width: 50px">
+    				<col span="1" style="width:175px">
 
-    				<col span="1" style="">
+    				<col span="1" style="width:125px">
     			</colgroup>
     			<tr>
-    				<th colspan="2">大分類</th>
+    				<th class="rd_top_left" style="height: 30px;" colspan="2">大分類</th>
     				<th colspan="2">中分類</th>
     				<th colspan="2">小分類</th>
-    				<th rowspan="2"></th>
+    				<th class="rd_top_right"  rowspan="2"></th>
     			</tr>
 
     			<tr>
-    				<th>コード</th><th>名称</th>
+    				<th style="height: 30px;">コード</th><th>名称</th>
     				<th>コード</th><th>名称</th>
     				<th>コード</th><th>名称</th>
     			</tr>
     		</table>
     	</div>
+    	</div>
     </div>
 
    	<html:hidden styleId="sortColumn" property="sortColumn" />
-	<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
+	<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
 </s:form>
 </div>
 </body>

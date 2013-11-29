@@ -213,19 +213,20 @@
 
 		<!-- ファンクションボタン -->
 		<div class="function_buttons">
-			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/>
-			</button><button disabled="disabled">F2<br>&nbsp;
-			</button><button id="btnF3" tabindex="2001" onclick="onF3()">F3<br><bean:message key='words.name.excel'/>
-			</button><button disabled="disabled">F4<br>&nbsp;
-			</button><button disabled="disabled">F5<br>&nbsp;
-			</button><button disabled="disabled">F6<br>&nbsp;
-			</button><button disabled="disabled">F7<br>&nbsp;
-			</button><button disabled="disabled">F8<br>&nbsp;
-			</button><button disabled="disabled">F9<br>&nbsp;
-			</button><button disabled="disabled">F10<br>&nbsp;
-			</button><button disabled="disabled">F11<br>&nbsp;
-			</button><button disabled="disabled">F12<br>&nbsp;</button>
+			<button id="btnF1" tabindex="2000" onclick="onF1()">F1<br><bean:message key='words.action.initialize'/></button>
+			<button disabled="disabled">F2<br>&nbsp;</button>
+			<button id="btnF3" tabindex="2001" onclick="onF3()">F3<br><bean:message key='words.name.excel'/></button>
+			<button disabled="disabled">F4<br>&nbsp;</button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form onsubmit="return false;">
 
@@ -234,50 +235,66 @@
 				<div id="errors" style="color: red">
 					<html:errors/>
 				</div>
-
-				<table id="output_condition" class="forms" summary="outputCondition">
-					<colgroup>
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 35%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 35%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.selectMst'/></th> <!-- マスタリスト選択 -->
-						<td>
-							<html:select property="outputTarget" styleId="outputTarget" onchange="onChangeTarget()" tabindex="100">
-								<html:options collection="outputTargetList" property="value" labelProperty="label"/>
-							</html:select>
-						</td>
-					</tr>
-				</table>
-				<!-- 顧客マスタ -->
-				<table id="detail_condition_1" class="forms" summary="detailCondition1">
-					<colgroup>
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 85%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.customerCodeRange'/></th> <!-- 顧客コード範囲-->
-						<td>
-							<html:text property="customerCodeFrom9" styleId="customerCodeFrom9" style="width: 150px; ime-mode: disabled;"
-								maxlength="<%=String.valueOf(Constants.CODE_SIZE.CUSTOMER)%>" tabindex="162" />
-							<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(901)" tabindex="163" />
-							<bean:message key='labels.betweenSign'/> <!-- ～ -->
-							<html:text property="customerCodeTo9" styleId="customerCodeTo9" style="width: 150px; ime-mode: disabled;"
-								maxlength="<%=String.valueOf(Constants.CODE_SIZE.CUSTOMER)%>" tabindex="164" />
-							<html:image src='${f:url("/images/icon_04_02.gif")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(902)" tabindex="165" />
-						</td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.creDateRange'/></th> <!-- 登録年月日範囲 -->
-						<td>
-							<html:text property="creDateFrom9" styleId="creDateFrom9" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="166" />
-							<bean:message key='labels.betweenSign'/> <!-- ～ -->
-							<html:text property="creDateTo9" styleId="creDateTo9" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="167" />
-						</td>
-					</tr>
-				</table>
+				
+				<div class="form_section_wrap">
+				<div class="form_section">
+					<div class="section_title">
+						<span>マスタリスト</span>
+						<button class="btn_toggle">
+						<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+						</button>
+					</div>
+				
+					<div class="section_body">
+						<table id="output_condition" class="forms" summary="outputCondition" style="width: auto;">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.selectMst'/></div></th> <!-- マスタリスト選択 -->
+								<td>
+									<html:select property="outputTarget" styleId="outputTarget" onchange="onChangeTarget()" tabindex="100" style="width: 300px;">
+										<html:options collection="outputTargetList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+							</tr>
+						</table>
+						
+						<!-- 顧客マスタ -->
+						<table id="detail_condition_1" class="forms" summary="detailCondition1" style="width: auto;">
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.customerCodeRange'/></div></th> <!-- 顧客コード範囲-->
+								<td style="padding-right: 0;">
+									<html:text property="customerCodeFrom9" styleId="customerCodeFrom9" style="width: 150px; ime-mode: disabled;"
+										maxlength="<%=String.valueOf(Constants.CODE_SIZE.CUSTOMER)%>" tabindex="162" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(901)" tabindex="163" />
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/><!-- ～ -->
+								</td>
+								<td>
+									<html:text property="customerCodeTo9" styleId="customerCodeTo9" style="width: 150px; ime-mode: disabled;"
+										maxlength="<%=String.valueOf(Constants.CODE_SIZE.CUSTOMER)%>" tabindex="164" />
+									<html:image src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(902)" tabindex="165" />
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.creDateRange'/></div></th> <!-- 登録年月日範囲 -->
+								<td style="padding-right: 0;">
+									<div class="pos_r">
+										<html:text property="creDateFrom9" styleId="creDateFrom9" style="width: 150px; ime-mode: disabled;" styleClass="date_input" tabindex="166" />
+									</div>
+								</td>
+								<td style="text-align: center; width:30px; padding-right: 0;">
+									<bean:message key='labels.betweenSign'/><!-- ～ -->
+								</td>
+								<td>
+									<div class="pos_r">
+										<html:text property="creDateTo9" styleId="creDateTo9" style="width: 150px; ime-mode: disabled;" styleClass="date_input" tabindex="167" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				</div>
 			</div>
 		</s:form>
 	</div>

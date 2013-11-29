@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.porder;
 
 import java.util.ArrayList;
@@ -99,7 +98,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 	@Resource
 	private ProductService productService;
 
-	
+	//セッション
 	public HttpSession session;
 
 	/**
@@ -184,7 +183,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 	@Override
 	protected void createList() throws ServiceException{
 		try {
-			
+			//運送便区分プルダウンの値
 			List<CategoryJoin> categoryJoinList = this.categoryService
 					.findCategoryJoinById(Categories.TRANSPORT_CATEGORY);
 			for (CategoryJoin categoryTrnJoin : categoryJoinList) {
@@ -194,7 +193,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				this.transportCategoryList.add(bean);
 			}
 
-			
+			//敬称プルダウンの値
 			categoryJoinList = this.categoryService
 				.findCategoryJoinById(Categories.PRE_TYPE);
 			for (CategoryJoin categoryTrnJoin : categoryJoinList) {
@@ -203,14 +202,14 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				bean.setLabel(categoryTrnJoin.categoryCodeName);
 				this.preTypeCategoryList.add(bean);
 			}
-			
+			//通貨単位のリスト
 			inputPOrderForm.cUnitSignList = supplierService.getCUnitSignList();
 
-			
+			//モード設定
 			inputPOrderForm.lockMode = false;
-			
+			//権限による制御
 			setValidMode();
-			
+			//制御統合
 			inputPOrderForm.lockMode = (inputPOrderForm.lockMode || inputPOrderForm.ROMode);
 
 
@@ -231,7 +230,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 	protected boolean loadData() throws Exception, ServiceException {
 		try {
 
-			
+			// 発注伝票をロードする
 			InputPOrderSlipDto dto = (InputPOrderSlipDto) inputPOrderSlipService
 					.loadBySlipId(inputPOrderForm.poSlipId);
 			if( dto == null ){
@@ -240,7 +239,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 
 			Beans.copy(dto, inputPOrderForm).execute();
 
-			
+			// 発注明細情報をロードする
 			List<InputPOrderLineDto> lineDtoList = inputPOrderLineService.loadBySlip(dto);
 			inputPOrderForm.poLineList = lineDtoList;
 
@@ -248,7 +247,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 
 			setCannotEditSlipReason();
 
-			
+			//伝票状態による制御
 			inputPOrderForm.lockMode = (inputPOrderForm.lockMode ||
 				((inputPOrderForm.status != null)?
 						((Constants.STATUS_PORDER_SLIP.PURCHASED).equals(inputPOrderForm.status)):false));
@@ -270,12 +269,12 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 		ActionMessages errors = new ActionMessages();
 		ActionMessage tempMsg;
 
-		
-
-
-
-		
-		
+		//多重登録防止用：同期トークンをチェック
+//		if(!TokenProcessor.getInstance().isTokenValid(request,true)){
+//			errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.multipleAction"));
+//		}
+		//伝票部チェック
+		//伝票納期(不正なら空文字列にしておく)
 		String[] mssageValues = new String[1];
 		mssageValues[0] = MessageResourcesUtil.getMessage("labels.deliveryDate");
 		tempMsg = ValidateUtil.dateType(this.inputPOrderForm.deliveryDate, Constants.FORMAT.DATE, true, "errors.date",mssageValues );
@@ -300,32 +299,32 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 		}
 
 
-		
+		//明細行部チェック
 
-		
+		//有効行カウンタ
 		int validLinesCount = 0;
-		
+		// 商品コード存在チェック
 		for (InputPOrderLineDto line : this.inputPOrderForm.poLineList ) {
-			
+			//有効行チェッカ
 			boolean validLineCheck = true;
 
 			if( line.isBlank() ){
 				continue;
 			}
-			
+			//商品コード書式チェック
 			if(!line.productCode.matches(Constants.CODE_MASK.PRODUCT_MASK)){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.invalid",line.lineNo,MessageResourcesUtil.getMessage("labels.productCode")));
 				validLineCheck = false;
 			}
-			
+			//相手先商品コード書式チェック
 			if(!line.supplierPcode.matches(Constants.CODE_MASK.PRODUCT_MASK)){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.invalid",line.lineNo,MessageResourcesUtil.getMessage("labels.productCode")));
 				validLineCheck = false;
 			}
-			
-			
+			// 商品マスタ存在チェック
+			// 商品がセット品の場合は、エラー
 			ProductJoin pj = productService.findById(line.productCode);
 			if( pj != null ){
 				if( pj.setTypeCategory.equals(CategoryTrns.PRODUCT_SET_TYPE_SET)){
@@ -339,7 +338,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 								.getMessage("labels.productCode")));
 				validLineCheck = false;
 			}
-			
+			//数量
 			if(!StringUtil.hasLength(line.quantity)){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.required",line.lineNo,MessageResourcesUtil.getMessage("labels.quantity")));
@@ -357,7 +356,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 						errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 						validLineCheck = false;
 					}
-					
+					// 運送便区分「委託在庫」で赤伝は許容しない
 					if(CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(this.inputPOrderForm.transportCategory) && iQuantity < 0) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.line.num.entrust",line.lineNo));
 						validLineCheck = false;
@@ -369,7 +368,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				}
 			}
 
-			
+			//円単価
 			if((!StringUtil.hasLength(this.inputPOrderForm.rateId)) && (!StringUtil.hasLength(line.unitPrice))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.required",line.lineNo,MessageResourcesUtil.getMessage("labels.unitPrice")));
@@ -389,7 +388,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				}
 			}
 
-			
+			//円金額
 			if((!StringUtil.hasLength(this.inputPOrderForm.rateId)) && (!StringUtil.hasLength(line.price))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.required",line.lineNo,MessageResourcesUtil.getMessage("labels.price")));
@@ -401,7 +400,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				validLineCheck = false;
 			}
 			else if(StringUtil.hasLength(line.price)){
-				
+				// 円金額 数値０チェック　2010.04.21 add kaki
 				float fprice = Float.parseFloat(line.price);
 				if( Double.compare( fprice, 0 ) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -410,7 +409,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				}
 			}
 
-			
+			//外貨単価
 			if((StringUtil.hasLength(this.inputPOrderForm.rateId)) && (!StringUtil.hasLength(line.dolUnitPrice))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.required",line.lineNo,MessageResourcesUtil.getMessage("labels.dolUnitPrice")));
@@ -422,7 +421,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				validLineCheck = false;
 			}
 			else if(StringUtil.hasLength(line.dolUnitPrice)){
-				
+				// 外貨単価 数値０チェック　2010.04.21 add kaki
 				float fdolUnitPrice = Float.parseFloat(line.dolUnitPrice);
 				if( Double.compare( fdolUnitPrice, 0) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -430,7 +429,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 					validLineCheck = false;
 				}
 			}
-			
+			//外貨金額
 			if((StringUtil.hasLength(this.inputPOrderForm.rateId)) && (!StringUtil.hasLength(line.dolPrice))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.line.required",line.lineNo,MessageResourcesUtil.getMessage("labels.dolPrice")));
@@ -442,7 +441,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				validLineCheck = false;
 			}
 			else if(StringUtil.hasLength(line.dolPrice)){
-				
+				// 外貨金額 数値０チェック　2010.04.21 add kaki
 				float fdolPrice = Float.parseFloat(line.dolPrice);
 				if( Double.compare(fdolPrice, 0) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -451,13 +450,13 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 				}
 			}
 
-			
+			//納期
 			if( !StringUtil.hasLength(line.deliveryDate) ){
 				if( StringUtil.hasLength(SlipDeliveryDate) ){
-					
+					//伝票納期からの複写
 					line.deliveryDate = SlipDeliveryDate;
 				}else{
-					
+					//複写できない＝伝票の納期が不正
 					validLineCheck = false;
 				}
 			}else{
@@ -470,13 +469,13 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 					validLineCheck = false;
 				}
 			}
-			
+			//備考
 			if( (StringUtil.hasLength(line.remarks) && (line.remarks.length()>InputPOrderForm.ML_REMARK))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage( "errors.line.maxlength",line.lineNo,MessageResourcesUtil.getMessage("labels.remarks"),InputPOrderForm.ML_REMARK ));
 				validLineCheck = false;
 			}
-			
+			//商品備考
 			if( (StringUtil.hasLength(line.productAbstract) && (line.productAbstract.length()>InputPOrderForm.ML_PRODUCT_REMARK))){
 				errors.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage( "errors.line.maxlength",line.lineNo,MessageResourcesUtil.getMessage("labels.productRemarks"),InputPOrderForm.ML_PRODUCT_REMARK ));
@@ -484,23 +483,23 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 			}
 			if( validLineCheck  ){ validLinesCount++; }
 		}
-		
+		//有効行が0のときはメッセージを出す
 		if(validLinesCount==0){
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
 					new ActionMessage("errors.noValidLine"));
 		}
 
-		
+		//伝票合計金額（円）
 		tempMsg = ValidateUtil.decimalType(this.inputPOrderForm.priceTotal, MessageResourcesUtil.getMessage("labels.priceTotal"), 9, 0);
 		if(tempMsg != null){
 			errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 		}
-		
+		//伝票合計消費税
 		tempMsg = ValidateUtil.decimalType(this.inputPOrderForm.ctaxTotal, MessageResourcesUtil.getMessage("labels.ctaxTotal"), 9, 0);
 		if(tempMsg != null){
 			errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 		}
-		
+		//伝票合計外貨金額
 		tempMsg = ValidateUtil.decimalType(this.inputPOrderForm.fePriceTotal, MessageResourcesUtil.getMessage("labels.fePriceTotal"), 9, 3);
 		if(tempMsg != null){
 			errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
@@ -514,7 +513,7 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 	private void setCannotEditSlipReason(){
         ActionMessages messages = new ActionMessages();
         if(inputPOrderForm.status!=null){
-        	
+        	//仕入完了
         	if((Constants.STATUS_PORDER_SLIP.PURCHASED).equals(inputPOrderForm.status)){
         		messages.add(ActionMessages.GLOBAL_MESSAGE,
         				new ActionMessage("infos.cannotEditSlip"
@@ -522,14 +521,14 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
         				));
         	}
         }
-        
+        //ユーザ権限が参照のみ
         if(inputPOrderForm.ROMode){
         	messages.add(ActionMessages.GLOBAL_MESSAGE,
     				new ActionMessage("infos.cannotEditSlip"
     						,MessageResourcesUtil.getMessage("words.reason.userRole.validLimitation")
     				));
         }
-        
+        //メッセージを投げる
         ActionMessagesUtil.addMessages(session, messages);
 	}
 

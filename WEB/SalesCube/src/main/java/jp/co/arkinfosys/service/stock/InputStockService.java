@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.ArrayList;
@@ -42,12 +41,12 @@ public class InputStockService extends CommonInputStockService {
 	@Override
 	protected int insertRecord(EadSlipTrnDto dto) throws ServiceException {
 		try {
-			
-			
+			// 入出庫伝票の処理
+			// 入出庫伝票番号を採番
 			dto.eadSlipId = Long.toString(seqMakerService
 					.nextval(EadService.Table.EAD_SLIP_TRN));
 
-			
+			// 入出庫年度、月度、年月度を計算
 			YmDto ymDto = ymService.getYm(dto.eadDate);
 			if (ymDto == null) {
 				ServiceException se = new ServiceException(MessageResourcesUtil
@@ -59,25 +58,25 @@ public class InputStockService extends CommonInputStockService {
 			dto.eadMonthly = ymDto.monthly.toString();
 			dto.eadYm = ymDto.ym.toString();
 
-			
+			// 登録元機能
 			dto.srcFunc = Constants.SRC_FUNC.STOCK;
 
-			
+			// 売上伝票番号
 			dto.salesSlipId = null;
 
-			
+			// 仕入伝票番号
 			dto.supplierSlipId = null;
 
-			
+			// 移動入出庫伝票番号
 			dto.moveDepositSlipId = null;
 
-			
-			
+			// Insert
+			//eadService.insertSlipAndLine(dto);
 			EadSlipTrn eadSlipTrn = Beans.createAndCopy(EadSlipTrn.class, dto)
 					.execute();
 			return eadService.insertSlip(eadSlipTrn);
 
-			
+			//return Integer.parseInt(dto.eadSlipId);
 		} catch (Exception e) {
 			ServiceException se = new ServiceException(e);
 			se.setStopOnError(true);
@@ -100,10 +99,10 @@ public class InputStockService extends CommonInputStockService {
 		int lockResult = LockResult.SUCCEEDED;
 
 		if (dto.newData == null || dto.newData) {
-			
+			// 入出庫伝票を登録する
 			insertRecord(dto);
 		} else {
-			
+			// 入出庫伝票を更新する
 			lockResult = updateRecord(dto);
 		}
 		return lockResult;
@@ -134,21 +133,21 @@ public class InputStockService extends CommonInputStockService {
 	@Override
 	public EadSlipTrnDto loadBySlipId(String eadSlipId) throws ServiceException {
 		try {
-			
+			// 入力された入出庫番号が数値であるかチェック
 			try {
 				Integer.valueOf(eadSlipId);
 			} catch (NumberFormatException e) {
 				return null;
 			}
 
-			
+			// EadSlipTrnDtoを生成する
 			EadSlipTrn eadSlipTrn = eadService.findSlipByEadSlipId(Integer
 					.valueOf(eadSlipId));
 			List<EadLineTrn> eadLineTrnList = eadService
 					.findLineByEadSlipId(Integer.valueOf(eadSlipId));
 			if (eadSlipTrn == null
 					|| (eadLineTrnList == null || eadLineTrnList.size() == 0)) {
-				
+				// 伝票または明細を取得できなかった場合はnullを返す
 				return null;
 			}
 
@@ -162,25 +161,25 @@ public class InputStockService extends CommonInputStockService {
 						EadLineTrnDto.class, eadLineTrn).converter(conv,
 						EadService.Param.QUANTITY).execute();
 
-				
+				// 現在庫数,変更後在庫数は取得し、設定
 				ProductJoin pj = findProductByCode(eadLineTrnDto.productCode);
 				if (pj != null) {
 					if (CategoryTrns.PRODUCT_STOCK_CTL_YES
-							.equals(pj.stockCtlCategory)) { 
+							.equals(pj.stockCtlCategory)) { // 在庫管理区分
 						StockInfoDto dto = productStockService
 								.calcStockQuantityByProductCode(eadLineTrnDto.productCode);
 						eadLineTrnDto.stockCount = Integer
 								.toString(dto.currentTotalQuantity);
 
 						int updQuantity;
-						
+						// 編集時の初期表示時は、変更後在庫数は、現在庫数とする。
 						updQuantity = Integer
 								.parseInt(eadLineTrnDto.stockCount);
 						eadLineTrnDto.updateQuantity = Integer
 								.toString(updQuantity);
 					}
 
-					
+					// 商品備考を読み込む
 					eadLineTrnDto.productRemarks = pj.remarks;
 				}
 

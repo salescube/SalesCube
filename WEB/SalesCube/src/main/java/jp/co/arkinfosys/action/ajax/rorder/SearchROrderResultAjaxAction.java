@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.rorder;
 
 import java.util.ArrayList;
@@ -125,7 +124,7 @@ public class SearchROrderResultAjaxAction extends
 	 */
 	@Override
 	protected MasterSearch<BeanMap> getService() {
-		
+		// 未使用
 		return null;
 	}
 
@@ -137,7 +136,7 @@ public class SearchROrderResultAjaxAction extends
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class getDtoClass() {
-		
+		// 未使用
 		return null;
 	}
 }

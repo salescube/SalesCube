@@ -251,39 +251,40 @@
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0013"/>
 		<jsp:param name="MENU_ID" value="1301"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能 --%>
 	<div id="main_function">
 		<span class="title">セット商品</span>
 
-		
+		<%-- Fキー群 --%>
 		<div class="function_buttons">
-			<button tabindex="2000" onclick="onF1()">F1<br>リセット</button><button
-				type="button" tabindex="2001" onclick="onF2()">F2<br>戻る</button><button
-				type="button" tabindex="2002" onclick="onF3();"
-					<c:if test="${!isUpdate}">disabled</c:if> >F3<br>更新</button><button
-				type="button" disabled="disabled">F4<br>&nbsp;</button><button
-				type="button" disabled="disabled">F5<br>&nbsp;</button><button
-				type="button" disabled="disabled">F6<br>&nbsp;</button><button
-				type="button" disabled="disabled">F7<br>&nbsp;</button><button
-				type="button" disabled="disabled">F8<br>&nbsp;</button><button
-				type="button" disabled="disabled">F9<br>&nbsp;</button><button
-				type="button" disabled="disabled">F10<br>&nbsp;</button><button
-				type="button" disabled="disabled">F11<br>&nbsp;</button><button
-				type="button" disabled="disabled">F12<br>&nbsp;</button>
+			<button tabindex="2000" onclick="onF1()">F1<br>リセット</button>
+			<button type="button" tabindex="2001" onclick="onF2()">F2<br>戻る</button>
+			<button type="button" tabindex="2002" onclick="onF3();"
+				<c:if test="${!isUpdate}">disabled</c:if> >F3<br>更新</button>
+			<button type="button" disabled="disabled">F4<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F5<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F8<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+	
 		<div class="function_forms">
 
-			
+			<%-- エラー表示部分 --%>
 			<div style="color:red; padding-left: 20px">
 				<html:errors/>
 				<span id="ajax_errors"></span>
@@ -294,150 +295,165 @@
 				</html:messages>
 			</div>
 
-			<span>セット商品情報</span><br>
 			<s:form onsubmit="return false;">
 				<html:hidden styleId="isUpdate" property="isUpdate"/>
 
-				<table class="forms" summary="セット商品情報">
-					<colgroup>
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 50%">
-					</colgroup>
-					<tr>
-						<th>セット商品コード</th>
-						<td><html:text styleId="setProductCode" property="setProductCode"
-								style="width: 170px" styleClass="c_disable" tabindex="100" readonly="true" /></td>
-						<th>セット商品名</th>
-						<td><html:text styleId="setProductName" property="setProductName"
-								style="width: 400px" styleClass="c_disable" tabindex="101" readonly="true" /></td>
-					</tr>
-				</table>
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span>セット商品情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+				
+						<div id="order_section" class="section_body">
+							<table class="forms" summary="セット商品情報">
+								<tr>
+									<th><div class="col_title_right">セット商品コード</div></th>
+									<td><html:text styleId="setProductCode" property="setProductCode"
+											style="width: 170px" styleClass="c_disable" tabindex="100" readonly="true" /></td>
+									<th><div class="col_title_right">セット商品名</div></th>
+									<td><html:text styleId="setProductName" property="setProductName"
+											style="width: 400px" styleClass="c_disable" tabindex="101" readonly="true" /></td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
 
-				<span>セット内容</span><br>
-				<table class="forms" summary="セット商品内訳" style="width: 910px;">
-					<colgroup>
-						<col span="1" style="width: 5%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 41%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 5%">
-					</colgroup>
-
-					<thead>
-					<tr>
-						<th>No</th>
-						<th>商品コード※</th>
-						<th>商品名</th>
-						<th>数量※</th>
-						<th>&nbsp;</th>
-					</tr>
-					</thead>
-
-					<tbody id="childProductList">
-
-					<bean:define id="lineNo" value="1"/>
-
-					<c:forEach var="product" items="${childProductList}" varStatus="status" >
-					
-
-					<tr id="childNo_${status.index}" <c:if test="${product.deleted}">style="display: none;"</c:if> >
-						<td style="text-align: center">
-							<span class="classRowIndex">${product.deleted ? "" : lineNo }</span>
-
-							
-							<html:hidden name="product" property="setProductCode" />
-							<html:hidden name="product" property="setProductName"/>
-
-							
-							<html:hidden name="product" property="updDatetm"/>
-
-							
-							<html:hidden name="product" property="originalProductCode"/>
-						</td>
-						<td>
-							<html:text name="product" property="productCode" style="width: 170px; ime-mode: disabled;" tabindex="${200 + (5 * status.index)}" maxlength="20"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
-							<input type="image" name="searchProductButton" src="${f:url('/images/icon_04_02.gif')}"
-								style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch(this);" tabindex="${201 + (5 * status.index)}"/>
-						</td>
-						<td>
-							<html:text name="product" property="productName" style="width: 400px;"
-								styleClass="c_disable" readonly="true" tabindex="${202 + (5 * status.index)}"/>
-						</td>
-						<td style="text-align: center;">
-							<html:text name="product" property="quantity" style="width: 80px; ime-mode: disabled;"
-								styleClass="numeral_commas BDCqua" tabindex="${203 + (5 * status.index)}" maxlength="6"/>
-						</td>
-						<td>
-							<html:hidden name="product" property="deleted"/>
-							<button type="button" name="deleteButton" tabindex="${204 + (5 * status.index)}"
-									onclick="deleteRow(this);"
-									<c:if test="${!isUpdate || childProductCount == 1}">disabled="disabled"</c:if>>削除</button>
-						</td>
-					</tr>
-
-					<bean:define id="lineNo" value="${product.deleted ? lineNo : lineNo + 1}"/>
-
-					</c:forEach>
-					</tbody>
-
-					<tfoot>
-					<tr>
-						<c:if test="${isUpdate}">
-						<td style="text-align: right" colspan="6">
-							<button type="button" onclick="addRow();" tabindex="400">行追加</button>
-						</td>
-						</c:if>
-						<c:if test="${!isUpdate}">
-						<td style="text-align: right" colspan="6">
-							<button type="button" disabled="disabled" tabindex="400">行追加</button>
-						</td>
-						</c:if>
-					</tr>
-
-					
-					<tr id="TEMPLATE" style="display: none;">
-						<td style="text-align: center">
-							<span class="classRowIndex"></span>
-
-							
-							<html:hidden property="setProductCode"/>
-							<html:hidden property="setProductName"/>
-
-							
-							<input type="hidden" name="updDatetm" value="">
-
-							
-							<input type="hidden" name="originalProductCode" value="">
-						</td>
-						<td>
-							<input type="text" name="productCode" style="width: 170px; ime-mode: disabled;" tabindex="-1"  maxlength="20"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
-							<input type="image"  name="searchProductButton" src="${f:url('/images/icon_04_02.gif')}"
-								style="vertical-align: middle; cursor: pointer;"
-								onclick="productSearch(this);" tabindex="-1">
-						</td>
-						<td>
-							<input type="text" name="productName" style="width: 400px;" class="c_disable" readonly="readonly" tabindex="-1">
-						</td>
-						<td style="text-align: center;">
-							<input type="text" name="quantity" style="width: 80px; ime-mode: disabled;" class="numeral_commas BDCqua" tabindex="-1" maxlength="6">
-						</td>
-						<td>
-							<input type="hidden" name="deleted" value="false">
-							<button type="button" name="deleteButton" tabindex="-1"
-									onclick="deleteRow(this);">削除</button>
-						</td>
-					</tr>
-
-					</tfoot>
-
-				</table>
-
-				<div style="text-align: right; width: 910px;">
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				    	<div class="section_title">
+							<span>セット内容</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+				
+						<div id="order_section" class="section_body">
+							<table class="forms detail_info" summary="セット商品内訳" style="width: 910px;">
+								<colgroup>
+									<col span="1" style="width: 5%">
+									<col span="1" style="width: 20%">
+									<col span="1" style="width: 41%">
+									<col span="1" style="width: 10%">
+									<col span="1" style="width: 7%">
+								</colgroup>
+								<thead>
+								<tr>
+									<th class="rd_top_left" style="height: 30px;">No</th>
+									<th class="xl64" style="height: 30px;">商品コード※</th>
+									<th class="xl64" style="height: 30px;">商品名</th>
+									<th class="xl64" style="height: 30px;">数量※</th>
+									<th class="rd_top_right" style="height: 30px;">&nbsp;</th>
+								</tr>
+								</thead>
+			
+								<tbody id="childProductList">
+			
+								<bean:define id="lineNo" value="1"/>
+			
+								<c:forEach var="product" items="${childProductList}" varStatus="status" >
+								<%-- 行の順序が自在に入れ替わるためindexed属性は使わない --%>
+			
+								<tr id="childNo_${status.index}" <c:if test="${product.deleted}">style="display: none;"</c:if> >
+									<td style="text-align: center">
+										<span class="classRowIndex">${product.deleted ? "" : lineNo }</span>
+			
+										<%-- セット商品コード・セット商品名 --%>
+										<html:hidden name="product" property="setProductCode" />
+										<html:hidden name="product" property="setProductName"/>
+			
+										<%-- 更新日時 --%>
+										<html:hidden name="product" property="updDatetm"/>
+			
+										<%-- オリジナルの商品コード --%>
+										<html:hidden name="product" property="originalProductCode"/>
+									</td>
+									<td>
+										<html:text name="product" property="productCode" style="width: 170px; ime-mode: disabled;" tabindex="${200 + (5 * status.index)}" maxlength="20"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
+										<input type="image" name="searchProductButton" src="${f:url('/images//customize/btn_search.png')}"
+											style="vertical-align: middle; cursor: pointer; width: auto;"
+											onclick="productSearch(this);" tabindex="${201 + (5 * status.index)}"/>
+									</td>
+									<td>
+										<html:text name="product" property="productName" style="width: 400px;"
+											styleClass="c_disable" readonly="true" tabindex="${202 + (5 * status.index)}"/>
+									</td>
+									<td style="text-align: center;">
+										<html:text name="product" property="quantity" style="width: 80px; ime-mode: disabled;"
+											styleClass="numeral_commas BDCqua" tabindex="${203 + (5 * status.index)}" maxlength="6"/>
+									</td>
+									<td>
+										<html:hidden name="product" property="deleted"/>
+										<button type="button" name="deleteButton" class="btn_small" tabindex="${204 + (5 * status.index)}"
+												onclick="deleteRow(this);"
+												<c:if test="${!isUpdate || childProductCount == 1}">disabled="disabled"</c:if>>削除</button>
+									</td>
+								</tr>
+			
+								<bean:define id="lineNo" value="${product.deleted ? lineNo : lineNo + 1}"/>
+			
+								</c:forEach>
+								</tbody>
+			
+								<tfoot>
+								<tr>
+									<c:if test="${isUpdate}">
+									<td style="text-align: right" colspan="6">
+										<button type="button" onclick="addRow();" tabindex="400" class="btn_small">行追加</button>
+									</td>
+									</c:if>
+									<c:if test="${!isUpdate}">
+									<td style="text-align: right" colspan="6">
+										<button type="button" disabled="disabled" tabindex="400" class="btn_small">行追加</button>
+									</td>
+									</c:if>
+								</tr>
+			
+								<%-- 行追加用の行テンプレート --%>
+								<tr id="TEMPLATE" style="display: none;">
+									<td style="text-align: center">
+										<span class="classRowIndex"></span>
+			
+										<%-- セット商品コード・セット商品名 --%>
+										<html:hidden property="setProductCode"/>
+										<html:hidden property="setProductName"/>
+			
+										<%-- 更新日時 --%>
+										<input type="hidden" name="updDatetm" value="">
+			
+										<%-- オリジナルの商品コード --%>
+										<input type="hidden" name="originalProductCode" value="">
+									</td>
+									<td>
+										<input type="text" name="productCode" style="width: 170px; ime-mode: disabled;" tabindex="-1"  maxlength="20"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
+										<input type="image"  name="searchProductButton" src="${f:url('/images//customize/btn_search.png')}"
+											style="vertical-align: middle; cursor: pointer; width: auto;"
+											onclick="productSearch(this);" tabindex="-1">
+									</td>
+									<td>
+										<input type="text" name="productName" style="width: 400px;" class="c_disable" readonly="readonly" tabindex="-1">
+									</td>
+									<td style="text-align: center;">
+										<input type="text" name="quantity" style="width: 80px; ime-mode: disabled;" class="numeral_commas BDCqua" tabindex="-1" maxlength="6">
+									</td>
+									<td>
+										<input type="hidden" name="deleted" value="false">
+										<button type="button" name="deleteButton" class="btn_small" tabindex="-1"
+												onclick="deleteRow(this);">削除</button>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
+		
+				<div style="text-align: right; width: 1160px;">
 					<span>登録日：${creDatetmShow} 更新日:${updDatetmShow}</span>
 
 					<html:hidden styleId="creDatetmShow" property="creDatetmShow"/>
@@ -447,8 +463,8 @@
 					<html:hidden styleId="productFractCategory" property="productFractCategory" />
 					<html:hidden styleId="numDecAlignment" property="numDecAlignment"/>
 
-					<button type="button" tabindex="450" onclick="onF1()">リセット</button>
-					<button type="button" tabindex="451" onclick="onF3();"
+					<button type="button" tabindex="450" onclick="onF1()" class="btn_medium">リセット</button>
+					<button type="button" tabindex="451" onclick="onF3();" class="btn_medium"
 						<c:if test="${!isUpdate}">disabled</c:if> >更新</button>
 				</div>
 			</s:form>

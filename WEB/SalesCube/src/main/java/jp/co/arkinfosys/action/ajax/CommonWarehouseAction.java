@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.HashMap;
@@ -58,7 +57,7 @@ public class CommonWarehouseAction extends CommonAjaxResources {
 				map.put(WarehouseService.Param.MANAGER_EMAIL, warehouse.managerEmail==null?"":warehouse.managerEmail);
 				map.put(WarehouseService.Param.WAREHOUSE_STATE, warehouse.warehouseState==null?"":warehouse.warehouseState);
 			} else {
-				
+				// 検索結果が空=Nullなら空文字列で返却する
 				ResponseUtil.write("", "text/javascript");
 				return null;
 			}

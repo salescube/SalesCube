@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.deposit;
 
 import jp.co.arkinfosys.dto.deposit.ImportBankDepositResultDto;
@@ -29,15 +28,15 @@ public class ImportBankDepositForm extends AbstractSearchForm<ImportBankDepositR
 
 	public String  newDepositSlipIdStr ;
 
-	
+	// 権限
 	public boolean linkInputDeposit;
 
-	public int importOKCount;	
-	public int importNGCount;	
+	public int importOKCount;	// 一致件数
+	public int importNGCount;	// 不一致件数
 	public int dispResultCount;
 
 	 /**
      * 検索結果選択値
      */
-	public int selectCount = 0; 
+	public int selectCount = 0; // 0:全件　1: 一致　2: 不一致
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.rorder;
 
 import jp.co.arkinfosys.common.StringUtil;
@@ -55,7 +54,7 @@ public class ImportOnlineOrderForm extends
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
 
-		
+		// 必須チェック
 		if (uploadFile == null
 				|| !StringUtil.hasLength(uploadFile.getFileName())) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -63,7 +62,7 @@ public class ImportOnlineOrderForm extends
 							.getMessage("labels.onlineorder.file")));
 		} else {
 			if (uploadFile.getFileSize() == 0) {
-				
+				// 0バイトファイル
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.upload.content.none"));
 			}

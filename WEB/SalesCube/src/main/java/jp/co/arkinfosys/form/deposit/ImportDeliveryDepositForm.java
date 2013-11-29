@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.deposit;
 
 import jp.co.arkinfosys.dto.deposit.ImportDeliveryDepositResultDto;
@@ -37,17 +36,17 @@ public class ImportDeliveryDepositForm extends
 
 	public String newDepositSlipIdStr;
 
-	
+	// 権限
 	public boolean linkInputSales;
 	public boolean linkInputDeposit;
 
-	public int importOKCount; 
-	public int importNGCount; 
-	public int importEtcCount; 
+	public int importOKCount; // 登録済件数
+	public int importNGCount; // エラー件数
+	public int importEtcCount; // その他件数
 	public int dispResultCount;
 	/**
 	* 検索結果選択値
 	*/
-	public int selectCount = 0; 
+	public int selectCount = 0; // 0:全件　1: 登録済　2: エラー　3:送り状のみ
 
 }

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto;
 
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public abstract class AbstractSlipDto<LINEDTOCLASS extends AbstractLineDto> {
 	public void copyFrom(List<LINEDTOCLASS> src) {
 
 		if (this.lineDtoList == src) {
-			
+			// 同じオブジェクトならコピーする必要なし
 			return;
 		}
 		if (this.lineDtoList == null) {

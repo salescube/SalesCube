@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.ArrayList;
@@ -145,7 +144,7 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	public void incrementDispatchOrderPrintCount( String entrustEadSlipId )
 			throws ServiceException, UnabledLockException {
 		try {
-			
+			// 伝票の更新
 			entrustEadService.incrementDispatchOrderPrintCount(entrustEadSlipId);
 
 		} catch (ServiceException e) {
@@ -170,10 +169,10 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	public int deleteById(String entrustEadSlipId, String updDatetm) throws ServiceException,
 			UnabledLockException {
 		try {
-			
+			// 排他制御
 			int lockResult = this.lockRecord(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipId, updDatetm, "entrustead/LockSlipByEntrustEadSlipId.sql");
 
-			
+			// 最新の状態を取得する
 			EntrustEadSlipTrnDto entrustEadSlipTrnDto = createEntrustEadSlipTrnDto(entrustEadSlipId);
 			if(entrustEadSlipTrnDto == null) {
 				ServiceException se = new ServiceException(
@@ -182,10 +181,10 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 				throw se;
 			}
 
-			
+			// 伝票の削除
 			deleteSlipByEntrustEadSlipId(Integer.parseInt(entrustEadSlipId));
 
-			
+			// 発注伝票の状態を変更する(更新済みの明細状態を再集計してメソッド内で自動的に伝票状態を判別し、設定される)
 			poSlipService.updatePOrderTrnStatusByPoSlipId(entrustEadSlipTrnDto.poSlipId);
 
 			return lockResult;
@@ -214,18 +213,18 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 			throws ServiceException {
 		try {
 
-			
-			
+			// 入出庫伝票の処理
+			// 入出庫伝票番号を採番
 			entrustEadSlipTrnDto.entrustEadSlipId = Long.toString(seqMakerService
 					.nextval(EntrustEadService.Table.ENTRUST_EAD_SLIP_TRN));
 
-			
+			// 入出庫年度、月度、年月度を計算
 			entrustEadSlipTrnDto = calcYmComuns(entrustEadSlipTrnDto, entrustEadSlipTrnDto.entrustEadDate);
 
-			
+			// 未印刷状態で初期化する
 			entrustEadSlipTrnDto.dispatchOrderPrintCount = "0";
 
-			
+			// Insert
 			insertSlip(entrustEadSlipTrnDto);
 
 			return 0;
@@ -281,16 +280,16 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	protected int updateRecord(EntrustEadSlipTrnDto entrustEadSlipTrnDto)
 			throws UnabledLockException, ServiceException {
 		try {
-			
+			// 入出庫年度、月度、年月度を計算
 			entrustEadSlipTrnDto = calcYmComuns(entrustEadSlipTrnDto, entrustEadSlipTrnDto.entrustEadDate);
 
 			EntrustEadSlipTrn entrustEadSlipTrn = Beans.createAndCopy(EntrustEadSlipTrn.class,
 					entrustEadSlipTrnDto).execute();
 
-			
+			// 排他制御
 			int lockResult =this.lockRecord(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipTrnDto.entrustEadSlipId,
 												entrustEadSlipTrnDto.updDatetm, "entrustead/LockSlipByEntrustEadSlipId.sql");
-			
+			// 伝票の更新
 			updateSlipByEntrustEadSlipId(entrustEadSlipTrn);
 
 			return lockResult;
@@ -307,7 +306,7 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	}
 
 	/**
-	 * 委託入出庫伝票を登録します.<br.
+	 * 委託入出庫伝票を登録します.<br>
 	 * 発注伝票の更新も行います.
 	 * @param entrustEadSlipTrnDto 委託入出庫伝票DTO
 	 * @throws ServiceException
@@ -315,14 +314,14 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	public void insertSlip(EntrustEadSlipTrnDto entrustEadSlipTrnDto)
 			throws ServiceException {
 		try {
-			
+			// 入出庫伝票の処理
 			EntrustEadSlipTrn entrustEadSlipTrn = Beans.createAndCopy(EntrustEadSlipTrn.class,
 					entrustEadSlipTrnDto).execute();
 
-			
+			// Insert
 			insertSlip(entrustEadSlipTrn);
 
-			
+			// 発注伝票の状態を変更する(更新済みの明細状態を再集計してメソッド内で自動的に伝票状態を判別し、設定される)
 			poSlipService.updatePOrderTrnStatusByPoSlipId(entrustEadSlipTrnDto.poSlipId);
 
 		} catch (Exception e) {
@@ -340,7 +339,7 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	 */
 	public int insertSlip(EntrustEadSlipTrn entrustEadSlipTrn) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(entrustEadSlipTrn);
 			return this.updateBySqlFile("entrustead/InsertSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -381,7 +380,7 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 			EntrustEadSlipTrn entrustEadSlipTrn ) throws ServiceException {
 
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createSlipSqlParam(entrustEadSlipTrn);
 			return this.updateBySqlFile("entrustead/UpdateSlip.sql", param).execute();
 		} catch (Exception e) {
@@ -399,7 +398,7 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	 */
 	public int deleteSlipByEntrustEadSlipId(Integer entrustEadSlipId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(EntrustEadService.Param.ENTRUST_EAD_SLIP_ID, entrustEadSlipId);
 
@@ -420,23 +419,23 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 	public EntrustEadSlipTrnDto createEntrustEadSlipTrnDto(String entrustEadSlipId)
 			throws ServiceException {
 		try {
-			
+			// 入力された入出庫番号が数値であるかチェック
 			try {
 				Integer.valueOf(entrustEadSlipId);
 			} catch (NumberFormatException e) {
 				return null;
 			}
 
-			
+			// TrnオブジェクトをDBから取得する
 			EntrustEadSlipTrn entrustEadSlipTrn = entrustEadService.findSlipByEntrustEadSlipId(Integer.valueOf(entrustEadSlipId));
 			List<EntrustEadLineTrn> eadLineTrnList = entrustEadService.findLineByEntrustEadSlipId(Integer.valueOf(entrustEadSlipId));
 			if (entrustEadSlipTrn == null
 					|| (eadLineTrnList == null || eadLineTrnList.size() == 0)) {
-				
+				// 伝票または明細を取得できなかった場合はnullを返す
 				return null;
 			}
 
-			
+			// TrnDtoオブジェクトをTrnオブジェクトから生成する
 			EntrustEadSlipTrnDto entrustEadSlipTrnDto = Beans.createAndCopy(
 					EntrustEadSlipTrnDto.class, entrustEadSlipTrn).dateConverter(
 									Constants.FORMAT.TIMESTAMP, "updDatetm").execute();
@@ -444,11 +443,11 @@ public class InputEntrustStockService extends AbstractSlipService<EntrustEadSlip
 			List<EntrustEadLineTrnDto> entrustEadLineTrnDtoList = new ArrayList<EntrustEadLineTrnDto>();
 			Converter conv = createProductNumConverter();
 			for (EntrustEadLineTrn eadLineTrn : eadLineTrnList) {
-				
+				// 画面表示用のDTOへ変換する
 				EntrustEadLineTrnDto entrustEadLineTrnDto = Beans.createAndCopy(
 						EntrustEadLineTrnDto.class, eadLineTrn).converter(conv, EntrustEadService.Param.QUANTITY).execute();
 
-				
+				// 商品備考の取得
 				ProductJoin pj = productService.findById(eadLineTrn.productCode);
 				if( pj != null ) {
 					entrustEadLineTrnDto.productRemarks = pj.remarks;

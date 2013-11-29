@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 /**
@@ -11,19 +10,19 @@ package jp.co.arkinfosys.dto.sales;
  *
  */
 public class OutputReportDataDto {
-	
+	// 受注番号
 	public String roSlipId;
 
-	
+	// 売上番号
 	public String salesSlipId;
 
-	
+	// レポートファイル
 	public String reportFile;
 
-	
+	// 出力ファイル名
 	public String outputFileName = null;
 
-	
+	// 日付表示フラグ
 	public Boolean dispDateFlag = Boolean.FALSE;
 
 

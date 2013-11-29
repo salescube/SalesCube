@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.security.GeneralSecurityException;
@@ -44,23 +43,23 @@ public final class EncryptUtil {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String encrypt(String encSrc) throws GeneralSecurityException, NoSuchAlgorithmException {
-		
+		// 暗号化方式を取得する
 		String encryptStyle = (String) ConfigUtil.getConfigValue(ConfigUtil.KEY.PASSWORD_ENCRYPT_STYLE);
 		
-		
+		// 指定なしの場合はAES方式とする
 		if(encryptStyle == null || encryptStyle.length() == 0) {
 			encryptStyle = ENCRYPT_AES;
 		}
 		
-		
+		// 指定された方式で暗号化する
 		String encryptString = null;
 		
 		if(ENCRYPT_MD5.equals(encryptStyle)) {
-			
+			// MD5形式
 			encryptString = encryptMD5(encSrc);
 			
 		} else {
-			
+			// AES方式
 			encryptString = encryptAES(encSrc);
 		}
 		
@@ -75,7 +74,7 @@ public final class EncryptUtil {
 	 * @throws GeneralSecurityException
 	 */
 	public static String encryptAES(String encSrc) throws GeneralSecurityException {
-		
+		// 秘密鍵を生成する
 		byte[] keySrc = EncryptUtil.DEFAULT_PRIVATE_KEY.getBytes();
 		byte[] userKeySrc = encSrc.getBytes();
 		System.arraycopy(userKeySrc, 0, keySrc, 0, Math.min(keySrc.length,
@@ -96,7 +95,7 @@ public final class EncryptUtil {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String encryptMD5(String encSrc) throws NoSuchAlgorithmException {
-		
+		// MD5で暗号化したByte型配列を取得する
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
 		md5.update(encSrc.getBytes());
 		byte[] encryptedHash = md5.digest();
@@ -122,7 +121,7 @@ public final class EncryptUtil {
 			buff.append(Integer.toHexString(bt));
 		}
 
-		
+		// / 16進数の文字列を返す。
 		return buff.toString();
 	}
 

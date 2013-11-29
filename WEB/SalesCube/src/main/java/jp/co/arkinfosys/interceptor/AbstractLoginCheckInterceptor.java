@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.interceptor;
 
 import javax.annotation.Resource;
@@ -74,21 +73,21 @@ public abstract class AbstractLoginCheckInterceptor extends AbstractInterceptor 
 	 */
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		
+		// ログイン確認
 		if (!this.isLogin()) {
 			this.doAfterError(invocation);
 			return this.getErrorURIString();
 		}
 
-		
+		// ユーザーDTOに最終実行処理を記録
 		this.recordRequestFunc(invocation);
 
-		
+		// メソッド実行前ログ出力
 		this.logBeforeInvoke(invocation);
 
 		Object result = invocation.proceed();
 
-		
+		// メソッド実行後ログ出力
 		this.logBeforeInvoke(invocation);
 
 		return result;

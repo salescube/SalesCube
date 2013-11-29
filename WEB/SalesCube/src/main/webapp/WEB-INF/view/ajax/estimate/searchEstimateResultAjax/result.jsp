@@ -1,8 +1,8 @@
-<div style="width: 910px; height: 25px;">
+<div style="width: 1010px; height: 25px;">
 	<div style="position:absolute; left: 0px;">検索結果件数： ${searchResultCount}件</div>
 	<input type="hidden" id="searchResultCount" value="${searchResultCount}">
 
-	<div style="position:absolute; width: 910px; text-align: center;">
+	<div style="position:absolute; width: 1160px; text-align: center;">
 		${sw:pageLink(searchResultCount,rowCount,pageNo)}
 	</div>
 
@@ -13,7 +13,7 @@
 	<%@ include file="/WEB-INF/view/estimate/searchEstimateResultOutput/resultList.jsp" %>
 </span>
 
-<div style="position:absolute; width: 910px; text-align: center;">
+<div style="position:absolute; width: 1160px; text-align: center; margin-top: 20px;">
 	${sw:pageLink(searchResultCount,rowCount,pageNo)}
 </div>
 

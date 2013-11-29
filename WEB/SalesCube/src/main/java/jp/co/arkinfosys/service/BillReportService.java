@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class BillReportService extends AbstractReportService<Bill> {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			
+			// システム例外として処理する
 			return null;
 		}
 		return retVal;
@@ -94,7 +93,7 @@ public class BillReportService extends AbstractReportService<Bill> {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			
+			// システム例外として処理する
 			throw e;
 		}
 
@@ -122,9 +121,9 @@ public class BillReportService extends AbstractReportService<Bill> {
 	protected String getReportId(int index) {
 		if ( 1 <= index) {
 			return null;
-		}
+		}// else{
 		return Constants.REPORT_TEMPLATE.REPORT_ID_I;
-		
+		// }
 	}
 
 	/**
@@ -164,7 +163,7 @@ public class BillReportService extends AbstractReportService<Bill> {
 
 		BeanMap beanMapBill = Beans.createAndCopy(BeanMap.class, bill).execute();
 
-		
+		// 常にマスタの請求先を使う
 		String customerCode = beanMapBill.get("customerCode").toString();
 
 		List<DeliveryAndPre> billList = this.deliveryService
@@ -207,7 +206,7 @@ public class BillReportService extends AbstractReportService<Bill> {
 	protected List<BeanMap> getDetailList(int index) throws ServiceException {
 		if ( 1 <= index) {
 			return null;
-		}
+		}// else{
 		List<BeanMap> lbm = this.salesLineService
 				.findSalesLinesByBillIdSimple( bill.billId.toString() );
 		if (lbm.size() == 0) {

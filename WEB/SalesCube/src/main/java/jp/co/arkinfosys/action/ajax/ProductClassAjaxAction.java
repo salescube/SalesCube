@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.ArrayList;
@@ -141,11 +140,11 @@ public class ProductClassAjaxAction extends
 	@Execute(validator = false)
 	public String searchClass1() throws Exception {
 		try {
-			
+			// 検索を行う
 			List<ProductClass> productClassList = this.productClassService
 					.findAllProductClass1();
 
-			
+			// 検索結果件数を設定する
 			ResponseUtil
 					.write(JSON.encode(productClassList), "text/javascript");
 		} catch (ServiceException e) {
@@ -164,25 +163,25 @@ public class ProductClassAjaxAction extends
 	@Execute(validator = false)
 	public String searchNextValue() throws Exception {
 		try {
-			
+			// 指定条件で次の値を取り出す
 			String classCode1 = this.searchProductClassForm.classCode1;
 			String classCode2 = this.searchProductClassForm.classCode2;
 
 			Map<String, Object> conditions = new HashMap<String, Object>();
 			if (!StringUtil.hasLength(classCode1)
 					&& !StringUtil.hasLength(classCode2)) {
-				
+				// 分類（大）
 				conditions.put(ProductClassService.Param.TARGET_COLUMN,
 						ProductClassService.COLUMN_CLASS_CODE_1);
 			} else if (!StringUtil.hasLength(classCode2)) {
-				
+				// 分類（中）
 				conditions.put(ProductClassService.Param.TARGET_COLUMN,
 						ProductClassService.COLUMN_CLASS_CODE_2);
 				conditions.put(ProductClassService.Param.CLASS_CODE_1,
 						classCode1);
 			} else if (StringUtil.hasLength(classCode1)
 					&& StringUtil.hasLength(classCode2)) {
-				
+				// 分類（小）
 				conditions.put(ProductClassService.Param.TARGET_COLUMN,
 						ProductClassService.COLUMN_CLASS_CODE_3);
 				conditions.put(ProductClassService.Param.CLASS_CODE_1,

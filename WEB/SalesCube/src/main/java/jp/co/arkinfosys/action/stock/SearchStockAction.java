@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.stock;
 
 import java.util.ArrayList;
@@ -49,11 +48,11 @@ public class SearchStockAction extends AbstractSearchAction<List<Object>> {
 	 */
 	@Override
 	protected void doAfterIndex() throws Exception {
-		
+		// 検索対象プルダウンの初期値を設定
 		this.searchStockForm.searchTarget = Constants.SEARCH_TARGET.VALUE_LINE;
-		
+		// ソートカラムの初期値を設定
 		this.searchStockForm.sortColumn = EadService.Param.SRC_FUNC;
-		
+		// 検索結果表示項目の取得
 		this.columnInfoList = searchStockService.createSearchStockResult(null,
 				null, searchStockForm.searchTarget);
 	}

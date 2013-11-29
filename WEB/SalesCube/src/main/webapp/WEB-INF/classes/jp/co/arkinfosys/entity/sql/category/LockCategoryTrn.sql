@@ -1,2 +1,0 @@
-SELECT * FROM CATEGORY_TRN_/*$domainId*/ WHERE CATEGORY_ID=/*categoryId*/ AND CATEGORY_CODE=/*categoryCode*/
-FOR UPDATE

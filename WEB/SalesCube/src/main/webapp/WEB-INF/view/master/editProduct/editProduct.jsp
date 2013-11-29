@@ -517,421 +517,422 @@
 </head>
 <body>
 
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp"%>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0013" />
 		<jsp:param name="MENU_ID" value="1300" />
 	</jsp:include>
 
-	
+	<%-- メイン機能 --%>
 	<div id="main_function">
 		<span class="title">商品</span>
 
-		
+		<%-- Fキー群 --%>
 		<div class="function_buttons">
-			<button tabindex="2000" onclick="onF1()">F1<br>初期化</button><button
-				type="button" tabindex="2001" onclick="onF2()">F2<br>戻る</button><button
-				type="button" tabindex="2002" onclick="onF3();"
-					<c:if test="${!isUpdate}">disabled</c:if> >F3<br>
-					<c:if test="${!editMode}">登録</c:if>
-					<c:if test="${editMode}">更新</c:if></button><button
-				type="button" tabindex="2003" onclick="onF4();"
-					<c:if test="${!editMode || !isUpdate}">disabled="disabled"</c:if> >F4<br>削除</button><button
-				type="button" tabindex="2004" onclick="onF5();"
-					<c:if test="${!isUpdate}">disabled</c:if> >F5<br>初期値</button><button
-				type="button" disabled="disabled">F6<br>&nbsp;</button><button
-				type="button" disabled="disabled">F7<br>&nbsp;</button><button
-				type="button" tabindex="2005" onclick="onF8();"
-					<c:if test="${!editMode || !isUpdate}">disabled</c:if> >F8<br>履歴出力</button><button
-				type="button" disabled="disabled">F9<br>&nbsp;</button><button
-				type="button" disabled="disabled">F10<br>&nbsp;</button><button
-				type="button" disabled="disabled">F11<br>&nbsp;</button><button
-				type="button" disabled="disabled">F12<br>&nbsp;</button>
+			<button tabindex="2000" onclick="onF1()">F1<br>初期化</button>
+			<button type="button" tabindex="2001" onclick="onF2()">F2<br>戻る</button>
+			<button type="button" tabindex="2002" onclick="onF3();"
+				<c:if test="${!isUpdate}">disabled</c:if> >F3<br>
+				<c:if test="${!editMode}">登録</c:if>
+				<c:if test="${editMode}">更新</c:if></button>
+			<button type="button" tabindex="2003" onclick="onF4();"
+				<c:if test="${!editMode || !isUpdate}">disabled="disabled"</c:if> >F4<br>削除</button>
+			<button type="button" tabindex="2004" onclick="onF5();"
+				<c:if test="${!isUpdate}">disabled</c:if> >F5<br>初期値</button>
+			<button type="button" disabled="disabled">F6<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F7<br>&nbsp;</button>
+			<button type="button" tabindex="2005" onclick="onF8();"
+				<c:if test="${!editMode || !isUpdate}">disabled</c:if> >F8<br>履歴出力</button>
+			<button type="button" disabled="disabled">F9<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F10<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F11<br>&nbsp;</button>
+			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<div class="function_forms">
 
-			
-			<div style="padding-left: 20px; color:red;">
+			<%-- エラー表示部分 --%>
+			<div id="errors" style="color: red">
 				<html:errors/>
 			</div>
-			<div style="padding-left: 20px; color:red;">
-				<span id="ajax_errors"></span>
-			</div>
-			<div style="padding-left: 20px; color: blue;">
+			<span id="ajax_errors"></span>
+			<div id = "message" style="padding-left: 20px;color: blue;">
 				<html:messages id="msg" message="true">
 					<bean:write name="msg" ignore="true"/>
 				</html:messages>
 			</div>
-
-			<span>商品情報</span>
+			
 			<s:form onsubmit="return false;">
-				<html:hidden styleId="isUpdate" property="isUpdate"/>
-				<html:hidden styleId="editMode" property="editMode"/>
+			
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				        <div class="section_title">
+							<span>商品情報</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
+						
+						<html:hidden styleId="isUpdate" property="isUpdate"/>
+						<html:hidden styleId="editMode" property="editMode"/>
+		
+						<html:hidden styleId="fractCategory" property="fractCategory"/>
+						<html:hidden styleId="taxCategory" property="taxCategory"/>
+						<html:hidden styleId="productFractCategory" property="productFractCategory"/>
+						<input type="hidden" id="numDecAlignment" name="numDecAlignment" value="0">
+		
+						<html:hidden styleId="priceFractCategory" property="priceFractCategory"/>
+						<html:hidden styleId="unitPriceDecAlignment" property="unitPriceDecAlignment"/>
+						<html:hidden styleId="dolUnitPriceDecAlignment" property="dolUnitPriceDecAlignment"/>
+						<html:hidden styleId="statsDecAlignment" property="statsDecAlignment"/>
+						<html:hidden styleId="supplierRate" property="supplierRate"/>
+		
+						<div id="order_section" class="section_body">
+							<table id="product_info" class="forms" summary="商品情報">
+								<tr>
+									<th><div class="col_title_right">商品コード※</div></th>
+									<td>
+										<html:text styleId="productCode" property="productCode" style="width: 160px; ime-mode: disabled;" tabindex="100" maxlength="20"
+											styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"
+											readonly="${editMode || !isUpdate}"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); checkNMJStockCtlCategory(); }" />
+										<html:image src="${f:url('/images//customize/btn_search.png')}"
+											style="vertical-align: middle; cursor: pointer;"
+											tabindex="101" onclick="openProductSearchDialog();" />
+									</td>
+									<th><div class="col_title_right">商品名※</div></th>
+									<td><html:text styleId="productName" property="productName" style="width: 200px;" tabindex="102" maxlength="60"/></td>
+									<th><div class="col_title_right">商品名カナ</div></th>
+									<td><html:text styleId="productKana" property="productKana" style="width: 200px;" tabindex="103" maxlength="60"/></td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right"><bean:message key='labels.onlineorder.pcode'/></div></th>
+									<td><html:text styleId="onlinePcode" property="onlinePcode" style="width: 170px;ime-mode: disabled;" tabindex="104" maxlength="50"/></td>
+									<th><div class="col_title_right">JANコード</div></th>
+									<td><html:text styleId="janPcode" property="janPcode" style="width: 150px;ime-mode: disabled;" tabindex="105" maxlength="13"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ chkdigit(this); }"/></td>
+									<th><div class="col_title_right">廃番予定日</div></th>
+									<td><html:text styleClass="date_input" styleId="discardDate" property="discardDate" style="width: 140px; ime-mode: disabled;" tabindex="106" /></td>
+								</tr>
+							</table>
+							<table class="forms" summary="仕入先情報">
+								<tr>
+									<th><div class="col_title_right">仕入先コード</div></th>
+									<td><html:text styleId="supplierCode" property="supplierCode"
+										style="width: 100px;ime-mode: disabled;" tabindex="200" maxlength="10"
+										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeSupplierCode(this); }"/>
+										<html:image src="${f:url('/images//customize/btn_search.png')}"
+											style="vertical-align: middle; cursor: pointer;" tabindex="201"
+											onclick="supplierSearch()" />
+									</td>
+									<th><div class="col_title_right">仕入先名</div></th>
+									<td><html:text styleId="supplierName" property="supplierName"
+											style="width: 150px;" styleClass="c_disable" tabindex="202" readonly="true" /></td>
+									<th><div class="col_title_right">仕入先商品コード</div></th>
+									<td><html:text styleId="supplierPcode" property="supplierPcode"
+											style="width: 150px;ime-mode: disabled;" tabindex="203" maxlength="20"/></td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">仕入単価（円）</div></th>
+									<td><html:text styleClass="numeral_commas yen_value BDCyen" styleId="supplierPriceYen" property="supplierPriceYen"
+											style="width: 150px;" tabindex="204" onchange="applyPriceAlignment();" maxlength="9"/></td>
+									<th><div class="col_title_right">仕入単価（外貨）</div></th>
+									<td colspan="3"><html:text styleClass="numeral_commas dollar_value BDCdol" styleId="supplierPriceDol" property="supplierPriceDol"
+											style="width: 150px;" tabindex="205" onchange="exchangePrice();" maxlength="9"/></td>
+			
+								</tr>
+							</table>
+							<html:hidden styleId="sign" property="sign" />
+							<table class="forms" summary="商品在庫情報">
+								<tr>
+									<th><div class="col_title_right">在庫管理</div></th>
+									<td>
+										<html:select styleId="stockCtlCategory" property="stockCtlCategory" tabindex="300" onchange="checkNMJStockCtlCategory();">
+											<html:options collection="stockCtlCategoryList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+									<th><div class="col_title_right">入数</div></th>
+									<td colspan="3">
+										<html:text styleClass="numeral_commas BDCqua" styleId="packQuantity" property="packQuantity"  style="width: 100px;" tabindex="301" maxlength="5"/>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">月平均出荷数</div></th>
+									<td>
+										<html:text styleId="avgShipCount" property="avgShipCount"
+											style="width: 100px;" styleClass="c_disable numeral_commas BDCqua" tabindex="302" readonly="true" /></td>
+									<th><div class="col_title_right">倉庫名</div></th>
+									<td>
+										<html:text styleId="warehouseName" property="warehouseName" style="width: 100px; ime-mode: disabled;" tabindex="303" readonly="true" styleClass="c_disable" />
+									<th><div class="col_title_right">棚番</div></th>
+									<td>
+										<html:text styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;" tabindex="304" maxlength="10"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeRackCode(this); }"/>
+										<html:image src="${f:url('/images//customize/btn_search.png')}"
+											style="vertical-align: middle; cursor: pointer;"
+											tabindex="305" onclick="rackSearch();" /></td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">リードタイム</div></th>
+									<td>
+										<html:text styleId="leadTime" property="leadTime" style="width: 100px; text-align: right; ime-mode: disabled;"
+											maxlength="5" tabindex="306"/> 日
+									</td>
+									<th><div class="col_title_right">発注点</div></th>
+									<td>
+										<html:text styleClass="numeral_commas BDCqua"  styleId="poNum" property="poNum" style="width: 100px;" tabindex="307" maxlength="6"/>
+										<html:checkbox styleId="poUpdFlag" property="poUpdFlag" value="1" tabindex="308" />自動更新</td>
+									<th><div class="col_title_right">安全在庫数</div></th>
+									<td>
+										<html:text styleClass="numeral_commas BDCqua"  styleId="mineSafetyStock" property="mineSafetyStock" style="width: 100px;" tabindex="309" maxlength="6"/>
+										<html:checkbox styleId="mineSafetyStockUpdFlag" property="mineSafetyStockUpdFlag" value="1" tabindex="310" />自動更新</td>
+			
+										<html:hidden property="entrustSafetyStock"/>
+										<html:hidden property="salesStandardDeviation"/>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">発注ロット</div></th>
+									<td>
+										<html:text styleClass="numeral_commas BDCqua"  styleId="poLot" property="poLot" style="width: 100px;" tabindex="311" maxlength="6"/>
+										<html:checkbox styleId="lotUpdFlag" property="lotUpdFlag" value="1" tabindex="312" />自動更新
+									</td>
+									<th><div class="col_title_right">最大保有数</div></th>
+									<td>
+										<html:text styleClass="numeral_commas BDCqua"  styleId="maxStockNum" property="maxStockNum" style="width: 100px;" tabindex="313" maxlength="6"/>
+										<html:checkbox styleId="stockUpdFlag" property="stockUpdFlag" value="1" tabindex="314" />自動更新
+									</td>
+									<th><div class="col_title_right">単位発注限度数</div></th>
+									<td>
+										<html:text styleClass="numeral_commas BDCqua"  styleId="maxPoNum" property="maxPoNum" style="width: 100px;" tabindex="315" maxlength="6"/>
+										 <html:checkbox styleId="maxPoUpdFlag" property="maxPoUpdFlag" value="1" tabindex="316"/>自動更新
+									</td>
+								</tr>
+							</table>
+			
+							<table class="forms" summary="ランク・割引情報">
+								<tr>
+									<th><div class="col_title_right">受注限度数</div></th>
+									<td><html:text styleClass="numeral_commas BDCqua" styleId="roMaxNum" property="roMaxNum" style="width: 100px;" tabindex="400" maxlength="5"/></td>
+									<th><div class="col_title_right">売単価</div></th>
+									<td><html:text styleClass="numeral_commas yen_value BDCyen" styleId="retailPrice" property="retailPrice"
+											style="width: 150px;" tabindex="401" onchange="applyPriceAlignment();" maxlength="9"/></td>
+									<th><div class="col_title_right">数量割引</div></th>
+									<td>
+										<html:text styleId="discountId" property="discountId" style="width: 150px; ime-mode: disabled;" styleClass="discountId" tabindex="402"
+											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeDiscountId(this); }" maxlength="20"/>
+										<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="403" onclick="discountSearch();" />
 
-				<html:hidden styleId="fractCategory" property="fractCategory"/>
-				<html:hidden styleId="taxCategory" property="taxCategory"/>
-				<html:hidden styleId="productFractCategory" property="productFractCategory"/>
-				<input type="hidden" id="numDecAlignment" name="numDecAlignment" value="0">
+									</td>
+									<td>
+										<html:text styleId="discountName" property="discountName" style="width: 150px;" styleClass="c_disable" tabindex="404"  readonly="true" />
+										<html:hidden styleId="discountUpdDatetm" property="discountUpdDatetm" />
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
 
-				<html:hidden styleId="priceFractCategory" property="priceFractCategory"/>
-				<html:hidden styleId="unitPriceDecAlignment" property="unitPriceDecAlignment"/>
-				<html:hidden styleId="dolUnitPriceDecAlignment" property="dolUnitPriceDecAlignment"/>
-				<html:hidden styleId="statsDecAlignment" property="statsDecAlignment"/>
-				<html:hidden styleId="supplierRate" property="supplierRate"/>
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				        <div class="section_title">
+							<span>分類</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
 
-				<table id="product_info" class="forms" summary="商品情報">
-					<colgroup>
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-					</colgroup>
-					<tr>
-						<th>商品コード※</th>
-						<td>
-							<html:text styleId="productCode" property="productCode" style="width: 160px; ime-mode: disabled;" tabindex="100" maxlength="20"
-								styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"
-								readonly="${editMode || !isUpdate}"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); checkNMJStockCtlCategory(); }" />
-							<html:image src="${f:url('/images/icon_04_02.gif')}"
-								style="vertical-align: middle; cursor: pointer;"
-								tabindex="101" onclick="openProductSearchDialog();" />
-						</td>
-						<th>商品名※</th>
-						<td><html:text styleId="productName" property="productName" style="width: 200px;" tabindex="102" maxlength="60"/></td>
-						<th>商品名カナ</th>
-						<td><html:text styleId="productKana" property="productKana" style="width: 200px;" tabindex="103" maxlength="60"/></td>
-					</tr>
-					<tr>
-						<th><bean:message key='labels.onlineorder.pcode'/></th>
-						<td><html:text styleId="onlinePcode" property="onlinePcode" style="width: 170px;ime-mode: disabled;" tabindex="104" maxlength="50"/></td>
-						<th>JANコード</th>
-						<td><html:text styleId="janPcode" property="janPcode" style="width: 150px;ime-mode: disabled;" tabindex="105" maxlength="13"
-							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ chkdigit(this); }"/></td>
-						<th>廃番予定日</th>
-						<td><html:text styleClass="date_input" styleId="discardDate" property="discardDate" style="width: 100px; ime-mode: disabled;" tabindex="106" /></td>
-					</tr>
-				</table>
+						<div id="order_section" class="section_body">
+							<table id="product_category_info" class="forms" summary="商品分類">		
+								<tr>
+									<th><div class="col_title_right">状況</div></th>
+									<td><html:select tabindex="500" property="productStatusCategory">
+										<html:options collection="statusCategoryList" property="value"
+											labelProperty="label" />
+									</html:select></td>
+									<th><div class="col_title_right">保管</div></th>
+									<td><html:select tabindex="501" property="productStockCategory">
+										<html:options collection="stockCategoryList" property="value"
+											labelProperty="label" />
+									</html:select></td>
+									<th><div class="col_title_right">調達</div></th>
+									<td><html:select tabindex="502" property="productPurvayCategory">
+										<html:options collection="purvayCategoryList" property="value"
+											labelProperty="label" />
+									</html:select></td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">標準化</div></th>
+									<td><html:select tabindex="503" styleId="productStandardCategory" onchange="checkNMJStockCtlCategory();"
+										property="productStandardCategory">
+										<html:options collection="standardCategoryList" property="value"
+											labelProperty="label" />
+									</html:select></td>
+									<th><div class="col_title_right">特注計算掛率</div></th>
+									<td><html:text styleClass="numeral_commas BDCrate" styleId="soRate" property="soRate" style="width: 100px;" tabindex="504" onchange="applyStatsAlignment($(this));" maxlength="6"/></td>
+									<th><div class="col_title_right">セット</div></th>
+									<td>
+										<html:select styleId="setTypeCategory" property="setTypeCategory" tabindex="505">
+											<html:options collection="setTypeCategoryList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+			
+								<tr>
+									<th><div class="col_title_right">カテゴリ（大）</div></th>
+									<td colspan="5">
+										<html:select styleClass="ProductClass1_TopEmpty" styleId="product1" property="product1" tabindex="506" style="width: 500px;">
+											<html:options collection="product1List" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">カテゴリ（中）</div></th>
+									<td colspan="5">
+										<html:select styleClass="ProductClass2_TopEmpty" styleId="product2" property="product2" tabindex="507" style="width: 500px;">
+											<html:options collection="product2List" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">カテゴリ（小）</div></th>
+									<td colspan="5">
+										<html:select styleClass="ProductClass3_TopEmpty" styleId="product3" property="product3" tabindex="508" style="width: 500px;">
+											<html:options collection="product3List" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
 
-				<table class="forms" summary="仕入先情報">
-					<colgroup>
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-					</colgroup>
-					<tr>
-						<th>仕入先コード</th>
-						<td><html:text styleId="supplierCode" property="supplierCode"
-							style="width: 100px;ime-mode: disabled;" tabindex="200" maxlength="10"
-							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeSupplierCode(this); }"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}"
-								style="vertical-align: middle; cursor: pointer;" tabindex="201"
-								onclick="supplierSearch()" />
-						</td>
-						<th>仕入先名</th>
-						<td><html:text styleId="supplierName" property="supplierName"
-								style="width: 150px;" styleClass="c_disable" tabindex="202" readonly="true" /></td>
-						<th>仕入先商品コード</th>
-						<td><html:text styleId="supplierPcode" property="supplierPcode"
-								style="width: 150px;ime-mode: disabled;" tabindex="203" maxlength="20"/></td>
-					</tr>
-					<tr>
-						<th>仕入単価（円）</th>
-						<td><html:text styleClass="numeral_commas yen_value BDCyen" styleId="supplierPriceYen" property="supplierPriceYen"
-								style="width: 150px;" tabindex="204" onchange="applyPriceAlignment();" maxlength="9"/></td>
-						<th>仕入単価（外貨）</th>
-						<td colspan="3"><html:text styleClass="numeral_commas dollar_value BDCdol" styleId="supplierPriceDol" property="supplierPriceDol"
-								style="width: 150px;" tabindex="205" onchange="exchangePrice();" maxlength="9"/></td>
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				        <div class="section_title">
+							<span>特性分類</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
 
-					</tr>
-				</table>
-				<html:hidden styleId="sign" property="sign" />
-				<table class="forms" summary="商品在庫情報">
-					<colgroup>
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 20%">
-					</colgroup>
-					<tr>
-						<th>在庫管理</th>
-						<td>
-							<html:select styleId="stockCtlCategory" property="stockCtlCategory" tabindex="300" onchange="checkNMJStockCtlCategory();">
-								<html:options collection="stockCtlCategoryList" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-						<th>入数</th>
-						<td colspan="3">
-							<html:text styleClass="numeral_commas BDCqua" styleId="packQuantity" property="packQuantity"  style="width: 100px;" tabindex="301" maxlength="5"/>
-						</td>
-					</tr>
-					<tr>
-						<th>月平均出荷数</th>
-						<td>
-							<html:text styleId="avgShipCount" property="avgShipCount"
-								style="width: 100px;" styleClass="c_disable numeral_commas BDCqua" tabindex="302" readonly="true" /></td>
-						<th>倉庫名</th>
-						<td>
-							<html:text styleId="warehouseName" property="warehouseName" style="width: 100px; ime-mode: disabled;" tabindex="303" readonly="true" styleClass="c_disable" />
-						<th>棚番</th>
-						<td>
-							<html:text styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;" tabindex="304" maxlength="10"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeRackCode(this); }"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}"
-								style="vertical-align: middle; cursor: pointer;"
-								tabindex="305" onclick="rackSearch();" /></td>
-					</tr>
-					<tr>
-						<th>リードタイム</th>
-						<td>
-							<html:text styleId="leadTime" property="leadTime" style="width: 100px; text-align: right; ime-mode: disabled;"
-								maxlength="5" tabindex="306"/> 日
-						</td>
-						<th>発注点</th>
-						<td>
-							<html:text styleClass="numeral_commas BDCqua"  styleId="poNum" property="poNum" style="width: 100px;" tabindex="307" maxlength="6"/>
-							<html:checkbox styleId="poUpdFlag" property="poUpdFlag" value="1" tabindex="308" />自動更新</td>
-						<th>安全在庫数</th>
-						<td>
-							<html:text styleClass="numeral_commas BDCqua"  styleId="mineSafetyStock" property="mineSafetyStock" style="width: 100px;" tabindex="309" maxlength="6"/>
-							<html:checkbox styleId="mineSafetyStockUpdFlag" property="mineSafetyStockUpdFlag" value="1" tabindex="310" />自動更新</td>
+						<div id="order_section" class="section_body">
+							<table class="forms" summary="特性分類">
+							<!-- <table border="1"> -->
+								<tr>
+									<th><div class="col_title_right">単位</div></th>
+									<td>
+										<html:select styleId="unitCategory" property="unitCategory" tabindex="600" style="width: 150px;">
+											<html:options collection="unitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+									<th><div class="col_title_right">重量</div></th>
+									<td>
+										<html:text styleClass="numeral_commas" styleId="weight" property="weight" style="width: 100px; ime-mode:disabled;" tabindex="601" maxlength="6"/>
+										<html:select styleId="weightUnitSizeCategory" property="weightUnitSizeCategory" tabindex="602" style="width: 150px;">
+											<html:options collection="weightUnitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+									<th><div class="col_title_right">長さ</div></th>
+									<td>
+										<html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="603" property="length" maxlength="6"/>
+										<html:select tabindex="604" property="lengthUnitSizeCategory" style="width: 150px;">
+											<html:options collection="lengthUnitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">サイズ（幅）</div></th>
+									<td>
+										<html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="605" property="width" maxlength="6"/>
+										<html:select tabindex="606" property="widthUnitSizeCategory" style="width: 150px;">
+											<html:options collection="lengthUnitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+									<th><div class="col_title_right">サイズ（奥）</div></th>
+									<td>
+										<html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="607" property="depth" maxlength="6" />
+										<html:select tabindex="608" property="depthUnitSizeCategory" style="width: 150px;">
+											<html:options collection="lengthUnitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+									<th><div class="col_title_right">サイズ（高）</div></th>
+									<td>
+										<html:text styleClass="numeral_commas"  styleId="height" property="height" style="width: 100px; ime-mode:disabled;" tabindex="609" maxlength="6"/>
+										<html:select styleId="heightUnitSizeCategory" property="heightUnitSizeCategory" tabindex="610" style="width: 150px;">
+											<html:options collection="lengthUnitList" property="value" labelProperty="label" />
+										</html:select>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">芯数</div></th>
+									<td><html:text styleId="coreNum" property="coreNum" style="width: 100px; ime-mode: disabled;" tabindex="611" maxlength="5" /></td>
+									<th>&nbsp;</th>
+									<td>&nbsp;</td>
+									<th>&nbsp;</th>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
 
-							<html:hidden property="entrustSafetyStock"/>
-							<html:hidden property="salesStandardDeviation"/>
-					</tr>
-					<tr>
-						<th>発注ロット</th>
-						<td>
-							<html:text styleClass="numeral_commas BDCqua"  styleId="poLot" property="poLot" style="width: 100px;" tabindex="311" maxlength="6"/>
-							<html:checkbox styleId="lotUpdFlag" property="lotUpdFlag" value="1" tabindex="312" />自動更新
-						</td>
-						<th>最大保有数</th>
-						<td>
-							<html:text styleClass="numeral_commas BDCqua"  styleId="maxStockNum" property="maxStockNum" style="width: 100px;" tabindex="313" maxlength="6"/>
-							<html:checkbox styleId="stockUpdFlag" property="stockUpdFlag" value="1" tabindex="314" />自動更新
-						</td>
-						<th>単位発注限度数</th>
-						<td>
-							<html:text styleClass="numeral_commas BDCqua"  styleId="maxPoNum" property="maxPoNum" style="width: 100px;" tabindex="315" maxlength="6"/>
-							 <html:checkbox styleId="maxPoUpdFlag" property="maxPoUpdFlag" value="1" tabindex="316"/>自動更新
-						</td>
-					</tr>
-				</table>
+			    <div class="form_section_wrap">
+				    <div class="form_section">
+				        <div class="section_title">
+							<span>備考欄</span>
+				            <button class="btn_toggle">
+				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+				            </button>
+						</div><!-- /.section_title -->
 
-				<table class="forms" summary="ランク・割引情報">
-					<colgroup>
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 21%">
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 25%">
-					</colgroup>
-					<tr>
-						<th>受注限度数</th>
-						<td><html:text styleClass="numeral_commas BDCqua" styleId="roMaxNum" property="roMaxNum" style="width: 100px;" tabindex="400" maxlength="5"/></td>
-						<th>売単価</th>
-						<td><html:text styleClass="numeral_commas yen_value BDCyen" styleId="retailPrice" property="retailPrice"
-								style="width: 150px;" tabindex="401" onchange="applyPriceAlignment();" maxlength="9"/></td>
-						<th>数量割引</th>
-						<td>
-							<html:text styleId="discountId" property="discountId" style="width: 150px; ime-mode: disabled;" styleClass="discountId" tabindex="402"
-								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ changeDiscountId(this); }" maxlength="20"/>
-							<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" tabindex="403" onclick="discountSearch();" />
-							<html:text styleId="discountName" property="discountName" style="width: 150px;" styleClass="c_disable" tabindex="404"  readonly="true" />
-							<html:hidden styleId="discountUpdDatetm" property="discountUpdDatetm" />
-						</td>
-					</tr>
-				</table>
+						<div id="order_section" class="section_body">
+							<table class="forms" summary="備考欄">
+								<colgroup>
+									<col span="1" style="width: 13%">
+									<col span="1" style="width: 87%">
+								</colgroup>
+								<tr>
+									<th><div class="col_title_right">備考</div></th>
+									<td>
+										<html:textarea styleId="remarks" property="remarks" style="width: 750px;" tabindex="700" rows="2"/>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">ピッキング備考</div></th>
+									<td>
+										<html:textarea styleId="eadRemarks" property="eadRemarks" style="width: 750px;" tabindex="701" rows="2"/>
+									</td>
+								</tr>
+								<tr>
+									<th><div class="col_title_right">コメント</div></th>
+									<td>
+										<html:textarea styleId="commentData" property="commentData" style="width: 750px;" tabindex="702" rows="2"/>
+									</td>
+								</tr>
+							</table>
+						</div><!-- /.section_body -->
+					</div><!-- /.form_section -->
+				</div><!-- /.form_section_wrap -->
 
-				<table id="product_category_info" class="forms" summary="商品分類">
-					<colgroup>
-						<col span="1" style="width: 4%">
-						<col span="1" style="width: 9%">
-						<col span="1" style="width: 21%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-					</colgroup>
-
-					<tr>
-						<th rowspan="5">分類</th>
-						<th>状況</th>
-						<td><html:select tabindex="500" property="productStatusCategory">
-							<html:options collection="statusCategoryList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-						<th>保管</th>
-						<td><html:select tabindex="501" property="productStockCategory">
-							<html:options collection="stockCategoryList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-						<th>調達</th>
-						<td><html:select tabindex="502" property="productPurvayCategory">
-							<html:options collection="purvayCategoryList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-					</tr>
-					<tr>
-						<th>標準化</th>
-						<td><html:select tabindex="503" styleId="productStandardCategory" onchange="checkNMJStockCtlCategory();"
-							property="productStandardCategory">
-							<html:options collection="standardCategoryList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-						<th>特注計算掛率</th>
-						<td><html:text styleClass="numeral_commas BDCrate" styleId="soRate" property="soRate" style="width: 100px;" tabindex="504" onchange="applyStatsAlignment($(this));" maxlength="6"/></td>
-						<th>セット</th>
-						<td>
-							<html:select styleId="setTypeCategory" property="setTypeCategory" tabindex="505">
-								<html:options collection="setTypeCategoryList" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-					</tr>
-
-					<tr>
-						<th>カテゴリ（大）</th>
-						<td colspan="5">
-							<html:select styleClass="ProductClass1_TopEmpty" styleId="product1" property="product1" tabindex="506" style="width: 500px;">
-								<html:options collection="product1List" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th>カテゴリ（中）</th>
-						<td colspan="5">
-							<html:select styleClass="ProductClass2_TopEmpty" styleId="product2" property="product2" tabindex="507" style="width: 500px;">
-								<html:options collection="product2List" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th>カテゴリ（小）</th>
-						<td colspan="5">
-							<html:select styleClass="ProductClass3_TopEmpty" styleId="product3" property="product3" tabindex="508" style="width: 500px;">
-								<html:options collection="product3List" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-					</tr>
-				</table>
-
-				<table class="forms" summary="特性分類">
-					<colgroup>
-						<col span="1" style="width: 4%">
-						<col span="1" style="width: 9%">
-						<col span="1" style="width: 21%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 23%">
-					</colgroup>
-					<tr>
-						<th rowspan="3">特性<br>分類</th>
-						<th>単位</th>
-						<td>
-							<html:select styleId="unitCategory" property="unitCategory" tabindex="600">
-								<html:options collection="unitList" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-						<th>重量</th>
-						<td>
-							<html:text styleClass="numeral_commas" styleId="weight" property="weight" style="width: 100px; ime-mode:disabled;" tabindex="601" maxlength="6"/>
-							<html:select styleId="weightUnitSizeCategory" property="weightUnitSizeCategory" tabindex="602" >
-								<html:options collection="weightUnitList" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-						<th>長さ</th>
-						<td><html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="603"
-							property="length" maxlength="6"/> <html:select tabindex="604"
-							property="lengthUnitSizeCategory">
-							<html:options collection="lengthUnitList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-					</tr>
-					<tr>
-						<th>サイズ（幅）</th>
-						<td><html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="605"
-							property="width" maxlength="6"/> <html:select tabindex="606"
-							property="widthUnitSizeCategory">
-							<html:options collection="lengthUnitList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-						<th>サイズ（奥）</th>
-						<td><html:text styleClass="numeral_commas"  style="width: 100px; ime-mode:disabled;" tabindex="607"
-							property="depth" maxlength="6" /> <html:select tabindex="608"
-							property="depthUnitSizeCategory">
-							<html:options collection="lengthUnitList" property="value"
-								labelProperty="label" />
-						</html:select></td>
-						<th>サイズ（高）</th>
-						<td>
-							<html:text styleClass="numeral_commas"  styleId="height" property="height" style="width: 100px; ime-mode:disabled;" tabindex="609" maxlength="6"/>
-							<html:select styleId="heightUnitSizeCategory" property="heightUnitSizeCategory" tabindex="610">
-								<html:options collection="lengthUnitList" property="value" labelProperty="label" />
-							</html:select>
-						</td>
-					</tr>
-					<tr>
-						<th>芯数</th>
-						<td><html:text styleId="coreNum" property="coreNum" style="width: 100px; ime-mode: disabled;" tabindex="611" maxlength="5" /></td>
-						<th>&nbsp;</th>
-						<td>&nbsp;</td>
-						<th>&nbsp;</th>
-						<td>&nbsp;</td>
-					</tr>
-				</table>
-
-				<table class="forms" summary="備考欄">
-					<colgroup>
-						<col span="1" style="width: 13%">
-						<col span="1" style="width: 87%">
-					</colgroup>
-					<tr>
-						<th>備考</th>
-						<td>
-							<html:textarea styleId="remarks" property="remarks" style="width: 750px;" tabindex="700" rows="2"/>
-						</td>
-					</tr>
-					<tr>
-						<th>ピッキング備考</th>
-						<td>
-							<html:textarea styleId="eadRemarks" property="eadRemarks" style="width: 750px;" tabindex="701" rows="2"/>
-						</td>
-					</tr>
-					<tr>
-						<th>コメント</th>
-						<td>
-							<html:textarea styleId="commentData" property="commentData" style="width: 750px;" tabindex="702" rows="2"/>
-						</td>
-					</tr>
-				</table>
-
-				<div style="text-align: right; width: 910px;">
+				<div style="text-align: right; width: 1160px;">
 					<span>登録日：${creDatetmShow} 更新日:${updDatetmShow}</span>
 					<html:hidden styleId="creDatetm" property="creDatetm"/>
 					<html:hidden styleId="updDatetm" property="updDatetm"/>
 					<html:hidden property="creDatetmShow"/>
 					<html:hidden property="updDatetmShow"/>
 
-					<button type="button" tabindex="750" onclick="onF1()">初期化</button>
-					<button type="button" tabindex="751" onclick="onF3();"
+					<button type="button"  class="btn_medium" tabindex="750" onclick="onF1()">初期化</button>
+					<button type="button"  class="btn_medium" tabindex="751" onclick="onF3();"
 						<c:if test="${!isUpdate}">disabled</c:if> >
 						<c:if test="${!editMode}">登録</c:if>
 						<c:if test="${editMode}">更新</c:if>
 					</button>
-					<button type="button" tabindex="752" onclick="onF4();"
+					<button type="button"  class="btn_medium" tabindex="752" onclick="onF4();"
 						<c:if test="${!editMode || !isUpdate}">disabled</c:if> >削除</button>
 				</div>
 

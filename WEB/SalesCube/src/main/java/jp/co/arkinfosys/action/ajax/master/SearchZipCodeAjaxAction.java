@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.master;
 
 import java.util.Iterator;
@@ -41,7 +40,7 @@ public class SearchZipCodeAjaxAction extends CommonAjaxResources {
 	@Execute(validator = true, validate = "validate", input = Mapping.ERROR_JSP)
 	public String search() throws Exception {
 		try {
-			
+			// 住所検索
 			List<Zip> resultList = zipService.findAddressByZipCode(
 					searchZipCodeAjaxForm.zipCode, null, true);
 			if (resultList != null) {
@@ -55,12 +54,12 @@ public class SearchZipCodeAjaxAction extends CommonAjaxResources {
 				}
 			}
 
-			
+			// 検索結果件を設定する
 			ResponseUtil.write(JSON.encode(resultList), "text/javascript");
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
-			
+			// システム例外として処理する
 			super.writeSystemErrorToResponse();
 			return null;
 		}

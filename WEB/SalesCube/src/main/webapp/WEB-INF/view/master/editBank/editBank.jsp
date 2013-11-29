@@ -55,10 +55,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1315"/>
@@ -104,7 +104,7 @@
         <button disabled="disabled">F11<br>&nbsp;</button>
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
 
 	<div class="function_forms">
     <s:form styleId="editBankForm" onsubmit="return false;">
@@ -116,71 +116,84 @@
         	</html:messages>
     	</div>
 
-		<span>銀行情報</span><br>
-		<table id="user_info" class="forms" summary="銀行情報" style="width: 500px">
-			<colgroup>
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 40%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 20%">
-			</colgroup>
-			<tr>
-				<th>銀行コード<bean:message key='labels.must'/></th>
-				<td colspan="3">
-					<html:text tabindex="100" maxlength="4" styleId="bankCode" property="bankCode" style="width: 100px;ime-mode:disabled;"/>
-				</td>
-			</tr>
-			<tr>
-				<th>銀行名<bean:message key='labels.must'/></th>
-				<td colspan="3">
-					<html:text tabindex="101" maxlength="20" styleId="bankName" property="bankName" style="width: 200px"/>
-				</td>
-			</tr>
-			<tr>
-				<th>店名<bean:message key='labels.must'/></th>
-				<td><html:text tabindex="102" maxlength="20" styleId="storeName" property="storeName" style="width: 200px"/></td>
-				<th>店番<bean:message key='labels.must'/></th>
-				<td><html:text tabindex="103" maxlength="3" styleId="storeCode" property="storeCode" style="width: 50px;ime-mode:disabled;"/></td>
-			</tr>
-			<tr>
-				<th>科目<bean:message key='labels.must'/></th>
-				<td colspan="3">
-    				<html:select styleId="dwbType" property="dwbType" tabindex="104">
-    					<html:options collection="dwbTypeList" property="value" labelProperty="label"/>
-    				</html:select>
-				</td>
-			</tr>
-			<tr>
-				<th>口座番号<bean:message key='labels.must'/></th>
-				<td colspan="3">
-					<html:text tabindex="105" maxlength="7" styleId="accountNum" property="accountNum" style="width: 100px;ime-mode:disabled;"/>
-				</td>
-			</tr>
-		</table>
-
-		<div style="text-align: right; width: 500px">
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    
+		    	<div class="section_title">
+					<span>銀行情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
+				
+				<div id="order_section" class="section_body">
+					<table id="user_info" class="forms" summary="銀行情報" style="width: 500px">
+						<tr>
+							<th><div class="col_title_right">銀行コード<bean:message key='labels.must'/></div></th>
+							<td colspan="3">
+								<html:text tabindex="100" maxlength="4" styleId="bankCode" property="bankCode" style="width: 100px;ime-mode:disabled;"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">銀行名<bean:message key='labels.must'/></div></th>
+							<td colspan="3">
+								<html:text tabindex="101" maxlength="20" styleId="bankName" property="bankName" style="width: 200px"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">店名<bean:message key='labels.must'/></div></th>
+							<td><html:text tabindex="102" maxlength="20" styleId="storeName" property="storeName" style="width: 200px"/></td>
+							<th><div class="col_title_right">店番<bean:message key='labels.must'/></div></th>
+							<td><html:text tabindex="103" maxlength="3" styleId="storeCode" property="storeCode" style="width: 50px;ime-mode:disabled;"/></td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">科目<bean:message key='labels.must'/></div></th>
+							<td colspan="3">
+			    				<html:select styleId="dwbType" property="dwbType" tabindex="104">
+			    					<html:options collection="dwbTypeList" property="value" labelProperty="label"/>
+			    				</html:select>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">口座番号<bean:message key='labels.must'/></div></th>
+							<td colspan="3">
+								<html:text tabindex="105" maxlength="7" styleId="accountNum" property="accountNum" style="width: 100px;ime-mode:disabled;"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">有効</div></th>
+							<td colspan="3">
+								<html:checkbox tabindex="106" styleId="valid" property="valid" value="1" />
+							</td>
+						</tr>
+					</table>
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
+		
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}<html:hidden property="creDatetmShow"/>　更新日:${updDatetmShow}<html:hidden property="updDatetmShow"/>　</span>
-			<button tabindex="150" onclick="initForm()">初期化</button>
+			<button tabindex="150" onclick="initForm()" class="btn_medium">初期化</button>
 <c:if test="${!isUpdate}">
-			<button tabindex="151" disabled="disabled">更新</button>
+			<button tabindex="151" disabled="disabled" class="btn_medium">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="151" onclick="registerBank()">更新</button>
+            <button tabindex="151" onclick="registerBank()" class="btn_medium">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="151" onclick="registerBank()">登録</button>
+            <button tabindex="151" onclick="registerBank()" class="btn_medium">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="152" disabled="disabled">削除</button>
+		<button tabindex="152" disabled="disabled" class="btn_medium">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="152" onclick="deleteBank()">削除</button>
+		<button tabindex="152" onclick="deleteBank()" class="btn_medium">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="152" disabled="disabled">削除</button>
+		<button tabindex="152" disabled="disabled" class="btn_medium">削除</button>
     </c:if>
 </c:if>
 		</div>

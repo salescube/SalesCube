@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax;
 
 import java.util.HashMap;
@@ -45,7 +44,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 	@Execute(validator = false, urlPattern = "getDeliveryInfosByDeliveryCode/{deliveryCode}")
 	public String getDeliveryInfosByDeliveryCode() throws Exception {
 
-		
+		// 納入先コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonDeliveryForm.deliveryCode)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -61,9 +60,9 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 			throw e;
 		}
 
-		
+		// 納入先コードを指定した検索なので複数はかえらない
 		if (deliveryList.size() == 1) {
-			
+			// エンティティの内容をマップに展開
 			BeanMap map = super.createBeanMapWithNullToEmpty(deliveryList
 					.get(0));
 			ResponseUtil.write(JSON.encode(map), "text/javascript");
@@ -84,13 +83,13 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
+		// 条件設定
 		conditions.put(DeliveryService.Param.DELIVERY_CODE,
 				commonDeliveryForm.deliveryCode);
 		String sortColumn = DeliveryService.Param.DELIVERY_CODE;
 		boolean sortOrderAsc = true;
 
-		
+		// 検索実行
 		return deliveryService.findDeliveryAndPreByCompleteCode(conditions,
 				sortColumn, sortOrderAsc);
 	}
@@ -104,7 +103,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 	@Execute(validator = false, urlPattern = "getCustomerAndBillInfosByCustomerCode/{customerCode}")
 	public String getCustomerAndBillInfosByCustomerCode() throws Exception {
 
-		
+		// 顧客コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonDeliveryForm.customerCode)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -120,7 +119,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 			throw e;
 		}
 
-		
+		// 納入先コードを指定した検索なので複数はかえらない
 		if (deliveryList.size() == 1) {
 
 			BeanMap map = super.createBeanMapWithNullToEmpty(deliveryList
@@ -144,7 +143,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 	@Execute(validator = false)
 	public String getDeliveryListByCustomerCode() throws Exception {
 
-		
+		// 顧客コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonDeliveryForm.customerCode)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -155,7 +154,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 			deliveryList = deliveryService
 					.searchDeliveryListByCompleteCustomerCode(commonDeliveryForm.customerCode);
 
-			
+			// 納入先コードと納入先名を返す
 			int i = 0;
 			String key;
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -192,7 +191,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 	public String getDeliveryListByCustomerCodeSortedByCreDate()
 			throws Exception {
 
-		
+		// 顧客コードを指定しない場合は検索しません
 		if (!StringUtil.hasLength(commonDeliveryForm.customerCode)) {
 			ResponseUtil.write("", "text/javascript");
 			return null;
@@ -203,7 +202,7 @@ public class CommonDeliveryAction extends CommonAjaxResources {
 			deliveryList = deliveryService
 					.searchDeliveryByCompleteCustomerCodeSortedByCreDate(commonDeliveryForm.customerCode);
 
-			
+			// 納入先コードと納入先名を返す
 			int i = 0;
 			String key;
 			Map<String, Object> param = new HashMap<String, Object>();

@@ -2,9 +2,10 @@
 	<span id="${dialogId}_errors" style="color: red">
 	</span>
 
-	ファイル件数: ${fileInfoCount}件
-	<div style="padding: 0px; border: none; width: 570px; height: 240px; overflow: hidden">
-		<table id="${dialogId}List" summary="ファイル一覧" style="width: 560px;">
+	<div id="${dialogId}Div"  style="padding: 20px 20px 0 20px;">
+		<div style=" color: #FFFFFF;">ファイル件数: ${fileInfoCount}件</div>
+		<div style="border: none; width: 610px; height: 200px; overflow: hidden;">
+		<table class="dialog_resultList" id="${dialogId}List" summary="ファイル一覧" style="width: 96%;">
 			<colgroup>
 				<col span="1" style="width: 5%">
 				<col span="1" style="width: 50%">
@@ -32,9 +33,10 @@
 			</tr>
 			</c:forEach>
 		</table>
+		</div>
 	</div>
 
-	<div style="width: 570px; text-align: right">
+	<div style="width: 610px; text-align: right; margin-top:15px;">
 		<button type="button" style="width: 70px" tabindex="12050"
 			onclick="$('#${dialogId}').dialog('close');">閉じる</button>
 	</div>

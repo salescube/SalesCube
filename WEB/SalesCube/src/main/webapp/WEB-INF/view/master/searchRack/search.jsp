@@ -41,9 +41,7 @@
 	 * 検索処理実行
 	 */
 	function searchRack(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData());
 	}
 
@@ -319,10 +317,10 @@
 </head>
 <body onhelp="return false;">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1306"/>
@@ -355,85 +353,82 @@
 		<button disabled="disabled">F11<br>&nbsp;</button>
 		<button disabled="disabled">F12<br>&nbsp;</button>
     </div>
-
+	<br><br><br>
+	
     <div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
 
-        <span>棚番情報</span><br>
-        <table id="user_info" class="forms" summary="倉庫情報1">
-            <colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 30%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-            </colgroup>
-            <tr>
-                <th>倉庫コード</th>
-                <td>
-                	<html:text maxlength="10" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;" tabindex="100"/>
-                	<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="warehouseSearch($('#warehouseCode'));" tabindex="101"/>
-                </td>
-                <th>倉庫名</th>
-                <td>
-                	<html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" tabindex="102"/>
-                	<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="warehouseSearch($('#warehouseName'));" tabindex="103"/>
-                </td>
-                <th>倉庫状況</th>
-                <td>
-                    <html:select styleId="warehouseState" property="warehouseState" style="width: 100px; ime-mode: disabled;"  tabindex="104">
-						<html:option value="" />
-						<html:option value="運用中" />
-						<html:option value="棚卸中"/>
-						<html:option value="廃止" />
-                    </html:select>
-                </td>
-            </tr>
-        </table>
-        <table id="user_info" class="forms" summary="棚番情報1">
-            <colgroup>
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 30%">
-				<col span="1" style="width: 10%">
-				<col span="1" style="width: 20%">
-            </colgroup>
-            <tr>
-                <th>棚番コード</th>
-                <td>
-                	<html:text maxlength="10" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;" tabindex="200"/>
-                	<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="rackSearch($('#rackCode'));" tabindex="201"/>
-                </td>
-                <th>棚番名</th>
-                <td>
-                	<html:text maxlength="60" styleId="rackName" property="rackName" style="width: 200px" tabindex="202"/>
-                	<html:image src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;"
-							onclick="rackSearch($('#rackName'));" tabindex="203"/>
-                </td>
-				<th>空き棚</th>
-				<td><html:checkbox styleId="emptyRack" property="emptyRack" value="true" tabindex="205"></html:checkbox></td>
-            </tr>
-        </table>
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+        			<span>棚番情報</span>
+		            <button class="btn_toggle">
+		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+		            </button>
+				</div><!-- /.section_title -->
 
-        <div style="text-align: right; width: 910px">
-			<button type="button" tabindex="250" style="width: 80px;"  onclick="initForm();">初期化</button>
-			<button type="button" tabindex="251" style="width: 80px;" onclick="searchRack();">検索</button>
+				<div id="search_info" class="section_body">
+		        <table id="user_info" class="forms" summary="倉庫情報1">
+		            <tr>
+		                <th><div class="col_title_right">&nbsp;倉庫コード&nbsp;</div></th>
+		                <td>
+		                	<html:text maxlength="10" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;" tabindex="100"/>
+		                	<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="warehouseSearch($('#warehouseCode'));" tabindex="101"/>
+		                </td>
+		                <th><div class="col_title_right">倉庫名</div></th>
+		                <td>
+		                	<html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" tabindex="102"/>
+		                	<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="warehouseSearch($('#warehouseName'));" tabindex="103"/>
+		                </td>
+		                <th><div class="col_title_right">倉庫状況</div></th>
+		                <td>
+		                    <html:select styleId="warehouseState" property="warehouseState" style="width: 100px; ime-mode: disabled;"  tabindex="104">
+								<html:option value="" />
+								<html:option value="運用中" />
+								<html:option value="棚卸中"/>
+								<html:option value="廃止" />
+		                    </html:select>
+		                </td>
+		            </tr>
+		        </table>
+		        <table id="user_info" class="forms" summary="棚番情報1">
+		            <tr>
+		                <th><div class="col_title_right">棚番コード</div></th>
+		                <td>
+		                	<html:text maxlength="10" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;" tabindex="200"/>
+		                	<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="rackSearch($('#rackCode'));" tabindex="201"/>
+		                </td>
+		                <th><div class="col_title_right">棚番名</div></th>
+		                <td>
+		                	<html:text maxlength="60" styleId="rackName" property="rackName" style="width: 200px" tabindex="202"/>
+		                	<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
+									onclick="rackSearch($('#rackName'));" tabindex="203"/>
+		                </td>
+						<th><div class="col_title_right">空き棚</div></th>
+						<td><html:checkbox styleId="emptyRack" property="emptyRack" value="true" tabindex="205"></html:checkbox></td>
+		            </tr>
+		        </table>
+		        </div>
+	    	</div><!-- /.form_section -->
+	    </div><!-- /.form_section_wrap -->
+
+        <div style="text-align: right; width: 1160px">
+			<button type="button" tabindex="250" style="width: 80px;" onclick="initForm();" class="btn_medium">初期化</button>
+			<button type="button" tabindex="251" style="width: 80px;" onclick="searchRack();" class="btn_medium">検索</button>
         </div>
 
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
                     <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
-            <table id="search_result" summary="検索結果" class="forms" style="width: 910px">
+            <table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
                 <colgroup>
 					<col span="1" style="width: 10%">
 					<col span="1" style="width: 15%">
@@ -441,16 +436,16 @@
 					<col span="1" style="width: 45%">
                 </colgroup>
                 <tr>
-					<th style="cursor: pointer">棚番コード</th>
-					<th style="cursor: pointer">棚番名</th>
-					<th>商品コード</th>
-			        <th>&nbsp;</th>
+					<th class="rd_top_left" style="cursor: pointer; height: 30px;">棚番コード</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">棚番名</th>
+					<th class="xl64" style="height: 30px;">商品コード</th>
+			        <th class="rd_top_right" style="height: 30px;">&nbsp;</th>
 			     </tr>
             </table>
         </div>
 		<html:hidden styleId="sortColumn" property="sortColumn" />
-		<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
-		<html:hidden styleId="rackCategory"property="rackCategory" />
+		<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
+		<html:hidden styleId="rackCategory" property="rackCategory" />
     </div>
 </s:form>
 </div>

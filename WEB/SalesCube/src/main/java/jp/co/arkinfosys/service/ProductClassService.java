@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -139,44 +138,44 @@ public class ProductClassService extends
 	 */
 	private void setCondition(Map<String, Object> conditions,
 			Map<String, Object> param, String sortColumn, boolean sortOrderAsc) {
-		
+		// 商品分類コード（大）
 		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE_1)) {
 			param.put(ProductClassService.Param.CLASS_CODE_1, conditions
 					.get(ProductClassService.Param.CLASS_CODE_1));
 		}
 
-		
+		// 商品分類コード（中）
 		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE_2)) {
 			param.put(ProductClassService.Param.CLASS_CODE_2, conditions
 					.get(ProductClassService.Param.CLASS_CODE_2));
 		}
 
-		
+		// 商品分類コード（小）
 		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE_3)) {
 			param.put(ProductClassService.Param.CLASS_CODE_3, conditions
 					.get(ProductClassService.Param.CLASS_CODE_3));
 		}
 
-		
+		// 商品分類コード（いずれか）
 		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE_ANY)) {
 			param.put(ProductClassService.Param.CLASS_CODE_ANY, super
 					.createPrefixSearchCondition((String) conditions
 							.get(ProductClassService.Param.CLASS_CODE_ANY)));
 		}
 
-		
+		// 商品名
 		if (conditions.containsKey(ProductClassService.Param.CLASS_NAME)) {
 			param.put(ProductClassService.Param.CLASS_NAME, super
 					.createPartialSearchCondition((String) conditions
 							.get(ProductClassService.Param.CLASS_NAME)));
 		}
 
-		
+		// ソートカラム
 		if (StringUtil.hasLength(sortColumn)) {
 			param.put(ProductClassService.Param.SORT_COLUMN, super.convertVariableNameToColumnName(sortColumn));
 		}
 
-		
+		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(ProductClassService.Param.SORT_ORDER, Constants.SQL.ASC);
 		} else {
@@ -263,7 +262,7 @@ public class ProductClassService extends
 		}
 		int max = Integer.parseInt(maxValue);
 
-		
+		// ４桁でパディング
 		String nextVal = "0000" + (max + 1);
 		nextVal = nextVal.substring(nextVal.length() - 4);
 		return nextVal;
@@ -318,7 +317,7 @@ public class ProductClassService extends
 
 			setCondition(conditions, param, sortColumn, sortOrderAsc);
 
-			
+			// LIMITを設定する
 			if (rowCount > 0) {
 				param.put(Param.ROW_COUNT, rowCount);
 				param.put(Param.OFFSET, offset);
@@ -341,7 +340,7 @@ public class ProductClassService extends
 	 */
 	@Override
 	public ProductClassJoin findById(String id) throws ServiceException {
-		
+		// 未使用メソッド
 		return null;
 	}
 
@@ -358,7 +357,7 @@ public class ProductClassService extends
 	public List<ProductClassJoin> findByCondition(
 			Map<String, Object> conditions, String sortColumn,
 			boolean sortOrderAsc) throws ServiceException {
-		
+		// 未使用メソッド
 		return new ArrayList<ProductClassJoin>();
 	}
 
@@ -370,8 +369,8 @@ public class ProductClassService extends
 	 */
 	@Override
 	public void deleteRecord(ProductClassDto dto) throws Exception {
-		
-		
+		// 排他制御
+		// データを整形
 		if (dto.classCode1 == null) {
 			dto.classCode1 = "";
 		}
@@ -389,7 +388,7 @@ public class ProductClassService extends
 		this.lockRecordBySqlFile("productclass/LockProductClass.sql", param,
 				timestamp);
 
-		
+		// 削除
 		param = super.createSqlParam();
 		param.put(Param.CLASS_CODE_1, dto.classCode1);
 		param.put(Param.CLASS_CODE_2, dto.classCode2);
@@ -411,10 +410,10 @@ public class ProductClassService extends
 			return;
 		}
 
-		
+		// 登録
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// データを整形
 		if (dto.classCode1 == null) {
 			dto.classCode1 = "";
 		}
@@ -446,7 +445,7 @@ public class ProductClassService extends
 			return;
 		}
 
-		
+		// データを整形
 		if (dto.classCode1 == null) {
 			dto.classCode1 = "";
 		}
@@ -457,17 +456,17 @@ public class ProductClassService extends
 			dto.classCode3 = "";
 		}
 
-		
+		// 排他制御
 		Map<String, Object> lockParam = createSqlParam();
 		lockParam.put(Param.CLASS_CODE_1, dto.classCode1);
 		lockParam.put(Param.CLASS_CODE_2, dto.classCode2);
 		lockParam.put(Param.CLASS_CODE_3, dto.classCode3);
 
-		
+		// 排他制御エラー時は例外が発生する
 		lockRecordBySqlFile("productclass/LockProductClass.sql", lockParam,
 				dto.updDatetm);
 
-		
+		// 更新
 		Map<String, Object> param = super.createSqlParam();
 		BeanMap productClassInfo = Beans.createAndCopy(BeanMap.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(

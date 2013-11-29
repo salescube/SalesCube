@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.common;
 
 import java.math.BigDecimal;
@@ -196,29 +195,29 @@ public final class ValidateUtil {
 		if(!StringUtil.hasLength(value)) {
 			return null;
 		}
-		
+		// 整数チェック
 		ActionMessage err = integerType(value, mssageKey, mssageValues);
 		if(err != null) {
 			return err;
 		}
-		
+		// 引数の範囲の確認
 		if(min != null && max != null) {
 			if(max.compareTo(min) < 0) {
-				
+				// minとmaxの指定が逆の場合、入れ替える
 				Integer work = min;
 				min = max;
 				max = work;
 			}
 		}
-		
+		// 整数範囲チェック
 		Integer intVal = Integer.parseInt(value);
-		
+		// 最小値チェック
 		if(min != null) {
 			if(intVal.compareTo(min) < 0) {
 				return new ActionMessage(mssageKey, mssageValues);
 			}
 		}
-		
+		// 最大値チェック
 		if(max != null) {
 			if(intVal.compareTo(max) > 0) {
 				return new ActionMessage(mssageKey, mssageValues);
@@ -268,7 +267,7 @@ public final class ValidateUtil {
 	 */
 	public static Boolean dateIsFuture(String datePattern) {
 		try {
-			
+			// 本日0時との比較を行う
 			Calendar today = Calendar.getInstance();
 			DateFormat df = new SimpleDateFormat(Constants.FORMAT.DATE);
 			df.setLenient(true);
@@ -286,6 +285,28 @@ public final class ValidateUtil {
 
 	}
 
+
+	/**
+	 * 当月かどうかを現在年月と比較して調べます.
+	 * @param datePattern 入力文字列
+	 * @return 当月の時 false、当月でない true
+	 */
+	public static Boolean dateIsNotThisMoon(String datePattern) {
+
+			Calendar calendar = Calendar.getInstance();
+			String year = String.valueOf(calendar.get(Calendar.YEAR));
+			String month =String.format("%1$02d", calendar.get(Calendar.MONTH) + 1);
+
+			//当月かどうか比較
+			if( (datePattern.substring(0,4).equals(year)) && (datePattern.substring(5,7).equals(month)) ) {
+				//当月
+				return false;
+			} else {
+				//当月以外
+				return true;
+			}
+	}
+
 	/**
 	 * 年月度のその月の最終日を取得します.
 	 * @param ymFormat　年月度文字列
@@ -293,15 +314,15 @@ public final class ValidateUtil {
 	 * @throws ParseException
 	 */
 	public static String getLastDateOfMonthFromYmFormat(String ymFormat) throws ParseException {
-		
+		// 売掛残高の出力対象年月度の最終日(月の最終日)
 		Date targetYmLastDate;
 		DateFormat dfDateYm = new SimpleDateFormat(Constants.FORMAT.DATEYM_SLASH);
 		DateFormat dfDate = new SimpleDateFormat(Constants.FORMAT.DATE);
-		
+		// 最終請求締日の翌日を取得
 		Calendar cal = java.util.Calendar.getInstance();
 		cal.setTime(dfDateYm.parse(ymFormat));
-		cal.add(Calendar.MONTH, 1);			
-		cal.add(Calendar.DAY_OF_MONTH, -1);	
+		cal.add(Calendar.MONTH, 1);			// 翌月の初日を取得
+		cal.add(Calendar.DAY_OF_MONTH, -1);	// 翌月の初日の前日は、月の最終日となる
 		targetYmLastDate = cal.getTime();
 
 		return dfDate.format(targetYmLastDate);

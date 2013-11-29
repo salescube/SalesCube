@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.List;
@@ -147,7 +146,7 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#loadData(java.lang.String)
 	 */
 	protected AuditInfo loadData(String key) throws ServiceException {
-		
+		// 割引情報を取得
 		Discount discount = discountService
 				.findById(key);
 		return discount;
@@ -163,17 +162,17 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 		if (record == null) {
 			return;
 		}
-		
+		// フォーム入れる
 		Discount discount = (Discount) record;
 		Beans.copy(discount, this.editDiscountForm).timestampConverter(
 				Constants.FORMAT.TIMESTAMP)
 				.dateConverter(Constants.FORMAT.DATE).execute();
 
-		
+		// 割引データを取得してフォームに入れる
 		List<DiscountTrnDto> list = discountTrnService.findDiscountTrnByDiscountId(discount.discountId);
 		this.editDiscountForm.discountTrnList = list;
 
-		
+		// 行数を記録
 		this.editDiscountForm.defaultRowCount = list.size();
 	}
 
@@ -220,7 +219,7 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#doInsertAfter(jp.co.arkinfosys.dto.master.MasterEditDto)
 	 */
 	protected void doInsertAfter(DiscountDto dto) throws Exception {
-		
+		// 割引データ
 		for (DiscountTrnDto trnDto : dto.discountTrnList) {
 			trnDto.discountId = getKey();
 
@@ -237,11 +236,11 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#doUpdateAfter(jp.co.arkinfosys.dto.master.MasterEditDto)
 	 */
 	protected void doUpdateAfter(DiscountDto dto) throws Exception {
-		
+		// 割引データ更新
 		for (DiscountTrnDto trnDto : dto.discountTrnList) {
 			trnDto.discountId = dto.discountId;
 			if (trnDto.lineNo == null) {
-				
+				// 削除されたデータ（後でDELETEされる）
 				continue;
 			}
 			if (trnDto.discountDataId == null) {
@@ -253,7 +252,7 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 			}
 		}
 
-		
+		// 画面上で削除された割引データ削除
 		String deletedDataIdCSV = this.editDiscountForm.deletedDataId;
 		if (deletedDataIdCSV != null) {
 			String[] deletedArray = deletedDataIdCSV.split(",");
@@ -274,7 +273,7 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#doDeleteAfter(jp.co.arkinfosys.dto.master.MasterEditDto)
 	 */
 	protected void doDeleteAfter(DiscountDto dto) throws Exception {
-		
+		// 割引データを削除
 		for (DiscountTrnDto trnDto : dto.discountTrnList) {
 			if (trnDto.discountDataId == null) {
 				continue;
@@ -284,7 +283,7 @@ public class EditDiscountAction extends AbstractEditAction<DiscountDto, Discount
 							.toString());
 		}
 
-		
+		// 画面上で削除された割引データ削除
 		String deletedDataIdCSV = this.editDiscountForm.deletedDataId;
 		if (deletedDataIdCSV != null) {
 			String[] deletedArray = deletedDataIdCSV.split(",");

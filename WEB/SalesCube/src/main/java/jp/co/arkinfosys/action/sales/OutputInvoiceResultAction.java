@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.sales;
 
 import java.util.ArrayList;
@@ -101,7 +100,7 @@ public class OutputInvoiceResultAction
 					.numberConverter("#", "PRICE_TOTAL", "CTAX_PRICE_TOTAL")
 					.execute();
 
-			
+			// リストに追加
 			resultList.add(dto);
 		}
 

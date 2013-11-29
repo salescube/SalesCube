@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -39,24 +38,24 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 	 *
 	 */
 	public static class Param {
-		
-		
-		
-		
+		//
+		// 得意先関連
+		//
+		// 顧客コード
 		public static final String CUSTOMER_CODE = "customerCode";
-		
+		// 顧客名
 		public static final String CUSTOMER_NAME = "customerName";
-		
+		// 売上取引区分
 		public static final String SALES_CM_CATEGORY = "salesCmCategory";
-		
+		// 売上取引区分名
 		public static final String SALES_CM_CATEGORY_NAME = "salesCmCategoryName";
 
-		
+		// 得意先関連区分
 		public static final String CUST_REL_CATEGORY = "custRelCategory";
 
-		
-		
-		
+		//
+		// 納入先
+		//
 		public static final String DELIVERY_CODE = "deliveryCode";
 
 		public static final String DELIVERY_NAME = "deliveryName";
@@ -95,7 +94,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 
 		public static final String UPD_DATETM = "updDatetm";
 
-		
+		// 区分データの区分名
 		public static final String CATEGORY_CODE_NAME = "categoryCodeName";
 
 		private static final String SORT_COLUMN_DELIVERY_CODE = "sortColumnDeleveryCode";
@@ -132,9 +131,9 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 			Param.SORT_COLUMN_CRE_DATE, Param.SORT_COLUMN_UPD_DATE,
 			Param.SORT_ORDER, Param.CATEGORY_ID, Param.CATEGORY_ID2,
 			Param.CUSTOMER_PC_PRE_CATEGORY_NAME, Param.SALES_SLIP_CATEGORY };
-	
-	
-	
+	//
+	// ソート条件に指定時に使用するカラム名
+	//
 
 	/**
 	 * 納入先コードのカラム名
@@ -197,7 +196,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 			Map<String, Object> param = super.createSqlParam();
 			this.setEmptyCondition(param);
 
-			
+			// 顧客コード
 			if (complete == true) {
 				if (conditions.containsKey(DeliveryService.Param.CUSTOMER_CODE)) {
 					param.put(DeliveryService.Param.CUSTOMER_CODE, conditions
@@ -210,13 +209,13 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 									.get(DeliveryService.Param.CUSTOMER_CODE)));
 				}
 			}
-			
+			// 得意先関連区分
 			if (conditions.containsKey(DeliveryService.Param.CUST_REL_CATEGORY)) {
 				param.put(DeliveryService.Param.CUST_REL_CATEGORY, conditions
 						.get(DeliveryService.Param.CUST_REL_CATEGORY));
 			}
 
-			
+			// 納入先コード
 			if (complete == true) {
 				if (conditions.containsKey(DeliveryService.Param.DELIVERY_CODE)) {
 					param.put(DeliveryService.Param.DELIVERY_CODE, conditions
@@ -229,19 +228,19 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 									.get(DeliveryService.Param.DELIVERY_CODE)));
 				}
 			}
-			
+			// 納入先名
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_NAME)) {
 				param.put(DeliveryService.Param.DELIVERY_NAME, super
 						.createPartialSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_NAME)));
 			}
-			
+			// 納入先名カナ
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_KANA)) {
 				param.put(DeliveryService.Param.DELIVERY_KANA, super
 						.createPartialSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_KANA)));
 			}
-			
+			// 事業所名
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_OFFICE_NAME)) {
 				param
@@ -251,7 +250,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 										.createPartialSearchCondition((String) conditions
 												.get(DeliveryService.Param.DELIVERY_OFFICE_NAME)));
 			}
-			
+			// 事業所名カナ
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_OFFICE_KANA)) {
 				param
@@ -261,7 +260,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 										.createPartialSearchCondition((String) conditions
 												.get(DeliveryService.Param.DELIVERY_OFFICE_KANA)));
 			}
-			
+			// 部署名
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_DEPT_NAME)) {
 				param
@@ -271,13 +270,13 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 										.createPartialSearchCondition((String) conditions
 												.get(DeliveryService.Param.DELIVERY_DEPT_NAME)));
 			}
-			
+			// 郵便番号
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_ZIP_CODE)) {
 				param.put(DeliveryService.Param.DELIVERY_ZIP_CODE, super
 						.createPrefixSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_ZIP_CODE)));
 			}
-			
+			// 住所１
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_ADDRESS_1)) {
 				param
@@ -287,7 +286,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 										.createPartialSearchCondition((String) conditions
 												.get(DeliveryService.Param.DELIVERY_ADDRESS_1)));
 			}
-			
+			// 住所２
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_ADDRESS_2)) {
 				param
@@ -297,20 +296,20 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 										.createPartialSearchCondition((String) conditions
 												.get(DeliveryService.Param.DELIVERY_ADDRESS_2)));
 			}
-			
+			// 納入先担当者
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_PC_NAME)) {
 				param.put(DeliveryService.Param.DELIVERY_PC_NAME, super
 						.createPartialSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_PC_NAME)));
 			}
-			
+			// 納入先担当者カナ
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_PC_KANA)) {
 				param.put(DeliveryService.Param.DELIVERY_PC_KANA, super
 						.createPartialSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_PC_KANA)));
 			}
 
-			
+			// 納入先担当者敬称区分
 			if (conditions
 					.containsKey(DeliveryService.Param.DELIVERY_PC_PRE_CATEGORY)) {
 				param
@@ -319,37 +318,37 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 								conditions
 										.get(DeliveryService.Param.DELIVERY_PC_PRE_CATEGORY));
 			}
-			
+			// 電話番号
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_TEL)) {
 				param.put(DeliveryService.Param.DELIVERY_TEL, super
 						.createPrefixSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_TEL)));
 			}
-			
+			// FAX番号
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_FAX)) {
 				param.put(DeliveryService.Param.DELIVERY_FAX, super
 						.createPrefixSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_FAX)));
 			}
-			
+			// E-Mail
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_EMAIL)) {
 				param.put(DeliveryService.Param.DELIVERY_EMAIL, super
 						.createPrefixSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_EMAIL)));
 			}
-			
+			// URL
 			if (conditions.containsKey(DeliveryService.Param.DELIVERY_URL)) {
 				param.put(DeliveryService.Param.DELIVERY_URL, super
 						.createPrefixSearchCondition((String) conditions
 								.get(DeliveryService.Param.DELIVERY_URL)));
 			}
-			
+			// 備考
 			if (conditions.containsKey(DeliveryService.Param.REMARKS)) {
 				param.put(DeliveryService.Param.REMARKS, super
 						.createPartialSearchCondition((String) conditions
 								.get(DeliveryService.Param.REMARKS)));
 			}
-			
+			// 敬称
 			if (conditions
 					.containsKey(DeliveryService.Param.CUSTOMER_PC_PRE_CATEGORY_NAME)) {
 				param
@@ -360,7 +359,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 												.get(DeliveryService.Param.CUSTOMER_PC_PRE_CATEGORY_NAME)));
 			}
 
-			
+			// 売上伝票種別
 			if (conditions
 					.containsKey(DeliveryService.Param.SALES_SLIP_CATEGORY)) {
 				param
@@ -371,34 +370,34 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 												.get(DeliveryService.Param.SALES_SLIP_CATEGORY)));
 			}
 
-			
+			// 区分IDは固定で敬称を指定する
 			param.put(DeliveryService.Param.CATEGORY_ID, Categories.PRE_TYPE);
 
-			
+			// 売上取引区分IDは固定で指定する
 			param.put(DeliveryService.Param.CATEGORY_ID2,
 					Categories.SALES_CM_CATEGORY);
 
-			
+			// ソートカラムを設定する
 
-			
+			// 納入先コード
 			if (DeliveryService.Param.DELIVERY_CODE.equals(sortColumn)) {
 				param.put(DeliveryService.Param.SORT_COLUMN_DELIVERY_CODE,
 						DeliveryService.COLUMN_DELIVERY_CODE);
-				
+				// 納入先名
 			} else if (DeliveryService.Param.DELIVERY_NAME.equals(sortColumn)) {
 				param.put(DeliveryService.Param.SORT_COLUMN_DELIVERY_NAME,
 						DeliveryService.COLUMN_DELIVERY_NAME);
-				
+				// 作成日時
 			} else if (DeliveryService.Param.CRE_DATETM.equals(sortColumn)) {
 				param.put(DeliveryService.Param.SORT_COLUMN_CRE_DATE, super
 						.convertVariableNameToColumnName(Param.CRE_DATETM));
-				
+				// 更新日時
 			} else if (DeliveryService.Param.UPD_DATETM.equals(sortColumn)) {
 				param.put(DeliveryService.Param.SORT_COLUMN_UPD_DATE, super
 						.convertVariableNameToColumnName(Param.UPD_DATETM));
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(DeliveryService.Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
@@ -458,7 +457,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
+		// 条件設定
 		conditions.put(DeliveryService.Param.CUSTOMER_CODE, customerCode);
 		conditions.put(DeliveryService.Param.CUST_REL_CATEGORY,
 				Constants.CUSTOMER_REL.BILLING);
@@ -466,7 +465,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 		String sortColumn = DeliveryService.Param.DELIVERY_CODE;
 		boolean sortOrderAsc = true;
 
-		
+		// 検索実行
 		return findDeliveryAndPreByCompleteCode(conditions, sortColumn,
 				sortOrderAsc);
 	}
@@ -482,13 +481,13 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
+		// 条件設定
 		conditions.put(DeliveryService.Param.DELIVERY_CODE, deliveryCode);
 
 		String sortColumn = DeliveryService.Param.DELIVERY_CODE;
 		boolean sortOrderAsc = true;
 
-		
+		// 検索実行
 		List<DeliveryAndPre> list = findDeliveryAndPreByCompleteCode(
 				conditions, sortColumn, sortOrderAsc);
 		if (list.size() != 1) {
@@ -520,7 +519,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
+		// 条件設定
 		conditions.put(DeliveryService.Param.CUSTOMER_CODE, customerCode);
 		conditions.put(DeliveryService.Param.CUST_REL_CATEGORY,
 				Constants.CUSTOMER_REL.DELIVERY);
@@ -528,7 +527,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 		String sortColumn = DeliveryService.Param.CRE_DATETM;
 		boolean sortOrderAsc = true;
 
-		
+		// 検索実行
 		return findDeliveryAndPreByCompleteCode(conditions, sortColumn,
 				sortOrderAsc);
 	}
@@ -547,7 +546,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 					new String[] { Param.DELIVERY_CODE },
 					new Object[] { deliveryCode });
 
-			
+			// 削除
 			this.updateBySqlFile("delivery/DeleteDelivery.sql", param)
 					.execute();
 		} catch (Exception e) {
@@ -564,7 +563,7 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 		try {
 			Map<String, Object> paramS = super.createSqlParam();
 
-			
+			// 納入先ＩＤの発番
 			Long deliveryCode = seqMakerService.nextval(Delivery.TABLE_NAME);
 			delivery.deliveryCode = deliveryCode.toString();
 
@@ -609,9 +608,9 @@ public class DeliveryService extends AbstractService<DeliveryAndPre> {
 	public void deleteDeliveryByCustomerCode(String customerCode)
 			throws ServiceException {
 
-		
+		// 顧客メンテからのみ操作されるため、排他制御不要
 		try {
-			
+			// 該当顧客コードに所属する納入先・請求先を取得する
 			List<CustomerRel> list = customerRelService
 					.findCustomerRelByCustomerCode(customerCode);
 			for (CustomerRel customerRel : list) {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -90,24 +89,24 @@ public class TaxRateService extends
 			String categoryCode, String updDatetm) throws Exception {
 
 		if (taxRateList == null || taxRateList.size() == 0) {
-			return; 
+			return; // 何もしない
 		}
 
-		
+		// 親の区分データを更新する
 
-		
+		// CategoryDtoを生成する
 		CategoryDto categoryDto = new CategoryDto();
 		categoryDto.categoryId = String.valueOf(Categories.TAX_TYPE_CATEGORY);
 		categoryDto.categoryCode = categoryCode;
 		categoryDto.updDatetm = updDatetm;
 
-		
+		// ロックと更新日設定
 		categoryService.updateRecord(categoryDto);
 
-		
+		// 現在の税率マスタのリストを取得
 		List<TaxRate> list = findTaxRateByTaxTypeCagory(categoryCode);
 
-		
+		// レコード削除
 		for (TaxRate taxRate : list) {
 			boolean isExist = false;
 			for (TaxRateDto taxRateDto : taxRateList) {
@@ -120,30 +119,30 @@ public class TaxRateService extends
 				continue;
 			}
 
-			
+			// 画面に存在しない物は削除
 			super.updateAudit(Beans.createAndCopy(TaxRateDto.class, taxRate)
 					.execute().getKeys());
 			this.deleteRecord(Beans.createAndCopy(TaxRateDto.class, taxRate)
 					.execute());
 		}
 
-		
+		// 新規レコード追加
 		for (TaxRateDto dto : taxRateList) {
-			
+			// 画面にのみ存在する物のみ追加
 			boolean isInsert = true;
 			boolean isUpdate = false;
 			for (TaxRate taxRate : list) {
 				if (dto.equalsKey(taxRate)) {
-					
+					// DBにあるので追加しない
 					isInsert = false;
 					if (!dto.equalsValue(taxRate)) {
-						
+						// DBから変更されているので更新
 						isUpdate = true;
 					}
 					break;
 				}
 			}
-			
+			// 登録
 			if (isInsert) {
 				this.insertRecord(dto);
 			} else if (isUpdate) {
@@ -159,7 +158,7 @@ public class TaxRateService extends
 	 */
 	@Override
 	public void deleteRecord(TaxRateDto dto) throws Exception {
-		
+		// 履歴レコード作成
 		Map<String, Object> param = super.createSqlParam();
 		TaxRate taxRate = Beans.createAndCopy(TaxRate.class, dto)
 				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
@@ -167,7 +166,7 @@ public class TaxRateService extends
 		param.put(Param.TAX_TYPE_CATEGORY, taxRate.taxTypeCategory);
 		param.put(Param.START_DATE, taxRate.startDate);
 
-		
+		// データ削除
 		this.updateBySqlFile("taxrate/DeleteTaxRate.sql", param).execute();
 	}
 
@@ -186,7 +185,7 @@ public class TaxRateService extends
 		param.put(Param.START_DATE, taxRate.startDate);
 		param.put(Param.TAX_RATE, taxRate.taxRate);
 
-		
+		// データ登録
 		this.updateBySqlFile("taxrate/InsertTaxRate.sql", param).execute();
 	}
 
@@ -205,7 +204,7 @@ public class TaxRateService extends
 		param.put(Param.START_DATE, taxRate.startDate);
 		param.put(Param.TAX_RATE, taxRate.taxRate);
 
-		
+		// データ登録
 		this.updateBySqlFile("taxrate/UpdateTaxRate.sql", param).execute();
 	}
 

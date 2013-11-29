@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form;
 
 import java.util.List;
@@ -96,19 +95,40 @@ public abstract class AbstractSlipEditForm<LINEDTOCLASS extends AbstractLineDto>
 	 */
 	public void initialize() throws ServiceException {
 
-		
+		// 現在の税率を取得し、画面に設定する
 		TaxRate tx = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX,
 									StringUtil.getCurrentDateString(Constants.FORMAT.DATE));
 		this.taxRate = tx.taxRate.toString();
 
-		
+		// 更新権限
 		this.menuUpdate = this.userDto.isMenuUpdate(this.getMenuID());
 
-		
+		// 税端数処理　新規伝票は自社マスタから取得する
 		taxFractCategory = mineDto.taxFractCategory;
 		taxShiftCategory = mineDto.taxShiftCategory;
 		priceFractCategory = mineDto.priceFractCategory;
 	}
+
+	/**
+	 * 登録更新時・エラー時における 全画面共通のフォームの 初期化処理を行います.
+	 * @throws ServiceException
+	 */
+	public void upsertInitialize() throws ServiceException {
+
+		// 現在の税率を取得し、画面に設定する
+		TaxRate tx = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX,
+									StringUtil.getCurrentDateString(Constants.FORMAT.DATE));
+		this.taxRate = tx.taxRate.toString();
+
+		// 更新権限
+		this.menuUpdate = this.userDto.isMenuUpdate(this.getMenuID());
+
+		// 税端数処理　新規伝票は自社マスタから取得する処理は登録更新時は行わない
+		//taxFractCategory = mineDto.taxFractCategory;
+		//taxShiftCategory = mineDto.taxShiftCategory;
+		//priceFractCategory = mineDto.priceFractCategory;
+	}
+
 
 	/**
 	 * メニューＩＤを返します.
@@ -135,7 +155,7 @@ public abstract class AbstractSlipEditForm<LINEDTOCLASS extends AbstractLineDto>
 	 * 必要に応じてサブクラスでオーバーライドしてください.
 	 */
 	public void reset() {
-		
+		// デフォルト実装では何もしない
 	}
 
 	/**
@@ -175,7 +195,7 @@ public abstract class AbstractSlipEditForm<LINEDTOCLASS extends AbstractLineDto>
 	public ActionMessages validate() {
 		ActionMessages errors = new ActionMessages();
 
-		
+		// デフォルトでは何もしない
 		return errors;
 	}
 

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.sales;
 
 import jp.co.arkinfosys.dto.AbstractLineDto;
@@ -191,9 +190,9 @@ public class SalesSlipDto extends AbstractSlipDto<SalesLineDto> {
 	/** 担当者名 */
 	public String userName;
 
-	
+	// 出荷指示書用
 	public String pickingListId;
-	public String roDate;					
+	public String roDate;					// 足りない情報は保存時にDBを参照して設定する
 	public String printDate;
 
 	/** 請求書番号 */

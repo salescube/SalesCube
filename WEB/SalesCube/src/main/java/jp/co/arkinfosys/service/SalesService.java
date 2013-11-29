@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.math.BigDecimal;
@@ -60,10 +59,10 @@ import org.seasar.struts.util.MessageResourcesUtil;
 public class SalesService extends
 		AbstractSlipService<SalesSlipTrn, SalesSlipDto> {
 
-	
+	//発番用サービス
 	public SeqMakerService seqMakerService;
 
-	
+	// 売上伝票明細行用サービス
 	@Resource
 	public SalesLineService salesLineService;
 
@@ -73,31 +72,31 @@ public class SalesService extends
 	@Resource
 	private PickingService pickingService;
 
-	
+	// 出荷指示書明細行用サービス
 	@Resource
 	private PickingLineService pickingLineService;
 
-	
+	// 商品マスタ用サービス
 	@Resource
 	private ProductService productService;
 
-	
+	// 税率用サービス
 	@Resource
 	private TaxRateService taxRateService;
 
-	
+	// 受注伝票用サービス
 	@Resource
 	private RoSlipSalesService roSlipSalesService;
 
-	
+	// 顧客マスタ用サービス
 	@Resource
 	private CustomerService customerService;
 
-	
+	// カテゴリ用サービス
 	@Resource
 	protected CategoryService categoryService;
 
-	
+	// 顧客ランク用サービス
 	@Resource
 	protected CustomerRankService customerRankService;
 
@@ -110,21 +109,21 @@ public class SalesService extends
 	 * SQLファイルのパラメータ名定義
 	 */
 	public static class Param {
-		private static final String SORT_ORDER = "sortOrder"; 
-		private static final String ROW_COUNT = "rowCount"; 
-		private static final String OFFSET_ROW = "offsetRow"; 
-		public static final String CUSTOMER_CODE = "customerCode"; 
-		public static final String SALES_DATE = "salesDate"; 
-		public static final String SALES_DATE_FROM = "salesDateFrom"; 
-		public static final String SALES_DATE_TO = "salesDateTo"; 
-		public static final String SALES_YM = "salesYm"; 
-		public static final String SALES_SLIP_ID = "salesSlipId"; 
-		public static final String SALES_LINE_ID = "salesLineId"; 
-		private static final String SORT_COLUMN_SALES_DATE = "sortColumnSalesDate"; 
-		private static final String STATUS = "status"; 
+		private static final String SORT_ORDER = "sortOrder"; // ソート方向
+		private static final String ROW_COUNT = "rowCount"; // 取得件数
+		private static final String OFFSET_ROW = "offsetRow"; // 取得件数
+		public static final String CUSTOMER_CODE = "customerCode"; // 顧客コード
+		public static final String SALES_DATE = "salesDate"; // 売上日
+		public static final String SALES_DATE_FROM = "salesDateFrom"; // 売上日(範囲指定：FROM)
+		public static final String SALES_DATE_TO = "salesDateTo"; // 売上日(範囲指定：TO)
+		public static final String SALES_YM = "salesYm"; // 売上年月度
+		public static final String SALES_SLIP_ID = "salesSlipId"; // 売上伝票番号
+		public static final String SALES_LINE_ID = "salesLineId"; // 売上伝票行ID
+		private static final String SORT_COLUMN_SALES_DATE = "sortColumnSalesDate"; // 売上日のソート条件
+		private static final String STATUS = "status"; // 状態
 		public static final String PRODUCT_CODE = "productCode";
 		public static final String QUANTITY = "quantity";
-		public static final String BILL_CUTOFF_DATE = "billCutoffDate"; 
+		public static final String BILL_CUTOFF_DATE = "billCutoffDate"; // 請求締日
 		public static final String BILL_PRINT_COUNT = "billPrintCount";
 		public static final String DELIVERY_PRINT_COUNT = "deliveryPrintCount";
 		public static final String TEMP_DELIVERY_PRINT_COUNT = "tempDeliveryPrintCount";
@@ -138,7 +137,7 @@ public class SalesService extends
 		public static final String IS_CONTAIN_CLOSE_LEAK = "isContainCloseLeak";
 		public static final String LEAK_CHECK_CUTOFF_DATE = "leakCheckCutoffDate";
 		public static final String SALES_CM_CATEGORY = "salesCmCategory";
-		public static final String SALES_CUTOFF_DATE = "salesCutoffDate"; 
+		public static final String SALES_CUTOFF_DATE = "salesCutoffDate"; // 売掛締日
 
 	}
 
@@ -167,17 +166,17 @@ public class SalesService extends
 	 */
 	private void setSlipDataByForm(SalesSlipDto dto) throws ServiceException {
 
-		
-		
+		// 伝票　状態フラグの初期値は未請求
+		// 請求状態にある伝票は締っているので変更できないので常にこの値を入れる
 		dto.status = SalesSlipTrn.STATUS_INIT;
 
-		
+		// 入出庫年度、月度、年月度を計算
 		YmDto ymDto = ymService.getYm(dto.salesDate);
 		dto.salesAnnual = ymDto.annual.toString();
 		dto.salesMonthly = ymDto.monthly.toString();
 		dto.salesYm = ymDto.ym.toString();
 
-		
+		// 伝票合計の計算
 		calcTotal(dto);
 
 	}
@@ -187,7 +186,7 @@ public class SalesService extends
 	 * @param dto 売上伝票{@link SalesSlipDto}
 	 */
 	protected void calcTotal(SalesSlipDto dto) {
-		
+		// 数値計算の調整
 		Double total = 0.0;
 		Double tax = 0.0;
 		Double gm = 0.0;
@@ -204,12 +203,12 @@ public class SalesService extends
 			Double tmpGm = Double.parseDouble(lineDto.gm.replaceAll(",", ""));
 			gm += tmpGm;
 
-			
+			// 課税区分を確認
 			if (CategoryTrns.TAX_CATEGORY_FREE.equals(lineDto.taxCategory)) {
-				
+				// 免税
 			} else if (CategoryTrns.TAX_CATEGORY_IMPOSITION.equals(lineDto.taxCategory)) {
-				
-				
+				// 課税
+				// 税率毎に加算
 				Double price = taxMap.get(lineDto.ctaxRate);
 				if (price == null) {
 					taxMap.put(lineDto.ctaxRate, tmpPrice);
@@ -217,19 +216,19 @@ public class SalesService extends
 					taxMap.put(lineDto.ctaxRate, tmpPrice + price);
 				}
 			} else if (CategoryTrns.TAX_CATEGORY_INCLUDED.equals(lineDto.taxCategory)) {
-				
+				// 内税
 			}
 		}
-		
-		Set<Entry<String, Double>> entrySet = taxMap.entrySet(); 
+		// 税率毎に消費税を計算
+		Set<Entry<String, Double>> entrySet = taxMap.entrySet(); //すべてのvalue
 		Iterator<Entry<String, Double>> entryIte = entrySet.iterator();
-		while (entryIte.hasNext()) { 
-			Map.Entry<String, Double> ent = entryIte.next(); 
+		while (entryIte.hasNext()) { //ループ
+			Map.Entry<String, Double> ent = entryIte.next(); //key=value
 			if (ent.getKey() != null) {
-				
+				// 税率×金額
 				if (StringUtil.hasLength(ent.getKey())) {
 					Double rate = Double.valueOf(ent.getKey());
-					Double thisTax = (ent.getValue() * (rate / 100.0)); 
+					Double thisTax = (ent.getValue() * (rate / 100.0)); // rateは％表記の値なので100.0で割る
 					BigDecimal bd = DiscountUtil.getScaleValue(
 							dto.taxFractCategory, 0, new BigDecimal(thisTax));
 					if (bd != null) {
@@ -238,24 +237,24 @@ public class SalesService extends
 				}
 			}
 		}
-		
-		
+		// 伝票合計消費税
+		// 税転嫁を確認
 		if (CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX
 				.equals(dto.taxShiftCategory)) {
-			
+			// 区分名：税転嫁、区分コード名：内税
 			dto.ctaxPriceTotal = null;
 		} else if (CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL
 				.equals(dto.taxShiftCategory)) {
-			
+			// 区分名：税転嫁、区分コード名：外税伝票計
 			dto.ctaxPriceTotal = tax.toString();
 		} else if (CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS
 				.equals(dto.taxShiftCategory)) {
-			
+			// 区分名：税転嫁、区分コード名：外税締単位
 			dto.ctaxPriceTotal = tax.toString();
 		}
-		
+		// 伝票金額合計
 		dto.priceTotal = total.toString();
-		
+		// 伝票合計粗利益
 		dto.gmTotal = gm.toString();
 
 	}
@@ -270,18 +269,18 @@ public class SalesService extends
 	 */
 	protected void setCloseSalesSlipBill(SalesSlipTrn ss, Integer billId,
 			String lastCutOffDate, Timestamp cutoffPdate) throws ParseException {
-		
+		// 状態フラグ
 		ss.status = SalesSlipTrn.STATUS_FINISH;
-		
+		// 請求書番号
 		ss.billId = billId;
-		
+		// 請求締日付
 		ss.billCutoffDate = super.convertUtilDateToSqlDate(DF_YMD
 				.parse(lastCutOffDate));
-		
+		// 請求締処理日
 		ss.billCutoffPdate = cutoffPdate;
-		
-		
-		
+		// 売上請求書番号は設定しない
+		// 締日グループはSQLで設定
+		// 回収間隔もSQLで設定
 	}
 
 	/**
@@ -294,20 +293,20 @@ public class SalesService extends
 	 */
 	protected void setCloseSalesSlipArt(SalesSlipTrn ss, Integer artId,
 			String lastCutOffDate, Timestamp cutoffPdate) throws ParseException {
-		
+		// 伝票が売掛以外の時には状態フラグを変更する
 		if (!CategoryTrns.SALES_CM_CREDIT.equals(ss.salesCmCategory)) {
 			ss.status = SalesSlipTrn.STATUS_FINISH;
 		}
-		
+		// 売掛残高番号
 		ss.artId = artId;
-		
+		// 売掛締日付
 		ss.salesCutoffDate = super.convertUtilDateToSqlDate(DF_YMD
 				.parse(lastCutOffDate));
-		
+		// 売掛締処理日
 		ss.salesCutoffPdate = cutoffPdate;
-		
-		
-		
+		// 売上請求書番号は設定しない
+		// 締日グループはSQLで設定
+		// 回収間隔もSQLで設定
 	}
 
 	/**
@@ -317,13 +316,13 @@ public class SalesService extends
 	 */
 	protected void setReOpenSalesSlipBill(SalesSlipTrn ss)
 			throws ParseException {
-		
+		// 状態フラグ
 		ss.status = SalesSlipTrn.STATUS_INIT;
-		
+		// 請求書番号
 		ss.billId = null;
-		
+		// 請求締日付
 		ss.billCutoffDate = null;
-		
+		// 請求締処理日
 		ss.billCutoffPdate = null;
 	}
 
@@ -333,15 +332,15 @@ public class SalesService extends
 	 * @throws ParseException
 	 */
 	protected void setReOpenSalesSlipArt(SalesSlipTrn ss) throws ParseException {
-		
+		// 伝票が売掛以外の時には状態フラグを変更する
 		if (!CategoryTrns.SALES_CM_CREDIT.equals(ss.salesCmCategory)) {
 			ss.status = SalesSlipTrn.STATUS_INIT;
 		}
-		
+		// 売掛残高番号
 		ss.artId = null;
-		
+		// 売掛締日付
 		ss.salesCutoffDate = null;
-		
+		// 売掛締処理日
 		ss.salesCutoffPdate = null;
 	}
 
@@ -352,14 +351,14 @@ public class SalesService extends
 	 */
 	private Map<String, Object> createParamMap(SalesSlipTrn ss) {
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, ss).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -418,7 +417,7 @@ public class SalesService extends
 
 		Double salesTotal = 0.0;
 
-		
+		// 読み飛ばし用伝票番号生成
 		Integer ssId;
 		if ((salesSlipId == null) || (salesSlipId.equals(""))) {
 			ssId = -1;
@@ -426,9 +425,9 @@ public class SalesService extends
 			ssId = Integer.parseInt(salesSlipId);
 		}
 
-		
+		// 伝票合計金額の合計
 		for (SalesSlipTrn sst : salesList) {
-			
+			// 指定伝票（今、編集中の伝票）を除外
 			if (sst.salesSlipId.equals(ssId) == true) {
 				continue;
 			}
@@ -454,8 +453,8 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		if (startDate != null) {
 			conditions.put(Param.SALES_DATE, DF_YMD.format(startDate));
@@ -481,11 +480,11 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
-		
-		
-		
+		// 条件設定
+		// 状態が未請求
+		// 顧客コードが一致
+		// 売上日が指定日以前
+		// 売上日降順
 		conditions.put(Param.STATUS, SalesSlipTrn.STATUS_INIT);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SALES_DATE, closeDate);
@@ -510,11 +509,11 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
-		
-		
-		
+		// 条件設定
+		// 状態が未請求
+		// 顧客コードが一致
+		// 売上日が指定日以前
+		// 売上日降順
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SALES_DATE, closeDate);
 		conditions.put(Param.SALES_CUTOFF_DATE, null);
@@ -565,8 +564,8 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.STATUS, SalesSlipTrn.STATUS_FINISH);
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.BILL_CUTOFF_DATE, lastCutOffDate);
@@ -591,8 +590,8 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SALES_CUTOFF_DATE, lastCutOffDate);
 		conditions.put(Param.SORT_COLUMN_SALES_DATE, COLUMN_SALES_DATE);
@@ -654,8 +653,8 @@ public class SalesService extends
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.CUSTOMER_CODE, customerCode);
 		conditions.put(Param.SORT_COLUMN_SALES_DATE, COLUMN_SALES_DATE);
 		conditions.put(Param.SORT_ORDER, "DESC");
@@ -684,9 +683,9 @@ public class SalesService extends
 		try {
 			Map<String, Object> params = super.createSqlParam();
 
-			
+			// 商品コード
 			params.put(Param.CUSTOMER_CODE, customerCode);
-			
+			// 抽出期間
 			params.put(Param.SALES_DATE, cutoffDate);
 
 			return this.selectBySqlFile(CustomerAndDate.class,
@@ -715,27 +714,27 @@ public class SalesService extends
 
 		int updateCount = 0;
 		for (SalesSlipTrn ss : salesSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, ss.salesSlipId, ss.updDatetm,
 					"sales/LockSlip.sql");
 
-			
+			// 明細エンティティの取得
 			List<SalesLineTrn> slList = salesLineService
 					.findSalesLineBySalesSlipId(ss.salesSlipId.toString());
 
-			
+			// 明細行の更新
 			for (SalesLineTrn sl : slList) {
-				
+				// 存在したら常に更新
 				sl.status = SalesLineTrn.STATUS_FINISH;
 				if (salesLineService.updateRecord(sl) == 0) {
 					throw new ServiceException("errors.system");
 				}
 			}
 
-			
+			// 伝票の更新
 			setCloseSalesSlipBill(ss, billId, lastCutOffDate, cutoffPdate);
 
-			
+			// 伝票の更新
 			this.updateBySqlFile("sales/UpdateSalesSlip.sql",
 					createParamMap(ss)).execute();
 
@@ -759,24 +758,24 @@ public class SalesService extends
 
 		int updateCount = 0;
 		for (SalesSlipTrn ss : salesSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, ss.salesSlipId, ss.updDatetm,
 					"sales/LockSlip.sql");
 
-			
+			// 明細エンティティの取得
 			List<SalesLineTrn> slList = salesLineService
 					.findSalesLineBySalesSlipId(ss.salesSlipId.toString());
 
-			
+			// 明細行の更新
 			for (SalesLineTrn sl : slList) {
-				
+				// 存在したら常に更新
 				salesLineService.setReOpenSalesLine(sl);
 				if (salesLineService.updateRecord(sl) == 0) {
 					throw new ServiceException("errors.system");
 				}
 			}
 
-			
+			// 伝票の更新
 			setReOpenSalesSlipBill(ss);
 
 			this.updateBySqlFile("sales/UpdateSalesSlip.sql",
@@ -805,19 +804,19 @@ public class SalesService extends
 
 		int updateCount = 0;
 		for (SalesSlipTrn ss : salesSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, ss.salesSlipId, ss.updDatetm,
 					"sales/LockSlip.sql");
 
-			
+			// 対象伝票が掛売以外だったら、ここで締める（掛売は請求締めしないとだめ）
 			if (!CategoryTrns.SALES_CM_CREDIT.equals(ss.salesCmCategory)) {
-				
+				// 明細エンティティの取得
 				List<SalesLineTrn> slList = salesLineService
 						.findSalesLineBySalesSlipId(ss.salesSlipId.toString());
 
-				
+				// 明細行の更新
 				for (SalesLineTrn sl : slList) {
-					
+					// 存在したら常に更新
 					sl.status = SalesLineTrn.STATUS_FINISH;
 					if (salesLineService.updateRecord(sl) == 0) {
 						throw new ServiceException("errors.system");
@@ -825,10 +824,10 @@ public class SalesService extends
 				}
 			}
 
-			
+			// 伝票の更新
 			setCloseSalesSlipArt(ss, artId, lastCutOffDate, cutoffPdate);
 
-			
+			// 伝票の更新
 			if (this.updateBySqlFile("sales/UpdateSalesSlip.sql",
 					createParamMap(ss)).execute() == 0) {
 				throw new ServiceException("errors.system");
@@ -853,19 +852,19 @@ public class SalesService extends
 
 		int updateCount = 0;
 		for (SalesSlipTrn ss : salesSlipList) {
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, ss.salesSlipId, ss.updDatetm,
 					"sales/LockSlip.sql");
 
-			
+			// 対象伝票が掛売以外だったら、ここで締め解除する（掛売は請求締め解除しないとだめ）
 			if (!CategoryTrns.SALES_CM_CREDIT.equals(ss.salesCmCategory)) {
-				
+				// 明細エンティティの取得
 				List<SalesLineTrn> slList = salesLineService
 						.findSalesLineBySalesSlipId(ss.salesSlipId.toString());
 
-				
+				// 明細行の更新
 				for (SalesLineTrn sl : slList) {
-					
+					// 存在したら常に更新
 					salesLineService.setReOpenSalesLine(sl);
 					if (salesLineService.updateRecord(sl) == 0) {
 						throw new ServiceException("errors.system");
@@ -873,7 +872,7 @@ public class SalesService extends
 				}
 			}
 
-			
+			// 伝票の更新
 			setReOpenSalesSlipArt(ss);
 
 			if (this.updateBySqlFile("sales/UpdateSalesSlip.sql",
@@ -901,7 +900,7 @@ public class SalesService extends
 		SalesLineDto postagePriceLineDto = null;
 		SalesLineDto salesDiscountPriceLineDto = null;
 
-		
+		// 自動計算対象特殊商品コードの存在チェック
 		List<SalesLineDto> list = dto.getLineDtoList();
 		for (int i = 0; i < list.size(); i++) {
 			SalesLineDto lineDto = list.get(i);
@@ -922,31 +921,31 @@ public class SalesService extends
 				salesDiscountPriceLine = i;
 			}
 		}
-		
+		// 消費税の取得
 		TaxRate taxRate = taxRateService.findTaxRateById(
 				CategoryTrns.TAX_TYPE_CTAX, dto.salesDate);
 
-		
+		// 代引き手数料と送料と顧客ランク割引を含まない商品税抜き合計計算
 		Double priceTotalNoCodFeeNoPostage = sumNotCodeFeeAndProstageAndSalesDiscount(
 				dto, false);
 
-		
+		// 顧客ランクによる値引き
 		CustomerRank customerRank = getCustomerRank(customer);
 		if (customerRank != null) {
-			
-			
-			
-			
+			// ----------------
+			// 顧客ランク割引実施
+			// ----------------
+			// 送料無料の場合には送料を削除する
 			if (CategoryTrns.POSTAGE_FREE.equals(customerRank.postageType)) {
-				
+				// 送料が追加されていたら削除する
 				if (postagePriceLine != -1) {
-					
-					
+					// 行削除するので対象行を調整
+					// 顧客ランク割引行
 					if ((postagePriceLine < salesDiscountPriceLine)
 							&& (salesDiscountPriceLine != -1)) {
 						salesDiscountPriceLine -= 1;
 					}
-					
+					// 代引き手数料行
 					if ((postagePriceLine < codFeePriceLine)
 							&& (codFeePriceLine != -1)) {
 						codFeePriceLine -= 1;
@@ -954,28 +953,28 @@ public class SalesService extends
 					dto.getLineDtoList().remove(postagePriceLine);
 				}
 			} else {
-				
+				// 送料追加
 				addPostagePrice(customer, priceTotalNoCodFeeNoPostage,
 						postagePriceLineDto, postagePriceLine, dto, taxRate);
 			}
-			
+			// 代引き手数料と顧客ランク値引き（お取引実績による値引き）を含まない商品税抜き合計計算
 			Double priceTotalNoCodFeeNoTax = sumNotCodeFeeAndSalesDiscount(dto,
 					false);
 
-			
+			// 顧客ランク割引額を計算する
 			addSalesDiscountPrice(priceTotalNoCodFeeNoTax,
 					salesDiscountPriceLineDto, salesDiscountPriceLine, dto,
 					taxRate, customerRank);
 		} else {
-			
+			// 送料追加
 			addPostagePrice(customer, priceTotalNoCodFeeNoPostage,
 					postagePriceLineDto, postagePriceLine, dto, taxRate);
 		}
 
-		
+		// 代引き手数料を含まない商品税込合計計算
 		Double priceTotalNoCodFee = sumNotCodeFee(dto, true);
 
-		
+		// 代引き手数料追加
 		addCodFee(customer, priceTotalNoCodFee, codFeePriceLineDto, codFeePriceLine, dto, taxRate);
 	}
 
@@ -988,7 +987,7 @@ public class SalesService extends
 	protected CustomerRank getCustomerRank(CustomerJoin customer)
 			throws ServiceException {
 		CustomerRank customerRank = null;
-		
+		// 顧客ランク適用チェックがONの顧客が対象なので、それ以外の条件の顧客はnull返却する
 		if (!Constants.FLAG.ON.equals(customer.customerUpdFlag)) {
 			return customerRank;
 		}
@@ -1015,11 +1014,11 @@ public class SalesService extends
 			throws ServiceException {
 		if (normalTotalPrice == null
 				|| new BigDecimal(normalTotalPrice).compareTo(BigDecimal.ZERO) <= 0) {
-			
+			// 代引き手数料以外の特殊コード商品を含む全明細の合計(税抜き)が0以下の場合は追加しない
 			return;
 		}
 
-		
+		// 自分自身を除く、全ての明細行の合計を計算
 		Double priceTotal = 0.0;
 		List<SalesLineDto> salesLineList = dto.getLineDtoList();
 		for (int i = 0; i < salesLineList.size(); i++) {
@@ -1030,7 +1029,7 @@ public class SalesService extends
 			if (!StringUtil.hasLength(lineDto.productCode)) {
 				continue;
 			}
-			
+			// 代引き手数料は除く
 			if (Constants.EXCEPTIANAL_PRODUCT_CODE.COD_FEE_PRICE
 					.equals(lineDto.productCode))
 				continue;
@@ -1038,22 +1037,22 @@ public class SalesService extends
 			Double price = Double.valueOf(lineDto.retailPrice);
 			priceTotal += price;
 		}
-		
+		// 割引率は％の値なので100.0で割る
 		Double discountTotal = priceTotal * customerRank.rankRate.doubleValue()
 				/ 100.0;
 
-		
+		// 割引額が無かったら何もしない
 		if (discountTotal <= 0.0) {
 			return;
 		}
 
-		
+		// 割引明細を追加する
 		SalesLineDto lineDto = (SalesLineDto) dto.createLineDto();
-		
+		// 状態
 		lineDto.status = SalesLineTrn.STATUS_INIT;
-		
+		// 商品コード
 		lineDto.productCode = Constants.EXCEPTIANAL_PRODUCT_CODE.SALES_DISCOUNT_PRICE;
-		
+		// 商品名
 		ProductJoin product;
 		try {
 			product = productService.findById(lineDto.productCode);
@@ -1068,20 +1067,20 @@ public class SalesService extends
 			throw new ServiceException(strMsg);
 		}
 		lineDto.productAbstract = product.productName;
-		
+		// 数量
 		lineDto.quantity = "1";
 
-		
+		// 完納を設定
 		lineDto.deliveryProcessCategory = CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL;
 
-		
+		// 入り数
 		if (product.packQuantity == null) {
 			lineDto.packQuantity = "";
 		} else {
 			lineDto.packQuantity = product.packQuantity.toString();
 		}
 
-		
+		// 金額
 		discountTotal *= -1;
 		BigDecimal bdPrice = DiscountUtil.getScaleValue(dto.priceFractCategory,
 				0, new BigDecimal(discountTotal));
@@ -1089,24 +1088,24 @@ public class SalesService extends
 		lineDto.unitCost = bdPrice.toString();
 		lineDto.cost = bdPrice.toString();
 		lineDto.retailPrice = bdPrice.toString();
-		
+		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
-		
+		// 税率
 		lineDto.ctaxRate = taxRate.taxRate.toString();
-		
+		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
-		
+		// 粗利益
 		lineDto.gm = "0";
 
-		
+		// 設定
 		if (lineNo == -1) {
-			
+			// 行数
 			Integer size = validSize(dto) + 1;
 			lineDto.salesSlipId = dto.salesSlipId;
 			lineDto.lineNo = size.toString();
 			dto.getLineDtoList().add(lineDto);
 		} else {
-			
+			// 行数
 			lineDto.salesLineId = salesDiscountPriceLineDto.salesLineId;
 			lineDto.salesSlipId = dto.salesSlipId;
 			lineDto.lineNo = Integer.toString(lineNo + 1);
@@ -1128,24 +1127,24 @@ public class SalesService extends
 			SalesLineDto codFeePriceLineDto, int lineNo, SalesSlipDto dto, TaxRate taxRate)
 			throws ServiceException {
 		if (normalTotalPrice == null) {
-			
+			// 計算対象が無い場合は、追加もしない
 			return;
 		}
 
-		
+		// 代引き手数料の取得
 		String codFeePrice = CodFeeUtil.getCodFee(customer, normalTotalPrice);
 		if (codFeePrice == null) {
-			
+			// 代引き以外は登録しない
 			return;
 		}
 
 		SalesLineDto lineDto = (SalesLineDto) dto.createLineDto();
 
-		
+		// 状態
 		lineDto.status = SalesLineTrn.STATUS_INIT;
-		
+		// 商品コード
 		lineDto.productCode = Constants.EXCEPTIANAL_PRODUCT_CODE.COD_FEE_PRICE;
-		
+		// 商品名
 		ProductJoin product;
 		try {
 			product = productService.findById(lineDto.productCode);
@@ -1156,43 +1155,43 @@ public class SalesService extends
 			throw new ServiceException(strLabel + lineDto.productCode);
 		}
 		lineDto.productAbstract = product.productName;
-		
+		// 数量
 		lineDto.quantity = "1";
 
-		
+		// 完納を設定
 		lineDto.deliveryProcessCategory = CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL;
 
-		
+		// 入り数
 		if (product.packQuantity == null) {
 			lineDto.packQuantity = "";
 		} else {
 			lineDto.packQuantity = product.packQuantity.toString();
 		}
 
-		
+		// 金額
 		lineDto.unitRetailPrice = codFeePrice;
 		lineDto.unitCost = codFeePrice;
 		lineDto.cost = codFeePrice;
 		lineDto.retailPrice = codFeePrice;
-		
+		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
-		
+		// 税率
 		lineDto.ctaxRate = taxRate.taxRate.toString();
-		
+		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
-		
+		// 粗利益
 		lineDto.gm = "0";
 
-		
+		// 設定
 		if (codFeePriceLineDto == null) {
-			
+			// 行数
 			Integer size = validSize(dto) + 1;
 			lineDto.lineNo = size.toString();
 			dto.getLineDtoList().add(lineDto);
 		} else {
 			lineDto.salesLineId = codFeePriceLineDto.salesLineId;
 			lineDto.salesSlipId = codFeePriceLineDto.salesSlipId;
-			
+			// 行数
 			lineDto.lineNo = Integer.toString(lineNo + 1);
 			dto.getLineDtoList().set(lineNo, lineDto);
 		}
@@ -1213,11 +1212,11 @@ public class SalesService extends
 			Double normalTotalPrice, SalesLineDto postageLineDto, int lineNo,
 			SalesSlipDto dto, TaxRate taxRate) throws ServiceException {
 		if (normalTotalPrice == null) {
-			
+			// 計算対象が無い場合は、追加もしない
 			return;
 		}
 
-		
+		// 送料
 		String postagePrice = PostageUtil.getPostagePrice(customer,
 				normalTotalPrice);
 		if (postagePrice == null) {
@@ -1226,13 +1225,13 @@ public class SalesService extends
 
 		SalesLineDto lineDto = (SalesLineDto) dto.createLineDto();
 
-		
+		// 状態
 		lineDto.status = SalesLineTrn.STATUS_INIT;
 
-		
+		// 商品コード
 		lineDto.productCode = Constants.EXCEPTIANAL_PRODUCT_CODE.POSTAGE_PRICE;
 
-		
+		// 商品名
 		ProductJoin product;
 		try {
 			product = productService.findById(lineDto.productCode);
@@ -1247,43 +1246,43 @@ public class SalesService extends
 		}
 		lineDto.productAbstract = product.productName;
 
-		
+		// 数量
 		lineDto.quantity = "1";
 
-		
+		// 完納を設定
 		lineDto.deliveryProcessCategory = CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL;
 
-		
+		// 入り数
 		if (product.packQuantity == null) {
 			lineDto.packQuantity = "";
 		} else {
 			lineDto.packQuantity = product.packQuantity.toString();
 		}
 
-		
+		// 金額
 		lineDto.unitRetailPrice = postagePrice;
 		lineDto.unitCost = postagePrice;
 		lineDto.cost = postagePrice;
 		lineDto.retailPrice = postagePrice;
-		
+		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
-		
+		// 税率
 		lineDto.ctaxRate = taxRate.taxRate.toString();
-		
+		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
 
-		
+		// 粗利益
 		lineDto.gm = "0";
 
-		
+		// 設定
 		if (postageLineDto == null) {
-			
+			// 行数
 			Integer size = validSize(dto) + 1;
 			lineDto.salesSlipId = dto.salesSlipId;
 			lineDto.lineNo = size.toString();
 			dto.getLineDtoList().add(lineDto);
 		} else {
-			
+			// 行数
 			lineDto.salesLineId = postageLineDto.salesLineId;
 			lineDto.lineNo = Integer.valueOf(lineNo + 1).toString();
 			lineDto.salesSlipId = postageLineDto.salesSlipId;
@@ -1423,7 +1422,7 @@ public class SalesService extends
 		if (tax && StringUtil.hasLength(lineDto.ctaxPrice)) {
 			Double ctaxPrice = Double.valueOf(lineDto.ctaxPrice.replaceAll(",",
 					""));
-			
+			// 税込金額合計
 			return retailPrice + ctaxPrice;
 		} else {
 			return retailPrice;
@@ -1455,17 +1454,17 @@ public class SalesService extends
 	protected void calcDetailLineTax(SalesSlipDto dto, SalesLineDto lineDto,
 			ProductJoin product) throws ServiceException {
 
-		
+		// 課税区分を確認
 		if (CategoryTrns.TAX_CATEGORY_FREE.equals(product.taxCategory)) {
-			
+			// 免税
 			lineDto.ctaxPrice = "";
 		} else if (CategoryTrns.TAX_CATEGORY_IMPOSITION.equals(product.taxCategory)) {
-			
+			// 課税
 			Double rate = Double.valueOf(lineDto.ctaxRate);
 			Double price = Double.valueOf(lineDto.retailPrice);
 			Double tax;
 			if ((price != null) && (rate != null)) {
-				tax = (rate / 100.0) * price; 
+				tax = (rate / 100.0) * price; // rateは％表記の値なので100.0で割る
 				BigDecimal bd = DiscountUtil.getScaleValue(
 						dto.taxFractCategory, 0, new BigDecimal(tax));
 				if (bd != null) {
@@ -1477,7 +1476,7 @@ public class SalesService extends
 				throw new ServiceException("errors.system");
 			}
 		} else if (CategoryTrns.TAX_CATEGORY_INCLUDED.equals(product.taxCategory)) {
-			
+			// 内税
 			lineDto.ctaxPrice = "";
 		}
 	}
@@ -1550,7 +1549,7 @@ public class SalesService extends
 
 		}
 
-		
+		//MAPの生成
 		Map<String, Object> param = super.createSqlParam();
 		param.put(Param.SALES_SLIP_ID, salesSlipId);
 		param.put(Param.BILL_PRINT_COUNT, billPrintCount);
@@ -1562,7 +1561,7 @@ public class SalesService extends
 		param.put(Param.PO_PRINT_COUNT, poPrintCount);
 		param.put(Param.SI_PRINT_COUNT, siPrintCount);
 
-		
+		//SQLクエリを投げる
 		SuccessedLineCount = this.updateBySqlFile(
 				"sales/UpdateSalesSlipPrintCnt.sql", param).execute();
 
@@ -1588,7 +1587,7 @@ public class SalesService extends
 			if (orderSlipDto == null) {
 				throw new Exception();
 			}
-			
+			// 受注日
 			pl.roDate = super.convertUtilDateToSqlDate(DF_YMD
 					.parse(orderSlipDto.roDate));
 
@@ -1678,11 +1677,11 @@ public class SalesService extends
 	public SalesSlipDto loadBySlipId(String id) throws ServiceException,
 			UnabledLockException {
 
-		
+		// 伝票番号を指定して伝票を取得
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, id);
 
 		List<SalesSlipTrn> ssList = findByCondition(conditions, params,
@@ -1694,11 +1693,11 @@ public class SalesService extends
 		} else {
 			return null;
 		}
-		
+		// 支払条件を生成
 		dto.cutoffGroupCategory = dto.billCutoffGroup
 				+ dto.paybackCycleCategory;
 
-		
+		// 売上単位の請求書の発行日有無(請求書日付有無)を設定する
 		Customer customer = customerService
 				.findCustomerByCode(dto.customerCode);
 		dto.billDatePrint = customer.billDatePrint;
@@ -1739,25 +1738,25 @@ public class SalesService extends
 			if (customer == null) {
 				throw new Exception();
 			}
-			
+			// 特殊商品コードの追加
 			insertSpecialProduct(dto, customer);
 
-			
+			// 売上伝票番号の発番
 			newSlipId = seqMakerService.nextval(SalesSlipTrn.TABLE_NAME);
 			dto.salesSlipId = newSlipId.toString();
 
-			
+			// 請求日
 			if (CategoryTrns.SALES_CM_CREDIT.equals(dto.salesCmCategory)) {
 				dto.billDate = null;
 			} else {
 				dto.billDate = dto.salesDate;
 			}
 
-			
+			// 売上伝票画面から値を設定（明細の集計等）
 			setSlipDataByForm(dto);
-			
+			// 不足している顧客情報を設定
 			setCustomerInfoForSave(dto, customer);
-			
+			// 出力カウンタを初期化
 			dto.billPrintCount = "0";
 			dto.deliveryPrintCount = "0";
 			dto.tempDeliveryPrintCount = "0";
@@ -1767,10 +1766,10 @@ public class SalesService extends
 			dto.poPrintCount = "0";
 			dto.delborPrintCount = "0";
 
-			
+			// ActionFormをエンティティに変換
 			SalesSlipTrn ss = createAndCopy(dto);
 
-			
+			// 売上伝票の追加
 			return this.updateBySqlFile("sales/InsertSalesSlip.sql",
 					createParamMap(ss)).execute();
 		} catch (Exception e) {
@@ -1794,21 +1793,21 @@ public class SalesService extends
 			if (customer == null) {
 				throw new Exception();
 			}
-			
+			// 特殊商品コードの追加
 			insertSpecialProduct(dto, customer);
 
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, dto.salesSlipId,
 					dto.updDatetm, "sales/LockSlip.sql");
 
-			
+			// 入力データをもとに伝票情報を設定
 			setSlipDataByForm(dto);
-			
+			// 不足している顧客情報を設定
 			setCustomerInfoForSave(dto, customer);
-			
+			// DTOをEntityに変換
 			SalesSlipTrn ss = createAndCopy(dto);
 
-			
+			// 伝票の更新
 			return this.updateBySqlFile("sales/UpdateSalesSlip.sql",
 					createParamMap(ss)).execute();
 		} catch (Exception e) {
@@ -1829,25 +1828,25 @@ public class SalesService extends
 	public int deleteById(String salesSlipId, String updDatetm)
 			throws ServiceException, UnabledLockException {
 		try {
-			
+			// 排他制御
 			this.lockRecord(Param.SALES_SLIP_ID, salesSlipId, updDatetm,
 					"sales/LockSlip.sql");
 
-			
+			// 明細行が削除されている場合、受注伝票を更新できなくなるのでDBの状態を再取得
 			SalesSlipDto dto = loadBySlipId(salesSlipId);
 			dto.setLineDtoList(salesLineService.loadBySlip(dto));
 
-			
+			// 明細行からの更新
 			List<SalesLineDto> salesLineList = dto.getLineDtoList();
 			for (SalesLineDto lineDto : salesLineList) {
 				SalesLineTrn sl = salesLineService.createAndCopy(
 						dto.priceFractCategory, dto.taxFractCategory, lineDto);
-				
+				// 出荷指示書明細行の削除
 				PickingLine pll = new PickingLine();
 				pll.salesLineId = sl.salesLineId;
 				pickingLineService.delete(pll);
 
-				
+				// 受注伝票明細行の更新
 				if (sl.roLineId != null) {
 					if (StringUtil.hasLength(sl.roLineId.toString())) {
 						SalesLineTrn tmpSl = salesLineService.createAndCopy(
@@ -1857,17 +1856,17 @@ public class SalesService extends
 					}
 				}
 			}
-			
+			// DTOをエンティティに変換
 			SalesSlipTrn ss = createAndCopy(dto);
 
-			
+			// 伝票の削除
 			int count = this.updateBySqlFile("sales/DeleteSalesSlip.sql",
 					createParamMap(ss)).execute();
 			if (count == 0) {
 				throw new ServiceException(getDbMessage("erroes.db.salesSlip",
 						"erroes.db.delete", "(SalesService.delete 3)"));
 			}
-			
+			// 出荷指示書の削除
 			PickingList pl = new PickingList();
 			pl.salesSlipId = ss.salesSlipId;
 			if (pickingService.delete(pl) == 0) {
@@ -1875,7 +1874,7 @@ public class SalesService extends
 						"erroes.db.pickingList", "erroes.db.delete",
 						"(SalesService.delete 4)"));
 			}
-			
+			// 受注伝票の更新
 			if (StringUtil.hasLength(dto.roSlipId)) {
 				if (roSlipSalesService.updateSlipBySales(dto) == 0) {
 					throw new ServiceException(getDbMessage("erroes.db.roSlip",
@@ -1902,9 +1901,9 @@ public class SalesService extends
 
 		int totalCount = 0;
 		if (bInsert) {
-			
+			// 出荷指示書の追加
 
-			
+			// 出荷指示書番号の発番
 			PickingList pl = pickingService.createPickingList(dto);
 			setROrderInfoForSave(dto, pl);
 			int count = pickingService.insert(pl);
@@ -1919,7 +1918,7 @@ public class SalesService extends
 			}
 			totalCount += count;
 
-			
+			// 出荷指示書明細の登録 --------------------------------
 			List<SalesLineDto> lineList = dto.getLineDtoList();
 			for (SalesLineDto lineDto : lineList) {
 				if (lineDto.isBlank()) {
@@ -1927,7 +1926,7 @@ public class SalesService extends
 				}
 				PickingLine pll = pickingLineService.createPickingLine(lineDto,
 						pl.pickingListId.toString());
-				
+				// 出荷指示書は売上伝票をもとに作成するのでDTOは使用しない
 				count = pickingLineService.insert(pll);
 				if (count == 0) {
 					if (bInsert) {
@@ -1943,16 +1942,16 @@ public class SalesService extends
 				totalCount += count;
 			}
 		} else {
-			
+			// 出荷指示書の取得
 			boolean isPickingListExist = true;
 			List<PickingList> plList = pickingService
 					.findPickingListBySalesSlipId(dto.salesSlipId);
 			if (plList.size() == 0) {
-				
+				// 移行データ
 				isPickingListExist = false;
 			}
 
-			
+			// 出荷指示書の更新
 			if (isPickingListExist) {
 				PickingList pl = new PickingList();
 				pl.salesSlipId = Integer.valueOf(dto.salesSlipId);
@@ -1964,7 +1963,7 @@ public class SalesService extends
 				}
 
 				int count = 0;
-				
+				// 出荷指示書明細行の更新
 				List<PickingLine> picklineList = pickingLineService.findPickingLineBySalesSlipId(dto.salesSlipId);
 
 				List<SalesLineDto> lineList = dto.getLineDtoList();
@@ -1989,7 +1988,7 @@ public class SalesService extends
 					if( !isExist ){
 						PickingLine pll = pickingLineService.createPickingLine(lineDto,
 								pl.pickingListId.toString());
-						
+						// 出荷指示書は売上伝票をもとに作成するのでDTOは使用しない
 						count = pickingLineService.insert(pll);
 						if (count == 0) {
 							throw new ServiceException(
@@ -1999,7 +1998,7 @@ public class SalesService extends
 						totalCount += count;
 					}
 				}
-				
+				// 削除レコードの調整
 				for (PickingLine pll : picklineList) {
 
 					boolean isExist = false;
@@ -2024,7 +2023,7 @@ public class SalesService extends
 				}
 			}
 		}
-		
+		// 受注伝票の更新
 		if (StringUtil.hasLength(dto.roSlipId)) {
 			if (roSlipSalesService.updateSlipBySales(dto) == 0) {
 				throw new ServiceException(getDbMessage("erroes.db.roSlip",

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.deposit;
 
 import java.util.ArrayList;
@@ -53,10 +52,10 @@ public class SearchDepositResultAjaxAction extends
 	 */
 	@Override
 	protected int doCount(BeanMap params) throws ServiceException {
-		
+		// 検索結果件数を取得する
 		BeanMap result = searchDepositService.getSearchResultCount(params);
 
-		
+		// 回収合計金額を設定する
 		Number count = (Number)result.get("cnt");
 		if (count.intValue() > 0) {
 			this.searchDepositForm.depositTotal = ((Number) result.get("total"))

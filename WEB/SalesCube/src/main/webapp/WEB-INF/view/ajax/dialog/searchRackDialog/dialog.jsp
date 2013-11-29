@@ -2,6 +2,7 @@
 	<span id="${dialogId}_errors" style="color: red">
 	</span>
 	<form>
+	<div style="padding: 20px 20px 0 20px;">
 		<table class="forms" summary="倉庫検索条件" style="width: 650px;">
 			<colgroup>
 				<col span="1" style="width: 12%">
@@ -48,38 +49,33 @@
 				onclick="$('#${dialogId}_selectButton').attr('disabled', true);
 					_searchRack( '${dialogId}');">検索</button>
 		</div>
+	</div>
 	</form>
 
-	<span id="${dialogId}ListContainer">
-		検索結果件数： 0件
-		<div style="padding: 0px; border: none; width: 650px; height: 220px; overflow: hidden;">
-			<table id="${dialogId}List" summary="棚番検索結果" style="width: 640px;">
+	<div id="${dialogId}ListContainer"  style="padding: 0 20px;">
+		<div style=" color: #FFFFFF;">検索結果件数： 0件</div>
+		<div style="border: none; width: 100%; height: 220px; overflow: hidden;">
+			<table class="dialog_resultList" id="${dialogId}List" summary="棚番検索結果" style="width: 100%;">
 				<colgroup>
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 15%">
+					<col span="1" style="width: 20%">
 					<col span="1" style="width: 30%">
 					<col span="1" style="width: 15%">
-					<col span="1" style="width: 30%">
-					<col span="1" style="width: 30%">
+					<col span="1" style="width: 20%">
+					<col span="1" style="width: 15%">
 				</colgroup>
 				<tr>
-					<th>&nbsp;</th>
-					<th>倉庫コード</th>
-					<th>倉庫名</th>
 					<th>棚番</th>
 					<th>棚番名</th>
+					<th>倉庫コード</th>
+					<th>倉庫名</th>
 					<th>商品コード</th>
 				</tr>
 			</table>
 		</div>
-	</span>
+	</div>
 
-	<div style="width: 650px; text-align: right">
-		<button id="${dialogId}_selectButton" type="button" style="width: 70px" tabindex="10150"
-			onclick="_selectSearchResult( '${dialogId}', 'selectedRack' );
-					$('#${dialogId}').dialog('close');" disabled>選択</button>
+	<div style="width: 96%; text-align: right; margin-top: 15px;">
 		<button id="" type="button" style="width: 70px" tabindex="10151"
 			onclick="$('#${dialogId}').dialog('close');">閉じる</button>
 	</div>
-
 </div>

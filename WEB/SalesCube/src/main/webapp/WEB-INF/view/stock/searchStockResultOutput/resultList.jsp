@@ -1,33 +1,54 @@
-<table id="search_result" summary="検索結果" class="forms" style="table-layout: auto;">
+<table id="search_result" summary="検索結果" class="forms detail_info" style="table-layout: auto; margin-top: 10px;">
 	<colgroup>
 		<c:forEach var="colInfo" items="${columnInfoList}" varStatus="status">
 			<col span="1" style="min-width: ${f:h(colInfo.colWidth)}px">
 		</c:forEach>
 	</colgroup>
 	<thead>
-		<tr>
-			<c:forEach var="colInfo" items="${columnInfoList}" varStatus="status">
-				<th class="xl64" id='result_${f:h(colInfo.itemId)}'
-					<c:if test='${colInfo.sortFlag=="1"}'>
-						style='cursor: pointer' onclick="sort('${f:h(colInfo.itemId)}')"
-					</c:if>
-				>
+	<tr>
+		<c:forEach var="colInfo" items="${columnInfoList}" varStatus="status">
+			<logic:equal name="colInfo" property="sortFlag" value="1">
+			<c:choose>
+				<c:when test="${status.first}" >
+					<th class="xl64 rd_top_left"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
+				</c:when>
+				<c:when test="${status.last}" >
+					<th class="xl64 rd_top_right"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
+				</c:when>
+				<c:otherwise>
+					<th class=xl64  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
+				</c:otherwise>
+			</c:choose>
 					${f:h(colInfo.itemName)}
+					<c:if test='${outputExcel}'>
+						${f:h(value)}
+					</c:if>
 					<c:if test='${!outputExcel}'>
-						<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: blue">
-							<c:if test='${sortColumn==colInfo.itemId}'>
-								<c:if test='${sortOrderAsc}'>
-									<bean:message key='labels.asc'/>
-								</c:if>
-								<c:if test='${!sortOrderAsc}'>
-									<bean:message key='labels.desc'/>
-								</c:if>
-							</c:if>
-						</span>
+						<logic:equal name="colInfo" property="itemId" value="${sortColumn}">
+							<span style="color: blue">
+							<logic:equal name="sortOrderAsc" value="true"><bean:message key='labels.asc'/></logic:equal>
+							<logic:equal name="sortOrderAsc" value="false"><bean:message key='labels.desc'/></logic:equal>
+							</span>
+						</logic:equal>
 					</c:if>
 				</th>
-			</c:forEach>
-		</tr>
+			</logic:equal>
+			<logic:equal name="colInfo" property="sortFlag" value="0">
+			<c:choose>
+				<c:when test="${status.first}" >
+					<th class="xl64 rd_top_left"  style="height:30px;">${f:h(colInfo.itemName)}</th>
+				</c:when>
+				<c:when test="${status.last}" >
+					<th class="xl64 rd_top_right" style="height:30px;">${f:h(colInfo.itemName)}</th>
+				</c:when>
+				<c:otherwise>
+					<th class=xl64  style="height:30px;">${f:h(colInfo.itemName)}</th>
+				</c:otherwise>
+			</c:choose>
+
+			</logic:equal>
+		</c:forEach>
+	</tr>
 	</thead>
 	<tbody>
 		<c:forEach var="rowData" items="${searchResultList}" varStatus="statusRow">
@@ -35,7 +56,7 @@
 				<c:forEach var="value" items="${rowData}" varStatus="statusCol">
 					<c:choose>
 						<c:when test='${columnInfoList[statusCol.index].itemId=="slipId"}'>
-							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
+							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">&nbsp;
 								<c:if test='${!outputExcel&&value.menuValid}'>
 									<a
 										<c:choose>
@@ -65,65 +86,65 @@
 								</c:if>
 								<c:if test='${outputExcel||!value.menuValid}'>
 									${f:h(value.slipId)}
-								</c:if>
+								</c:if>&nbsp;
 							</td>
 						</c:when>
 						<c:when test='${columnInfoList[statusCol.index].itemId=="srcFunc"}'>
 							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-								${f:h(value.srcFuncName)}
+								&nbsp;${f:h(value.srcFuncName)}&nbsp;
 							</td>
 						</c:when>
 						<c:when test='${columnInfoList[statusCol.index].itemId=="eadSlipCategory"}'>
 							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-								${f:h(value.eadSlipCategoryName)}
+								&nbsp;${f:h(value.eadSlipCategoryName)}&nbsp;
 							</td>
 						</c:when>
 						<c:when test='${columnInfoList[statusCol.index].itemId=="eadCategory"}'>
 							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-								${f:h(value.eadCategoryName)}
+								&nbsp;${f:h(value.eadCategoryName)}&nbsp;
 							</td>
 						</c:when>
 						<c:when test='${columnInfoList[statusCol.index].itemId=="rackCode"}'>
-							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
+							<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">&nbsp;
 								<c:if test='${value.srcFunc!=CONST_STOCK_TRANSFER}'>
 									${f:h(value.rackCode)}
 								</c:if>
 								<c:if test='${value.srcFunc==CONST_STOCK_TRANSFER}'>
 									<bean:message key='labels.src'/>${f:h(value.rackCode)}<br>
 									<bean:message key='labels.dest'/>${f:h(value.rackCodeMove)}
-								</c:if>
+								</c:if>&nbsp;
 							</td>
 						</c:when>
 						<c:otherwise>
 							<c:choose>
 								<c:when test="${columnInfoList[statusCol.index].formatType == 1}">
 									<td class="xl65" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<fmt:formatNumber value="${value}" pattern="###,##0" />
+										&nbsp;<fmt:formatNumber value="${value}" pattern="###,##0" />&nbsp;
 									</td>
 								</c:when>
 								<c:when test="${columnInfoList[statusCol.index].formatType == 2}">
 									<td class="xl66" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<fmt:formatNumber value="${value}" pattern="${mineDto.unitPriceDecAlignFormat}" />
+										&nbsp;<fmt:formatNumber value="${value}" pattern="${mineDto.unitPriceDecAlignFormat}" />&nbsp;
 									</td>
 								</c:when>
 								<c:when test="${columnInfoList[statusCol.index].formatType == 3}">
 									<td class="xl67" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<fmt:formatNumber value="${value}" pattern="${mineDto.numDecAlignFormat}" />
+										&nbsp;<fmt:formatNumber value="${value}" pattern="${mineDto.numDecAlignFormat}" />&nbsp;
 									</td>
 								</c:when>
 								<c:when test="${columnInfoList[statusCol.index].formatType == 10}">
 									<td class="xl68" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<fmt:formatDate value="${value}" pattern="yyyy/MM/dd" />
+										&nbsp;<fmt:formatDate value="${value}" pattern="yyyy/MM/dd" />&nbsp;
 									</td>
 								</c:when>
 								<c:when test="${columnInfoList[statusCol.index].formatType == 11}">
 									<td  class="xl69"style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										<fmt:formatDate value="${value}" pattern="yyyy/MM/dd HH:mm:ss.S" />
+										&nbsp;<fmt:formatDate value="${value}" pattern="yyyy/MM/dd HH:mm:ss.S" />&nbsp;
 									</td>
 								</c:when>
 								<c:otherwise>
 									<td class="xl70" style="text-align: ${columnInfoList[statusCol.index].textAlign}">
-										${f:h(value)}
+										&nbsp;${f:h(value)}&nbsp;
 									</td>
 								</c:otherwise>
 							</c:choose>

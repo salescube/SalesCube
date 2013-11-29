@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity.join;
 
 import jp.co.arkinfosys.entity.EstimateLineTrn;
@@ -14,8 +13,8 @@ import jp.co.arkinfosys.entity.EstimateLineTrn;
  */
 public class EstimateLineProductJoin extends EstimateLineTrn{
 
-	public Short roMaxNum;			
-	public String supplierPcode;	
+	public Short roMaxNum;			// 受注限度数
+	public String supplierPcode;	// 仕入先品番
 
 
 

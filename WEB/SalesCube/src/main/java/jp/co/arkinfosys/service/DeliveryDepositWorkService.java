@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class DeliveryDepositWorkService extends AbstractService<DeliveryDepositW
 			BeanMap shipDepositWorkMap = Beans.createAndCopy(BeanMap.class, shipDepositWorkDto).execute();
 			param.putAll(shipDepositWorkMap);
 
-			
+			// データ登録
 			this.updateBySqlFile("deliverydepositwork/InsertDeliveryDepositWork.sql", param).execute();
 
 		} catch (Exception e) {

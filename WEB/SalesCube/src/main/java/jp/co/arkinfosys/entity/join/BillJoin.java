@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.entity.join;
 
 import jp.co.arkinfosys.entity.Bill;
@@ -14,6 +13,6 @@ import jp.co.arkinfosys.entity.Bill;
  */
 public class BillJoin extends Bill {
 
-	
+	// 顧客名
 	public String customerName;
 }

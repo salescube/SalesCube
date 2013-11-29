@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.deposit;
 
 import java.util.List;
@@ -168,7 +167,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 入金番号
 		if (conditions.containsKey(Param.DEPOSIT_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_SLIP_ID))) {
@@ -177,7 +176,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入力担当者コード
 		if (conditions.containsKey(Param.USER_ID)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_ID))) {
 				param.put(Param.USER_ID, super
@@ -186,7 +185,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入力担当者
 		if (conditions.containsKey(Param.USER_NAME)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.USER_NAME))) {
 				param.put(Param.USER_NAME, super
@@ -195,7 +194,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入金From
 		if (conditions.containsKey(Param.DEPOSIT_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_DATE_FROM))) {
@@ -204,7 +203,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入金日To
 		if (conditions.containsKey(Param.DEPOSIT_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_DATE_TO))) {
@@ -213,7 +212,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入力日From
 		if (conditions.containsKey(Param.INPUT_PDATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.INPUT_PDATE_FROM))) {
@@ -222,7 +221,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入力日To
 		if (conditions.containsKey(Param.INPUT_PDATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.INPUT_PDATE_TO))) {
@@ -231,7 +230,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 回収金額From
 		if (conditions.containsKey(Param.DEPOSIT_TOTAL_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_TOTAL_FROM))) {
@@ -240,7 +239,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 回収金額To
 		if (conditions.containsKey(Param.DEPOSIT_TOTAL_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_TOTAL_TO))) {
@@ -249,7 +248,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 摘要
 		if (conditions.containsKey(Param.DEPOSIT_ABSTRACT)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_ABSTRACT))) {
@@ -259,7 +258,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 顧客コード
 		if (conditions.containsKey(Param.CUSTOMER_CODE)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.CUSTOMER_CODE))) {
@@ -269,7 +268,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 顧客名
 		if (conditions.containsKey(Param.CUSTOMER_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.CUSTOMER_NAME))) {
@@ -279,7 +278,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 払込名義
 		if (conditions.containsKey(Param.PAYMENT_NAME)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.PAYMENT_NAME))) {
@@ -289,7 +288,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入金取込み
 		if (conditions.containsKey(Param.DEPOSIT_METHOD_TYPE_CATEGORY)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_METHOD_TYPE_CATEGORY))) {
@@ -299,7 +298,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// 入金区分
 		if (conditions.containsKey(Param.DEPOSIT_CATEGORY)) {
 			Object obj = conditions.get(Param.DEPOSIT_CATEGORY);
 			if (obj != null) {
@@ -310,7 +309,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil
 					.hasLength((String) conditions.get(Param.SORT_COLUMN))) {
@@ -320,7 +319,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean) conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc) {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.ASC);
@@ -328,13 +327,13 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT, conditions
 					.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW, conditions.get(Param.OFFSET_ROW));
 		}

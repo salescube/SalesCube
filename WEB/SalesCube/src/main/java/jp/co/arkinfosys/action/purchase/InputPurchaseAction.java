@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.purchase;
 
 import java.math.BigDecimal;
@@ -127,20 +126,20 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 */
 	@Override
 	protected boolean loadData() throws Exception, ServiceException {
-		
+		// DTOの取得　伝票のロード
 		PurchaseSlipDto dto = supplierSlipService.loadBySlipId(inputPurchaseForm.supplierSlipId);
 		if (dto == null){
 			return false;
 		}
 
-		
+		// 明細をロードする
 		List<PurchaseLineDto> supplierLineTrnDtoList = supplierLineService.loadBySlip(dto);
 
-		
+		// 明細情報を伝票にセットする
 		supplierSlipService.setLineData(dto,supplierLineTrnDtoList);
 
-		
-		Beans.copy(dto, inputPurchaseForm).execute();
+		// DTOの値をFormへコピー
+		Beans.copy(dto, inputPurchaseForm).execute();//OK
 
 		return true;
 	}
@@ -170,23 +169,23 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	@Override
 	protected void afterLoad() throws Exception,
 			ServiceException {
-		
+		// 明細行リストを取得する
 		List<PurchaseLineDto> lineList = this.inputPurchaseForm.lineDtoList;
 
-		
+		// 空行を削除して新規リストを作成する
 		List<PurchaseLineDto> newLineList = new ArrayList<PurchaseLineDto>();
 
 		for(PurchaseLineDto lineDto : lineList) {
-			
+			// 空白行以外はリストに追加する
 			if(!lineDto.isBlank()) {
 				newLineList.add(lineDto);
 			}
 		}
 
-		
+		// 新リストをフォームに設定する
 		this.inputPurchaseForm.lineDtoList = newLineList;
 
-		
+		// 複写元が委託在庫発注伝票の場合、明細の数量を無効化する必要があるため、Formにフラグをセットする
 		PoSlipTrn poSlipTrnSingle = poSlipService
 				.loadPOSlip(inputPurchaseForm.poSlipId);
 		if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) ) {
@@ -196,37 +195,37 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		}
 
 		if( !Constants.STATUS_SUPPLIER_SLIP.UNPAID.equals(inputPurchaseForm.status)){
-			
-			
+			// 発注状態以外は編集不可
+			// 状態名を取得
 			String categoryName = categoryService.findCategoryNameByIdAndCode(
-					SlipStatusCategories.SUPPLIER_SLIP_STATUS, inputPurchaseForm.status);
-			
+					SlipStatusCategories.SUPPLIER_SLIP_STATUS, inputPurchaseForm.status);// statusはFormから取るように変更
+			// 伝票名取得
 			String strSlipLabel = MessageResourcesUtil.getMessage("erroes.db.supplierSlip");
-			
+			// 動作名取得
 			String strActionLabel = MessageResourcesUtil.getMessage("words.action.edit");
 
-			
+			// メッセージに設定
 			this.addMessage("infos.slip.lock", strSlipLabel, categoryName, strActionLabel);
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
 
-			
+			// 更新不可
 			inputPurchaseForm.menuUpdate = false;
 
 		} else if(StringUtil.hasLength(this.inputPurchaseForm.paymentCutoffDate)) {
-			
+			// 状態名を取得
 			String categoryName = MessageResourcesUtil.getMessage("labels.alreadyPaymentCutoff");
-			
+			// 伝票名取得
 			String strSlipLabel = MessageResourcesUtil.getMessage("erroes.db.supplierSlip");
-			
+			// 動作名取得
 			String strActionLabel = MessageResourcesUtil.getMessage("words.action.edit");
-			
+			// メッセージに設定
 			this.addMessage("infos.slip.lock", strSlipLabel, categoryName, strActionLabel);
 			ActionMessagesUtil.addMessages(super.httpRequest, super.messages);
-			
+			// 更新不可
 			inputPurchaseForm.menuUpdate = false;
 
 		}else{
-			
+			// ユーザの権限を設定
 			inputPurchaseForm.menuUpdate = userDto
 					.isMenuUpdate(Constants.MENU_ID.INPUT_PURCHASE);
 		}
@@ -249,11 +248,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		PurchaseSlipDto inDto = (PurchaseSlipDto)dto;
 
 		if (inputPurchaseForm.isNewData()) {
-			((PurchaseSlipDto)inDto).status = Constants.STATUS_SUPPLIER_SLIP.UNPAID;
+			((PurchaseSlipDto)inDto).status = Constants.STATUS_SUPPLIER_SLIP.UNPAID;// 未払い
 		}else{
-			
+			// 入出庫が締済みかどうか
 			if(this.inputStockPurchaseService.existsClosedEadSlip(inDto)) {
-				
+				// 遷移先を設定
 				this.inputURIString = Mapping.EDIT + inDto.supplierSlipId + "?redirect=true";
 				ServiceException e = new ServiceException("errors.update.stockclosed");
 				e.setStopOnError(false);
@@ -279,14 +278,14 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		supplierSlipService.afterUpsert(insert, pdto,supplierLineService.getDeletedLineStoreDto());
 
 		if (pdto.newData == null || pdto.newData ) {
-			
+			// 入出庫伝票の登録
 			inputStockPurchaseService.insert(pdto);
 		} else {
-			
+			// 入出庫伝票の更新
 			inputStockPurchaseService.update(pdto);
 		}
 
-		
+		// ユーザの権限を設定
 		inputPurchaseForm.menuUpdate = userDto
 				.isMenuUpdate(Constants.MENU_ID.INPUT_PURCHASE);
 
@@ -304,10 +303,10 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 */
 	@Override
 	protected void beforeDelete(AbstractSlipDto<PurchaseLineDto> dto) throws Exception {
-		
+		// hiddenのカンマ除去
 		deleteComma();
 
-		
+		// 入出庫が締済みかどうか
 		if(this.inputStockPurchaseService.existsClosedEadSlip((PurchaseSlipDto)dto)) {
 			ServiceException e = new ServiceException("errors.delete.stockclosed");
 			this.inputURIString = Mapping.EDIT + inputPurchaseForm.supplierSlipId + "?redirect=true";
@@ -331,11 +330,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 
 		PurchaseSlipDto dto = (PurchaseSlipDto) d;
 
-		
+		// 関連仕入伝票の明細行ステータス更新
 		supplierLineService.updateRelatedSlipLinesBySlip(dto);
-		
+		// 発注伝票のステータス更新
 		supplierSlipService.updatePoStatus(dto);
-		
+		// 入出庫伝票を削除
 		inputStockPurchaseService.delete(dto);
 	}
 
@@ -369,31 +368,31 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 */
 	private String copySlipFromPorderFunc() throws Exception {
 
-		
+		// 抽象クラスのフレームワークのcopyの流れに合わない
 		try {
 			inputPurchaseForm.copySlipId = StringUtil.decodeSL(inputPurchaseForm.copySlipId);
-			
+			// copy元 発注伝票の取得
 			PoSlipTrn poSlipTrnSingle = poSlipService
 					.loadPOSlip(inputPurchaseForm.copySlipId);
 			List<PoLineTrnJoin> poLineTrnList = poSlipService
 					.loadPOLine(inputPurchaseForm.copySlipId);
 
-			
+			// プルダウンの初期化
 			createList();
 
-			
+			// 発注番号が存在しない
 			if(poSlipTrnSingle == null){
-				
+				// 発注番号をクリアする
 				inputPurchaseForm.poSlipId = "";
 
-				
+				// ユーザの権限を設定
 				inputPurchaseForm.menuUpdate = userDto
 						.isMenuUpdate(Constants.MENU_ID.INPUT_PAYMENT);
 
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.copy.notexist"));
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
-				
+				// 明細行の調整
 				PurchaseSlipDto dto = (PurchaseSlipDto) this.createDTO();
 				dto.setLineDtoList(inputPurchaseForm.lineDtoList);
 				dto.fillList();
@@ -402,16 +401,16 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 
 			this.inputPurchaseForm.reset();
 
-			
+			// 明細行の残数量が全て０ならエラー
 			BigDecimal zero = new BigDecimal("0");
 			boolean allZero = true;
 			for (PoLineTrnJoin poLine : poLineTrnList) {
-				
+				// 委託在庫発注の場合は、委託出庫済みの明細以外は複写対象外とする
 				if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) && ! Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED.equals(poLine.status) ) {
 					continue;
 				}
 
-				
+				// 発注伝票の発注残数=0ならば、伝票複写しない
 				if( poLine.restQuantity.compareTo(zero) ==  0 ){
 					continue;
 				}
@@ -419,10 +418,10 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				break;
 			}
 			if( allZero ){
-				
+				// 発注番号をクリアする
 				inputPurchaseForm.poSlipId = "";
 
-				
+				// ユーザの権限を設定
 				inputPurchaseForm.menuUpdate = userDto
 						.isMenuUpdate(Constants.MENU_ID.INPUT_PAYMENT);
 
@@ -430,29 +429,29 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						new ActionMessage("errors.copy.notexist"));
 
 				ActionMessagesUtil.addErrors(super.httpSession, super.messages);
-				
+				// 明細行の調整
 				PurchaseSlipDto dto = (PurchaseSlipDto) this.createDTO();
 				dto.setLineDtoList(inputPurchaseForm.lineDtoList);
 				dto.fillList();
 				return Mapping.INPUT;
 			}
 
-			
+			// 数量端数処理
 			Converter numConv = new NumberConverter(
 					super.mineDto.productFractCategory,
 					super.mineDto.numDecAlignment, true);
-			
+			// 円単価端数処理
 			Converter yenConv = new NumberConverter(
 					poSlipTrnSingle.priceFractCategory, 0, true);
-			
+			// 外貨単価端数処理
 			Converter dolConv = new NumberConverter(
 					poSlipTrnSingle.priceFractCategory,
 					super.mineDto.unitPriceDecAlignment, true);
-			
+			// レート
 			Converter rateConv = new NumberConverter(
 					CategoryTrns.FLACT_CATEGORY_DOWN, 2, false);
 
-			
+			// 伝票
 			inputPurchaseForm.poSlipId = String
 					.valueOf(poSlipTrnSingle.poSlipId);
 			inputPurchaseForm.supplierDate = StringUtil
@@ -461,14 +460,14 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 					Constants.FORMAT.DATE, poSlipTrnSingle.deliveryDate);
 			inputPurchaseForm.remarks = poSlipTrnSingle.remarks;
 
-			
+			// 複写元が委託在庫発注伝票の場合、明細の数量を無効化する必要があるため、Formにフラグをセットする
 			if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) ) {
 				inputPurchaseForm.isEntrustPorder = true;
 			} else {
 				inputPurchaseForm.isEntrustPorder = false;
 			}
 
-			
+			// 仕入先情報
 			inputPurchaseForm.supplierCode = poSlipTrnSingle.supplierCode;
 			inputPurchaseForm.supplierName = poSlipTrnSingle.supplierName;
 			inputPurchaseForm.priceFractCategory = poSlipTrnSingle.priceFractCategory;
@@ -511,24 +510,24 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						.getAsString(poSlipTrnSingle.fePriceTotal);
 			}
 
-			
+			// 明細
 			inputPurchaseForm.lineDtoList = new ArrayList<PurchaseLineDto>();
 			int lineNo = 0;
 
 			for (PoLineTrnJoin poLineTrn : poLineTrnList) {
-				
+				// 委託在庫発注の場合は、委託出庫済みの明細以外は複写対象外とする
 				if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) && ! Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED.equals(poLineTrn.status) ) {
 					continue;
 				}
-				
-
-				
+				// 発注伝票の発注残数=0ならば、伝票複写しない
+//				if( poLineTrn.restQuantity.compareTo(zero) ==  0 ){
+				// 発注伝票明細が、仕入完了ならば伝票複写しない
 				if( poLineTrn.status.equals(Constants.STATUS_PORDER_LINE.PURCHASED)){
 					continue;
 				}
 
 				if(poLineTrn.quantity.compareTo(poLineTrn.restQuantity) != 0) {
-					
+					// 発注数と残数が異なる場合には表示時に金額計算
 					inputPurchaseForm.initCalc = true;
 				}
 
@@ -547,24 +546,24 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						SupplierSlipService.Param.DOL_PRICE).execute();
 				dto.lineNo = String.valueOf(++lineNo);
 
-				
+				// 発注伝票の発注残数を数量にセットする
 				dto.quantity = numConv.getAsString(poLineTrn.restQuantity);
 
-				
+				// 更新前数量に0をセットする
 				dto.oldQuantity = "0";
 
-				
+				// 発注伝票の発注数をトータル数量にセットする
 				dto.totalQuantity = String.valueOf(poLineTrn.quantity.doubleValue());
 				dto.deliveryProcessCategory = CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL;
 
-				
+				// 発注残数をセットする
 				dto.restQuantity = String.valueOf(poLineTrn.restQuantity);
 
 				if (poLineTrn.ctaxRate != null) {
 					inputPurchaseForm.supplierTaxRate = String
 							.valueOf(poLineTrn.ctaxRate);
 				}
-				
+				// 標準棚番、倉庫名を設定
 				if( StringUtil.hasLength(poLineTrn.productCode)){
 					ProductJoin pj = productService.findById(poLineTrn.productCode);
 					if( pj != null ){
@@ -576,11 +575,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				inputPurchaseForm.lineDtoList.add(dto);
 			}
 
-			
+			// 明細行の調整
 			PurchaseSlipDto dto = (PurchaseSlipDto) this.createDTO();
 			dto.setLineDtoList(inputPurchaseForm.lineDtoList);
 
-			
+			// ユーザの権限を設定
 			inputPurchaseForm.userId = this.userDto.userId;
 			inputPurchaseForm.userName = this.userDto.nameKnj;
 			inputPurchaseForm.menuUpdate = userDto
@@ -604,11 +603,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		ActionMessages errors = new ActionMessages();
 		ActionMessage tempMsg;
 
-		
+		// hiddenのカンマ除去
 		deleteComma();
 
 		String labelSupplierCode = MessageResourcesUtil
-				.getMessage("labels.supplierCode");
+				.getMessage("labels.supplierCode");// 仕入先
 		String labelProductCode = MessageResourcesUtil
 				.getMessage("labels.productCode");
 		String labelQuantity = MessageResourcesUtil
@@ -629,11 +628,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		boolean inputLine = false;
 
 		if (StringUtil.hasLength(inputPurchaseForm.supplierCode)) {
-			
+			// 仕入先情報を取得
 			Supplier supplier = supplierService
 					.findById(inputPurchaseForm.supplierCode);
 			if (supplier == null) {
-				
+				// 仕入先コードが存在しない
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.dataNotExist", labelSupplierCode,
 						inputPurchaseForm.supplierCode));
@@ -643,23 +642,23 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		int plus = 0;
 		int minus = 0;
 		for (PurchaseLineDto supplierLineTrnDto : inputPurchaseForm.lineDtoList) {
-			
+			// 商品コードに入力がない場合は無視
 			if (!StringUtil.hasLength(supplierLineTrnDto.productCode)) {
 				continue;
 			}
 
-			
+			// 明細行が1件以上、存在する
 			inputLine = true;
 
-			
+			// 必須チェック
 
-			
+			// 商品コード
 			if (!StringUtil.hasLength(supplierLineTrnDto.productCode)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
 						supplierLineTrnDto.lineNo, labelProductCode));
 			}
-			
+			// 数量
 			if (!StringUtil.hasLength(supplierLineTrnDto.quantity)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
@@ -675,37 +674,37 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 					}
 				}
 			}
-			
+			//レートで国内外判断
 			if(inputPurchaseForm.rateId == null || inputPurchaseForm.rateId.length() == 0){
-			
+			// 円単価
 			if (!StringUtil.hasLength(supplierLineTrnDto.unitPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
 						supplierLineTrnDto.lineNo, labelUnitPrice));
 			}
-			
+			// 金額(円)
 			if (!StringUtil.hasLength(supplierLineTrnDto.price)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
 						supplierLineTrnDto.lineNo, labelPrice));
 			}
 			}else{
-			
+			// 外貨単価
 			if (!StringUtil.hasLength(supplierLineTrnDto.dolUnitPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
 						supplierLineTrnDto.lineNo, labelDolUnitPrice));
 			}
-			
+			// 外貨金額
 			if (!StringUtil.hasLength(supplierLineTrnDto.dolPrice)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"errors.line.required",
 						supplierLineTrnDto.lineNo, labelDolPrice));
 			}
 			}
-			
+			// 長さチェック
 
-			
+			// 数量
 			if (StringUtil.hasLength(supplierLineTrnDto.quantity)) {
 				if (supplierLineTrnDto.quantity.length() > 6) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -714,7 +713,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 									labelQuantity, "6"));
 				}
 			}
-			
+			// 備考
 			if (StringUtil.hasLength(supplierLineTrnDto.remarks)) {
 				if (supplierLineTrnDto.remarks.length() > 120) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -724,7 +723,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 商品備考
 			if (StringUtil.hasLength(supplierLineTrnDto.productRemarks)) {
 				if (supplierLineTrnDto.productRemarks.length() > 120) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -734,9 +733,9 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 型チェック
 
-			
+			// 数量
 			if (!supplierLineTrnDto.quantity
 					.matches(Constants.NUMBER_MASK.DECIMAL12_3)) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -744,7 +743,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						supplierLineTrnDto.lineNo, labelQuantity));
 			}
 			else if(StringUtil.hasLength(supplierLineTrnDto.quantity)){
-				
+				// 数値０チェック add kaki 2010.04.21
 				int iQuantity = ((Double)Double.parseDouble(supplierLineTrnDto.quantity)).intValue();
 				if( iQuantity == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -754,7 +753,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 
 			}
 
-			
+			// 円単価
 			tempMsg = ValidateUtil.decimalType(
 					Integer.valueOf(supplierLineTrnDto.lineNo).intValue()
 					, supplierLineTrnDto.unitPrice
@@ -763,7 +762,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 			}
 			else if(StringUtil.hasLength(supplierLineTrnDto.unitPrice)){
-				
+				// 数値０チェック add kaki 2010.04.21
 				float funitCost = Float.parseFloat(supplierLineTrnDto.unitPrice);
 				if( Double.compare( funitCost, 0 ) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -772,7 +771,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 金額(円)
 			tempMsg = ValidateUtil.decimalType(
 					Integer.valueOf(supplierLineTrnDto.lineNo).intValue()
 					, supplierLineTrnDto.price
@@ -781,7 +780,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 			}
 			else if(StringUtil.hasLength(supplierLineTrnDto.price)){
-				
+				// 数値０チェック add kaki 2010.04.21
 				float fprice = Float.parseFloat(supplierLineTrnDto.price);
 				if( Double.compare( fprice, 0 ) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -790,7 +789,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 外貨単価
 			tempMsg = ValidateUtil.decimalType(
 					Integer.valueOf(supplierLineTrnDto.lineNo).intValue()
 					, supplierLineTrnDto.dolUnitPrice
@@ -799,7 +798,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				errors.add(ActionMessages.GLOBAL_MESSAGE,tempMsg);
 			}
 			else if(StringUtil.hasLength(supplierLineTrnDto.dolUnitPrice)){
-				
+				// 数値０チェック add kaki 2010.04.21
 				float fdolUnitPrice = Float.parseFloat(supplierLineTrnDto.dolUnitPrice);
 				if( Double.compare( fdolUnitPrice, 0 ) == 0 ){
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
@@ -808,7 +807,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 外貨金額
 			tempMsg = ValidateUtil.decimalType(
 					Integer.valueOf(supplierLineTrnDto.lineNo).intValue()
 					, supplierLineTrnDto.dolPrice
@@ -825,9 +824,9 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 値チェック（マスタ存在確認）
 
-			
+			// 商品コード
 			if (StringUtil.hasLength(supplierLineTrnDto.productCode)) {
 				Product product = productService
 						.findById(supplierLineTrnDto.productCode);
@@ -839,7 +838,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				}
 			}
 
-			
+			// 単品商品の場合は棚番必須
 			ProductJoin pj = productService.findById(supplierLineTrnDto.productCode);
 			if( pj == null ){
 				String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
@@ -848,7 +847,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						supplierLineTrnDto.lineNo, strLabel, supplierLineTrnDto.productCode));
 			}else{
 				if( CategoryTrns.PRODUCT_SET_TYPE_SINGLE.equals(pj.setTypeCategory)){
-					
+					// 棚番
 					if (!StringUtil.hasLength(supplierLineTrnDto.rackCode)) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"errors.line.required",
@@ -864,14 +863,14 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						}
 					}
 				}
-				
+				// セット商品の場合はエラー
 				if( pj.setTypeCategory.equals(CategoryTrns.PRODUCT_SET_TYPE_SET)){
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("errors.line.product.set",supplierLineTrnDto.lineNo));
 				}
 			}
 		}
-		
+		// 明細行が1行以上、存在するかどうか
 		if (!inputLine) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"errors.noline"));
@@ -928,23 +927,23 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 */
 	@Override
 	protected void createList() throws Exception {
-		
+		// 仕入明細区分のプルダウン(現在未使用)
 		supplierDetailCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PURCHASE_DETAIL);
 
-		
+		// 完納区分のプルダウン
 		deliveryProcessCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.DELIVERY_PROCESS_CATEGORY);
-		
+		// 委託在庫発注伝票を複写した場合は、「完納区分=完納」以外の要素は削除する(完納しか選べないようにする)
 		if (inputPurchaseForm.isEntrustPorder) {
 			List<LabelValueBean> removeList = new ArrayList<LabelValueBean>();
-			
+			//完納以外の要素を取得する
 			for(LabelValueBean labelValueBean : deliveryProcessCategoryList) {
 				if( ! CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL.equals(labelValueBean.getValue()) ) {
 					removeList.add(labelValueBean);
 				}
 			}
-			
+			//完納以外の要素を削除する
 			for(LabelValueBean removeLabelValueBean : removeList) {
 				deliveryProcessCategoryList.remove(removeLabelValueBean);
 			}

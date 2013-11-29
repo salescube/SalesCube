@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.HashMap;
@@ -30,11 +29,11 @@ import org.seasar.framework.beans.util.Beans;
  */
 public class PickingService extends AbstractService<PickingList> {
 
-	
+	//発番用サービス
 	@Resource
 	private SeqMakerService seqMakerService;
 
-	
+	// 出荷指示書明細行用サービス
 	@Resource
 	private PickingLineService pickingLineService;
 
@@ -42,18 +41,18 @@ public class PickingService extends AbstractService<PickingList> {
 	 * SQLファイルのパラメータ名定義
 	 */
 	public static class Param {
-		
+		// ソート方向
 		private static final String SORT_ORDER = "sortOrder";
-		
+		// 取得件数
 		private static final String ROW_COUNT = "rowCount";
-		
+		// 取得件数
 		private static final String OFFSET_ROW = "offsetRow";
 
 		public static final String PICKING_LIST_ID = "pickingListId";
 		public static final String RO_SLIP_ID = "roSlipId";
 		public static final String SALES_SLIP_ID = "salesSlipId";
 		public static final String CUSTOMER_CODE = "customerCode";
-		
+		// 請求締日のソート条件
 		private static final String SORT_COLUMN_CUSTOMER_CODE = "sortColumnCustomerCode";
 
 	}
@@ -71,14 +70,14 @@ public class PickingService extends AbstractService<PickingList> {
 	 */
 	private Map<String, Object> createParamMap(PickingList pl) {
 
-		
+		//MAPの生成
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		
+		//アクションフォームの情報をPUT
 		BeanMap AFparam = Beans.createAndCopy(BeanMap.class, pl).execute();
 		param.putAll(AFparam);
 
-		
+		//更新日時とかPUT
 		Map<String, Object> CommonParam = super.createSqlParam();
 		param.putAll(CommonParam);
 
@@ -93,7 +92,7 @@ public class PickingService extends AbstractService<PickingList> {
 	public Long getNextVal() throws Exception {
 
 		Long newSlipId = -1L;
-		
+		//伝票番号の発番
 		try {
 			newSlipId = seqMakerService.nextval(PickingList.TABLE_NAME);
 		} catch (Exception e) {
@@ -201,7 +200,7 @@ public class PickingService extends AbstractService<PickingList> {
 	 * @return　実行行数
 	 */
 	public int insert(PickingList pl) {
-		
+		//SQLクエリを投げる
 		return this.updateBySqlFile("picking/InsertPickingListBySales.sql",
 				createParamMap(pl)).execute();
 	}
@@ -213,7 +212,7 @@ public class PickingService extends AbstractService<PickingList> {
 	 *
 	 */
 	public int update(PickingList pl) {
-		
+		//SQLクエリを投げる
 		return this.updateBySqlFile("picking/UpdatePickingListBySales.sql",
 				createParamMap(pl)).execute();
 	}
@@ -243,8 +242,8 @@ public class PickingService extends AbstractService<PickingList> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesSlipId);
 
 		return findByCondition(conditions, paramNames,
@@ -263,8 +262,8 @@ public class PickingService extends AbstractService<PickingList> {
 
 		LinkedHashMap<String, Object> conditions = new LinkedHashMap<String, Object>();
 
-		
-		
+		// 条件設定
+		// 顧客コードが一致
 		conditions.put(Param.SALES_SLIP_ID, salesSlipId);
 
 		List<PickingList> pickList = findByCondition(conditions, paramNames,
@@ -285,20 +284,20 @@ public class PickingService extends AbstractService<PickingList> {
 	public void insert(SalesSlipDto dto) throws Exception {
 		Long newSlipId = -1L;
 		try {
-			
+			// 伝票番号の発番
 			newSlipId = getNextVal();
 
 			PickingList pl = new PickingList();
 			pl.pickingListId = Integer.parseInt(newSlipId.toString());
 			pl.salesSlipId = Integer.parseInt(dto.salesSlipId);
 
-			
+			// 明細行の追加
 			List<SalesLineDto> salesLineList = dto.getLineDtoList();
 			for (SalesLineDto lineDto : salesLineList) {
 
-				
+				// 入力内容が存在する行だけを登録対象とする
 				if (lineDto.isBlank() == false) {
-					
+					// 伝票番号の発番
 					Long newLineId = pickingLineService.getNextVal();
 
 					PickingLine pll = new PickingLine();
@@ -306,14 +305,14 @@ public class PickingService extends AbstractService<PickingList> {
 					pll.pickingListId = Integer.parseInt(newSlipId.toString());
 					pll.salesLineId = Integer.parseInt(lineDto.salesLineId);
 
-					
+					// ピッキングリストは売上伝票をもとに作成するのでDTOは使用しない
 					if (pickingLineService.insert(pll) == 0) {
 						throw new ServiceException("errors.system");
 					}
 				}
 			}
 
-			
+			// 伝票の追加
 			if (insert(pl) == 0) {
 				throw new ServiceException("errors.system");
 			}
@@ -332,30 +331,30 @@ public class PickingService extends AbstractService<PickingList> {
 	 * @throws Exception
 	 */
 	public void update(SalesSlipDto dto) throws Exception {
-		
+		// 排他制御
 		isLocked(dto);
 
-		
+		// 明細エンティティの取得
 		List<PickingLine> plList = pickingLineService
 				.findPickingLineByPickingListId(dto.pickingListId);
 
-		
+		// 明細行の更新
 		List<SalesLineDto> salesLineList = dto.getLineDtoList();
 		for (SalesLineDto lineDto : salesLineList) {
 
-			
+			// 入力内容が存在する行だけを登録対象とする
 			if (lineDto.isBlank()) {
 				continue;
 			}
 
-			
+			// 伝票の情報を明細に複写
 			lineDto.salesSlipId = dto.salesSlipId;
 
 			PickingLine pl = pickingLineService.createAndCopy(
 					dto.priceFractCategory, dto.taxFractCategory, lineDto);
 
 			boolean bExist = false;
-			
+			// 明細行が存在する場合
 			for (PickingLine tmpSl : plList) {
 				if (tmpSl.salesLineId.equals(pl.salesLineId)) {
 					bExist = true;
@@ -363,21 +362,21 @@ public class PickingService extends AbstractService<PickingList> {
 				}
 			}
 			if (bExist == true) {
-				
+				// 存在したら常に更新
 				if (pickingLineService.update(pl) == 0) {
 					throw new ServiceException("errors.system");
 				}
 			}
 		}
-		
+		// 明細行の削除
 		for (PickingLine tmpPl : plList) {
 
 			boolean bExist = false;
 
-			
+			// 明細行が存在する場合
 			for (SalesLineDto lineDto : salesLineList) {
 
-				
+				// 入力内容が存在する行だけを登録対象とする
 				if (lineDto.isBlank()) {
 					continue;
 				}
@@ -390,18 +389,18 @@ public class PickingService extends AbstractService<PickingList> {
 				}
 			}
 			if (bExist == false) {
-				
+				// 明細行が存在しない場合、画面から削除されているのでレコードも削除
 				if (pickingLineService.delete(tmpPl) == 0) {
 					throw new ServiceException("errors.system");
 				}
 			}
 		}
 
-		
+		// ActionFormをエンティティに変換
 		PickingList ps = createAndCopy(dto.priceFractCategory,
 				dto.taxFractCategory, dto);
 
-		
+		// 伝票の更新
 		if (update(ps) == 0) {
 			throw new ServiceException("errors.system");
 		}
@@ -417,24 +416,24 @@ public class PickingService extends AbstractService<PickingList> {
 	 */
 	public void delete(SalesSlipDto dto) throws Exception {
 		try {
-			
+			// 排他制御
 			isLocked(dto);
 
-			
+			// 明細行の更新
 			List<SalesLineDto> salesLineList = dto.getLineDtoList();
 			for (SalesLineDto lineDto : salesLineList) {
 				PickingLine pl = pickingLineService.createAndCopy(
 						dto.priceFractCategory, dto.taxFractCategory, lineDto);
-				
+				// 明細行の削除
 				if (pickingLineService.delete(pl) == 0) {
 					throw new ServiceException("errors.system");
 				}
 			}
-			
+			// ActionFormをエンティティに変換
 			PickingList ps = createAndCopy(dto.priceFractCategory,
 					dto.taxFractCategory, dto);
 
-			
+			// 伝票の削除
 			if (delete(ps) == 0) {
 				throw new ServiceException("errors.system");
 			}

@@ -224,10 +224,10 @@
 </head>
 <body onhelp="return false;" onload="init()">
 
-
+<%-- ページヘッダ領域 --%>
 <%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-
+<%-- メニュー領域 --%>
 <jsp:include page="/WEB-INF/view/common/menubar.jsp">
 	<jsp:param name="PARENT_MENU_ID" value="0013"/>
 	<jsp:param name="MENU_ID" value="1311"/>
@@ -273,7 +273,8 @@
 		<button disabled="disabled">F11<br>&nbsp;</button>
 		<button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
-
+	<br><br><br>
+	
 	<div class="function_forms">
 	<div style="padding-left: 20px"><html:errors/></div>
 	<div style="padding-left: 20px;color: blue;">
@@ -282,70 +283,77 @@
 	</html:messages>
 	</div>
 
-		<span>分類情報</span><br>
-		<table id="productClass_info" class="forms" summary="分類情報１">
-			<colgroup>
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 7%">
-				<col span="1" style="width: 85%">
-			</colgroup>
-			<tr>
-				<th colspan="2">登録・編集分類</th>
-				<td>
-<c:if test="${!editMode}">
-					<html:select styleId="targetClass" property="targetClass" onchange="changeTargetClass()" tabindex="100">
-						<html:option value="1">分類（大）</html:option>
-						<html:option value="2">分類（中）</html:option>
-						<html:option value="3">分類（小）</html:option>
-					</html:select>
-</c:if>
-<c:if test="${editMode}">
-					<html:select styleId="targetClass" property="targetClass" styleClass="c_disable" tabindex="100">
-        <c:if test="${targetClass == 1}">
-						<html:option value="1">分類（大）</html:option>
-        </c:if>
-        <c:if test="${targetClass == 2}">
-						<html:option value="2">分類（中）</html:option>
-        </c:if>
-        <c:if test="${targetClass == 3}">
-						<html:option value="3">分類（小）</html:option>
-        </c:if>
-					</html:select>
-</c:if>
-				</td>
-			</tr>
-			<tr>
-				<th rowspan="2">親分類</th>
-				<th>（大）</th>
-				<td colspan="3">
-<c:if test="${!editMode}">
-    				<html:select styleId="classCode1" property="classCode1" style="width:500px" onchange="changeProductClass1()" tabindex="101">
-    					<html:options collection="classCode1List" property="value" labelProperty="label"/>
-    				</html:select>
-</c:if>
-<c:if test="${editMode}">
-    				<html:select styleId="classCode1" property="classCode1" style="width:500px" styleClass="c_disable" tabindex="101">
-    					<html:options collection="classCode1List" property="value" labelProperty="label"/>
-    				</html:select>
-</c:if>
-				</td>
-			</tr>
-			<tr>
-				<th>（中）</th>
-				<td colspan="3">
-<c:if test="${!editMode}">
-    				<html:select styleId="classCode2" property="classCode2" style="width:500px" onchange="changeProductClass2()" tabindex="102">
-    					<html:options collection="classCode2List" property="value" labelProperty="label"/>
-    				</html:select>
-</c:if>
-<c:if test="${editMode}">
-    				<html:select styleId="classCode2" property="classCode2" style="width:500px" styleClass="c_disable" tabindex="102">
-    					<html:options collection="classCode2List" property="value" labelProperty="label"/>
-    				</html:select>
-</c:if>
-				</td>
-			</tr>
-		</table>
+		<div class="form_section_wrap">
+			<div class="form_section">
+				<div class="section_title">
+					<span>分類情報</span><br>
+				</div><!-- /.section_title -->
+				<div class="section_body">
+
+					<table id="productClass_info" class="forms" summary="分類情報１">
+						<colgroup>
+							<col span="1" style="width: 8%">
+							<col span="1" style="width: 7%">
+							<col span="1" style="width: 85%">
+						</colgroup>
+						<tr>
+							<th colspan="2"><div class="col_title_right">登録・編集分類</div></th>
+							<td>
+			<c:if test="${!editMode}">
+								<html:select styleId="targetClass" property="targetClass" onchange="changeTargetClass()" tabindex="100">
+									<html:option value="1">分類（大）</html:option>
+									<html:option value="2">分類（中）</html:option>
+									<html:option value="3">分類（小）</html:option>
+								</html:select>
+			</c:if>
+			<c:if test="${editMode}">
+								<html:select styleId="targetClass" property="targetClass" styleClass="c_disable" tabindex="100">
+			        <c:if test="${targetClass == 1}">
+									<html:option value="1">分類（大）</html:option>
+			        </c:if>
+			        <c:if test="${targetClass == 2}">
+									<html:option value="2">分類（中）</html:option>
+			        </c:if>
+			        <c:if test="${targetClass == 3}">
+									<html:option value="3">分類（小）</html:option>
+			        </c:if>
+								</html:select>
+			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<th rowspan="2"><div class="col_title_right">親分類</div></th>
+							<th><div class="col_title_right">（大）</div></th>
+							<td colspan="3">
+			<c:if test="${!editMode}">
+			    				<html:select styleId="classCode1" property="classCode1" style="width:500px" onchange="changeProductClass1()" tabindex="101">
+			    					<html:options collection="classCode1List" property="value" labelProperty="label"/>
+			    				</html:select>
+			</c:if>
+			<c:if test="${editMode}">
+			    				<html:select styleId="classCode1" property="classCode1" style="width:500px" styleClass="c_disable" tabindex="101">
+			    					<html:options collection="classCode1List" property="value" labelProperty="label"/>
+			    				</html:select>
+			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">（中）</div></th>
+							<td colspan="3">
+			<c:if test="${!editMode}">
+			    				<html:select styleId="classCode2" property="classCode2" style="width:500px" onchange="changeProductClass2()" tabindex="102">
+			    					<html:options collection="classCode2List" property="value" labelProperty="label"/>
+			    				</html:select>
+			</c:if>
+			<c:if test="${editMode}">
+			    				<html:select styleId="classCode2" property="classCode2" style="width:500px" styleClass="c_disable" tabindex="102">
+			    					<html:options collection="classCode2List" property="value" labelProperty="label"/>
+			    				</html:select>
+			</c:if>
+							</td>
+						</tr>
+					</table>
+
 
 		<table class="forms" style="width: 910px" summary="分類情報２">
 			<colgroup>
@@ -355,37 +363,39 @@
 				<col span="1" style="width: 45%">
 			</colgroup>
 			<tr>
-				<th>分類コード</th>
+				<th><div class="col_title_right">分類コード</div></th>
 				<td><html:text maxlength="4" styleId="classCode" property="classCode" style="width: 100px" tabindex="103" readonly="true" styleClass="c_disable"/>
 				</td>
-				<th>分類名<bean:message key='labels.must'/></th>
+				<th><div class="col_title_right">分類名</div><bean:message key='labels.must'/></th>
 				<td><html:text maxlength="250" styleId="className" property="className" style="width: 250px" tabindex="104"/></td>
 			</tr>
 		</table>
-
-		<div style="text-align: right; width: 910px">
+		</div><!-- /.section_body -->
+    		</div><!-- /.form_section -->
+   		</div><!-- /.form_section_wrap -->
+		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
-			<button tabindex="150" onclick="initForm()">初期化</button>
+			<button class="btn_medium" tabindex="150" onclick="initForm()">初期化</button>
 <c:if test="${!isUpdate}">
-            <button tabindex="151" disabled="disabled">更新</button>
+            <button class="btn_medium" tabindex="151" disabled="disabled">更新</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-            <button tabindex="151" onclick="registerProductClass()">更新</button>
+            <button class="btn_medium" tabindex="151" onclick="registerProductClass()">更新</button>
     </c:if>
 	<c:if test="${!editMode}">
-            <button tabindex="151" onclick="registerProductClass()">登録</button>
+            <button class="btn_medium" tabindex="151" onclick="registerProductClass()">登録</button>
     </c:if>
 </c:if>
 <c:if test="${!isUpdate}">
-		<button tabindex="152" disabled="disabled">削除</button>
+		<button class="btn_medium" tabindex="152" disabled="disabled">削除</button>
 </c:if>
 <c:if test="${isUpdate}">
 	<c:if test="${editMode}">
-		<button tabindex="152" onclick="deleteProductClass()">削除</button>
+		<button class="btn_medium" tabindex="152" onclick="deleteProductClass()">削除</button>
     </c:if>
 	<c:if test="${!editMode}">
-		<button tabindex="152" disabled="disabled">削除</button>
+		<button class="btn_medium" tabindex="152" disabled="disabled">削除</button>
     </c:if>
 </c:if>
 		</div>

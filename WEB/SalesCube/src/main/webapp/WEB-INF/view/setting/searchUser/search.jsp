@@ -38,9 +38,7 @@
 	 * 検索処理実行
 	 */
 	function searchUser(){
-		if(!confirm('<bean:message key="confirm.search" />')){
-			return;
-		}
+
 		return execSearch(createData(), true);
 	}
 
@@ -196,96 +194,101 @@
 </head>
 
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0012"/>
 		<jsp:param name="MENU_ID" value="1203"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 		<!-- タイトル -->
 		<span class="title">社員情報</span>
 
 		<div class="function_buttons">
-			<button tabindex="2000" onclick="initForm();">F1<br>初期化</button><button
-				tabindex="2001" onclick="searchUser();">F2<br>検索</button><button
-				tabindex="2002" onclick="addUser();" <c:if test="${!isUpdate}">disabled</c:if> >F3<br>追加</button><button
-				disabled="disabled">F4<br>&nbsp;</button><button
-				disabled="disabled">F5<br>&nbsp;</button><button
-				disabled="disabled">F6<br>&nbsp;</button><button
-				disabled="disabled">F7<br>&nbsp;</button><button
-				disabled="disabled">F8<br>&nbsp;</button><button
-				disabled="disabled">F9<br>&nbsp;</button><button
-				disabled="disabled">F10<br>&nbsp;</button><button
-				disabled="disabled">F11<br>&nbsp;</button><button
-				disabled="disabled">F12<br>&nbsp;</button>
+			<button tabindex="2000" onclick="initForm();">F1<br>初期化</button>
+			<button tabindex="2001" onclick="searchUser();">F2<br>検索</button>
+			<button tabindex="2002" onclick="addUser();" <c:if test="${!isUpdate}">disabled</c:if> >F3<br>追加</button>
+			<button disabled="disabled">F4<br>&nbsp;</button>
+			<button disabled="disabled">F5<br>&nbsp;</button>
+			<button disabled="disabled">F6<br>&nbsp;</button>
+			<button disabled="disabled">F7<br>&nbsp;</button>
+			<button disabled="disabled">F8<br>&nbsp;</button>
+			<button disabled="disabled">F9<br>&nbsp;</button>
+			<button disabled="disabled">F10<br>&nbsp;</button>
+			<button disabled="disabled">F11<br>&nbsp;</button>
+			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form onsubmit="return false;">
 			<html:hidden styleId="sortColumn" property="sortColumn" />
-			<html:hidden styleId="sortOrderAsc"property="sortOrderAsc" />
-
+			<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
+			
 			<div class="function_forms">
-
 				<div style="padding-left: 20px">
 					<html:errors/>
 					<span id="ajax_errors"></span>
 				</div>
+			
+			<div class="form_section_wrap">
+				<div class="form_section">
+					<div class="section_title">
+						<span>社員情報</span>
+						<button class="btn_toggle">
+	           				<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	      				</button>
+						<br>
+					</div><!-- /.section_title -->
+				<div class="section_body">
+					<div id="search_info">
+						<table id="order_info" class="forms" style="width: 600px" summary="社員情報">
+							<tr>
+								<th><div class="col_title_right">社員コード</div></th>
+								<td colspan="3"><html:text styleId="userId" property="userId" tabindex="100" style="width: 150px; ime-mode: disabled;"  /></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">社員名</div></th>
+								<td colspan="3"><html:text styleId="nameKnj" property="nameKnj"  tabindex="101" style="width: 150px"/></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">社員名カナ</div></th>
+								<td colspan="3"><html:text styleId="nameKana" property="nameKana"  tabindex="102" style="width: 150px"/></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">部門</div></th>
+								<td colspan="3">
+									<html:select styleId="deptId" property="deptId" tabindex="103" style="width: 400px;">
+										<html:options collection="deptList" property="value" labelProperty="label" />
+									</html:select>
+								</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">E-MAIL</div></th>
+								<td colspan="3"><html:text styleId="email" property="email"  tabindex="106" style="width: 400px; ime-mode: disabled;"/></td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- /.section_body -->
+    		</div><!-- /.form_section -->
+   		</div><!-- /.form_section_wrap -->
 
-				<span>社員情報</span><br>
-				<div id="search_info">
-					<table id="order_info" class="forms" style="width: 600px" summary="社員情報">
-						<colgroup>
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 30%">
-							<col span="1" style="width: 20%">
-							<col span="1" style="width: 30%">
-						</colgroup>
-						<tr>
-							<th>社員コード</th>
-							<td colspan="3"><html:text styleId="userId" property="userId" tabindex="100" style="width: 130px; ime-mode: disabled;"  /></td>
-						</tr>
-						<tr>
-							<th>社員名</th>
-							<td colspan="3"><html:text styleId="nameKnj" property="nameKnj"  tabindex="101" style="width: 150px"/></td>
-						</tr>
-						<tr>
-							<th>社員名カナ</th>
-							<td colspan="3"><html:text styleId="nameKana" property="nameKana"  tabindex="102" style="width: 150px"/></td>
-						</tr>
-						<tr>
-							<th>部門</th>
-							<td colspan="3">
-								<html:select styleId="deptId" property="deptId" tabindex="103" >
-									<html:options collection="deptList" property="value" labelProperty="label" />
-								</html:select>
-							</td>
-						</tr>
-						<tr>
-							<th>E-MAIL</th>
-							<td colspan="3"><html:text styleId="email" property="email"  tabindex="106" style="width: 400px; ime-mode: disabled;"/></td>
-						</tr>
-					</table>
-				</div>
-
-				<div style="text-align: right; width: 600px">
-					<button type="button" tabindex="350" style="width: 80px;"  onclick="initForm();">初期化</button>
-					<button type="button" tabindex="351" style="width: 80px;" onclick="searchUser();">検索</button>
+				<div style="text-align: right; width: 1160px">
+					<button class="btn_medium"  type="button" tabindex="350" style=""  onclick="initForm();">初期化</button>
+					<button class="btn_medium"  type="button" tabindex="351" style="" onclick="searchUser();">検索</button>
 				</div>
 			</div>
 		</s:form>
 
 		<div id="ListContainer">
-			<div style="width: 910px; height: 25px;">
+			<div style="width: 1010px; height: 25px;">
 					<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>
 					<jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 			</div>
-
-			<table id="List" summary="社員検索結果"  class="forms" style="width: 910px">
+			<table id="search_result" summary="searchResult" class="forms detail_info" summary="社員検索結果" style="table-layout: auto; margin-top: 20px;">
 				<colgroup>
 					<col span="1" style="width: 10%">
 					<col span="1" style="width: 15%">
@@ -295,16 +298,15 @@
 					<col span="1" style="width: 10%">
 				</colgroup>
 				<tr>
-					<th style="cursor: pointer">社員コード</th>
+					<th class="rd_top_left" style="height: 30px; cursor: pointer">社員コード</th>
 					<th style="cursor: pointer">社員名</th>
 					<th style="cursor: pointer">社員名カナ</th>
 					<th style="cursor: pointer">部門</th>
 					<th style="cursor: pointer">E-MAIL</th>
-					<th>&nbsp;</th>
+					<th class="rd_top_right" >&nbsp;</th>
 				</tr>
 			</table>
 		</div>
-
 	</div>
 </body>
 </html>

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.ArrayList;
@@ -99,7 +98,7 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 
 		Map<String, Object> param = super.createSqlParam();
 
-		
+		// 検索条件
 		param.put(Param.ONLINE_ORDER_ID, onlineOrderId);
 
 		List<OnlineOrderWork> result = this.selectBySqlFile(OnlineOrderWork.class,
@@ -151,14 +150,14 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 			String userId, String limitRow, String offsetRow, String sortColumn, boolean sortOrderAsc)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
-			
+			// ユーザIDの制限を外す
 			if( userId != null ){
 				param.put(Param.USER_ID, userId);
 			}
 
-			
+			// ソートカラムを設定する
 			if (Param.STATUS.equals(sortColumn)) {
 				param.put(Param.SORT_COLUMN, Column.RO_SLIP_ID);
 			} else if (Param.RO_SLIP_ID.equals(sortColumn)) {
@@ -173,14 +172,14 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 				param.put(Param.SORT_COLUMN, Column.LOAD_DATE);
 			}
 
-			
+			// ソートオーダーを設定する
 			if (sortOrderAsc) {
 				param.put(Param.SORT_ORDER, Constants.SQL.ASC);
 			} else {
 				param.put(Param.SORT_ORDER, Constants.SQL.DESC);
 			}
 
-			
+			// リミットを設定する
 			if(StringUtil.hasLength(limitRow)
 					&& StringUtil.hasLength(offsetRow)) {
 				param.put(Param.LIMIT_ROW, limitRow);
@@ -206,7 +205,7 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 	public Integer findRoWorkRelCntByUserId(String userId)
 			throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			if( userId != null ){
 				param.put(Param.USER_ID, userId);
@@ -229,7 +228,7 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 	 */
 	public int insertWork(OnlineOrderWorkDto onlineOrderWorkDto) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = createWorkSqlParam(onlineOrderWorkDto);
 			return this.updateBySqlFile("onlineorder/InsertOnlineOrderWork.sql", param).execute();
 		} catch (Exception e) {
@@ -287,7 +286,7 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 	 */
 	public int deleteWorksAll() throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			return this.updateBySqlFile("onlineorder/DeleteOnlineOrderWork.sql", param).execute();
 		} catch (Exception e) {
@@ -305,7 +304,7 @@ public class OnlineOrderService extends AbstractService<OnlineOrderWork> {
 	 */
 	public int deleteWorksByRoId(String roId) throws ServiceException {
 		try {
-			
+			// SQLパラメータを構築する
 			Map<String, Object> param = super.createSqlParam();
 			param.put(Param.ONLINE_ORDER_ID, roId);
 			return this.updateBySqlFile("onlineorder/DeleteOnlineOrderWork.sql", param).execute();

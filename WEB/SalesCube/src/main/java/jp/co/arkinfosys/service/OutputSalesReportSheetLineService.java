@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class OutputSalesReportSheetLineService extends
 	 *
 	 */
 	public static class Param {
-		public static final String SALES_SLIP_ID = "salesSlipId";
+		public static final String SALES_SLIP_ID = "salesSlipId";// 売上伝票番号
 		public static final String SALES_LINE_ID = "salesLineId";
 		public static final String SORT_COLUMN_LINE_NO = "sortColumnLineNo";
 		public static final String SORT_ORDER = "sortOrder";
@@ -85,7 +84,7 @@ public class OutputSalesReportSheetLineService extends
 	 * @return 空の検索条件オブジェクト
 	 */
 	private Map<String, Object> setEmptyCondition(Map<String, Object> param) {
-		param.put(Param.SALES_SLIP_ID, null);
+		param.put(Param.SALES_SLIP_ID, null);// 売上番号
 		param.put(Param.SALES_LINE_ID, null);
 		param.put(Param.SORT_COLUMN_LINE_NO, null);
 		param.put(Param.SORT_ORDER, null);
@@ -105,7 +104,7 @@ public class OutputSalesReportSheetLineService extends
 	 */
 	private void setConditionParam(Map<String, Object> conditions,
 			Map<String, Object> param) {
-		
+		// 売上伝票番号
 		if (conditions.containsKey(Param.SALES_SLIP_ID)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SALES_SLIP_ID))) {
@@ -114,13 +113,13 @@ public class OutputSalesReportSheetLineService extends
 			}
 		}
 
-		
+		// ピッキングリストID
 		if (conditions.containsKey(Param.PICKING_LIST_ID)) {
 			param.put(Param.PICKING_LIST_ID, (Integer) conditions
 					.get(Param.PICKING_LIST_ID));
 		}
 
-		
+		// セット商品フラグ
 		if (conditions.containsKey(Param.SET_TYPE_CATEGORY)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SET_TYPE_CATEGORY))) {

@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.porder;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class MakeOutPOrderResultOutputAction extends AbstractReportWriterAction 
 	 * @throws ServiceException
 	 */
 	private void incrementPrintCount() throws ServiceException {
-		
+		//発行数を＋１する
 		for (String slipId : makeOutPOrderResultOutputForm.slipIdList) {
 			try {
 				outputPOrderSlipService.incrementSlipPrintCount(slipId);
@@ -91,7 +90,7 @@ public class MakeOutPOrderResultOutputAction extends AbstractReportWriterAction 
 	public String excel() throws Exception {
 		if (makeOutPOrderResultOutputForm.slipIdList != null) {
 			super.excel();
-			
+			//伝票発行済み
 			incrementPrintCount();
 		} else {
 			ResponseUtil.write(MessageResourcesUtil
@@ -112,7 +111,7 @@ public class MakeOutPOrderResultOutputAction extends AbstractReportWriterAction 
 
 			super.pdf();
 
-			
+			//伝票発行済み
 			incrementPrintCount();
 		} else {
 			ResponseUtil.write(MessageResourcesUtil

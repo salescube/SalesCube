@@ -32,13 +32,10 @@ function onF1(){
 
 // 検索ボタンによる検索処理
 function onF2() {
-	// この条件で検索しますか？
-	if(confirm('<bean:message key="confirm.search" />')){
-		showNowSearchingDiv();
-		$("form[name='" + MAIN_FORM_NAME + "']").attr("action", '${f:url("/estimate/dispProductPriceList/show")}');
-		$("form[name='" + MAIN_FORM_NAME + "']").submit();
-		return;
-	}
+	showNowSearchingDiv();
+	$("form[name='" + MAIN_FORM_NAME + "']").attr("action", '${f:url("/estimate/dispProductPriceList/show")}');
+	$("form[name='" + MAIN_FORM_NAME + "']").submit();
+	return;
 }
 
 /**
@@ -63,16 +60,16 @@ function productSearch(jqObject) {
 </script>
 </head>
 <body onload="init()">
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0002"/>
 		<jsp:param name="MENU_ID" value="0203"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<!-- タイトル -->

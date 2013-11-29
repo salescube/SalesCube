@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.stock;
 
 import java.util.List;
@@ -141,7 +140,7 @@ public abstract class CommonInputStockService extends
 	@Override
 	public int deleteById(String id, String updDatetm) throws ServiceException,
 			UnabledLockException {
-		
+		// 排他制御
 		Map<String, Object> param = super.createSqlParam();
 
 		param.put(EadService.Param.EAD_SLIP_ID, id);

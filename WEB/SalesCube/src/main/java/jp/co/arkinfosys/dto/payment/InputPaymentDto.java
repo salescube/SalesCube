@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.payment;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ import jp.co.arkinfosys.dto.AbstractSlipDto;
 public class InputPaymentDto extends AbstractSlipDto<InputPaymentLineDto> {
 	private static final long serialVersionUID = 1L;
 
-	
+	// 支払伝票情報
 	/** 支払伝票番号 */
 	public String paymentSlipId;
 
@@ -67,7 +66,7 @@ public class InputPaymentDto extends AbstractSlipDto<InputPaymentLineDto> {
 	/** 単価端数処理 */
 	public String priceFractCategory;
 
-	
+	// 登録・更新で設定する項目
 	/** 状態フラグ */
 	public String status;
 
@@ -86,7 +85,7 @@ public class InputPaymentDto extends AbstractSlipDto<InputPaymentLineDto> {
 	/** 支払年月度 */
 	public String paymentYm;
 
-	
+	// 参照時の金額合計で使用する項目
 	/** 消費税率 */
 	public String supplierTaxRate;
 

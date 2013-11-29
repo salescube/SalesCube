@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import java.util.ArrayList;
@@ -58,19 +57,19 @@ public class SearchProductForm extends AbstractSearchForm<ProductDto> {
 	/** 備考 */
 	public String remarks;
 
-	
+	// 標準
 	public List<LabelValueBean> standardCategoryList = null;
-	
+	// 状況
 	public List<LabelValueBean> statusCategoryList = null;
-	
+	// 保管
 	public List<LabelValueBean> stockCategorylist = null;
-	
+	// セット分類
 	public List<LabelValueBean> setCategoryList = null;
-	
+	// 分類（大）
 	public List<LabelValueBean> product1List = null;
-	
+	// 分類（中）
 	public List<LabelValueBean> product2List = new ArrayList<LabelValueBean>();
-	
+	// 分類（小）
 	public List<LabelValueBean> product3List = new ArrayList<LabelValueBean>();
 
 }

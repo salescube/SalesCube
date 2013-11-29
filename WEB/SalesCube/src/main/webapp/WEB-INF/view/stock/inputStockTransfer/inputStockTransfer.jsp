@@ -16,6 +16,7 @@
 
 		// ページ読込時の動作
 		$(document).ready(function(){
+		
 			// 明細行のIndex管理
 			var maxLineNo = $("#tbodyLine").children().length-2;
 			var maxLineId = $("#tbodyLine").children().eq(maxLineNo).attr("id");
@@ -72,10 +73,10 @@
 			if(confirm('<bean:message key="confirm.init" />')){
 				showNowSearchingDiv();
 /*
-				<c:if test="${f:h(new)}">
+				<c:if test="${f:h(newData)}">
 					<bean:define id="concatUrl" value="${'/stock/inputStockTransfer'}" />
 				</c:if>
-				<c:if test="${!f:h(new)}">
+				<c:if test="${!f:h(newData)}">
 					<bean:define id="concatUrl" value="${'/stock/inputStockTransfer/edit/'}${eadSlipId}" />
 				</c:if>
 				*/
@@ -155,36 +156,36 @@
 			elemWork.val("");
 			// 商品列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.productCode");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.productCode");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].productCode");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].productCode");
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("focus", {index: maxIndex}, function(e){ this.curVal=this.value; });
 			elemWork.bind("blur", {index: maxIndex}, function(e){ if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(e); } });
 			elemWork.val("");
-			elemWork = elemTd.children("#productCodeImg" + baseIndex);
+			elemWork = elemTd.children().children("#productCodeImg" + baseIndex);
 			elemWork.attr("id", "productCodeImg" + maxIndex);
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("click", {index: maxIndex}, openProductSearchDialog);
-			elemWork = elemTd.children("#productAbstract" + baseIndex);
+			elemWork = elemTd.children().children("#productAbstract" + baseIndex);
 			elemWork.attr("id", "productAbstract" + maxIndex);
 			elemWork.text("");
 			// 数量列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantity");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantity");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].quantity");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].quantity");
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("change", {index: maxIndex}, changeQuantity);
 			applyNumeralStylesToObj(${mineDto.productFractCategory}, ${mineDto.numDecAlignment}, elemWork);
 			elemWork.val("");
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.movableStockCount");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.movableStockCount");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].movableStockCount");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].movableStockCount");
 			elemWork.attr("tabindex", (++tabIdx));
 			applyNumeralStylesToObj(${mineDto.productFractCategory}, ${mineDto.numDecAlignment}, elemWork);
 			elemWork.val("");
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.stockCount");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.stockCount");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].stockCount");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].stockCount");
 			elemWork.attr("tabindex", (++tabIdx));
@@ -192,56 +193,56 @@
 			elemWork.val("");
 			// 棚番列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.rackCode");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.rackCode");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].rackCode");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].rackCode");
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("focus", {index: maxIndex, isSrc: true}, function(e){ this.curVal=this.value; });
 			elemWork.bind("blur", {index: maxIndex, isSrc: true}, function(e){ if(this.curVal!=this.value){ changeRackCode(e); } });
 			elemWork.val("");
-			elemWork = elemTd.children("#rackCodeImg" + baseIndex);
+			elemWork = elemTd.children().children("#rackCodeImg" + baseIndex);
 			elemWork.attr("id", "rackCodeImg" + maxIndex);
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("click", {index: maxIndex}, openRackSearchDialog);
 			elemWork.val("");
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.rackCodeDest");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.rackCodeDest");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].rackCodeDest");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].rackCodeDest");
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("focus", {index: maxIndex, isSrc: false}, function(e){ this.curVal=this.value; });
 			elemWork.bind("blur", {index: maxIndex, isSrc: false}, function(e){ if(this.curVal!=this.value){ changeRackCode(e); } });
 			elemWork.val("");
-			elemWork = elemTd.children("#rackCodeDestImg" + baseIndex);
+			elemWork = elemTd.children().children("#rackCodeDestImg" + baseIndex);
 			elemWork.attr("id", "rackCodeDestImg" + maxIndex);
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("click", {index: maxIndex}, openRackSearchDialogDest);
 			elemWork.val("");
 			// 移動元、先在庫数列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantitySrc");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantitySrc");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].quantitySrc");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].quantitySrc");
 			applyNumeralStylesToObj(${mineDto.productFractCategory}, ${mineDto.numDecAlignment}, elemWork);
 			elemWork.val("");
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantityDest");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.quantityDest");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].quantityDest");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].quantityDest");
 			applyNumeralStylesToObj(${mineDto.productFractCategory}, ${mineDto.numDecAlignment}, elemWork);
 			elemWork.val("");
 			// 備考列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.remarks");
+			elemWork = elemTd.children().children("#eadLineTrnDtoList\\[" + baseIndex + "\\]\\.remarks");
 			elemWork.attr("id", "eadLineTrnDtoList[" + maxIndex + "].remarks");
 			elemWork.attr("name", "eadLineTrnDtoList[" + maxIndex + "].remarks");
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.val("");
 			// ボタン列の設定
 			elemTd = elemTd.next();
-			elemWork = elemTd.children("#deleteBtn" + baseIndex);
+			elemWork = elemTd.children().children("#deleteBtn" + baseIndex);
 			elemWork.attr("id", "deleteBtn" + maxIndex);
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("click", {index: maxIndex}, deleteRow);
-			elemWork = elemTd.children("#copyBtn" + baseIndex);
+			elemWork = elemTd.children().children("#copyBtn" + baseIndex);
 			elemWork.attr("id", "copyBtn" + maxIndex);
 			elemWork.attr("tabindex", (++tabIdx));
 			elemWork.bind("click", {index: maxIndex}, copyRow);
@@ -694,35 +695,34 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0010"/>
 		<jsp:param name="MENU_ID" value="1002"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<span class="title"><bean:message key='titles.inputStockTransfer'/></span>
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %>
-			</button><button type="button" id="btnF2" tabindex="2001" onclick="onF2();" ${new||cuttOff||!menuUpdate?"disabled":""}>F2<br><bean:message key='words.action.delete'/><%// 削除 %>
-			</button><button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${new&&menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.register'/><%// 登録 %>
-			</button><button type="button" id="btnF4" tabindex="2003" disabled>F4<br>&nbsp;
-			</button><button type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;
-			</button><button type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;
-			</button><button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;
-			</button><button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;
-			</button><button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;
-			</button><button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;
-			</button><button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;
-			</button><button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;
-			</button>
-		</div>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %></button>
+			<button type="button" id="btnF2" tabindex="2001" onclick="onF2();" ${newData||cuttOff||!menuUpdate?"disabled":""}>F2<br><bean:message key='words.action.delete'/><%// 削除 %></button>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>F3<br><bean:message key='words.action.register'/><%// 登録 %></button>
+			<button type="button" id="btnF4" tabindex="2003" disabled>F4<br>&nbsp;</button>
+			<button type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;</button>
+			<button type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
+		</div><br><br><br>
 
 		<s:form onsubmit="return false;">
 			<div class="function_forms">
@@ -735,74 +735,75 @@
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 				</div>
-
-				<bean:message key='labels.stockTransferSlipInfos'/><br>
+				
+				<div class="form_section_wrap">
+    			<div class="form_section">
+        		<div class="section_title">
+					<span><bean:message key='labels.stockTransferSlipInfos'/></span><br>
+	        		<button class="btn_toggle">
+	            		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+	        		</button>
+       			 </div>
+       			<div id="order_section" class="section_body">
+				
 				<table id="order_info" class="forms" summary="在庫移動伝票情報">
-					<colgroup>
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 15%">
-					</colgroup>
 					<tr>
-						<th><bean:message key='labels.eadSlipId.transfer'/></th><%// 在庫移動番号 %>
+						<th><div class="col_title_right"><bean:message key='labels.eadSlipId.transfer'/></div></th><%// 在庫移動番号 %>
 						<td><html:text property="eadSlipId" styleId="eadSlipId" style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="findSlip();"/></td>
-						<th><bean:message key='labels.eadDate.transfer'/><bean:message key='labels.must'/></th><%// 在庫移動日 %>
-						<td colspan="3"><html:text property="eadDate" styleId="eadDate" style="width: 100px; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
-						<th><bean:message key='labels.userName'/></th><%// 入力担当者 %>
+						<th><div class="col_title_right"><bean:message key='labels.eadDate.transfer'/><bean:message key='labels.must'/></div></th><%// 在庫移動日 %>
+						<td><html:text property="eadDate" styleId="eadDate" style="width: 135px; vertical-align: middle; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
+						<th><div class="col_title_right"><bean:message key='labels.userName'/></div></th><%// 入力担当者 %>
 						<td>
 							<html:text property="userName" styleClass="c_disable" readonly="true" />
 						</td>
 					</tr>
 					<tr>
-						<th><bean:message key='labels.reason'/></th><%// 理由 %>
+						<th><div class="col_title_right"><bean:message key='labels.reason'/></div></th><%// 理由 %>
 						<td colspan="7"><html:text property="remarks" styleClass="c_referable" style="width: 700px;" tabindex="102" maxlength="120" /></td>
 					</tr>
 				</table>
+				</div>
+				</div>
+				</div>
+				
 				<html:hidden property="userId"/>
 				<html:hidden property="stockPdate" />
 				<html:hidden property="moveDepositSlipId" />
 				<html:hidden property="updDatetm" />
-				<table id="input_table" summary="入出庫明細リスト" class="forms" style="margin-top: 20px;">
-					<colgroup>
-						<col span="1" style="width: 25px;">
-						<col span="1" style="width:255px;">
-						<col span="1" style="width: 85px;">
-						<col span="1" style="width:150px;">
-						<col span="1" style="">
-						<col span="1" style="width: 85px;">
-					</colgroup>
+				
+  				<div id="order_detail_info_wrap">
+				<table id="order_detail_info" summary="移動在庫リスト" class="forms" style="margin-top: 20px;">
 					<thead>
 						<tr>
-							<th rowspan="3"><bean:message key='labels.lineNo'/></th><%// No %>
-							<th><bean:message key='labels.productCode'/><bean:message key='labels.must'/></th><%// 商品コード %>
-							<th><bean:message key='labels.quantity'/><bean:message key='labels.must'/></th><%// 数量 %>
-							<th><bean:message key='labels.rackCodeSrc'/><bean:message key='labels.must'/></th><%// 移動元棚番 %>
-							<th><bean:message key='labels.quantitySrc'/></th><%// 移動元在庫数 %>
-							<th rowspan="3"><bean:message key='labels.remarks'/></th><%// 備考 %>
-							<th rowspan="3">&nbsp;</th>
+							<th rowspan="3" class="rd_top_left" style="height: 60px; width: 30px;"><bean:message key='labels.lineNo'/></th><%// No %>
+							<th style="height: 30px; width: 260px;"><bean:message key='labels.productCode'/><bean:message key='labels.must'/></th><%// 商品コード %>
+							<th style="height: 20px; width: 150px;"><bean:message key='labels.quantity'/><bean:message key='labels.must'/></th><%// 数量 %>
+							<th style="height: 30px; width: 200px;"><bean:message key='labels.rackCodeSrc'/><bean:message key='labels.must'/></th><%// 移動元棚番 %>
+							<th style="height: 30px; width: 150px;"><bean:message key='labels.quantitySrc'/></th><%// 移動元在庫数 %>
+							<th rowspan="3" style="height: 60px; width: 700px;"><bean:message key='labels.remarks'/></th><%// 備考 %>
+							<th rowspan="3" class="rd_top_right" style="height: 60px; width: 100px;">&nbsp;</th>
 						</tr>
 						<tr>
-							<th rowspan="2"><bean:message key='labels.productName'/></th><%// 商品名 %>
-							<th><bean:message key='labels.movableQuantity'/></th><%// 移動可能数 %>
-							<th><bean:message key='labels.rackCodeDest'/><bean:message key='labels.must'/></th><%// 移動先棚番 %>
-							<th rowspan="2"><bean:message key='labels.quantityDest'/></th><%// 移動先在庫数 %>
+							<th rowspan="2" style="height: 30px;"><bean:message key='labels.productName'/></th><%// 商品名 %>
+							<th style="height: 20px;"><bean:message key='labels.movableQuantity'/></th><%// 移動可能数 %>
+							<th style="height: 20px;"><bean:message key='labels.rackCodeDest'/><bean:message key='labels.must'/></th><%// 移動先棚番 %>
+							<th rowspan="2" style="height: 30px;"><bean:message key='labels.quantityDest'/></th><%// 移動先在庫数 %>
 						</tr>
 						<tr>
-							<th><bean:message key='labels.stockQuantity'/></th><%// 現在庫数 %>
-							<th>&nbsp;</th>
+							<th style="height: 20px;"><bean:message key='labels.stockQuantity'/></th><%// 現在庫数 %>
+							<th style="height: 20px;">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody id="tbodyLine">
 						<c:forEach var="eadLineTrnDtoList" items="${eadLineTrnDtoList}" varStatus="status">
 							<c:if test='${eadLineTrnDtoList.lineNo != null}'>
 								<tr id="trLine${status.index}">
-									<td id="tdNo${status.index}" style="text-align: right;">
-										<c:out value="${eadLineTrnDtoList.lineNo}" />
+								
+									<!-- No -->
+									<td id="tdNo${status.index}" style="text-align: center;">
+										<div class="box_1of1">
+											<c:out value="${eadLineTrnDtoList.lineNo}" />
+										</div>
 									</td>
 									<td style="display: none;">
 										<html:hidden name="eadLineTrnDtoList" property="lineNo" indexed="true" styleId="eadLineTrnDtoList[${status.index}].lineNo" />
@@ -811,61 +812,105 @@
 										<html:hidden name="eadLineTrnDtoList" property="rackName" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackName" />
 										<html:hidden name="eadLineTrnDtoList" property="rackNameDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackNameDest" />
 									</td>
-									<td style="vartical-align: top;">
-										<html:text name="eadLineTrnDtoList" property="productCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productCode" styleClass="c_referable" style="width: 165px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1000}" maxlength="20" />
-										<html:image src='${f:url("/images/icon_04_02.gif")}' styleId="productCodeImg${status.index}" style="vertical-align: middle; cursor: pointer;" tabindex="${status.index*lineElementCount+1001}" />
-										<span id="productAbstract${status.index}" style="display: block;  width:255px; height:3em; white-space: normal; overflow: auto; padding: 1px; border-top: 1px gray solid;">
-											<c:out value="${eadLineTrnDtoList.productAbstract}" />
-										</span>
-									</td>
+									
+									<!-- 商品コード・商品名 -->
 									<td>
-										<html:text name="eadLineTrnDtoList" property="quantity" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantity" styleClass="numeral_commas" style="width: 80px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1002}" maxlength="6" /><br>
-										<html:text name="eadLineTrnDtoList" property="movableStockCount" indexed="true" styleId="eadLineTrnDtoList[${status.index}].movableStockCount" styleClass="c_disable numeral_commas" style="width: 80px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1003}" readonly="true" /><br>
-										<html:text name="eadLineTrnDtoList" property="stockCount" indexed="true" styleId="eadLineTrnDtoList[${status.index}].stockCount" styleClass="c_disable numeral_commas" style="width: 80px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1004}" readonly="true" /><br>
+										<div class="box_1of2">
+											<html:text name="eadLineTrnDtoList" property="productCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productCode" styleClass="c_referable" style="width: 165px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1000}" maxlength="20" />
+											<html:image styleId="productCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1001}"/>
+										</div>
+										<div class="box_2of2">
+											<span id="productAbstract${status.index}" style="display: block;  width:255px; height:3em; white-space: normal; overflow: auto; padding: 1px;">
+												<c:out value="${eadLineTrnDtoList.productAbstract}" />
+											</span>
+										</div>
 									</td>
-									<td style="vertical-align:top;">
-										<html:text name="eadLineTrnDtoList" property="rackCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCode" styleClass="c_referable" style="width: 120px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1005}"  maxlength="${code_size_rack}" />
-										<html:image src='${f:url("/images/icon_04_02.gif")}' styleId="rackCodeImg${status.index}" style="vertical-align: middle; cursor: pointer;" tabindex="${status.index*lineElementCount+1006}" /><br>
-										<html:text name="eadLineTrnDtoList" property="rackCodeDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCodeDest" styleClass="c_referable" style="width: 120px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1007}"  maxlength="${code_size_rack}" />
-										<html:image src='${f:url("/images/icon_04_02.gif")}' styleId="rackCodeDestImg${status.index}" style="vertical-align: middle; cursor: pointer;" tabindex="${status.index*lineElementCount+1008}" />
-									</td>
+									
+									<!-- 数量・移動可能数・現在庫数 -->
 									<td>
-										<html:text name="eadLineTrnDtoList" property="quantitySrc" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantitySrc" styleClass="numeral_commas" style="border: 0px;text-align: center;width: 55px; text-align: right;" readonly="true" /><br>
-										<html:text name="eadLineTrnDtoList" property="quantityDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantityDest" styleClass="numeral_commas" style="border: 0px;text-align: center;width: 55px; text-align: right;" readonly="true" />
+										<div class="box_1of3">
+											<html:text name="eadLineTrnDtoList" property="quantity" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantity" styleClass="numeral_commas" style="width: 80px; height: 24px; ime-mode: disabled; margin: 3px;" tabindex="${status.index*lineElementCount+1002}" maxlength="6" /><br>
+										</div>
+										<div class="box_2of3">
+											<html:text name="eadLineTrnDtoList" property="movableStockCount" indexed="true" styleId="eadLineTrnDtoList[${status.index}].movableStockCount" styleClass="c_disable numeral_commas" style="width: 80px; height: 24px; ime-mode: disabled; margin: 3px;" tabindex="${status.index*lineElementCount+1003}" readonly="true" /><br>
+										</div>
+										<div class="box_3of3">
+											<html:text name="eadLineTrnDtoList" property="stockCount" indexed="true" styleId="eadLineTrnDtoList[${status.index}].stockCount" styleClass="c_disable numeral_commas" style="width: 80px; height: 24px; ime-mode: disabled; margin: 3px;" tabindex="${status.index*lineElementCount+1004}" readonly="true" /><br>
+										</div>
 									</td>
+									
+									<!-- 移動元棚番・移動先棚番 -->
 									<td>
-										<html:textarea name="eadLineTrnDtoList" property="remarks" indexed="true" styleId="eadLineTrnDtoList[${status.index}].remarks" style="width: 280px; height: 4.5em;" tabindex="${status.index*lineElementCount+1009}" />
+										<div class="box_1of2">
+											<html:text name="eadLineTrnDtoList" property="rackCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCode" styleClass="c_referable" style="width: 120px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1005}"  maxlength="${code_size_rack}" />
+											<html:image styleId="rackCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1006}"/>
+										</div>
+										<div class="box_2of2">
+											<html:text name="eadLineTrnDtoList" property="rackCodeDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCodeDest" styleClass="c_referable" style="width: 120px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1007}"  maxlength="${code_size_rack}" />
+											<html:image styleId="rackCodeDestImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1008}"/>
+										</div>
 									</td>
+									
+									<!-- 移動元在庫数・移動先在庫数 -->
+									<td>
+										<div class="box_1of2">
+											<html:text name="eadLineTrnDtoList" property="quantitySrc" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantitySrc" styleClass="numeral_commas" style="text-align: center;width: 80px; text-align: right;" readonly="true" />
+										</div>
+										<div class="box_2of2">
+											<html:text name="eadLineTrnDtoList" property="quantityDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantityDest" styleClass="numeral_commas" style="text-align: center;width: 80px; text-align: right;" readonly="true" />
+										</div>
+									</td>
+									
+									<!-- 備考 -->
+									<td>
+										<div class="box_1of1">
+											<html:textarea name="eadLineTrnDtoList" property="remarks" indexed="true" styleId="eadLineTrnDtoList[${status.index}].remarks" style="width: 96%; height: 5em; margin: 3px;" tabindex="${status.index*lineElementCount+1009}" />
+										</div>
+									</td>
+									
+									<!-- ボタン -->
 									<td style="text-align:right;">
-										<button id="deleteBtn${status.index}" type="button" style="width:80px;" tabindex="${status.index*lineElementCount+1010}"
-											<c:if test="${!new}">
+										<div class="box_1of2">
+										<button id="deleteBtn${status.index}" type="button" style="width:80px;" class="btn_small"  tabindex="${status.index*lineElementCount+1010}"
+											<c:if test="${!newData}">
 												disabled
 											</c:if>
-										><bean:message key='words.action.delete'/><%// 削除 %></button><br>
-										<button id="copyBtn${status.index}" type="button" style="width:80px;" tabindex="${status.index*lineElementCount+1011}"
-											<c:if test="${status.first || !new}">
+										><bean:message key='words.action.delete'/><%// 削除 %></button>
+										</div>
+										<div class="box_2of2">
+										<button id="copyBtn${status.index}" type="button" style="width:80px;" class="btn_small"  tabindex="${status.index*lineElementCount+1011}"
+											<c:if test="${status.first || !newData}">
 												disabled
 											</c:if>
 										><bean:message key='words.action.copyFromPreviousLine'/><%// 前行複写 %></button>
+										</div>
 									</td>
 								</tr>
 							</c:if>
 						</c:forEach>
 
+
 						<tr id="trAddLine">
-							<td style="text-align: right" colspan="7">
-								<button style="width:80px;" onclick="addRow();" tabindex="1999"
-									<c:if test="${!new}">
+							<td style="height: 60px; text-align: center" colspan="7" class="rd_bottom_left rd_bottom_right">
+								<button type="button" style="width:80px;" onclick="addRow();" tabindex="1999" 
+									<c:if test="${!newData}">
 										disabled
 									</c:if>
-								><bean:message key='words.action.addLine'/><%// 行追加 %></button>
+								><%// 行追加 %>
+									<img alt="<bean:message key='words.action.addLine'/>" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+								</button>
+								
 							</td>
 						</tr>
+						
 					</tbody>
 				</table>
 			</div>
-				<div style="text-align: right; width: 910px">
-					<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${new&&menuUpdate?"":"disabled"}><bean:message key='words.action.register'/><%// 登録 %></button>
+			</div>
+				<div style="text-align: center; width: 1160px; margin-top: 10px;">
+					<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>
+						<img alt="<bean:message key='words.action.register'/>" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 登録 %>
+					</button>
 				</div>
 		</s:form>
 	</div>

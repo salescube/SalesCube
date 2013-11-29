@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.ajax.estimate;
 
 import java.util.ArrayList;
@@ -136,7 +135,7 @@ public class SearchEstimateResultAjaxAction extends
 	 */
 	@Override
 	protected MasterSearch<BeanMap> getService() {
-		
+		// 未使用
 		return null;
 	}
 
@@ -147,7 +146,7 @@ public class SearchEstimateResultAjaxAction extends
 	 */
 	@Override
 	protected Class<List<Object>> getDtoClass() {
-		
+		// 未使用
 		return null;
 	}
 }

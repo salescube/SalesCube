@@ -1,16 +1,16 @@
 
-		<div style="width: 910px; height: 25px;">
+		<div style="width: 1010px; height: 25px;">
 			<div style="position:absolute; left: 0px;">検索結果件数： ${searchResultCount}件</div>
 			<input type="hidden" id="searchResultCount" value="${searchResultCount}">
 
-			<div style="position:absolute; width: 910px; text-align: center;">
+			<div style="position:absolute; width: 1160px; text-align: center;">
 				${sw:pageLink(searchResultCount,rowCount,pageNo)}
 			</div>
 
 			<jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
 		</div>
 
-		<table id="order_myself_output_list" summary="order_myself_output_list" class="forms" style="width: 910px;">
+		<table id="order_myself_output_list" summary="order_myself_output_list" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 			<colgroup>
 				<col span="1" style="width: 10%;">
 				<col span="1" style="width: 10%;">
@@ -20,29 +20,29 @@
 			</colgroup>
 		<thead>
 			<tr>
-				<th><bean:message key='words.action.select'/></th><!-- 選択 -->
-				<th style="cursor: pointer"  onclick="sort('printCount');">
+				<th class="rd_top_left" style="height:30px;"><bean:message key='words.action.select'/></th><!-- 選択 -->
+				<th style="cursor: pointer; height:30px;"  onclick="sort('printCount');">
 					<bean:message key='labels.alreadyOutput'/>
 					<c:if test="${sortColumn == 'printCount'}">
 						<c:if test="${sortOrderAsc}">▲</c:if>
 						<c:if test="${!sortOrderAsc}">▼</c:if>
 					</c:if>
 				</th><!-- 発行済 -->
-				<th style="cursor: pointer"  onclick="sort('poSlipId');">
+				<th style="cursor: pointer; height:30px;"  onclick="sort('poSlipId');">
 					<bean:message key='labels.poSlipId'/>
 					<c:if test="${sortColumn == 'poSlipId'}">
 						<c:if test="${sortOrderAsc}">▲</c:if>
 						<c:if test="${!sortOrderAsc}">▼</c:if>
 					</c:if>
 				</th><!-- 発注番号 -->
-				<th style="cursor: pointer"  onclick="sort('poDate');">
+				<th style="cursor: pointer; height:30px;"  onclick="sort('poDate');">
 					<bean:message key='labels.poDate'/>
 					<c:if test="${sortColumn == 'poDate'}">
 						<c:if test="${sortOrderAsc}">▲</c:if>
 						<c:if test="${!sortOrderAsc}">▼</c:if>
 					</c:if>
 				</th><!-- 発注日 -->
-				<th style="cursor: pointer"  onclick="sort('supplierName');">
+				<th class="rd_top_right" style="cursor: pointer; height:30px;"  onclick="sort('supplierName');">
 					<bean:message key='labels.supplierName'/>
 					<c:if test="${sortColumn == 'supplierName'}">
 						<c:if test="${sortOrderAsc}">▲</c:if>
@@ -75,7 +75,7 @@
 					</c:if>
 				</td>
 
-				<td style="">
+				<td style="">&nbsp;
 					<input type="hidden" id="poSlipId_row_${f:h(s.index)}" value="${f:h(rowData.poSlipId)}">
 					<c:if test='${isInputValid}'>
 						<bean:define id="concatUrl" value="${'/porder/inputPOrder/load/?poSlipId='}${f:h(rowData.poSlipId)}" />
@@ -85,13 +85,13 @@
 					</c:if>
 					<c:if test='${!isInputValid}'>
 						${f:h(rowData.poSlipId)}
-					</c:if>
+					</c:if>&nbsp;
 				</td>
 				<td style="text-align: center">
-					${f:h(rowData.poDate)}
+					&nbsp;${f:h(rowData.poDate)}&nbsp;
 				</td>
 				<td style="">
-					${f:h(rowData.supplierName)}
+					&nbsp;${f:h(rowData.supplierName)}&nbsp;
 				</td>
 			</tr>
 		</c:forEach>
@@ -99,7 +99,7 @@
 
 		</table>
 
-		<div style="position:absolute; width: 910px; text-align: center;">
+		<div style="position:absolute; width: 1160px; text-align: center; margin-top: 20px;">
 			${sw:pageLink(searchResultCount,rowCount,pageNo)}
 		</div>
 

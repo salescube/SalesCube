@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.service.sales;
 
 import java.util.ArrayList;
@@ -111,7 +110,7 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 		try {
 			List<OutputSalesSearchResultDto> resultList = new ArrayList<OutputSalesSearchResultDto>();
 			for (BeanMap resultMap : beanMapList) {
-				
+				// DTOに変換
 				OutputSalesSearchResultDto dto =
 					Beans.createAndCopy(OutputSalesSearchResultDto.class,resultMap)
 					.dateConverter(Constants.FORMAT.DATE)
@@ -166,56 +165,56 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 	private Map<String, Object> setConditionParam(
 			Map<String, Object> conditions, Map<String, Object> param) {
 
-		
+		// 売上日From
 		if (conditions.containsKey(Param.SALES_DATE_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_FROM))) {
 				param.put(Param.SALES_DATE_FROM,(String)conditions.get(Param.SALES_DATE_FROM));
 			}
 		}
 
-		
+		// 売上日To
 		if (conditions.containsKey(Param.SALES_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_TO))) {
 				param.put(Param.SALES_DATE_TO,(String)conditions.get(Param.SALES_DATE_TO));
 			}
 		}
 
-		
+		// 発注番号From
 		if (conditions.containsKey(Param.RO_SLIP_ID_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.RO_SLIP_ID_FROM))) {
 				param.put(Param.RO_SLIP_ID_FROM,new Long((String)conditions.get(Param.RO_SLIP_ID_FROM)));
 			}
 		}
 
-		
+		// 発注番号To
 		if (conditions.containsKey(Param.RO_SLIP_ID_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.RO_SLIP_ID_TO))) {
 				param.put(Param.RO_SLIP_ID_TO,new Long((String)conditions.get(Param.RO_SLIP_ID_TO)));
 			}
 		}
 
-		
+		// 売上番号From
 		if (conditions.containsKey(Param.SALES_SLIP_ID_FROM)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_SLIP_ID_FROM))) {
 				param.put(Param.SALES_SLIP_ID_FROM,new Long((String)conditions.get(Param.SALES_SLIP_ID_FROM)));
 			}
 		}
 
-		
+		// 売上番号To
 		if (conditions.containsKey(Param.SALES_SLIP_ID_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_SLIP_ID_TO))) {
 				param.put(Param.SALES_SLIP_ID_TO,new Long((String)conditions.get(Param.SALES_SLIP_ID_TO)));
 			}
 		}
 
-		
+		// 受付番号
 		if (conditions.containsKey(Param.RECEPT_NO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.RECEPT_NO))) {
 				param.put(Param.RECEPT_NO,(String)conditions.get(Param.RECEPT_NO) + '%');
 			}
 		}
 
-		
+		// 取引区分
 		if (conditions.containsKey(Param.SALES_CATEGORY_LIST)) {
 			List<SalesCategoryDto> categoryList = (List<SalesCategoryDto>)conditions.get(Param.SALES_CATEGORY_LIST);
 			if(categoryList.size() > 0){
@@ -223,14 +222,14 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 			}
 		}
 
-		
+		// 「全て出力済を除く」チェックボックス
 		if (conditions.containsKey(Param.EXCLUDING_OUTPUT_ALL)) {
 			if ((Boolean)conditions.get(Param.EXCLUDING_OUTPUT_ALL)) {
 				param.put(Param.EXCLUDING_OUTPUT_ALL,"true");
 			}
 		}
 
-		
+		// ソートカラムを設定する
 		if (conditions.containsKey(Param.SORT_COLUMN)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SORT_COLUMN))) {
 				param.put(Param.SORT_COLUMN,
@@ -238,7 +237,7 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 			}
 		}
 
-		
+		// ソートオーダーを設定する
 		Boolean sortOrderAsc = (Boolean)conditions.get(Param.SORT_ORDER_ASC);
 		if (sortOrderAsc != null && sortOrderAsc) {
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.ASC);
@@ -246,13 +245,13 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 			param.put(Param.SORT_ORDER_ASC, Constants.SQL.DESC);
 		}
 
-		
+		// 表示件数を設定する
 		if (conditions.containsKey(Param.ROW_COUNT)) {
 			param.put(Param.ROW_COUNT,
 					conditions.get(Param.ROW_COUNT));
 		}
 
-		
+		// オフセットを設定する
 		if (conditions.containsKey(Param.OFFSET_ROW)) {
 			param.put(Param.OFFSET_ROW,conditions.get(Param.OFFSET_ROW));
 		}
@@ -290,8 +289,8 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 	public Delivery findOldestDeliveryByCustomerCode(String customerCode) throws ServiceException{
 		try {
 			Map<String, Object> param = super.createSqlParam();
-			param.put(Param.CUST_REL_CATEGORY, Constants.CUSTOMER_REL.DELIVERY);
-			param.put(Param.CUSTOMER_CODE, customerCode);
+			param.put(Param.CUST_REL_CATEGORY, Constants.CUSTOMER_REL.DELIVERY);// 01:納入先
+			param.put(Param.CUSTOMER_CODE, customerCode);// 01:納入先
 
 			return this.selectBySqlFile(Delivery.class,
 					"sales/FindOldestDeliveryByCustomerCode.sql", param).getSingleResult();
@@ -313,38 +312,38 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 	 * </p>
 	 */
 	private void setResultDispInfo(OutputSalesSearchResultDto dto) throws ServiceException{
-		
+		// 仮納品書チェックボックスの制御
 		if(StringUtil.hasLength(dto.customerCode)){
 
 			if(dto.firstDeliveryCode != null &&
 					!dto.firstDeliveryCode.equals("true")) {
-				
-				
-				
+				// 売上伝票の納入先コードが、関連する納入先マスタの中で最も古いものでない場合、
+				// 帳票出力チェックボックスを表示する
+				// 仮納品書
 				dto.isTempDeliveryCheckDisp = true;
 				dto.fileTempDelivery = dto.REPORT_FILE_E;
 
-				
+				// 仮納品書が発行対象である
 				dto.tempDeliveryOutputFlag = true;
 
-				
+				// 仮納品書が発行済であればフラグを立てる
 				if(Integer.parseInt(dto.tempDeliveryPrintCount) > 0){
 					dto.tempDeliveryOutput = true;
 				}
 			}
 		}
 
-		
+		//全て出力済みかどうかのフラグ(とりあえずtrueにして、一つでも出力していない物があればfalseに変更する)
 		dto.allOutput = true;
 
-		
+		// ピッキングリストは常に有効
 		dto.isPickingListCheckDisp = true;
 		dto.filePickingList = dto.REPORT_FILE_J + "," + dto.REPORT_FILE_K;
 		if(Integer.parseInt(dto.shippingPrintCount) <= 0) {
 			dto.allOutput = false;
 		}
 
-		
+		// 納品書は「請求書発行単位：発行しない」以外の場合（請求書を発行する場合）のみ発行可能。
 		if( CategoryTrns.SALES_CM_CREDIT.equals(dto.salesCmCategory) && !CategoryTrns.BILL_PRINT_UNIT_NO_BILL.equals(dto.billPrintUnit)) {
 			dto.isDeliveryCheckDisp = true;
 			dto.fileDelivery = dto.REPORT_FILE_D;
@@ -354,20 +353,20 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 		}
 
 		if( !CategoryTrns.SALES_CM_CREDIT.equals(dto.salesCmCategory) || CategoryTrns.BILL_PRINT_UNIT_NO_BILL.equals(dto.billPrintUnit)) {
-			
+			// 請求書を発行しない場合は、納品書兼領収書を有効にする
 			dto.isDeliveryReceiptCheckDisp = true;
 			dto.fileDeliveryReceipt = dto.REPORT_FILE_F;
 			if(Integer.parseInt(dto.delborPrintCount) <= 0) {
 				dto.allOutput = false;
 			}
 		} else if( CategoryTrns.SALES_CM_CREDIT.equals(dto.salesCmCategory) && CategoryTrns.BILL_PRINT_UNIT_BILL_CLOSE.equals(dto.billPrintUnit)) {
-			
+			// 請求締め単位で請求書を発行する場合は、売上時に特別に発行する帳票はなし
 		} else if( CategoryTrns.SALES_CM_CREDIT.equals(dto.salesCmCategory) && CategoryTrns.BILL_PRINT_UNIT_SALES_SLIP.equals(dto.billPrintUnit)) {
-			
+			// 売上伝票単位の請求書を発行する場合
 			dto.isBillCheckDisp = true;
 			dto.fileBill = dto.REPORT_FILE_G;
 
-			
+			// 売上伝票単位の請求書発行日を出力するかどうかを設定する
 			if( CategoryTrns.BILL_DATE_PRINT_ON.equals(dto.billDatePrint) ) {
 				dto.dispDateFlag = true;
 			} else {

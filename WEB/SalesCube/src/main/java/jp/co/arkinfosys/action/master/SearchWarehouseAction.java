@@ -1,6 +1,3 @@
-/*
- *  Copyright 2009-2010 Ark Information Systems.
- */
 package jp.co.arkinfosys.action.master;
 
 import javax.annotation.Resource;
@@ -42,7 +39,7 @@ public class SearchWarehouseAction extends AbstractSearchAction<WarehouseDto> {
 
 	@Override
 	protected void createList() throws ServiceException {
-		
+		// TODO Auto-generated method stub
 		
 	}
 

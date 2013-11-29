@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.dto.setting;
 
 import java.io.Serializable;
@@ -28,6 +27,8 @@ public class MineDto implements Serializable {
     public String companyAbbr;
 
     public String companyCeoName;
+
+    public String companyCeoTitle;
 
     public String companyZipCode;
 
@@ -111,7 +112,7 @@ public class MineDto implements Serializable {
      * 数値整形用フォーマットを設定します．
      */
     public void initDecAlignFormat() {
-    	
+    	// 単価整形用
     	StringBuffer ret = new StringBuffer("###,##0");
     	StringBuffer xls = new StringBuffer("\\#\\,\\#\\#0");
     	if (unitPriceDecAlignment!=null && unitPriceDecAlignment.intValue()>0) {
@@ -126,7 +127,7 @@ public class MineDto implements Serializable {
     	unitPriceDecAlignFormat = ret.toString();
     	unitPriceDecAlignFormat4xls = xls.toString();
 
-    	
+    	// 数量
     	ret = new StringBuffer("###,##0");
     	xls = new StringBuffer("\\#\\,\\#\\#0");
     	if (numDecAlignment!=null && numDecAlignment.intValue()>0) {
@@ -141,7 +142,7 @@ public class MineDto implements Serializable {
     	numDecAlignFormat = ret.toString();
     	numDecAlignFormat4xls = xls.toString();
 
-    	
+    	// 統計処理用
     	ret = new StringBuffer("0");
     	xls = new StringBuffer("0");
     	if (statsDecAlignment!=null && statsDecAlignment.intValue()>0) {
@@ -154,7 +155,7 @@ public class MineDto implements Serializable {
     	}
     	xls.append("_ ");
 
-    	
+    	// 2010.04.22 add kaki 率表示には、「%」を付加する。
     	ret.append("%");
     	xls.append("%");
 

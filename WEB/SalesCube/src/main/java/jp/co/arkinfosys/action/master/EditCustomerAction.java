@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.action.master;
 
 import java.util.Iterator;
@@ -63,7 +62,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	@Resource
 	public EditCustomerForm editCustomerForm;
 
-	
+	// サービス群
 	/** 区分マスタ */
 	@Resource
 	public CategoryService categoryService;
@@ -132,7 +131,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	public String load() throws Exception {
 		super.doEdit(this.getKey());
 
-		
+		// 新規追加で不要な情報はクリアする
 		this.editCustomerForm.customerCode = null;
 		this.editCustomerForm.editMode = false;
 		this.editCustomerForm.lastCutoffDate = null;
@@ -173,7 +172,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	protected void doInsertAfter(CustomerDto dto) throws Exception {
 		ActionMessages messages = new ActionMessages();
 
-		
+		// 納入先情報登録
 		if (editCustomerForm.deliveryList != null) {
 			for (int i = 0; i < editCustomerForm.deliveryList.size(); i++) {
 				DeliveryAndPre delivery = editCustomerForm.deliveryList.get(i);
@@ -195,7 +194,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 			}
 		}
 
-		
+		// 請求先情報登録
 		this.deliveryService.insertDelivery(editCustomerForm.billTo);
 		CustomerRel cr = new CustomerRel();
 		cr.customerCode = editCustomerForm.customerCode;
@@ -244,7 +243,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 		CustomerDto dto = Beans.createAndCopy(CustomerDto.class,
 				this.editCustomerForm).execute();
 
-		
+		// 顧客情報更新
 		if (!dto.equals(customer)) {
 			updateFlag = true;
 			super.doUpdate();
@@ -280,13 +279,13 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	protected void doUpdateAfter(CustomerDto dto) throws Exception {
 		boolean customerUpdateFlag = updateFlag;
 
-		
+		// 既存納入先情報の取得
 		List<DeliveryAndPre> deliveryAndPreList = this.deliveryService.searchDeliveryByCompleteCustomerCodeSortedByCreDate(this.getKey());
 
-		
+		// 納入先情報登録
 		if (editCustomerForm.deliveryList != null) {
 			for (DeliveryAndPre delivery : editCustomerForm.deliveryList) {
-				
+				// 既存データ存在チェック
 				boolean exist = false;
 				boolean update = false;
 				if( delivery.deliveryCode != null ){
@@ -302,7 +301,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 					}
 				}
 				if( !exist ){
-					
+					// 追加
 					this.deliveryService.insertDelivery(delivery);
 					CustomerRel cr = new CustomerRel();
 					cr.customerCode = editCustomerForm.customerCode;
@@ -311,14 +310,14 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 					this.customerRelService.insertCustomerRel(cr);
 					updateFlag = true;
 				}else{
-					
+					// 更新
 					if( update ){
 						this.deliveryService.updateDelivery(delivery);
 						updateFlag = true;
 					}
 				}
 			}
-			
+			// 削除
 			for( DeliveryAndPre dbdap : deliveryAndPreList ){
 				this.deliveryService.deleteDelivery(dbdap.deliveryCode);
 				this.customerRelService.deleteCustomerRel(
@@ -329,7 +328,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 			}
 		}
 
-		
+		// 請求先情報登録
 		List<DeliveryAndPre> ldapBill = this.deliveryService.searchDeliveryByCompleteCustomerCode( this.editCustomerForm.customerCode);
 		if( ldapBill.size() == 1 ){
 			if( !editCustomerForm.billTo.equals(ldapBill.get(0)) ){
@@ -341,7 +340,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 		}
 		this.init(this.editCustomerForm.customerCode);
 
-		
+		// メッセージ設定
 		ActionMessages messages = new ActionMessages();
 		if( updateFlag ){
 			if(!zipService.checkZipCodeAndAddress(dto.customerZipCode,
@@ -372,11 +371,11 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 		}
 
 		if (!customerUpdateFlag && updateFlag) {
-			
+			// 関連テーブルのみ更新時
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"infos.update"));
 		} else if (!customerUpdateFlag && !updateFlag) {
-			
+			// 更新なし
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"infos.noupdate"));
 		}
@@ -401,7 +400,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	 */
 	@Override
 	protected String doDelete() throws Exception {
-		
+		// 関連データの存在チェック
 		Map<String, Object> result = this.customerService
 				.countRelations(this.editCustomerForm.customerCode);
 
@@ -435,10 +434,10 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 		super.init(key);
 
 		if (!StringUtil.hasLength(key)) {
-			
+			// 新規追加の場合、初期値マスタから値を取る。
 			this.initMstService.initBean(Customer.TABLE_NAME, this.editCustomerForm);
 
-			
+			// 敬称
 			if (StringUtil.hasLength(this.editCustomerForm.customerPcPreCategory)) {
 				editCustomerForm.customerPcPreCategory = this.editCustomerForm.customerPcPreCategory;
 				editCustomerForm.newDeliveryPcPreCategory = this.editCustomerForm.customerPcPreCategory;
@@ -462,7 +461,7 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	 */
 	@Override
 	protected AuditInfo loadData(String key) throws ServiceException {
-		
+		// 顧客情報を取得する
 		return this.customerService
 				.findCustomerByCode(key);
 	}
@@ -477,18 +476,18 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	protected void setForm(AuditInfo record) throws ServiceException {
 		super.setForm(record);
 
-		
+		// 納入先リストを作る
 		editCustomerForm.deliveryList = deliveryService
 				.searchDeliveryListByCompleteCustomerCode(this.getKey());
 
-		
+		// 請求先を設定
 		List<DeliveryAndPre> billing = deliveryService
 				.searchDeliveryByCompleteCustomerCode(this.getKey());
 		if (billing != null && billing.size() > 0) {
 			editCustomerForm.billTo = billing.get(0);
 		}
 
-		
+		// 支払条件の調整
 		editCustomerForm.cutoffGroupCategory = ((Customer)record).cutoffGroup
 				+ ((Customer)record).paybackCycleCategory;
 	}
@@ -498,61 +497,65 @@ public class EditCustomerAction extends AbstractEditAction<CustomerDto, Customer
 	 * @throws ServiceException
 	 */
 	protected void initList() throws ServiceException {
-		
+		// 敬称
 		this.editCustomerForm.preTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
-		
+		// 先頭に空白を入れる
 		this.editCustomerForm.preTypeCategoryList.add(0, new LabelValueBean());
 
-		
+		// 顧客ランク
 		List<CustomerRank> list = customerRankService.findAllCustomerRank();
 		this.editCustomerForm.customerRankList.clear();
 		for (CustomerRank rank : list) {
 			this.editCustomerForm.customerRankList.add(new LabelValueBean(rank.rankName,
 					rank.rankCode));
 		}
-		
+		// 先頭に空白を入れる
 		this.editCustomerForm.customerRankList.add(0, new LabelValueBean());
 
-		
+		// 受注停止
 		this.editCustomerForm.customerRoCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUSTOMER_RO_CATEGORY);
-		
+		// 先頭に空白を入れる
 		this.editCustomerForm.customerRoCategoryList.add(0, new LabelValueBean());
 
-		
+		// 業種
 		this.editCustomerForm.customerBusinessCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUSTOMER_BUSINESS_CATEGORY);
-		
+		// 先頭に空白を入れる
 		this.editCustomerForm.customerBusinessCategoryList.add(0, new LabelValueBean());
 
-		
+		// 職種
 		this.editCustomerForm.customerJobCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUSTOMER_JOB_CATEGORY);
-		
+		// 先頭に空白を入れる
 		this.editCustomerForm.customerJobCategoryList.add(0, new LabelValueBean());
 
-		
+		// 取引区分
 		this.editCustomerForm.salesCmCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.SALES_CM_CATEGORY);
 
-		
+		// 税端数処理
+		this.editCustomerForm.taxFractCategoryList = categoryService
+				.findCategoryLabelValueBeanListById(Categories.TAX_FRACT_CATEGORY);
+
+		// 税転嫁
 		this.editCustomerForm.taxShiftCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.ART_TAX_SHIFT_CATEGORY);
 
-		
+		// 支払方法
 		this.editCustomerForm.cutoffGroupList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.CUTOFF_GROUP);
 
-		
+		// 回収方法
 		this.editCustomerForm.paybackTypeCategoryList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.PAYBACK_TYPE_CATEGORY);
 
-		
+		// 請求書発行単位
 		this.editCustomerForm.billPrintUnitList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.BILL_PRINT_UNIT);
 
-		
+		// 請求書日付有無
 		this.editCustomerForm.billDatePrintList = categoryService
 				.findCategoryLabelValueBeanListById(Categories.BILL_DATE_PRINT);
 	}

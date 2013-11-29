@@ -1,7 +1,6 @@
 /*
- *  Copyright 2009-2010 Ark Information Systems.
+ * Copyright 2009-2010 Ark Information Systems.
  */
-
 package jp.co.arkinfosys.form.master;
 
 import org.apache.struts.action.ActionMessages;
@@ -55,18 +54,18 @@ public class EditProductClassForm extends AbstractEditForm {
 		String labelClassCode2 = MessageResourcesUtil.getMessage("labels.classcode2");
 		String labelClassName = MessageResourcesUtil.getMessage("labels.classname");
 
-		
-		if ("2".equals(targetClass)) {	
-			
+		// 必須チェック
+		if ("2".equals(targetClass)) {	// 分類（中）の場合
+			// 分類（大）は必須
 			checkRequired(classCode1, labelClassCode1, err);
-		} else if ("3".equals(targetClass)) {	
-			
+		} else if ("3".equals(targetClass)) {	// 分類（小）の場合
+			// 分類（大）は必須
 			checkRequired(classCode1, labelClassCode1, err);
-			
+			// 分類（中）は必須
 			checkRequired(classCode2, labelClassCode2, err);
 		}
 
-		
+		// 分類名の長さチェック
 		checkMaxLength(className, 250, labelClassName, err);
 
 

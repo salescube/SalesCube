@@ -107,7 +107,7 @@
 
 		function deleteLine( onlineOrderId ){
 			if(confirm('<bean:message key="confirm.delete"/>')) {
-				$("#onlineOrderId").val( onlineOrderId );
+				$("#roId").val( onlineOrderId );
 				$("form[name='" + MAIN_FORM_NAME + "']").attr("action", '${f:url("/rorder/importOnlineOrder/delete")}');
 				$("form[name='" + MAIN_FORM_NAME + "']").submit();
 			}
@@ -117,35 +117,36 @@
 	</script>
 </head>
 <body>
-	
+	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
-	
+	<%-- メニュー領域 --%>
 	<jsp:include page="/WEB-INF/view/common/menubar.jsp">
 		<jsp:param name="PARENT_MENU_ID" value="0003"/>
 		<jsp:param name="MENU_ID" value="0303"/>
 	</jsp:include>
 
-	
+	<%-- メイン機能領域 --%>
 	<div id="main_function">
 
 		<span class="title"><bean:message key='titles.importOnlineOrder' /></span>
 
 		<div class="function_buttons">
-			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %></button><button
-			type="button" id="btnF2" tabindex="2001" disabled>F2<br>&nbsp;</button><button
-			type="button" id="btnF3" tabindex="2002" onclick="onF3();">F3<br><bean:message key='words.action.uptake'/><%// 取込 %></button><button
-			type="button" id="btnF4" tabindex="2003" disabled>F4<br>&nbsp;</button><button
-			type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;</button><button
-			type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;</button><button
-			type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;</button><button
-			type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;</button><button
-			type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;</button><button
-			type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button><button
-			type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button><button
-			type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
+			<button type="button" id="btnF1" tabindex="2000" onclick="onF1();">F1<br><bean:message key='words.action.initialize'/><%// 初期化 %></button>
+			<button type="button" id="btnF2" tabindex="2001" disabled>F2<br>&nbsp;</button>
+			<button type="button" id="btnF3" tabindex="2002" onclick="onF3();">F3<br><bean:message key='words.action.uptake'/><%// 取込 %></button>
+			<button type="button" id="btnF4" tabindex="2003" disabled>F4<br>&nbsp;</button>
+			<button type="button" id="btnF5" tabindex="2004" disabled>F5<br>&nbsp;</button>
+			<button type="button" id="btnF6" tabindex="2005" disabled>F6<br>&nbsp;</button>
+			<button type="button" id="btnF7" tabindex="2006" disabled>F7<br>&nbsp;</button>
+			<button type="button" id="btnF8" tabindex="2007" disabled>F8<br>&nbsp;</button>
+			<button type="button" id="btnF9" tabindex="2008" disabled>F9<br>&nbsp;</button>
+			<button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button>
+			<button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button>
+			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
 		</div>
-
+		<br><br><br>
+		
 		<s:form enctype="multipart/form-data" onsubmit="return false;">
 			<div class="function_forms">
 
@@ -158,23 +159,37 @@
 					</html:messages>
 				</div>
 
-				<table summary="注文データ" class="forms">
-					<colgroup>
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 85%">
-					</colgroup>
-					<tr>
-						<th><bean:message key='labels.onlineorder.file' /><bean:message key='labels.must'/><%// 注文データ %></th>
-						<td><html:file property="uploadFile" styleId="uploadFile" style="width: 600px" tabindex="100" onchange="$('#importBtn').focus();" /></td>
-					</tr>
-					<tr>
-						<th>取込済は除く</th>
-						<td><html:checkbox property="showExist" styleId="showExist" onclick="onShowExist();"></html:checkbox></td>
-					</tr>
-				</table>
-				<div style="width: 910px; text-align: right">
-					<button type="button" id="initBtn" onclick="onF1();" tabindex="150"><bean:message key='words.action.initialize'/><%// 初期化 %></button>
-					<button type="button" id="importBtn" onclick="onF3();" tabindex="151"><bean:message key='words.action.uptake'/><%// 取込 %></button>
+			    <div class="form_section_wrap">
+			    <div class="form_section">
+			    	<div class="section_title">
+						<span>受注データ</span>
+			            <button class="btn_toggle">
+			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
+			            </button>
+					</div><!-- /.section_title -->
+					
+					<div id="search_info" class="section_body">
+						<table summary="注文データ" class="forms">
+							<colgroup>
+								<col span="1" style="width: 15%">
+								<col span="1" style="width: 85%">
+							</colgroup>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.onlineorder.file' /><bean:message key='labels.must'/><%// 注文データ %></div></th>
+								<td><html:file property="uploadFile" styleId="uploadFile" style="width: 600px" tabindex="100" onchange="$('#importBtn').focus();" /></td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right">取込済は除く</div></th>
+								<td><html:checkbox property="showExist" styleId="showExist" onclick="onShowExist();"></html:checkbox></td>
+							</tr>
+						</table>
+					</div>
+		    	</div><!-- /.form_section -->
+		    	</div><!-- /.form_section_wrap -->
+		    	
+				<div style="width: 1160px; text-align: right">
+					<button type="button" id="initBtn" onclick="onF1();" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/><%// 初期化 %></button>
+					<button type="button" id="importBtn" onclick="onF3();" tabindex="151" class="btn_medium"><bean:message key='words.action.uptake'/><%// 取込 %></button>
 				</div>
 
 				<html:hidden property="sortColumn" styleId="sortColumn" />
@@ -187,7 +202,7 @@
 		</s:form>
 
 		<span id="listContainer">
-			
+			<%-- 検索結果領域 --%>
 			<%@ include file="/WEB-INF/view/ajax/rorder/importOnlineOrderResultAjax/result.jsp" %>
 		</span>
 	</div>

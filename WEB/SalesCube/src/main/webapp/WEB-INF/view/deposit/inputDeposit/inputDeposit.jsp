@@ -275,7 +275,7 @@
 		$(mySalesLineId).get(0).value = "";
 
 		tmpTd = $(trClone).get(0).children[2];
-		var myPrice = $(tmpTd).get(0).children[0];
+		var myPrice = $(tmpTd).children().get(0).children[0];
 		$(myPrice).attr("id","depLineList["+maxIndex+"].price");
 		$(myPrice).attr("name","depLineList["+maxIndex+"].price");
 		$(myPrice).attr("value","");
@@ -283,14 +283,14 @@
 		$(myPrice).bind("change", {index: maxIndex}, ChangePrice);
 
 		tmpTd = $(trClone).get(0).children[3];
-		var myBank = $(tmpTd).get(0).children[0];
+		var myBank = $(tmpTd).children().get(0).children[0];
 		$(myBank).attr("id","depLineList["+maxIndex+"].bankId");
 		$(myBank).attr("name","depLineList["+maxIndex+"].bankId");
 		$(myBank).attr("value","");
 		$(myBank).attr("tabindex",402+maxIndex*5);
 
 		tmpTd = $(trClone).get(0).children[4];
-		var myRemarks = $(tmpTd).get(0).children[0];
+		var myRemarks = $(tmpTd).children().get(0).children[0];
 		$(myRemarks).attr("id","depLineList["+maxIndex+"].remarks");
 		$(myRemarks).attr("name","depLineList["+maxIndex+"].remarks");
 		$(myRemarks).attr("value","");
@@ -298,12 +298,12 @@
 
 		// 削除関数変更
 		tmpTd = $(trClone).get(0).children[5];
-		var myDel = $(tmpTd).get(0).children[0];
+		var myDel = $(tmpTd).children().get(0).children[0];
 		$(myDel).attr("id","deleteBtn" + maxIndex);
 		$(myDel).attr("tabindex",404+maxIndex*5);
 		$(myDel).bind("click", {index: maxIndex}, deleteRow);
 
-		var myCopy = $(tmpTd).get(0).children[2];
+		var myCopy = $(tmpTd).children().get(1).children[0];
 		$(myCopy).attr("id","copyBtn"+maxIndex);
 		$(myCopy).attr("tabindex",405+maxIndex*5);
 		$(myCopy).bind("click", {index: maxIndex}, copyRow);
@@ -738,9 +738,11 @@ function copyDummy(){
 			<button id="btnF11" type="button" tabindex="" disabled>F11<br>&nbsp;</button>
 			<button id="btnF12" type="button" tabindex="" disabled>F12<br>&nbsp;</button>
 		</div>
+		<br><br><br>
 
 		<s:form style="margin:0px; padding:0px;" onsubmit="return false;">
-		<!--  表示・入力領域 -->
+		
+			<!--  表示・入力領域 -->
 			<div class="function_forms">
 				<!-- エラー情報 -->
 				<div id="errors" style="color: red">
@@ -752,8 +754,19 @@ function copyDummy(){
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 					</div>
-				<br>
-				<span >入金伝票情報</span><br>
+				
+				<div class="form_section_wrap">
+				<div class="form_section">
+				<div class="section_title">
+					<span >入金伝票情報</span>
+					<button class="btn_toggle">
+					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+					</button>
+				</div>
+
+				<div class="section_body">
+				
+				
 				<table id="receipt_info" class="forms" summary="入金伝票情報">
 					<colgroup>
 						<col span="1" style="width: 15%">
@@ -764,7 +777,7 @@ function copyDummy(){
 						<col span="1" style="width: 18%">
 					</colgroup>
 					<tr>
-						<th>入金番号</th>
+						<th><div class="col_title_right">入金番号</div></th>
 						<td>
 							<c:if test="${newData}">
 							<html:text tabindex="100" property="depositSlipId" styleId="depositSlipId" errorStyleClass="err" style="ime-mode:disabled;" maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){ findSlip();}"/>
@@ -773,23 +786,24 @@ function copyDummy(){
 							<html:text tabindex="100" property="depositSlipId" styleId="depositSlipId" errorStyleClass="err" readonly="true" styleClass="c_disable" style="ime-mode:disabled;" maxlength="10"/>
 							</c:if>
 						</td>
-						<th>入金日※</th>
+						<th><div class="col_title_right">入金日※</div></th>
 						<td>
-							<html:text tabindex="101" title="入金日" property="depositDate" styleId="depositDate" styleClass="date_input" style="ime-mode:disabled; width: 120px;" maxlength="10" />
+							<html:text tabindex="101" title="入金日" property="depositDate" styleId="depositDate" styleClass="date_input" style="ime-mode:disabled; width: 135px;" maxlength="10" />
 						</td>
-						<th>入力日</th>
+						<th><div class="col_title_right">入力日</div></th>
 						<td>
-							<html:text tabindex="102" title="入力日" property="inputPdate" styleId="inputPdate" styleClass="date_input" style="ime-mode:disabled; width: 120px;" maxlength="10" />
+							<html:text tabindex="102" title="入力日" property="inputPdate" styleId="inputPdate" styleClass="date_input" style="ime-mode:disabled; width: 135px;" maxlength="10" />
 						</td>
-						<th>入力担当者</th>
+						<th><div class="col_title_right">入力担当者</div></th>
 						<td>
 							<html:text tabindex="103" property="userName" styleId="userName" readonly="true" styleClass="c_disable" />
 							<html:hidden property="userId" />
 						</td>
 					</tr>
 					<tr>
-		<!-- TODO 入金区分表示用JSPをインクルードする -->
-						<th>入金区分※</th>
+					
+<!-- TODO 入金区分表示用JSPをインクルードする -->
+						<th><div class="col_title_right">入金区分※</div></th>
 						<td>
 							<html:select tabindex="105" property="depositCategory"  styleId="depositCategory" >
 								<c:forEach var="dcl" items="${depositCategoryList}">
@@ -797,14 +811,26 @@ function copyDummy(){
 								</c:forEach>
 							</html:select>
 						</td>
-						<th>摘要</th>
+						<th><div class="col_title_right">摘要</div></th>
 						<td colspan="5">
 							<html:text tabindex="106" property="depositAbstract" styleId="depositAbstract" style="width: 500px; ime-mode:active;" maxlength="50"  />
 						</td>
 					</tr>
 				</table>
+				</div>
+				</div>
+				</div>
+				
+				<div class="form_section_wrap">
+				<div class="form_section">
+				<div class="section_title">
+					<span >請求先情報</span>
+					<button class="btn_toggle">
+					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
+					</button>
+				</div>
 
-				<span >請求先情報</span><br>
+				<div class="section_body">
 				<table id="customer_info" class="forms" summary="顧客情報">
 					<colgroup>
 						<col span="1" style="width: 10%">
@@ -815,20 +841,20 @@ function copyDummy(){
 						<col span="1" style="width: 30%">
 					</colgroup>
 					<tr>
-						<th>顧客コード※</th>
+						<th><div class="col_title_right">顧客コード※</div></th>
 						<td>
 							<html:text tabindex="200" property="customerCode" styleId="customerCode" style="width: 100px; ime-mode:disabled;"
 								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeCustomerCode(); }" />
-							<html:image tabindex="201" styleId="customerCodeImg" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch()" />
+							<html:image tabindex="201" styleId="customerCodeImg" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="customerSearch()" />
 							<html:hidden styleId="customerIsExist" property="customerIsExist"/>
 							<html:hidden styleId="taxFractCategory" property="taxFractCategory"/>
 							<html:hidden styleId="priceFractCategory" property="priceFractCategory"/>
 						</td>
-						<th>顧客名</th>
+						<th><div class="col_title_right">顧客名</div></th>
 						<td>
 							<html:text tabindex="202" property="customerName" styleId="customerName" style="width: 300px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>支払条件</th>
+						<th><div class="col_title_right">支払条件</div></th>
 						<td>
 							<html:hidden styleId="cutoffGroup" property="cutoffGroup"/>
 							<html:hidden styleId="paybackCycleCategory" property="paybackCycleCategory"/>
@@ -838,13 +864,13 @@ function copyDummy(){
 						</td>
 					</tr>
 					<tr>
-						<th>備考</th>
+						<th><div class="col_title_right">備考</div></th>
 						<td colspan="5">
 							<html:text property="customerRemarks" styleId="customerRemarks" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="204" />
 						</td>
 					</tr>
 					<tr>
-						<th>コメント</th>
+						<th><div class="col_title_right">コメント</div></th>
 						<td colspan="5">
 							<html:text property="customerCommentData" styleId="customerCommentData" styleClass="c_disable" style="width: 800px;" readonly="true" tabindex="205" />
 						</td>
@@ -860,7 +886,7 @@ function copyDummy(){
 						<col span="1" style="width: 17%">
 					</colgroup>
 					<tr>
-						<th>請求先名</th>
+						<th><div class="col_title_right">請求先名</div></th>
 						<td>
 							<html:text tabindex="300" property="baName" styleId="baName" style="width: 150px" readonly="true" styleClass="c_disable" />
 							<html:hidden styleId="status" property="status"/>
@@ -878,41 +904,41 @@ function copyDummy(){
 							<html:hidden styleId="salesCutoffDate" property="salesCutoffDate"/>
 							<html:hidden styleId="salesCutoffPdate" property="salesCutoffPdate"/>
 						</td>
-						<th>事業所名</th>
+						<th><div class="col_title_right">事業所名</div></th>
 						<td>
 							<html:text tabindex="301" property="baOfficeName" styleId="baOfficeName" style="width: 200px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>部署名</th>
+						<th><div class="col_title_right">部署名</div></th>
 						<td>
 							<html:text tabindex="302" property="baDeptName" styleId="baDeptName" style="width: 200px" readonly="true" styleClass="c_disable" />
 						</td>
 					</tr>
 					<tr>
-						<th>郵便番号</th>
+						<th><div class="col_title_right">郵便番号</div></th>
 						<td>
-							<html:text tabindex="303" property="baZipCode" styleId="baZipCode" style="width: 70px" readonly="true" styleClass="c_disable" />
+							<html:text tabindex="303" property="baZipCode" styleId="baZipCode" style="width: 100px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>住所１</th>
+						<th><div class="col_title_right">住所１</div></th>
 						<td>
 							<html:text tabindex="304" property="baAddress1" styleId="baAddress1" style="width: 200px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>住所２</th>
+						<th><div class="col_title_right">住所２</div></th>
 						<td>
 							<html:text tabindex="305" property="baAddress2" styleId="baAddress2" style="width: 200px" readonly="true" styleClass="c_disable" />
 						</td>
 					</tr>
 					<tr>
-						<th>担当者</th>
+						<th><div class="col_title_right">担当者</div></th>
 						<td>
 							<html:text tabindex="306" property="baPcName" styleId="baPcName" style="width: 150px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>担当者カナ</th>
+						<th><div class="col_title_right">担当者カナ</div></th>
 						<td>
-							<html:text tabindex="307" property="baPcKana" styleId="baPcKana" style="width: 150px" readonly="true" styleClass="c_disable" />
+							<html:text tabindex="307" property="baPcKana" styleId="baPcKana" style="width: 200px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>敬称</th>
+						<th><div class="col_title_right">敬称</div></th>
 						<td>
-							<html:select tabindex="308" property="baPcPreCatrgory" styleId="baPcPreCatrgory" styleClass="c_disable" >
+							<html:select tabindex="308" property="baPcPreCatrgory" styleId="baPcPreCatrgory" styleClass="c_disable" style="width: 200px">
 								<c:forEach var="ptcl" items="${preTypeCategoryList}">
 									<html:option value="${ptcl.value}">${ptcl.label}</html:option>
 								</c:forEach>
@@ -920,21 +946,21 @@ function copyDummy(){
 						</td>
 					</tr>
 					<tr>
-						<th>TEL</th>
+						<th><div class="col_title_right">TEL</div></th>
 						<td>
 							<html:text tabindex="309" property="baTel" styleId="baTel" style="width: 150px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>E-MAIL</th>
+						<th><div class="col_title_right">E-MAIL</div></th>
 						<td colspan="3">
 							<html:text tabindex="310" property="baEmail" styleId="baEmail" style="width: 400px" readonly="true" styleClass="c_disable" />
 						</td>
 					</tr>
 					<tr>
-						<th>FAX</th>
+						<th><div class="col_title_right">FAX</div></th>
 						<td>
 							<html:text tabindex="311" property="baFax" styleId="baFax" style="width: 150px" readonly="true" styleClass="c_disable" />
 						</td>
-						<th>取引区分</th>
+						<th><div class="col_title_right">取引区分</div></th>
 						<td colspan="3">
 							<html:select tabindex="312" property="salesCmCategoryName" styleId="salesCmCategoryName" styleClass="c_disable" >
 								<c:forEach var="ptcl" items="${salesCmCategoryList}">
@@ -945,28 +971,29 @@ function copyDummy(){
 						</td>
 					</tr>
 				</table>
+				</div>
+				</div>
+				</div>
 
-				<table summary="入金明細リスト" class="forms" style="margin-top: 20px;">
-					<colgroup>
-						<col span="1" style="width: 5%">
-						<col span="1" style="width: 15%">
-						<col span="1" style="width: 10%">
-						<col span="1" style="width: 60%">
-						<col span="1" style="width: 10%">
-					</colgroup>
+				<div id="order_detail_info_wrap">
+				<table id="order_detail_info" summary="入金明細リスト" class="forms" style="margin-top: 20px;">
 					<tr>
-						<th>No</th>
+						<th class="rd_top_left" style="height:30px;">No</th>
 						<th>金額※</th>
 						<th>銀行</th>
 						<th>備考・手形番号/手形期日など</th>
-						<th>&nbsp;</th>
+						<th class="rd_top_right">&nbsp;</th>
 					</tr>
 					<tbody id="tbodyLine">
 						<c:forEach var="depLineList" items="${depLineList}" varStatus="s" >
 							<c:if test='${depLineList.lineNo != null}'>
 							<tr id="trLine${s.index}">
-								<td id="tdNo${s.index}" style="text-align: center;">
-									<c:out value="${f:h(depLineList.lineNo)}" />
+							
+								<!-- No -->
+								<td id="tdNo${s.index}" style="text-align: center; width: 50px;">
+									<div class="box_1of1">
+										<c:out value="${f:h(depLineList.lineNo)}" />
+									</div>
 								</td>
 								<td style="display: none;">
 									<html:hidden name="depLineList" property="lineNo" indexed="true" styleId="depLineList[${s.index}].lineNo" />
@@ -977,111 +1004,138 @@ function copyDummy(){
 									<html:hidden name="depLineList" property="instNo" indexed="true" styleId="depLineList[${s.index}].instNo" />
 									<html:hidden name="depLineList" property="salesLineId" indexed="true" styleId="depLineList[${s.index}].salesLineId" />
 								</td>
-								<td>
-									<html:text tabindex="${401+s.index*5}" maxlength="9" name="depLineList" property="price" style="width: 130px; ime-mode:disabled;" styleClass="numeral_commas" indexed="true" styleId="depLineList[${s.index}].price" onchange="ChangePrice()" />
+								
+								<!-- 金額 -->
+								<td style="width: 160px;">
+									<div class="box_1of1" style="margin: 5px;">
+										<html:text tabindex="${401+s.index*5}" maxlength="9" name="depLineList" property="price" style="width: 100%; ime-mode:disabled;" styleClass="numeral_commas" indexed="true" styleId="depLineList[${s.index}].price" onchange="ChangePrice()" />
+									</div>
+								</td>
+								
+								<!-- 銀行 -->
+								<td style="width: 300px;">
+									<div class="box_1of1" style="margin: 5px;">
+										<html:select tabindex="${402+s.index*5}" name="depLineList" property="bankId" style="ime-mode:disabled; width: 100%;" indexed="true" styleId="depLineList[${s.index}].bankId" >
+											<html:options collection="bankMstList" property="value" labelProperty="label"/>
+										</html:select>
+									</div>
+								</td>
+								
+								<!-- 備考・手形番号/手形期日など -->
+								<td style="width: 520px;">
+									<div class="box_1of1" style="margin: 5px;">
+										<html:textarea tabindex="${403+s.index*5}" name="depLineList" property="remarks" style="width: 100%; height: 55px; ime-mode:active;" indexed="true" styleId="depLineList[${s.index}].remarks" />
+									</div>
 								</td>
 								<td>
-									<html:select tabindex="${402+s.index*5}" name="depLineList" property="bankId" style="ime-mode:disabled;" indexed="true" styleId="depLineList[${s.index}].bankId" >
-										<html:options collection="bankMstList" property="value" labelProperty="label"/>
-									</html:select>
-								</td>
-								<td>
-									<html:textarea tabindex="${403+s.index*5}" name="depLineList" property="remarks" style="width: 100%; height: 55px; ime-mode:active;" indexed="true" styleId="depLineList[${s.index}].remarks" />
-								</td>
-								<td>
-								<c:if test="${!menuUpdate}">
-									<html:button tabindex="${404+s.index*5}" property="depLineList" styleId="deleteBtn${s.index}" style="width: 80px" disabled="true" >削除</html:button><br>
-								</c:if>
-								<c:if test="${menuUpdate}">
-									<c:if test="${menuUpdate && !closed}">
-									<html:button tabindex="${404+s.index*5}" property="depLineList" styleId="deleteBtn${s.index}" style="width: 80px" >削除</html:button><br>
+								
+								<div class="box_1of2">
+									<c:if test="${!menuUpdate}">
+										<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
 									</c:if>
-									<c:if test="${!menuUpdate || closed}">
-									<html:button tabindex="${404+s.index*5}" property="depLineList" styleId="deleteBtn${s.index}" style="width: 80px" disabled="true" >削除</html:button><br>
+									<c:if test="${menuUpdate}">
+										<c:if test="${menuUpdate && !closed}">
+											<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
+										</c:if>
+										<c:if test="${!menuUpdate || closed}">
+											<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
+										</c:if>
 									</c:if>
-								</c:if>
+								</div>
+								<div class="box_2of2">
 									<c:if test="${s.first}" >
-										<html:button tabindex="${405+s.index*5}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 80px" disabled="true">前行複写</html:button>
+										<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
 									</c:if>
 									<c:if test="${!s.first}" >
-									<c:if test="${menuUpdate && !closed}">
-										<html:button tabindex="${405+s.index*5}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 80px" >前行複写</html:button>
+										<c:if test="${menuUpdate && !closed}">
+											<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
+										</c:if>
+										<c:if test="${!menuUpdate || closed}">
+											<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
+										</c:if>
 									</c:if>
-									<c:if test="${!menuUpdate || closed}">
-										<html:button tabindex="${405+s.index*5}" styleId ="copyBtn${s.index}" property="copyLine" style="width: 80px" disabled="true" >前行複写</html:button>
-									</c:if>
-									</c:if>
+								</div>
 								</td>
 							</tr>
 							</c:if>
 						</c:forEach>
-						<tr id="addLineTr"  >
-							<td style="text-align: right" colspan="4">
-							<c:if test="${menuUpdate && !closed}">
-								<html:button tabindex="500" property="addLine" onclick="addRow();" >行追加</html:button>
+						
+						<tr id="addLineTr" style="text-align: center;height: 60px;">
+							<td class="rd_bottom_left rd_bottom_right"  colspan="10">
+							<c:if test="${closed || !menuUpdate}">
+								<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled">行追加</html:button>
 							</c:if>
-							<c:if test="${!menuUpdate || closed}">
-								<html:button tabindex="500" property="addLine" disabled="true" onclick="addRow();" >行追加</html:button>
+							<c:if test="${!closed && menuUpdate}">
+								<button tabindex="1999" id="addLine" onclick="addRow();">
+								<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+								</button>
 							</c:if>
 							</td>
 						</tr>
+						
+					
 					</tbody>
 				</table>
+				</div>
+				
 				<!-- 削除された行のCSVデータ -->
 		        <html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-
-				<div id="information" class="information" style="margin-top: 20px;">
-					<table class="forms" summary="伝票情報" style="width: 500px; position: absolute; top: 0px; left: 410px;">
-						<colgroup>
-							<col span="3" style="width: 25%">
-						</colgroup>
+		        
+				<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
+		        <div id="information" class="information" style="">
+					<table id="voucher_info" class="forms" summary="伝票情報" style="">
 						<tr>
-							<th>前回請求額</th>
+							<th style="height: 60px;" class="rd_top_left">前回請求額</th>
 							<th>今回回収額</th>
 							<th>今回売上高</th>
-							<th>請求残高</th>
+							<th class="rd_top_right">請求残高</th>
 						</tr>
 						<tr>
-							<td id="lastBillingPrice" style="text-align: right" class="numeral_commas">
+							<td id="lastBillingPrice" style="text-align: center; height: 100px;" class="numeral_commas">
 								<c:out value="${f:h(lastBillingPrice)}" />
 							</td>
-							<td id="nowPaybackPriceInput" style="text-align: right" class="numeral_commas">
+							<td id="nowPaybackPriceInput" style="text-align: center" class="numeral_commas">
 								<c:out value="${f:h(nowPaybackPrice)}" />
 							</td>
-							<td id="nowSalesPrice" style="text-align: right" class="numeral_commas">
+							<td id="nowSalesPrice" style="text-align: center" class="numeral_commas">
 								<c:out value="${f:h(nowSalesPrice)}" />
 							</td>
-							<td id="billingBalancePrice" style="text-align: right" class="numeral_commas">
+							<td id="billingBalancePrice" style="text-align: center" class="numeral_commas">
 								<c:out value="${f:h(billingBalancePrice)}" />
 							</td>
 							<html:hidden styleId="nowPaybackPriceBack" property="nowPaybackPrice"/>
 						</tr>
 					</table>
 				</div>
-				<br>
-				<br>
-				<br>
-				<div style="text-align: right; width: 910px">
+				</div>
+ 
+				<div style="width: 1160px; text-align: center; margin-top: 10px;">
 					<c:if test="${newData}" >
 					<c:if test="${menuUpdate && !closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">登録</button>
+						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">
+							<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						</button>
 					</c:if>
 					<c:if test="${!menuUpdate || closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>登録</button>
+						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>
+							<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						</button>
 					</c:if>
 					</c:if>
 					<c:if test="${!newData}" >
 					<c:if test="${menuUpdate && !closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">更新</button>
+						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">
+							<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						</button>
 					</c:if>
 					<c:if test="${!menuUpdate || closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>更新</button>
+						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>
+							<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						</button>
 					</c:if>
 					</c:if>
 				</div>
-
 			</div>
-
 			<html:hidden property="newData" />
 		</s:form>
 	</div>
