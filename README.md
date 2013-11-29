@@ -12,9 +12,13 @@
 
 SalesCube はデュアルライセンスです。
 
-1. GPLv3
+1. AGPLv3
+   ※ SalesCubeのバージョン1.2.0より、AGPLv3ライセンスとなります。
+
 2. SalesCube 商用ライセンス  
    詳しくは http://www.ark-info-sys.co.jp/jp/product/salescube/edition.html#partner をご覧ください。
+
+
 
 関連情報
 --------
@@ -23,3 +27,5 @@ SalesCube はデュアルライセンスです。
    http://www.ark-info-sys.co.jp/jp/product/salescube/index.html
 2. 株式会社アーク情報システム  
    http://www.ark-info-sys.co.jp/jp/
+
+test
