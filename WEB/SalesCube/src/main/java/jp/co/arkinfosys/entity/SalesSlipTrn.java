@@ -375,6 +375,11 @@ public class SalesSlipTrn {
 	@Column(name = "CTAX_PRICE_TOTAL")
 	public BigDecimal ctaxPriceTotal;
 	/**
+	 *
+	 */
+	@Column(name = "CTAX_RATE")
+	public BigDecimal ctaxRate;
+	/**
 	 *	売上伝票のpriceTotalには、消費税を含まない
 	 */
 	@Column(name = "PRICE_TOTAL")

@@ -39,3 +39,4 @@ WHERE
     RO_SLIP_ID =/*roSlipId*/'default' AND
     RL.STATUS=CT.CATEGORY_CODE AND
     CT.CATEGORY_ID=/*categoryId*/
+ORDER BY RL.LINE_NO

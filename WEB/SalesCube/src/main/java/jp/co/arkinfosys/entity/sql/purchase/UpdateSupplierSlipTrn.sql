@@ -15,6 +15,7 @@ UPDATE
 		,TAX_FRACT_CATEGORY=/*taxFractCategory*/NULL
 		,PRICE_FRACT_CATEGORY=/*priceFractCategory*/NULL
 		,CTAX_TOTAL=/*ctaxTotal*/NULL
+		,CTAX_RATE=/*ctaxRate*/NULL
 		,PRICE_TOTAL=/*priceTotal*/NULL
 		,FE_PRICE_TOTAL=/*fePriceTotal*/NULL
 		,PO_SLIP_ID=/*poSlipId*/NULL

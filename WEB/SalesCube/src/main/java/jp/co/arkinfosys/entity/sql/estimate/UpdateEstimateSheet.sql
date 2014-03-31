@@ -20,6 +20,7 @@ UPDATE ESTIMATE_SHEET_TRN_/*$domainId*/'DEFAULT' SET
         ,CUSTOMER_COMMENT_DATA=/*customerCommentData*/NULL
         ,DELIVERY_ZIP_CODE=/*deliveryZipCode*/NULL
         ,CTAX_PRICE_TOTAL=/*ctaxPriceTotal*/NULL
+        ,CTAX_RATE=/*ctaxRate*/NULL
         ,COST_TOTAL=/*costTotal*/NULL
         ,RETAIL_PRICE_TOTAL=/*retailPriceTotal*/NULL
         ,ESTIMATE_TOTAL=/*estimateTotal*/NULL

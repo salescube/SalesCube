@@ -230,6 +230,7 @@ public class ImportBankDepositAction extends AbstractXSVUploadAction {
 		// カラム数
 		if (values == null
 				|| values.length != Constants.BANK_DEPOSIT_CSV.DEPOSIT_COLUMN_COUNT) {
+			this.isReadStop = true;
 			addError("errors.line.onlineorder.format",
 					new Object[] { index, MessageResourcesUtil.getMessage("errors.onlineorder.reason.column") });
 			return;

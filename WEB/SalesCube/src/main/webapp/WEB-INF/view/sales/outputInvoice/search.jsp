@@ -382,8 +382,8 @@
 			</div>
 
 			<div style="width: 1160px; text-align :left">
-				<button type="button" tabindex="1000" onclick="setCheckBox(true)" class="btn_small"><bean:message key='words.action.selectAll'/></button>
-				<button type="button" tabindex="1001" onclick="setCheckBox(false)" class="btn_small"><bean:message key='words.action.selectNone'/></button>
+				<button type="button" tabindex="1000" onclick="setCheckBox(true)" class="btn_list_action"><bean:message key='words.action.selectAll'/></button>
+				<button type="button" tabindex="1001" onclick="setCheckBox(false)" class="btn_list_action"><bean:message key='words.action.selectNone'/></button>
 			</div>
 		</div>
 		<!-- 検索結果表示エリア -->

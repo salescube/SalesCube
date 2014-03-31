@@ -11,7 +11,7 @@
 		<th class=xl64><bean:message key='labels.master.rackName'/></th>
 		<th class=xl64><bean:message key='labels.product.csv.productCode'/></th>
 	</tr>
-	<c:forEach var="bean" items="${searchResultList}"varStatus="status">
+	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
 			<td class="xl70" style="text-align: left;">${f:h(bean.warehouseCode)}</td>
 			<td class="xl70" style="text-align: left;">${f:h(bean.warehouseName)}</td>

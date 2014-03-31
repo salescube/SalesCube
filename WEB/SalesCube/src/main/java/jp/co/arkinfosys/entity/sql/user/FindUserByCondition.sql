@@ -1,5 +1,7 @@
 SELECT DISTINCT
         U.USER_ID
+        ,U.LOCK_FLG
+        ,U.LOCK_DATETM
         ,U.NAME_KNJ
         ,U.NAME_KANA
         ,U.DEPT_ID

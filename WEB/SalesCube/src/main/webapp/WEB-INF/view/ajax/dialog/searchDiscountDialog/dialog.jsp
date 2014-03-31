@@ -45,8 +45,8 @@
 			<tr>
 				<td id="${dialogId}ListContainer">
 					<div style=" color: #FFFFFF;">検索結果件数： 0件</div>
-					<div style="border: none; width: 500px; height: 220px; overflow: hidden;">
-						<table class="dialog_resultList" id="${dialogId}List" summary="数量割引検索結果" style="width: 100%;">
+					<div style="border: none; width: 780px; height: 220px; overflow: hidden;">
+						<table class="dialog_resultList" id="${dialogId}List" summary="数量割引検索結果" style="width: 99%;">
 							<colgroup>
 								<col span="1" style="width: 10%">
 								<col span="1" style="width: 20%">
@@ -54,7 +54,7 @@
 								<col span="1" style="width: 10%">
 							</colgroup>
 							<tr>
-								<th>&nbsp;</th>
+								<th>割引詳細</th>
 								<th>割引コード</th>
 								<th>割引名</th>
 								<th>割引有効</th>
@@ -62,6 +62,7 @@
 						</table>
 					</div>
 				</td>
+				<!-- 
 				<td id="${dialogId}DataListContainer">
 					<div style="border: none; width: 300px; height: 220px; overflow: hidden; padding-top: 18px;">
 						<table class="dialog_resultList" id="${dialogId}DataList" summary="割引データ一覧" style="width: 100%;">
@@ -78,8 +79,11 @@
 						</table>
 					</div>
 				</td>
+				 -->
 			</tr>
 		</table>
+
+		<input type="hidden" id="${dialogId}DataListContainer"/>
 
 		<div style="width: 780px; text-align: right; margin-top: 15px;">
 			<button id="" type="button" style="width: 70px" tabindex="16151"

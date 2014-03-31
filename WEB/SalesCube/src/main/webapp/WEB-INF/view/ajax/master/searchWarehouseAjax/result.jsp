@@ -43,11 +43,11 @@
 		<td style="white-space: normal">&nbsp;${f:h(bean.warehouseState)}&nbsp;</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button class="btn_small" onclick="editWarehouse('${sw:u(bean.warehouseCode)}');">編集</button>
-			<button class="btn_small" onclick="deleteWarehouse('${bean.warehouseCode}', '${bean.updDatetm}');">削除</button>
+			<button class="btn_list_action" onclick="editWarehouse('${sw:u(bean.warehouseCode)}');">編集</button>
+			<button class="btn_list_action" onclick="deleteWarehouse('${bean.warehouseCode}', '${bean.updDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button class="btn_small" onclick="editWarehouse('${sw:u(bean.warehouseCode)}');">参照</button>
+			<button class="btn_list_action" onclick="editWarehouse('${sw:u(bean.warehouseCode)}');">参照</button>
 			</c:if>
 		</td>
 	</tr>

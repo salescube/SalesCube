@@ -130,9 +130,8 @@ public class SupplierSlipService extends AbstractSlipService<SupplierSlipTrn,Pur
 	public void setLineData(PurchaseSlipDto supplierSlipTrnDto,List<PurchaseLineDto> supplierLineTrnDtoList) {
 		supplierSlipTrnDto.setLineDtoList(supplierLineTrnDtoList);
 
-		// 先頭の明細行のレートと消費税率を伝票にセットする
+		// 先頭の明細行のレートを伝票にセットする
 		supplierSlipTrnDto.rate = supplierLineTrnDtoList.get(0).rate;
-		supplierSlipTrnDto.supplierTaxRate = supplierLineTrnDtoList.get(0).ctaxRate;
 	}
 
 	/**
@@ -389,6 +388,7 @@ public class SupplierSlipService extends AbstractSlipService<SupplierSlipTrn,Pur
 		param.put(SupplierSlipService.Param.PRICE_FRACT_CATEGORY,
 				slipTrn.priceFractCategory); // 単価端数処理
 		param.put(SupplierSlipService.Param.CTAX_TOTAL, slipTrn.ctaxTotal); // 伝票合計消費税
+		param.put(SupplierSlipService.Param.CTAX_RATE, slipTrn.ctaxRate); // 伝票消費税率
 		param.put(SupplierSlipService.Param.PRICE_TOTAL, slipTrn.priceTotal); // 伝票合計金額
 		param.put(SupplierSlipService.Param.FE_PRICE_TOTAL,
 				slipTrn.fePriceTotal); // 伝票合計外貨金額
@@ -452,12 +452,16 @@ public class SupplierSlipService extends AbstractSlipService<SupplierSlipTrn,Pur
 			// 発注残数
 			BigDecimal restQuantity = new BigDecimal(0);
 			if (StringUtil.hasLength(lineDto.restQuantity)) {
-				restQuantity = poLineTrn.restQuantity;
+				if(poLineTrn != null){
+					restQuantity = poLineTrn.restQuantity;
+				}
 			}
 			// 発注伝票の発注数量
 			BigDecimal totalQuantity = new BigDecimal(0);
 			if (StringUtil.hasLength(lineDto.totalQuantity)) {
-				totalQuantity = poLineTrn.quantity;
+				if(poLineTrn != null){
+					totalQuantity = poLineTrn.quantity;
+				}
 			}
 
 			// 他の仕入伝票で処理された数量を計算する
@@ -477,7 +481,7 @@ public class SupplierSlipService extends AbstractSlipService<SupplierSlipTrn,Pur
 			// 仕入明細のステータスから明細行のステータスを判定
 			String lineStatus = Constants.STATUS_PORDER_LINE.ORDERED;
 
-			if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnJoin.transportCategory) ) {
+			if( poSlipTrnJoin != null && CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnJoin.transportCategory) ) {
 				// 委託発注伝票の場合、仕入が削除されたら委託出庫済み状態へ戻し、登録・更新の場合は完納状態とする
 				if(bUpdate == false) {
 					lineStatus = Constants.STATUS_PORDER_LINE.ENTRUST_STOCK_DELIVERED;

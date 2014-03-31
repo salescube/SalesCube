@@ -523,8 +523,6 @@ public class InputPaymentService extends AbstractSlipService<PaymentSlipTrn, Inp
 		}
 		payTrnDto.setLineDtoList(lineList);
 
-		// 先頭の明細行の消費税率を伝票にセットする
-		payTrnDto.supplierTaxRate = payTrnDto.getLineDtoList().get(0).ctaxRate;
 
 		// 通貨記号をセットする
 		payTrnDto.cUnitSign = supplier.cUnitSign;

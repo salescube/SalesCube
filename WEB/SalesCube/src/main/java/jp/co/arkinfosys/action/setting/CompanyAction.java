@@ -111,7 +111,7 @@ public class CompanyAction extends CommonResources {
 	public String update() throws Exception {
 		// サイズエラーチェック
 		uploadErrorCheck();
-		
+
 		// 自社情報を更新する
 		// 排他制御
 		Mine mine = this.mineService.getMine();
@@ -122,16 +122,17 @@ public class CompanyAction extends CommonResources {
 				nowUpdatetm = String.valueOf(mine.updDatetm);
 			}
 			if( companyForm.updDatetm.equals(nowUpdatetm) == false){
-				super.messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage("errors.exclusive.control"));
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage("errors.exclusive.control.updated"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return CompanyAction.Mapping.INPUT;
 			}
 
 		}
+
 		this.mineService.updateMine(companyForm.companyName, companyForm.companyAbbr, companyForm.companyKana,
 				companyForm.companyCeoName, companyForm.companyCeoTitle, companyForm.logoImgPath, companyForm.logoInit, companyForm.companyZipCode , companyForm.companyAddress1,
 				companyForm.companyAddress2, companyForm.companyTel, companyForm.companyFax, companyForm.companyEmail,
-				companyForm.companyWebSite, companyForm.cutoffGroup, companyForm.closeMonth );
+				companyForm.companyWebSite, companyForm.cutoffGroup, companyForm.closeMonth);
 
 		super.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 				"infos.company.changed"));
@@ -187,6 +188,8 @@ public class CompanyAction extends CommonResources {
 			companyForm.cutoffGroup = mine.cutoffGroup;
 			companyForm.closeMonth = mine.closeMonth;
 			companyForm.updDatetm = "";
+
+
 			if( mine.updDatetm != null)	{
 				companyForm.updDatetm = String.valueOf(mine.updDatetm);
 			}

@@ -262,28 +262,28 @@
 	                <td><input id="taxRate" maxlength="3" type="text" style="width:90px; text-align:right; ime-mode: disabled;" class="numeral_commas scale_0 scale_half_up" >％</td>
 					<td style="text-align: center">
 	<c:if test="${!isUpdate}">
-	                    <button class="btn_small"  style="width:80px;" disabled="disabled">削除</button>
+	                    <button class="btn_list_action"  style="width:80px;" disabled="disabled">削除</button>
 	</c:if>
 	<c:if test="${isUpdate}">
-	                    <button class="btn_small"  id="deleteBtn" style="width:80px;">削除</button>
+	                    <button class="btn_list_action"  id="deleteBtn" style="width:80px;">削除</button>
 	</c:if>
 	                </td>
 	            </tr>
 	<c:forEach var="taxRateList" varStatus="s" items="${taxRateList}">
 	            <tr id="taxRateList_${s.index}">
-	                <td>
+	                <td style="background-color: #fae4eb;">
 	                	<input type="hidden" name="taxRateList[${s.index}].taxTypeCategory" value="${category.categoryCode}">
 	                    <html:text name="taxRateList" maxlength="10" styleId="taxRateList_${s.index}.startDate" tabindex="${s.index*4+201}" property="startDate" style="width:100px;text-align:center;ime-mode:disabled;" styleClass="date_input" indexed="true"/>
 	                </td>
-	                <td>
+	                <td style="background-color: #fae4eb;">
 	                    <html:text name="taxRateList" maxlength="3" styleId="taxRateList_${s.index}.taxRate" tabindex="${s.index*4+202}" styleClass="numeral_commas scale_0 scale_half_up" property="taxRate" style="width:90px; text-align:right; ime-mode: disabled;" indexed="true"/>％
 	                </td>
-					<td style="text-align: center">
+					<td style="text-align: center;">
 	<c:if test="${!isUpdate}">
-	                    <button class="btn_small" disabled="disabled" style="width:80px;">削除</button>
+	                    <button class="btn_list_action" disabled="disabled" style="width:80px;">削除</button>
 	</c:if>
 	<c:if test="${isUpdate}">
-	                    <button class="btn_small" id="taxRateList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" style="width:80px;">削除</button>
+	                    <button class="btn_list_action" id="taxRateList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" style="width:80px;">削除</button>
 	</c:if>
 	                </td>
 	            </tr>
@@ -296,10 +296,10 @@
 				<tr id="trAddLine" >
 					<td colspan="5" style="text-align:right;" class="rd_bottom_left rd_bottom_right">
 	<c:if test="${!isUpdate}">
-	                    <button class="btn_small" tabindex="1997" style="width:80px;" disabled>行追加</button>
+	                    <button class="btn_list_action" tabindex="1997" style="width:80px;" disabled>行追加</button>
 	</c:if>
 	<c:if test="${isUpdate}">
-	                    <button class="btn_small" tabindex="1997" onclick="addRow();" style="width:80px;">行追加</button>
+	                    <button class="btn_list_action" tabindex="1997" onclick="addRow();" style="width:80px;">行追加</button>
 	</c:if>
 	                </td>
 				</tr>

@@ -14,7 +14,9 @@
 		    <col span="1" style="width: 10%">
 		    <col span="1" style="width: 10%">
 		    <col span="1" style="width: 20%">
-		    <col span="1" style="width: 45%">
+		    <col span="1" style="width: 5%">
+		    <col span="1" style="width: 20%">
+		    <col span="1" style="width: 20%">
 		    <col span="1" style="width: 15%">
 		</colgroup>
 		<tr>
@@ -42,7 +44,9 @@
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if>
 		</th>
+		<th class="xl64">重複登録可能</th>
 		<th class="xl64">商品コード</th>
+		<th class="xl64">商品名</th>
         <th class="xl64 rd_top_right">&nbsp;</th>
      </tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
@@ -51,18 +55,34 @@
 		<td>&nbsp;${f:h(bean.warehouseName)}&nbsp;</td>
 		<td>&nbsp;${f:h(bean.rackCode)}&nbsp;</td>
 		<td style="white-space: normal">&nbsp;${f:h(bean.rackName)}&nbsp;</td>
-		<td style="white-space: normal">&nbsp;
+		<td style="white-space: normal">
+			&nbsp;
+			<c:forEach var="duplicate" items="${bean.duplicateList}" varStatus="status">
+				${f:h(duplicate)}
+			</c:forEach>
+			&nbsp;
+		</td>
+		<td style="white-space: normal">
+			&nbsp;
 			<c:forEach var="productCode" items="${bean.productCodeList}" varStatus="status">
 				<c:if test="${status.index != 0}">,</c:if>${f:h(productCode)}
-			</c:forEach>&nbsp;
+			</c:forEach>
+			&nbsp;
+		</td>
+		<td style="white-space: normal">
+			&nbsp;
+			<c:forEach var="productName" items="${bean.productNameList}" varStatus="status">
+				<c:if test="${status.index != 0}">,</c:if>${f:h(productName)}
+			</c:forEach>
+			&nbsp;
 		</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button class="btn_small" onclick="editRack('${sw:u(bean.rackCode)}');">編集</button>
-			<button class="btn_small" onclick="deleteRack('${bean.rackCode}', '${bean.updDatetm}');">削除</button>
+			<button class="btn_list_action" onclick="editRack('${sw:u(bean.rackCode)}');">編集</button>
+			<button class="btn_list_action" onclick="deleteRack('${bean.rackCode}', '${bean.updDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button class="btn_small" onclick="editRack('${sw:u(bean.rackCode)}');">参照</button>
+			<button class="btn_list_action" onclick="editRack('${sw:u(bean.rackCode)}');">参照</button>
 			</c:if>
 		</td>
 	</tr>

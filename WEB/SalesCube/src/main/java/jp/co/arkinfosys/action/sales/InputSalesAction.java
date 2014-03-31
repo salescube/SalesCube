@@ -14,6 +14,7 @@ import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.CheckUtil;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.DiscountUtil;
+import jp.co.arkinfosys.common.ListUtil;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
@@ -132,6 +133,9 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 	// 完納区分リストの内容
 	public List<LabelValueBean> delivertProcessCategoryList = new ArrayList<LabelValueBean>();
+	
+	// 消費税率プルダウン
+	public List<LabelValueBean> ctaxRateList = new ArrayList<LabelValueBean>();
 
 	static private String RORDER_SLIP = "RORDER";
 	static private String SALES_SLIP = "SALES";
@@ -738,6 +742,9 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		// 空欄で作成
 		createDeliveryList();
+		
+		// 消費税率プルダウンリスト
+		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
 	}
 
 	/**

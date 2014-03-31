@@ -19,7 +19,8 @@ public class FileInfoDto implements Serializable, MasterEditDto {
 
 	private static final long serialVersionUID = 1L;
 
-	public Integer fileId;
+	//public Integer fileId;
+	public String fileId;
 
 	public String title;
 

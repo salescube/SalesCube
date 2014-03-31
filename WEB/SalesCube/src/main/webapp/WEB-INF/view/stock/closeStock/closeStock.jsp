@@ -124,7 +124,7 @@
 									</td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key='labels.cutoffDate'/><bean:message key='labels.must'/><%// 締年月日 %></div></th>
+									<th><div class="col_title_right_req"><bean:message key='labels.cutoffDate'/><bean:message key='labels.must'/><%// 締年月日 %></div></th>
 									<td>
 										<html:text property="cutoffDate" styleId="cutoffDate" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="100" maxlength="10" />
 									</td>

@@ -174,13 +174,7 @@
 			"${f:url("/ajax/master/searchDiscountAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleDiscountId")) {
-					var discountId = jData.filter("#singleDiscountId");
-					window.location.doHref("${f:url("/master/editDiscount/edit/")}" + discountId.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -276,8 +270,8 @@
 	    </div><!-- /.form_section_wrap -->
 	    
 		<div style="text-align: right; width: 1160px">
-			<button tabindex="104" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
-			<button tabindex="105" style="width:80px" onclick="searchDiscount()" class="btn_medium">検索</button>
+			<button tabindex="104" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="105" onclick="searchDiscount()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">

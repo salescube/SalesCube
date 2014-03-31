@@ -91,13 +91,7 @@
 			"${f:url("/ajax/master/searchProductSetAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(autoEdit && jData.is("#singleProductSetCode")) {
-					var productSetCode = jData.filter("#singleProductSetCode");
-					window.location.doHref("${f:url("/master/editProductSet/edit/")}" + productSetCode.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -343,8 +337,8 @@
 			    </div><!-- /.form_section_wrap -->
 
 				<div style="width: 1160px; text-align: right">
-					<button type="button" tabindex="250" style="width:80px" onclick="init_screen();" class="btn_medium">初期化</button>
-					<button type="button" tabindex="251" style="width:80px" onclick="search_productSet();" class="btn_medium">検索</button>
+					<button type="button" tabindex="250" onclick="init_screen();" class="btn_medium">初期化</button>
+					<button type="button" tabindex="251" onclick="search_productSet();" class="btn_medium">検索</button>
 				</div>
 
 				<div id="ListContainer">

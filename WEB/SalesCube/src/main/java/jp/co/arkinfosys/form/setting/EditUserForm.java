@@ -16,6 +16,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.seasar.struts.annotation.Arg;
 import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Maxlength;
+import org.seasar.struts.annotation.Minlength;
 import org.seasar.struts.annotation.Msg;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.util.MessageResourcesUtil;
@@ -54,6 +55,7 @@ public class EditUserForm {
 	 */
 	@Mask(mask = Constants.CODE_MASK.ASCII_ONLY_MASK, msg = @Msg(key = "errors.ascii"))
 	@Maxlength(maxlength = 256)
+
 	public String password;
 
 	/**
@@ -124,6 +126,19 @@ public class EditUserForm {
 	 */
 	public boolean isUpdate = false;
 
+	/** ロック */
+	public String lockflg = "0";
+
+	/**
+	 * ログイン失敗カウント
+	 */
+	public String failCount = "0";
+
+	/**
+	 * ロック日時
+	 */
+	public String lockDatetm;
+
 	/**
 	 * フォームを初期化します.
 	 */
@@ -145,6 +160,9 @@ public class EditUserForm {
 		this.deptList.clear();
 		this.menuDtoList.clear();
 		this.originalMenuDtoList.clear();
+		this.lockflg = "0";
+		this.failCount = "0";
+		this.lockDatetm = null;
 	}
 
 	/**

@@ -46,6 +46,8 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		public static final String DWB_TYPE = "dwbType";
 		public static final String DWB_NAME = "dwbName";
 		public static final String ACCOUNT_NUM = "accountNum";
+		public static final String ACCOUNT_OWNER_NAME = "accountOwnerName";
+		public static final String ACCOUNT_OWNER_KANA = "accountOwnerKana";
 		public static final String VALID = "valid";
 		public static final String SORT_COLUMN_BANK = "sortColumnBank";
 		public static final String SORT_ORDER = "sortOrder";
@@ -62,6 +64,8 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 	private static final String COLUMN_STORE_NAME = "STORE_NAME";
 	private static final String COLUMN_DWB_NAME = "DWB_NAME";
 	private static final String COLUMN_ACCOUNT_NUM = "ACCOUNT_NUM";
+	private static final String COLUMN_ACCOUNT_OWNER_NAME = "ACCOUNT_OWNER_NAME";
+	private static final String COLUMN_ACCOUNT_OWNER_KANA = "ACCOUNT_OWNER_KANA";
 	private static final String COLUMN_VALID = "VALID";
 
 	/**
@@ -148,6 +152,8 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		param.put(Param.STORE_NAME, null);
 		param.put(Param.DWB_TYPE, null);
 		param.put(Param.ACCOUNT_NUM, null);
+		param.put(Param.ACCOUNT_OWNER_NAME, null);
+		param.put(Param.ACCOUNT_OWNER_KANA, null);
 		param.put(Param.VALID, null);
 
 		param.put(Param.SORT_COLUMN_BANK, null);
@@ -207,6 +213,18 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		if (conditions.containsKey(Param.ACCOUNT_NUM)) {
 			param.put(Param.ACCOUNT_NUM, conditions.get(Param.ACCOUNT_NUM));
 		}
+		// 口座名義
+		if (conditions.containsKey(Param.ACCOUNT_OWNER_NAME)) {
+			param.put(Param.ACCOUNT_OWNER_NAME, super
+					.createPartialSearchCondition((String) conditions
+							.get(Param.ACCOUNT_OWNER_NAME)));
+		}
+		// 口座名義カナ
+		if (conditions.containsKey(Param.ACCOUNT_OWNER_KANA)) {
+			param.put(Param.ACCOUNT_OWNER_KANA, super
+					.createPartialSearchCondition((String) conditions
+							.get(Param.ACCOUNT_OWNER_KANA)));
+		}
 		// 有効
 		if (conditions.containsKey(Param.VALID)) {
 			param.put(Param.VALID, conditions.get(Param.VALID));
@@ -234,7 +252,15 @@ public class BankService extends AbstractMasterEditService<BankDto, BankDwb>
 		} else if (Param.ACCOUNT_NUM.equals(sortColumn)) {
 			// 口座番号
 			param.put(Param.SORT_COLUMN_BANK, COLUMN_ACCOUNT_NUM);
-		} else if (Param.VALID.equals(sortColumn)) {
+		}else if (Param.ACCOUNT_OWNER_NAME.equals(sortColumn)) {
+			// 口座名義
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_ACCOUNT_OWNER_NAME);
+		}else if (Param.ACCOUNT_OWNER_KANA.equals(sortColumn)) {
+			// 口座名義カナ
+			param.put(Param.SORT_COLUMN_BANK, COLUMN_ACCOUNT_OWNER_KANA);
+		}
+
+		else if (Param.VALID.equals(sortColumn)) {
 			// 有効
 			param.put(Param.SORT_COLUMN_BANK, COLUMN_VALID);
 		}

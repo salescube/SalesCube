@@ -148,7 +148,7 @@ function openStockInfo() {
 									onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }" />
 							<html:image styleId="productCodeImg" tabindex="101" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="productSearch($('#productCode'));" />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- 無理矢理空白をあけた -->
-							<button type="button" onclick="openStockInfo();" tabindex="102" class="btn_small">在庫</button>
+							<button type="button" onclick="openStockInfo();" tabindex="102" class="btn_list_action">在庫</button>
 							</td>
 						</tr>
 					</table>

@@ -81,15 +81,15 @@ function onF3(){
 									<col span="1" style="width: 50%">
 								</colgroup>
 								<tr>
-									<th><div class="col_title_right">現在のパスワード※</div></th>
+									<th><div class="col_title_right_req">現在のパスワード<bean:message key='labels.must'/></div></th>
 									<td><html:password style="width: 300px;" tabindex="100" property="oldPassword" redisplay="false"/></td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right">新しいパスワード※</div></th>
+									<th><div class="col_title_right_req">新しいパスワード<bean:message key='labels.must'/></div></th>
 									<td><html:password style="width: 300px;" tabindex="101" property="newPassword" redisplay="false"/></td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right">新しいパスワード（確認）※</div></th>
+									<th><div class="col_title_right_req">新しいパスワード（確認）<bean:message key='labels.must'/></div></th>
 									<td><html:password style="width: 300px;" tabindex="102" property="newPasswordConfirm" redisplay="false"/></td>
 								</tr>
 							</table>

@@ -8,6 +8,9 @@ INSERT
             ,EMAIL
             ,PASSWORD
             ,EXPIRE_DATE
+            ,FAIL_COUNT
+            ,LOCK_FLG
+            ,LOCK_DATETM
             ,CRE_FUNC
             ,CRE_DATETM
             ,CRE_USER
@@ -23,12 +26,24 @@ INSERT
             ,/*deptId*/''
             ,/*email*/''
             ,/*password*/''
-            ,/*IF expireDate != null */
-            	/*expireDate*/
+
+			/*IF passwordValidDays != null */
+			,DATE_ADD(now(), INTERVAL /*passwordValidDays*/ DAY)
+			/*END*/
+
+            /*IF passwordValidDays == null */
+            	,NULL
             /*END*/
-            /*IF expireDate == null */
-            	NULL
+
+			,'0'
+            ,/*lockflg*/''
+			/*IF lockflg == 1 */
+            	,now()
             /*END*/
+			/*IF lockflg != 1 */
+            	,NULL
+            /*END*/
+
             ,/*creFunc*/NULL
             ,now()
             ,/*creUser*/NULL

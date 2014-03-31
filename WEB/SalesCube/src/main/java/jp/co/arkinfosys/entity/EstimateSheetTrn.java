@@ -91,6 +91,8 @@ public class EstimateSheetTrn {
 	public String deliveryUrl;
 	@Column(name = "CTAX_PRICE_TOTAL")
 	public BigDecimal ctaxPriceTotal;
+	@Column(name = "CTAX_RATE")
+	public BigDecimal ctaxRate;
 	@Column(name = "COST_TOTAL")
 	public BigDecimal costTotal;
 	@Column(name = "RETAIL_PRICE_TOTAL")

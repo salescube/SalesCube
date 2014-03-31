@@ -169,13 +169,7 @@
 			"${f:url("/ajax/master/searchRateAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleRateCode")) {
-					var rateId = jData.filter("#singleRateCode");
-					window.location.doHref("${f:url("/master/editRate/edit/")}" + rateId.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -281,8 +275,8 @@
 	    </div><!-- /.form_section_wrap -->
 
 		<div style="text-align: right; width: 1160px">
-			<button tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchRate()" class="btn_medium">検索</button>
+			<button tabindex="150" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="151" onclick="searchRate()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">

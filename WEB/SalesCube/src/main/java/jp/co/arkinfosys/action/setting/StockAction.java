@@ -88,7 +88,7 @@ public class StockAction extends CommonResources {
 				nowUpdatetm = String.valueOf(mine.updDatetm);
 			}
 			if( stockForm.updDatetm.equals(nowUpdatetm) == false){
-				super.messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage("errors.exclusive.control"));
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage("errors.exclusive.control.updated"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return StockAction.Mapping.INPUT;
 			}

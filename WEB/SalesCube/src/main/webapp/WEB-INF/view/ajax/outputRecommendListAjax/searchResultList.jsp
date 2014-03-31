@@ -87,7 +87,7 @@
 					<th class="xl65 rd_top_left" rowspan="2" style='cursor: pointer; height: 30px;"' onclick="sort('poSlipId')">
 						発注伝票番号
 						<c:if test='${!isOutputExcel}'>
-							<span id="sortStatus_poSlipId" style="color: blue">
+							<span id="sortStatus_poSlipId" style="color: white">
 								<c:if test="${searchSortColumn == 'poSlipId' && !isOutputExcel}">
 									<c:if test='${searchSortOrderAsc}'>
 										<bean:message key='labels.asc'/>
@@ -113,7 +113,7 @@
 							</c:if>
 						>
 							${f:h(colInfo.itemName)}
-							<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: blue">
+							<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: white">
 								<c:if test='${searchSortColumn==colInfo.itemId && !isOutputExcel}'>
 									<c:if test='${searchSortOrderAsc}'>
 										<bean:message key='labels.asc'/>

@@ -123,14 +123,7 @@
 			"${f:url("/ajax/master/searchProductAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(autoEdit && jData.is("#singleProductCode")) {
-					var productCode = jData.filter("#singleProductCode");
-					$("#editForm").find("#productCode").val(productCode.val());
-					$("#editForm").submit();
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -522,8 +515,8 @@
 		    	</div><!-- /.form_section_wrap -->
 
 				<div style="width: 1160px; text-align: right">
-					<button type="button" tabindex="250" style="width: 80px;" onclick="initForm();" class="btn_medium">初期化</button>
-					<button type="button" tabindex="251" style="width: 80px;" onclick="searchProduct();" class="btn_medium">検索</button>
+					<button type="button" tabindex="250" onclick="initForm();" class="btn_medium">初期化</button>
+					<button type="button" tabindex="251" onclick="searchProduct();" class="btn_medium">検索</button>
 				</div>
 	
 				<div id="ListContainer">

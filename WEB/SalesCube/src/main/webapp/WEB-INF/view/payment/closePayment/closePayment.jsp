@@ -103,7 +103,7 @@
 								<col span="1" style="width: 64%">
 							</colgroup>
 							<tr>
-								<th><div class="col_title_right"><bean:message key='labels.closeDate'/><bean:message key='labels.must'/></th>
+								<th><div class="col_title_right_req"><bean:message key='labels.closeDate'/><bean:message key='labels.must'/></div></th>
 								<td>
 									<c:if test="${cutoffDataExist}">
 										最終締日は「${f:h(latestAptCutoffDate)}」です。

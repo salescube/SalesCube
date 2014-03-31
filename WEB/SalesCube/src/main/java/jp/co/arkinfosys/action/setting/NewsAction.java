@@ -62,7 +62,7 @@ public class NewsAction extends CommonResources {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validate = "validate", validator = true, input = StockAction.Mapping.INPUT)
+	@Execute(validate = "validate", validator = true, input = NewsAction.Mapping.INPUT)
 	public String update() throws Exception {
 		// おしらせ情報を更新する
 		// 排他制御
@@ -75,7 +75,7 @@ public class NewsAction extends CommonResources {
 			if( newsForm.updDatetm.equals(nowUpdatetm) == false){
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage("errors.exclusive.control.updated"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
-				return StockAction.Mapping.INPUT;
+				return NewsAction.Mapping.INPUT;
 			}
 			//updateする
 			this.newsService.updateNews(newsForm.description);

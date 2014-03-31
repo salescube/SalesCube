@@ -51,7 +51,8 @@
 	<div id="main_function" style="text-align : center ;">
 		<div class="function_forms">
 
-			<div style="padding-left: 20px">
+			<!-- <div style="padding-left: 20px"> -->
+			<div style="width:100%; text-align:center; margin-bottom:20px;">
 				<html:errors/>
 			</div>
 

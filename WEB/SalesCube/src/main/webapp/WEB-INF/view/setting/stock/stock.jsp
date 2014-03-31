@@ -101,11 +101,11 @@
 			
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.deficiencyRate"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.deficiencyRate"/><bean:message key='labels.must'/></div></th>
 									<td><html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="101" property="deficiencyRate" maxlength="4"/></td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.maxEntrustPoTimelag"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.maxEntrustPoTimelag"/><bean:message key='labels.must'/></div></th>
 									<td><html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="102" property="maxEntrustPoTimelag" maxlength="3"/> 日</td>
 								</tr>
 							</table>
@@ -132,21 +132,21 @@
 									<col span="1" style="width: 10%">
 								</colgroup>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.stockHoldDays"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.stockHoldDays"/><bean:message key='labels.must'/></div></th>
 									<td colspan="3">月平均出荷数の <html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="201" property="stockHoldDays" maxlength="3"/> ヶ月分</td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.minPoLotCalcDays"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.minPoLotCalcDays"/><bean:message key='labels.must'/></div></th>
 									<td>月平均出荷数の <html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="202" property="minPoLotCalcDays" maxlength="3"/> ヶ月分</td>
-									<th><div class="col_title_right"><bean:message key="labels.minPoLotNum"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.minPoLotNum"/><bean:message key='labels.must'/></div></th>
 									<td><html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="203" property="minPoLotNum" maxlength="3"/></td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.maxPoNumCalcDays"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.maxPoNumCalcDays"/><bean:message key='labels.must'/></div></th>
 									<td colspan="3">月平均出荷数の <html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="204" property="maxPoNumCalcDays" maxlength="3"/> ヶ月分</td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right"><bean:message key="labels.minPoNum"/><bean:message key="labels.must"/></div></th>
+									<th><div class="col_title_right_req"><bean:message key="labels.minPoNum"/><bean:message key='labels.must'/></div></th>
 									<td colspan="3"> <html:text style="width: 50px; ime-mode: disabled; text-align: right;" tabindex="205" property="minPoNum" maxlength="3"/></td>
 								</tr>
 							</table>

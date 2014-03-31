@@ -298,10 +298,12 @@ var SlipPriceManager = function() {
 		this.unitPriceDecAlignment = $("#unitPriceDecAlignment").val();
 		this.numDecAlignment = $("#numDecAlignment").val();
 		this.aptBalance = $("#aptBalance").val();
-		this.supplierTaxRate =  $("#supplierTaxRate").val();
 		this.rate = $("#rate").val();
 		this.rateId = $("#rateId").val();
 		this.paymentSlipId = $("#paymentSlipId").val();
+		// 伝票の税率（仕入伝票にある。支払伝票にはない）
+		this.ctaxRateSlip = $("#ctaxRate").val();
+		this.ctaxTotal = $("#ctaxTotal").val();
 
 		// 初期計算の制御
 		this.initCalc = $("#initCalc").val() == "true";
@@ -446,8 +448,11 @@ var SlipPriceManager = function() {
 	 * 金額合計を計算する
 	 */
 	this.calcPrice = function() {
+		
 		// 本体金額合計と外貨伝票合計金額を計算する
 		var priceTotal = new BigDecimal("0");
+		var ctaxTotal = new BigDecimal("0");
+		var nonTaxPriceTotal =  new BigDecimal("0");
 		var fePriceTotal = new BigDecimal("0");
 		for ( var key in this.unitPriceDict) {
 			// 支払伝票入力から呼び出されている場合は、チェックされた明細しか伝票合計金額に計上しない
@@ -458,7 +463,24 @@ var SlipPriceManager = function() {
 			if (_isNum(this.unitPriceDict[key].price.value)) {
 				var p = new BigDecimal(
 					_getNumStr(this.unitPriceDict[key].price.value));
-				priceTotal = priceTotal.add(p);
+
+				// 消費税計算
+				// 有効なレートを持たず、外税伝票計か外税締単位の場合のみ本体合計金額に明細の税額をプラスする
+				if((this.rateId == null  || this.rateId == "") &&
+						taxShiftCategorySlipTotal != "" && taxShiftCategoryCloseTheBooks != "" &&
+						((this.taxShiftCategory == taxShiftCategorySlipTotal) ||
+						(this.taxShiftCategory == taxShiftCategoryCloseTheBooks) )){
+
+					// この明細の消費税額
+					var cTaxPrice = new BigDecimal(_getNumStr(this.unitPriceDict[key].ctaxPrice.value));
+					nonTaxPriceTotal =  nonTaxPriceTotal.add(p);
+					priceTotal = priceTotal.add(p).add(cTaxPrice);
+//					priceTotal = priceTotal.add(cTaxPrice);
+					ctaxTotal = ctaxTotal.add(cTaxPrice);
+				} else {
+					priceTotal = priceTotal.add(p);	// 消費税適用対象外の場合、そのままプラスする
+					nonTaxPriceTotal = priceTotal;
+				}
 			}
 			if (_isNum(this.unitPriceDict[key].dolPrice.value)) {
 				p = new BigDecimal(
@@ -467,11 +489,8 @@ var SlipPriceManager = function() {
 			}
 		}
 
-		var ctaxTotal = new BigDecimal("0");
-		var nonTaxPriceTotal =  new BigDecimal("0");
 
 		// 本体金額合計
-		nonTaxPriceTotal = priceTotal;
 		nonTaxPriceTotal = this.setYenScale(nonTaxPriceTotal);
 		this.PriceInfo.nonTaxPriceTotal = nonTaxPriceTotal.toString();
 
@@ -482,14 +501,20 @@ var SlipPriceManager = function() {
 			&& ((this.taxShiftCategory == taxShiftCategorySlipTotal)
 					||(this.taxShiftCategory == taxShiftCategoryCloseTheBooks) )){
 
-				if( this.supplierTaxRate){
-					var tax = new BigDecimal(_getNumStr(this.supplierTaxRate));
-					ctaxTotal = priceTotal.multiply(tax).divide(new BigDecimal("100.0"));
-					priceTotal = priceTotal.add(ctaxTotal);
-					ctaxTotal = this.setYenScale(ctaxTotal);
+				if(MAIN_FORM_NAME == "purchase_inputPurchaseActionForm"){
+					// 仕入の場合、税抜合計に新しい消費税率を掛ける
+					var tax = new BigDecimal(_getNumStr(this.ctaxRateSlip));
+					ctaxTotal = nonTaxPriceTotal.multiply(tax).divide(new BigDecimal("100.0"));
+					priceTotal = nonTaxPriceTotal.add(ctaxTotal);
+				} else {
+					// 支払の場合、各行の税額の和（行ごとに税率が異なる可能性がある）
 					this.PriceInfo.ctaxTotal = ctaxTotal.toString();
 				}
-		}else{this.PriceInfo.ctaxTotal = "";}
+				ctaxTotal = this.setYenScale(ctaxTotal);
+				this.PriceInfo.ctaxTotal = ctaxTotal.toString();
+		}else{
+			this.PriceInfo.ctaxTotal = ctaxTotal.toString();
+		}
 
 		// 伝票合計
 		priceTotal = this.setYenScale(priceTotal);
@@ -497,12 +522,12 @@ var SlipPriceManager = function() {
 
 		// 外貨伝票合計
 		if(this.rateId == null  || this.rateId == "") {
-			this.PriceInfo.fePriceTotal = "";
+			this.PriceInfo.fePriceTotal = fePriceTotal.toString();
 		}else{
 			fePriceTotal = this.setDolScale(fePriceTotal);
 			this.PriceInfo.fePriceTotal = fePriceTotal.toString();
 		}
-
+		
 		// 本体金額合計と買掛残高から支払残高を計算する
 		if (this.aptBalance) {
 			var b = new BigDecimal(_getNumStr(this.aptBalance));
@@ -512,6 +537,8 @@ var SlipPriceManager = function() {
 			}
 			b = this.setYenScale(b);
 			this.PriceInfo.paymentBalance = b.toString();
+		} else {
+			this.PriceInfo.paymentBalance = "0";
 		}
 	};
 
@@ -833,6 +860,44 @@ function changeUnitPrice(info) {
 	updatePrice();
 }
 
+/**
+ * 仕入入力画面の税率変更イベント
+ * @return
+ */
+function changeTaxRate(taxrateValue){
+	// 消費税計算
+	manager.ctaxRateSlip = taxrateValue;
+	
+	for ( var key in manager.unitPriceDict) {
+		var linePriceInfo = manager.unitPriceDict[key];
+
+		if((manager.rateId == null || manager.rateId == "") &&
+			taxShiftCategorySlipTotal != "" && taxShiftCategoryCloseTheBooks != ""
+			&& ((manager.taxShiftCategory == taxShiftCategorySlipTotal)
+					||(manager.taxShiftCategory == taxShiftCategoryCloseTheBooks) )
+			&& _isNum(taxrateValue)){
+
+			var taxRate = new BigDecimal(taxrateValue);
+			var p = new BigDecimal(_getNumStr(linePriceInfo.price.value));
+			
+			var ctaxp = p.multiply(taxRate).divide(new BigDecimal("100.0"));
+			ctaxp = manager.setYenScale(ctaxp);
+
+			linePriceInfo.ctaxRate.value = taxrateValue;
+			linePriceInfo.ctaxPrice.value = ctaxp.toString();
+		} else {
+			linePriceInfo.ctaxRate.value = "0";
+			linePriceInfo.ctaxPrice.value = "0";
+		}
+	}
+
+ 	manager.calcPrice();
+ 	updatePrice();
+
+}
+
+
+
  /**
  * 単価フォーカスイベント
  * @return
@@ -905,3 +970,5 @@ function changeUnitPrice(info) {
 		 this.changeDolUnitPrice();
 	 }
  }
+ 
+ 

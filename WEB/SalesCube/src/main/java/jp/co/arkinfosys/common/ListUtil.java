@@ -6,7 +6,13 @@ package jp.co.arkinfosys.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.arkinfosys.dto.master.TaxRateDto;
+import jp.co.arkinfosys.entity.TaxRate;
+import jp.co.arkinfosys.service.TaxRateService;
+import jp.co.arkinfosys.service.exception.ServiceException;
+
 import org.apache.struts.util.LabelValueBean;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * プルダウンリストのユーティリティクラスです.
@@ -168,6 +174,35 @@ public final class ListUtil {
 				list.add(new LabelValueBean(labels[i],values[i]));
 			}
 
+		return list;
+	}
+	
+	/**
+	 * 消費税率の選択値リストを返します。
+	 * @param 税率情報サービスクラス
+	 * @return 消費税率の選択値リスト
+	 */
+	public static List<LabelValueBean> getRateTaxList(TaxRateService t) {
+		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
+		list = addEmptyLabelValue(list);
+		
+		try {
+			// "1" は消費税（固定）
+			List<TaxRate> taxRateList = t.findTaxRateByTaxTypeCagory("1");
+
+			// 取得した消費税値をリストに格納
+			for (TaxRate taxRate : taxRateList) {
+				TaxRateDto dto = Beans.createAndCopy(TaxRateDto.class, taxRate)
+									.timestampConverter(Constants.FORMAT.TIMESTAMP)
+									.timestampConverter(Constants.FORMAT.DATE, "startDate")
+									.dateConverter(Constants.FORMAT.DATE)
+									.execute();
+				list.add(new LabelValueBean(dto.taxRate, dto.taxRate));
+			}
+		} catch (ServiceException e) {
+			
+		}
+		
 		return list;
 	}
 }

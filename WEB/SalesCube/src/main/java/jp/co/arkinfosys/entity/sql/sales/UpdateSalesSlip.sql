@@ -67,6 +67,7 @@ UPDATE
 			,TAX_FRACT_CATEGORY=/*taxFractCategory*/NULL
 			,PRICE_FRACT_CATEGORY=/*priceFractCategory*/NULL
 			,CTAX_PRICE_TOTAL=/*ctaxPriceTotal*/NULL
+			,CTAX_RATE=/*ctaxRate*/NULL
 			,PRICE_TOTAL=/*priceTotal*/NULL
 			,GM_TOTAL=/*gmTotal*/NULL
 			,COD_SC=/*codSc*/NULL

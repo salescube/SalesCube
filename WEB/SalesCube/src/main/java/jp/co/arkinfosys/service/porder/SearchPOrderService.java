@@ -123,6 +123,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		public static final String TRANSPORT_CATEGORY_CODE = "transportCategoryCode";
 		public static final String PO_LINE_STATUS = "poLineStatusCategory";
 		public static final String STATUS_SUPPLIER_SLIP_UNPAID = "statusSupplierSlipUnpaid";
+		public static final String STATUS_SUPPLIER_SLIP_PAYING = "statusSupplierSlipPaying";
 		public static final String STATUS_PORDER_SLIP_PURCHASED = "statusPorderSlipPurchased";
 	}
 
@@ -282,15 +283,20 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		// 未払い
 		param.put(ParamLocal.UNPAID, MessageResourcesUtil
 				.getMessage("labels.slipPaymentStatus.unpaid"));
-		// 済
 		param.put(ParamLocal.PAID, MessageResourcesUtil
 				.getMessage("labels.slipPaymentStatus.paid"));
+
 		// 発注伝票状態 仕入完了：Constants.STATUS_PORDER_SLIP.PURCHASED
 		param.put(ParamLocal.STATUS_PORDER_SLIP_PURCHASED,
 				Constants.STATUS_PORDER_SLIP.PURCHASED);
+		
 		// 仕入伝票状態 未払い：Constants.STATUS_SUPPLIER_SLIP.UNPAID
 		param.put(ParamLocal.STATUS_SUPPLIER_SLIP_UNPAID,
 				Constants.STATUS_SUPPLIER_SLIP.UNPAID);
+		// 仕入伝票状態 支払中：Constants.STATUS_SUPPLIER_SLIP.PAYING
+		param.put(ParamLocal.STATUS_SUPPLIER_SLIP_PAYING,
+				Constants.STATUS_SUPPLIER_SLIP.PAYING);
+
 		// 運送便区分のコード
 		param.put(ParamLocal.TRANSPORT_CATEGORY_CODE,
 				Categories.TRANSPORT_CATEGORY);

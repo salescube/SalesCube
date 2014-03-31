@@ -955,7 +955,7 @@
 		<bean:write name="msg" ignore="true"/><br>
 	</html:messages>
 	</div>
-	
+
     <div class="form_section_wrap">
 	    <div class="form_section">
 	    	<div class="section_title">
@@ -964,45 +964,48 @@
 	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 	            </button>
 			</div><!-- /.section_title -->
-	
+
 			<div id="order_section" class="section_body">
 			<table id="user_info" class="forms" summary="顧客情報">
 				<tr>
-					<th><div class="col_title_right">顧客コード<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">顧客コード<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:text styleId="customerCode" property="customerCode" tabindex="100" readonly="${editMode || !isUpdate}"
 	                    	styleClass="${editMode || !isUpdate ? 'c_disable' : '' }" style="width: 180px;ime-mode:disabled;"
 	                    	onfocus="this.curVal=this.value;"  />
+	                    	
+	                    <c:if test="${!editMode}">
 	    				<html:image src="${f:url('/images//customize/btn_search.png')}"
 	    					style="vertical-align: middle; cursor: pointer;" tabindex="101" onclick="openCustomerSearchDialog();" />
+	    				</c:if>
 	                </td>
-					<th><div class="col_title_right">顧客名<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">顧客名<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="60" styleId="customerName" property="customerName" style="width: 250px" tabindex="102"
 							onfocus="this.curVal=this.value;"/></td>
-					<th><div class="col_title_right">顧客名カナ<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">顧客名カナ<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="60" styleId="customerKana" property="customerKana" style="width: 250px" tabindex="103"
 							onfocus="this.curVal=this.value;"
 							onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); convertPaymentName(this.value); }"/></td>
 				</tr>
 				<tr>
-					<th><div class="col_title_right">事業所名</div></th>
+					<th><div class="col_title_right_req">事業所名<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="60" styleId="customerOfficeName" property="customerOfficeName" style="width:250px" tabindex="104"/></td>
-					<th><div class="col_title_right">事業所名カナ</div></th>
+					<th><div class="col_title_right_req">事業所名カナ<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="60" styleId="customerOfficeKana" property="customerOfficeKana" style="width:250px" tabindex="105"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/></td>
-					<th><div class="col_title_right">顧客略称</div></th>
+					<th><div class="col_title_right_req">顧客略称<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="14" styleId="customerAbbr" property="customerAbbr" style="width:250px" tabindex="106"/></td>
 				</tr>
 			</table>
 
 			<table class="forms" style="width: 910px" summary="自社情報2">
 				<tr>
-					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="8" styleId="customerZipCode" property="customerZipCode" style="width:100px;ime-mode:disabled;" tabindex="201"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect('customer');}"/>
 	                <html:image tabindex="202" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('customer');" />
 	                </td>
-					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="50" styleId="customerAddress1" property="customerAddress1" style="width:250px" tabindex="202"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
 					<th><div class="col_title_right">住所２</div></th>
@@ -1039,7 +1042,7 @@
 					<td colspan="5"><html:text maxlength="255" styleId="customerEmail" property="customerEmail" style="width:250px;ime-mode:disabled;" tabindex="211"/></td>
 				</tr>
 			</table>
-	
+
 			<table class="forms" style="width: 910px" summary="自社情報3">
 				<tr>
 					<th><div class="col_title_right">顧客ランク</div></th>
@@ -1077,13 +1080,13 @@
 					</td>
 				</tr>
 				<tr>
-					<th><div class="col_title_right">税端数処理<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">税端数処理<bean:message key='labels.must'/></div></th>
 					<td>
                     	<html:select styleId="taxFractCategory" property="taxFractCategory" tabindex="306" styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"  disabled="${editMode || !isUpdate ? 'true' : '' }"  >
                         	<html:options collection="taxFractCategoryList" property="value" labelProperty="label"/>
 						</html:select>
 					</td>
-					<th><div class="col_title_right">税転稼<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">税転嫁<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="308" style="width:150px;">
 	                        <html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
@@ -1095,22 +1098,22 @@
 			</table>
 			<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
 			<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
-	
+
 			<table class="forms" style="width: 910px" summary="自社情報3">
 				<tr>
-					<th><div class="col_title_right">取引区分<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">取引区分<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:select styleId="salesCmCategory" property="salesCmCategory" tabindex="400" >
 	                        <html:options collection="salesCmCategoryList" property="value" labelProperty="label"/>
 						</html:select>
 					</td>
-					<th><div class="col_title_right">支払条件<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">支払条件<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:select styleId="cutoffGroupCategory" property="cutoffGroupCategory" tabindex="401">
 	                        <html:options collection="cutoffGroupList" property="value" labelProperty="label"/>
 						</html:select>
 					</td>
-					<th><div class="col_title_right">回収方法<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">回収方法<bean:message key='labels.must'/></div></th>
 					<td colspan="3">
 	                    <html:select styleId="paybackTypeCategory" property="paybackTypeCategory" tabindex="402">
 	                        <html:options collection="paybackTypeCategoryList" property="value" labelProperty="label"/>
@@ -1118,13 +1121,13 @@
 					</td>
 				</tr>
 				<tr>
-					<th><div class="col_title_right">請求書発行単位<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">請求書発行単位<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:select styleId="billPrintUnit" property="billPrintUnit" tabindex="403" >
 	                        <html:options collection="billPrintUnitList" property="value" labelProperty="label"/>
 						</html:select>
 					</td>
-					<th><div class="col_title_right">請求書日付有無<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">請求書日付有無<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:select styleId="billDatePrint" property="billDatePrint" tabindex="404">
 	                        <html:options collection="billDatePrintList" property="value" labelProperty="label"/>
@@ -1134,7 +1137,7 @@
 					<td><html:checkbox styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag" value="0" tabindex="405"/></td>
 				</tr>
 			</table>
-	
+
 			<table class="forms" style="width: 910px" summary="自社情報3">
 				<colgroup>
 					<col span="1" style="width: 10%">
@@ -1168,12 +1171,12 @@
 	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 	            </button>
 			</div><!-- /.section_title -->
-			
+
 			<div id="order_section" class="section_body">
 			<table id="delivery_table" class="forms" summary="納入先情報">
 	            <tbody id="delivery_info">
 				<tr>
-					<th><div class="col_title_right">納入先<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">納入先<bean:message key='labels.must'/></div></th>
 					<td colspan="5">
 						<html:select styleId="selectedDelivery" property="selectedDelivery" style="width: 500px" onchange="changeDelivery()" tabindex="601">
 	                        <html:option value=""></html:option>
@@ -1185,11 +1188,11 @@
 					</td>
 				</tr>
 				<tr id="deliveryRow_0_1">
-					<th><div class="col_title_right">納入先名<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">納入先名<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:text maxlength="60" styleId="deliveryRow_0Name" property="newDeliveryName" tabindex="604" style="width:200px;"/>
 					</td>
-					<th><div class="col_title_right">納入先名カナ<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">納入先名カナ<bean:message key='labels.must'/></div></th>
 					<td colspan="3">
 						<html:text maxlength="60" styleId="deliveryRow_0Kana" property="newDeliveryKana" tabindex="605" style="width:200px;"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
@@ -1211,13 +1214,13 @@
 	                </td>
 				</tr>
 				<tr id="deliveryRow_0_3">
-					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 					<td>
 						<html:text maxlength="8" styleId="deliveryRow_0ZipCode" property="newDeliveryZipCode" tabindex="609" style="width:100px;ime-mode:disabled;"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_0'); }"/>
 	    				<html:image tabindex="610" styleId="deliveryRow_0ZipCodeIcon" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;"/>
 	                </td>
-					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:text maxlength="50" styleId="deliveryRow_0Address1" property="newDeliveryAddress1" tabindex="611" style="width:200px;"
 	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>
@@ -1263,12 +1266,12 @@
 				</tr>
 	            <c:forEach var="deliveryList" varStatus="s" items="${deliveryList}">
 				<tr id="deliveryRow_${s.index+1}_1" style="display: none;">
-					<th><div class="col_title_right">納入先名<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">納入先名<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Name" name="deliveryList" property="deliveryName" tabindex="-1" indexed="true" style="width:200px;"/>
 	                    <html:hidden styleId="deliveryRow_${s.index+1}Code" name="deliveryList" property="deliveryCode" indexed="true"/>
 					</td>
-					<th><div class="col_title_right">納入先名カナ<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">納入先名カナ<bean:message key='labels.must'/></div></th>
 					<td colspan="3">
 	                    <html:text maxlength="60" styleId="deliveryRow_${s.index+1}Kana" name="deliveryList" property="deliveryKana" tabindex="-1" indexed="true" style="width:200px;"
 	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
@@ -1284,12 +1287,12 @@
 					<td><html:text maxlength="60" styleId="deliveryRow_${s.index+1}DeptName" name="deliveryList" property="deliveryDeptName" tabindex="-1" indexed="true" style="width:200px;"/></td>
 				</tr>
 				<tr id="deliveryRow_${s.index+1}_3" style="display: none;">
-					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="8" styleId="deliveryRow_${s.index+1}ZipCode" name="deliveryList" property="deliveryZipCode" tabindex="-1" indexed="true" style="width:100px;ime-mode:disabled;"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('deliveryRow_${s.index+1}'); }"/>
 					<html:image tabindex="-1" styleId="deliveryRow_${s.index+1}_3_icon" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;"/>
 	                </td>
-					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 					<td><html:text maxlength="50" styleId="deliveryRow_${s.index+1}Address1" name="deliveryList" property="deliveryAddress1" tabindex="-1" indexed="true" style="width:200px;"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/></td>
 					<th><div class="col_title_right">住所２</div></th>
@@ -1346,17 +1349,17 @@
 	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 	            </button>
 			</div><!-- /.section_title -->
-			
+
 			<div id="order_section" class="section_body">
-		
+
 			<table id="bill_info" class="forms" summary="請求先情報">
 				<tr>
-					<th><div class="col_title_right">請求先名<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">請求先名<bean:message key='labels.must'/></div></th>
 					<td>
 						<html:hidden styleId="billTo_deliveryCode" property="billTo.deliveryCode" />
 						<html:text maxlength="60" styleId="billTo_deliveryName" property="billTo.deliveryName" tabindex="701" style="width: 200px;"/>
 					</td>
-					<th><div class="col_title_right">請求先名カナ<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">請求先名カナ<bean:message key='labels.must'/></div></th>
 					<td colspan="3">
 						<html:text maxlength="60" styleId="billTo_deliveryKana" property="billTo.deliveryKana" tabindex="702" style="width: 200px;"
 							onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=convertHKanaToKKana(this.value); }"/>
@@ -1378,13 +1381,13 @@
 	                </td>
 				</tr>
 				<tr>
-					<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 					<td>
 	                    <html:text maxlength="8" styleId="billTo_deliveryZipCode" property="billTo.deliveryZipCode" tabindex="706" style="width: 100px;ime-mode:disabled;"
 	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ searchZipCodeDirect('billTo_delivery'); }" />
 	    				<html:image tabindex="707" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="searchZipCode('billTo_delivery');" />
 	                </td>
-					<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 	                <td>
 	                    <html:text maxlength="50" styleId="billTo_deliveryAddress1" property="billTo.deliveryAddress1" tabindex="708" style="width: 200px"
 	                    	onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ checkZipCodeAndAddress(this); }"/>

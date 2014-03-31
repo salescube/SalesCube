@@ -20,6 +20,7 @@ UPDATE
 				GROUP BY
 					CTAX_RATE
 			) PTOTAL)
+		,CTAX_TOTAL = /*ctaxTotal*/
 		,FE_PRICE_TOTAL = (
 			SELECT
 				SUM(DOL_PRICE)

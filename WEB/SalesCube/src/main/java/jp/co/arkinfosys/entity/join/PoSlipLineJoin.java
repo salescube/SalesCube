@@ -37,4 +37,5 @@ public class PoSlipLineJoin implements Serializable{
 	public Date supplierDate;
 	public Timestamp supUpdDatetm;
 	public BigDecimal ctaxRate;
+	public BigDecimal ctaxPrice;
 }

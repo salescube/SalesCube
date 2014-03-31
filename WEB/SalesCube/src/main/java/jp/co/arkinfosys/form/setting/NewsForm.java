@@ -4,6 +4,8 @@
 package jp.co.arkinfosys.form.setting;
 
 import org.apache.struts.action.ActionMessages;
+import org.seasar.struts.annotation.Arg;
+import org.seasar.struts.annotation.Maxlength;
 
 /**
  * お知らせ編集画面のアクションフォームクラスです.
@@ -13,6 +15,7 @@ public class NewsForm {
 	/**
      * おしらせ
      */
+	@Maxlength(maxlength = 512, arg0 = @Arg(key = "labels.newsDesc"))
     public String description;
 
 	/**

@@ -9,6 +9,7 @@ import java.util.List;
 
 import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.porder.InputPOrderLineDto;
 import jp.co.arkinfosys.dto.porder.InputPOrderSlipDto;
@@ -222,6 +223,11 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 	public String ctaxTotal;
 
 	/**
+	 * 消費税率
+	 */
+	public String ctaxRate;
+	
+	/**
 	 * 伝票合計外貨金額
 	 */
 	public String fePriceTotal;
@@ -309,12 +315,16 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 
 		cUnitSignList = null;
 		defaultCUnit = null;
+		
 		/**
 		 * 伝票合計
 		 */
 		priceTotal = null;
 		ctaxTotal = null;
 		fePriceTotal = null;
+		
+		// 消費税率
+		this.ctaxRate = super.taxRate;
 
 		printCount = null;
 
@@ -338,6 +348,20 @@ public class InputPOrderForm extends AbstractSlipEditForm<InputPOrderLineDto> {
 		defProductFractCategory = mineDto.productFractCategory;
 		defNumDecAlignment = String.valueOf(mineDto.numDecAlignment.intValue());
 
+	}
+	
+	/**
+	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
+	 */
+	@Override
+	public void setSlipTaxRate() {
+		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
+			super.taxRate = this.ctaxRate;
+		}
+		
+		if (this.ctaxRate == "" || this.ctaxRate == null) {
+			this.ctaxRate = super.taxRate;
+		}
 	}
 
 	/**

@@ -85,9 +85,6 @@ public class InputPaymentDto extends AbstractSlipDto<InputPaymentLineDto> {
 	/** 支払年月度 */
 	public String paymentYm;
 
-	// 参照時の金額合計で使用する項目
-	/** 消費税率 */
-	public String supplierTaxRate;
 
 	/**
 	 * 支払伝票IDとその更新時間のセットを返します.

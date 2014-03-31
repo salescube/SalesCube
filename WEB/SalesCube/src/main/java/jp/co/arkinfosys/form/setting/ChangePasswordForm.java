@@ -6,6 +6,7 @@ package jp.co.arkinfosys.form.setting;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.seasar.struts.annotation.Maxbytelength;
+import org.seasar.struts.annotation.Minlength;
 import org.seasar.struts.annotation.Required;
 
 /**

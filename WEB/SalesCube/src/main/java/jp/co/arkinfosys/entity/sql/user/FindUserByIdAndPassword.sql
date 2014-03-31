@@ -12,6 +12,9 @@ SELECT
         ,U.UPD_FUNC
         ,U.UPD_DATETM
         ,U.UPD_USER
+        ,U.FAIL_COUNT
+        ,U.LOCK_FLG
+        ,U.LOCK_DATETM
         ,D.NAME
     FROM
         USER_MST_/*$domainId*/ U

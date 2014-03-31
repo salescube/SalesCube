@@ -50,6 +50,50 @@ table.dialog_resultList tr:nth-child(even) td {
     background-color: #404040;
 }
 
+
+/*数量割引詳細ポップアップのテーブル*/
+table.popup_resultList {
+    border: solid 1px #FFFFFF;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    margin: 15px;
+}
+
+table.popup_resultList th {
+    border-right: solid 1px #FFFFFF;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: none;
+    background-color: #48acc6;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+table.popup_resultList td {
+	border-right: solid 1px #FFFFFF;
+	border-top: solid 1px #FFFFFF;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+table.popup_resultList tr:nth-child(odd) td {
+    background-color: #e9f1f5;
+}
+table.popup_resultList tr:nth-child(even) td {
+    background-color: #d0e3ea;
+}
+
 /********************************************/
 
 
@@ -154,6 +198,31 @@ div.section_title button.btn_copy_customer_action:disabled {
 
 }
 
+.btn_list_action {
+    width: 60px;
+    height: 25px;
+    line-height: 25px;
+    margin: 10px;
+    background-color: #009AD0;
+    color: #FFFFFF;
+    font-size: 12px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-bottom: solid 1px #CCCCCC;
+}
+
+.btn_list_action[disabled="disabled"] {
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+}
+
+.btn_list_action:disabled {
+    background-color: #B2E1F0;
+    border-bottom: solid 1px #F1F1F1;
+}
+
+
 /***********************************************************/
 /*明細行以外の表形式表示の定義
  *
@@ -206,5 +275,38 @@ table.detail_info input[type="text"] {
 }
 table.detail_info textarea {
     width: 80%;
+    line-height: 20px;
+    height: 40px;
 }
 
+
+/* 必須項目 */
+.col_title_right_req {
+    position: relative;
+    background: #d94b71;
+    width: 100%;
+    min-width: 80px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.col_title_right_req:after {
+    left: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.col_title_right_req:after {
+    border-color: rgba(102, 102, 102, 0);
+    border-left-color: #d94b71;
+    border-width: 5px;
+    top: 50%;
+    margin-top: -5px;
+}

@@ -492,6 +492,9 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		public static final String QUANTITY_FRACT_CATEGORY_ID = "quantityFractCategoryId";
 		public static final String PRICE_FRACT_CATEGORY_ID = "priceFractCategoryId";
 		public static final String TAX_FRACT_CATEGORY_ID = "taxFractCategoryId";
+		
+		public static final String CTAX_RATE = "ctaxRate";
+		public static final String CTAX_TOTAL = "ctaxTotal";
 	}
 
 	//任意のタイミングでロールバックしたい
@@ -565,6 +568,10 @@ public class OutputRecommendListService extends AbstractService<PoSlipTrn> {
 		param.put(SlipParam.QUANTITY_FRACT_CATEGORY_ID, Categories.PRODUCT_FRACT_CATEGORY);
 		param.put(SlipParam.PRICE_FRACT_CATEGORY_ID, Categories.PRICE_FRACT_CATEGORY);
 		param.put(SlipParam.TAX_FRACT_CATEGORY_ID, Categories.TAX_FRACT_CATEGORY);
+		
+		// 消費税対応
+		param.put(SlipParam.CTAX_RATE, null);
+		param.put(SlipParam.CTAX_TOTAL, null);
 
 		//伝票用パラメータ
 		param.putAll(slipParam);

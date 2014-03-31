@@ -31,17 +31,33 @@
 			// 明細行のIndex管理
 			var maxLineNo = $("#tbodyLine").children().length-1;
 			lineCount = maxLineNo + 1;
-			var maxLineId
+			var maxLineId;
+			
+			// 明細データの存在チェック
+			var isEmpty = true;
+			for (var i = 0; i < 5; i++) {
+				if (!isEmptyLine(i)) {
+					isEmpty = false;
+					break;
+				}
+			}
+			
 			if(maxLineNo >= 0) {
 				maxLineId = $("#tbodyLine").children().eq(maxLineNo).attr("id");
 				maxIndex = maxLineId.replace("trLine", "");
-
-				// 明細が複数行存在する時は、委託入出庫番号と発注番号、委託入出庫区分をDisableにする
-				$("#entrustEadSlipId").attr("readOnly", "true");
-				$("#entrustEadSlipId").addClass("c_disable");
-				$("#poSlipId").attr("readOnly", "true");
-				$("#poSlipId").addClass("c_disable");
-
+				
+				if (!isEmpty) {
+					// 明細が複数行存在する時は、委託入出庫番号と発注番号、委託入出庫区分をDisableにする
+					$("#entrustEadSlipId").attr("readonly", "true");
+					$("#entrustEadSlipId").addClass("c_disable");
+					$("#entrustEadSlipId").css("background-color", "#CCCCCC");
+					$("#entrustEadSlipId").css("border-top", "2px solid #AEAEAE");
+					$("#poSlipId").attr("readOnly", "true");
+					$("#poSlipId").addClass("c_disable");
+					$("#poSlipId").css("background-color", "#CCCCCC");
+					$("#poSlipId").css("border-top", "2px solid #AEAEAE");
+				}
+				
 				// 明細行のクローンを生成
 				trCloneBase = $("#tbodyLine").children(":first").clone(true);
 				baseIndex = trCloneBase.attr("id").replace("trLine", "");
@@ -54,13 +70,16 @@
 
 			// 初期フォーカス設定
 //			$("#entrustEadDate").focus();
-			if( $("#entrustEadSlipId").val() != "" ){
+			if( !isEmpty && $("#entrustEadSlipId").val() != "" ){
 				$("#entrustEadSlipId").attr("readOnly", "true");
 				$("#entrustEadSlipId").addClass("c_disable");
+				$("#entrustEadSlipId").css("background-color", "#CCCCCC");
+				$("#entrustEadSlipId").css("border-top", "2px solid #AEAEAE");
 				$("#entrustEadDate").focus();
 
 			}else{
 				$("#entrustEadSlipId").focus();
+				lineCount = 0;
 			}
 		});
 
@@ -391,10 +410,10 @@
 							</colgroup>
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.entrustEadSlipId'/></div></th><%// 委託入出庫番号 %>
-								<td><html:text property="entrustEadSlipId" styleId="entrustEadSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="findSlip();"/></td>
+								<td><html:text property="entrustEadSlipId" styleId="entrustEadSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false" maxlength="10" onblur="findSlip();"/></td>
 								<th><div class="col_title_right"><bean:message key='labels.poSlipId'/></div></th><%// 発注番号 %>
 								<td><html:text property="poSlipId" styleId="poSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="copySlipFromPorder();"/></td>
-								<th><div class="col_title_right"><bean:message key='labels.entrustEadDate'/><bean:message key='labels.must'/></div></th><%// 入出庫日 %>
+								<th><div class="col_title_right_req"><bean:message key='labels.entrustEadDate'/><bean:message key='labels.must'/></div></th><%// 入出庫日 %>
 								<td><html:text property="entrustEadDate" styleId="entrustEadDate" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
 								<th><div class="col_title_right"><bean:message key='labels.userName' /></div></th><%// 入力担当者 %>
 								<td>
@@ -454,10 +473,11 @@
 				</div>
 
 				<br>
-				<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
-				<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
+				<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_list_action">全て選択</button>
+				<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_list_action">全て解除</button>
 
 				<%-- 入力明細領域 --%>
+				<div id="order_detail_info_wrap">
 				<table id="order_detail_info" summary="入出庫明細リスト" class="forms" style="margin-top: 0px;">
 					<thead>
 						<tr>
@@ -512,7 +532,7 @@
 											<html:text name="entrustEadLineTrnDtoList" property="quantity" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].quantity" styleClass="c_disable numeral_commas" style="width: 75px; ime-mode: disabled;" tabindex="${status.index*lineElementCount+1002}" maxlength="6"  readonly="true" /><br>
 										</div>
 										<div class="box_2of2">
-											<button type="button" id="stockButton${status.index}" class="btn_small" style="width:75px;">在庫</button>
+											<button type="button" id="stockButton${status.index}" class="btn_list_action" style="width:75px;">在庫</button>
 										</div>
 									</td>
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
@@ -530,20 +550,19 @@
 
 					</tbody>
 				</table>
+				</div>
 			</div>
 		</s:form>
 		
 		<div style="width: 1160px; text-align: center; margin-top: 10px;">
 			<c:if test="${!isExistSlipRead}">
-				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}>
-					<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 登録 %>
-					<!--<bean:message key='words.action.register'/><%// 登録 %>-->
+				<button type="button" id="btnF3btm" tabindex="1999" class="btn_medium" style="width:260px; height:51px;" onclick="onF3();" ${menuUpdate?"":"disabled"}>
+					<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 				</button>
 			</c:if>
 			<c:if test="${isExistSlipRead}">
-				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${menuUpdate?"":"disabled"}>
-					<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 更新 %>
-					<!--<bean:message key='words.action.renew'/><%// 更新 %>-->
+				<button type="button" id="btnF3btm" tabindex="1999" class="btn_medium" style="width:260px; height:51px;" onclick="onF3();" ${menuUpdate?"":"disabled"}>
+					<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 				</button>
 			</c:if>
 		</div>

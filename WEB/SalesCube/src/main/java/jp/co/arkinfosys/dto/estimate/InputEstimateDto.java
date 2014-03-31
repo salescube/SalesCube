@@ -69,7 +69,6 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
      */
 	public String deliveryName;
 
-
     /**
      * 見積条件
      */
@@ -79,6 +78,7 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
      * 提出先名
      */
     public String submitName;
+    
 	/**
      * 提出先敬称コード
      */
@@ -128,6 +128,7 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
      * メモ
      */
     public String memo;
+    
     /**
      * 粗利益
      */
@@ -137,18 +138,22 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
      * 粗利益率
      */
     public String grossMarginRate;
+    
     /**
      * 合計金額
      */
     public String retailPriceTotal;
+    
     /**
      * 消費税
      */
     public String ctaxPriceTotal;
+    
     /**
      * 伝票合計
      */
     public String estimateTotal;
+    
     /**
      * 原価合計（仕入金額合計）
      */
@@ -158,6 +163,7 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
      * 更新日（排他制御のため）
      */
 	public String updDatetm;
+	
     /**
      * 更新者（排他制御のため）
      */
@@ -167,10 +173,16 @@ public class InputEstimateDto extends AbstractSlipDto<InputEstimateLineDto> {
 	 * 税端数処理
 	 */
 	public String taxFractCategory;
+	
 	/**
 	 * 単価端数処理
 	 */
 	public String priceFractCategory;
+
+	/**
+	 * 消費税率
+	 */
+	public String ctaxRate;
 
 	// 新規作成状態の管理フラグ
 	public Boolean newData;

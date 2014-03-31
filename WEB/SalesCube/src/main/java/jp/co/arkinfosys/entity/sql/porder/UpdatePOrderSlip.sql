@@ -42,6 +42,7 @@ RATE_ID = /*rateId*/,
 
 PRICE_TOTAL = /*priceTotal*/,
 CTAX_TOTAL = /*ctaxTotal*/,
+CTAX_RATE = /*ctaxRate*/,
 FE_PRICE_TOTAL = /*fePriceTotal*/,
 PRINT_COUNT = /*printCount*/,
 

@@ -71,7 +71,14 @@ public class Mine implements Serializable {
     public Integer numDecAlignment;
 
     public Integer passwordValidDays;
+    
+    public Integer totalFailCount;
 
+    public Integer passwordHistCount;
+    public Integer passwordLength;
+    public String passwordCharType;
+    
+    
     public String logoImgPath;
 
     public String taxShiftCategory;

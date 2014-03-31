@@ -11,32 +11,60 @@
 	</tr>
 </table>
 
+<script type="text/javascript">
+<!--
+// 数量割引詳細を表示する
+function showBalloon(id, text) {
+	$(".discount" + id).showBalloon({
+		contents: text, 
+		position: "right",
+		minLifetime: 0,
+		offsetX: -40,
+		css: {
+			backgroundColor: '#fff',
+			opacity: '0.99'
+		}
+	});
+	return;
+}
+
+//数量割引詳細を非表示にする
+function hideBalloon(id) {
+	$(".discount" + id).showBalloon().hideBalloon();
+	return;
+}
+-->
+</script>
 
 <div id="${dialogId}ListContainer"
-	style="border: none; width: 500px; height: 220px; overflow: hidden;">
-<table class="dialog_resultList"  id="${dialogId}List" summary="数量割引検索結果" style="width: 100%;">
+	style="border: none; width: 780px; height: 220px; overflow: hidden;">
+<table class="dialog_resultList"  id="${dialogId}List" summary="数量割引検索結果" style="width: 99%;">
 	<colgroup>
-		<col span="1" style="width: 10%">
+		<col span="1" style="width: 5%">
 		<col span="1" style="width: 20%">
-		<col span="1" style="width: 60%">
+		<col span="1" style="width: 65%">
 		<col span="1" style="width: 10%">
 	</colgroup>
 	<tr>
-		<th>&nbsp;</th>
+		<th>割引詳細</th>
 		<th>割引コード</th>
 		<th>割引名</th>
 		<th>割引有効</th>
 	</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
-			<td style="text-align: center;"><input type="radio"
-				name="${dialogId}_selectedDiscount" value="${f:h(bean.discountId)}"
-				tabindex="16100"
-				onclick="_updateDiscountData( '${dialogId}', 'selectedDiscount' );
-					">
+			<td style="text-align: center; width: 50px;">
+				<div class="discount${f:h(bean.discountId)}"
+					onmouseover="showBalloon('${f:h(bean.discountId)}', _updateDiscountData('${dialogId}', 'selectedDiscount', '${f:h(bean.discountId)}'));" 
+					onmouseout="hideBalloon('${f:h(bean.discountId)}');">
+					<input type="image" name="fileIcon" src="${f:url('/images//customize/file.png')}" style="height:30px; width:30px; margin:0; padding:0;"/>
+				</div>
 			</td>
-			<td><a href="javascript:void(0)"  tabindex="16200" style="color: #1D9CCC" onclick="_selectLinkSearchResult( '${dialogId}', '${f:h(bean.discountId)}');
-				$('#${dialogId}').dialog('close');" >${f:h(bean.discountId)}</a>
+			<td>
+				<a href="javascript:void(0)"  tabindex="16200" style="color: #1D9CCC" 
+					onclick="_selectLinkSearchResult( '${dialogId}', '${f:h(bean.discountId)}');
+					$('#${dialogId}').dialog('close');" >${f:h(bean.discountId)}
+				</a>
 			</td>
 			<td>${f:h(bean.discountName)}</td>
 			<td>${f:h(bean.useFlagName)}</td>
@@ -47,7 +75,11 @@
 
 <c:forEach var="bean" items="${searchResultList}" varStatus="status">
 <%-- 数量割引マスタの属性値をhiddenに保持する --%>
-<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_discountId" name="${dialogId}_${f:h(bean.discountId)}_discountId" value="${f:h(bean.discountId)}"><input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_discountName" name="${dialogId}_${f:h(bean.discountId)}_discountName" value="${f:h(bean.discountName)}"><input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_remarks" name="${dialogId}_${f:h(bean.discountId)}_remarks" value="${f:h(bean.remarks)}"><input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_useFlag" name="${dialogId}_${f:h(bean.discountId)}_useFlag" value="${f:h(bean.useFlag)}"><input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_useFlagName" name="${dialogId}_${f:h(bean.discountId)}_useFlagName" value="${f:h(bean.useFlagName)}">
+<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_discountId" name="${dialogId}_${f:h(bean.discountId)}_discountId" value="${f:h(bean.discountId)}">
+<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_discountName" name="${dialogId}_${f:h(bean.discountId)}_discountName" value="${f:h(bean.discountName)}">
+<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_remarks" name="${dialogId}_${f:h(bean.discountId)}_remarks" value="${f:h(bean.remarks)}">
+<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_useFlag" name="${dialogId}_${f:h(bean.discountId)}_useFlag" value="${f:h(bean.useFlag)}">
+<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_useFlagName" name="${dialogId}_${f:h(bean.discountId)}_useFlagName" value="${f:h(bean.useFlagName)}">
 
 <c:forEach var="trn" items="${bean.discountTrnList}" varStatus="status2">
 	<input type="hidden" id="${dialogId}_${f:h(bean.discountId)}_Data${trn.lineNo}_discountDataId" name="${dialogId}_${f:h(bean.discountId)}_Data${trn.lineNo}_discountDataId" value="${f:h(trn.discountDataId)}">

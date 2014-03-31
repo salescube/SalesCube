@@ -197,7 +197,7 @@
 									<html:options collection="outputTargetList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><div class="col_title_right"><bean:message key='labels.targetDate'/> <bean:message key='labels.must'/></div></th> <!-- 対象年月 -->
+							<th><div class="col_title_right_req"><bean:message key='labels.targetDate'/><bean:message key='labels.must'/></div></th> <!-- 対象年月 -->
 							<td>
 								<html:text property="targetDate" styleId="targetDate" style="width: 150px; ime-mode: disabled;" tabindex="101" />
 								<bean:message key='labels.targetDateSuffix'/>
@@ -212,7 +212,7 @@
 							<col span="1" style="width: 87%">
 						</colgroup>
 						<tr>
-							<th><div class="col_title_right"><bean:message key='labels.supplierCode'/> <bean:message key='labels.must'/></div></th> <!-- 仕入先コード -->
+							<th><div class="col_title_right_req"><bean:message key='labels.supplierCode'/><bean:message key='labels.must'/></div></th> <!-- 仕入先コード -->
 							<td>
 								<html:text property="supplierCode" styleId="supplierCode" style="width: 150px; ime-mode: disabled;" maxlength="9" tabindex="102" />
 								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" tabindex="103" onclick="openSupplierSearchDialog(1);"/>

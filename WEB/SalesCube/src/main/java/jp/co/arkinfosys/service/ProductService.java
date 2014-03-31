@@ -1270,10 +1270,22 @@ public class ProductService extends
 								AbstractService.Param.UPD_FUNC,
 								AbstractService.Param.UPD_DATETM,
 								AbstractService.Param.UPD_USER).execute());
+				 
 				if (p == null) {
-					// 新規
+					// 新規：Excelで取り込んだデータがDBに存在しない場合は商品を登録する
 					count += super.updateBySqlFile("product/InsertProduct.sql",
 							param).execute();
+					
+					// 新規登録した商品を取得する
+					param = super.createSqlParam();
+					this.setEmptyCondition(param);
+					param.put(Param.PRODUCT_CODE, product.productCode);
+					this.setConditionCategoryId(param);
+					
+					p = super.selectBySqlFile(ProductJoin.class,
+							"product/FindProductByCodeAfterLock.sql", param)
+							.getSingleResult();
+					
 				} else {
 					// 更新
 					count += super.updateBySqlFile("product/UpdateProduct.sql",
@@ -1284,6 +1296,7 @@ public class ProductService extends
 				param = super.createSqlParam();
 				param.put(Param.PRODUCT_CODE, product.productCode);
 
+				// 取り込んだExcelには数量割引コードがあり、実データの方にも数量割引コードがある場合
 				if (StringUtil.hasLength(product.discountId)) {
 					if (StringUtil.hasLength(p.discountId)) {
 						if (!product.discountId.equals(p.discountId)) {

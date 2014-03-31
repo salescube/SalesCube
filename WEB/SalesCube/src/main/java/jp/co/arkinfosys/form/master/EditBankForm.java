@@ -48,6 +48,16 @@ public class EditBankForm extends AbstractEditForm {
 	@Maxlength(maxlength=7)
 	public String accountNum;
 
+	/** 口座名義 */
+	@Required
+	@Maxlength(maxlength=20)
+	public String accountOwnerName;
+
+	/** 口座名義カナ */
+	@Required
+	@Maxlength(maxlength=20)
+	public String accountOwnerKana;
+
 	/** 有効 */
 	public String valid = "1";
 
@@ -60,6 +70,8 @@ public class EditBankForm extends AbstractEditForm {
 		storeName = "";
 		dwbType = "";
 		accountNum = "";
+		accountOwnerName = "";
+		accountOwnerKana = "";
 //		valid = "1";
 	}
 
@@ -71,7 +83,7 @@ public class EditBankForm extends AbstractEditForm {
 		ActionMessages errors = new ActionMessages();
 		return errors;
 	}
-	
+
     public void reset() {
     	// チェックされていないときに、nullを送信するためにリセット
 		valid = Constants.VALID_FLAG.INVALID;

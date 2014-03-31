@@ -116,6 +116,7 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 			// 検索条件エラー
 			ActionMessagesUtil.addErrors(super.httpRequest, errors);
 			this.httpResponse.setStatus(450);
+			Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
 			return "/ajax/errorResponse.jsp";
 		}
 		try {
@@ -146,6 +147,7 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 									new ActionMessage("errors.report.targetDataNotExists"));
 							ActionMessagesUtil.addErrors(super.httpRequest, errors);
 							this.httpResponse.setStatus(450);
+							Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
 							return "/ajax/errorResponse.jsp";
 						}
 					}
@@ -156,16 +158,22 @@ public class OutputBalanceListAjaxAction extends CommonAjaxResources {
 						new ActionMessage("errors.report.NotClosed"));
 				ActionMessagesUtil.addErrors(super.httpRequest, errors);
 				this.httpResponse.setStatus(450);
+				Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
 				return "/ajax/errorResponse.jsp";
 			}
 
 			// 保存用検索条件にコピー
-			Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
+			//Beans.copy(outputBalanceListForm, outputBalanceListFormDto).execute();
+			this.excel();
 
 		} catch (ServiceException e) {
 			super.errorLog(e);
 
 			// システム例外として処理する
+			super.writeSystemErrorToResponse();
+			return null;
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
 			super.writeSystemErrorToResponse();
 			return null;
 		}

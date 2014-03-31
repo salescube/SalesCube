@@ -416,8 +416,8 @@
 										<input type="checkbox" id="depositCategory_${f:h(status.index)}" value="${item.value}" tabindex="301"/>${f:h(item.label)}&nbsp
 									</c:forEach>
 									<br>
-									<button id="btnSelectAll" tabindex="302" onclick="onSelectAll(true)" class="btn_small"><bean:message key='words.action.selectAll'/></button> <!-- 全て選択-->
-									<button id="btnSelectNone" tabindex="303" onclick="onSelectAll(false)" class="btn_small"><bean:message key='words.action.selectNone'/></button> <!-- 全て解除-->
+									<button id="btnSelectAll" tabindex="302" onclick="onSelectAll(true)" class="btn_list_action"><bean:message key='words.action.selectAll'/></button> <!-- 全て選択-->
+									<button id="btnSelectNone" tabindex="303" onclick="onSelectAll(false)" class="btn_list_action"><bean:message key='words.action.selectNone'/></button> <!-- 全て解除-->
 								</td>
 							</tr>
 						</table>

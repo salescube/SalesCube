@@ -224,6 +224,11 @@ public class RoSlipTrn {
 	/**
 	 *
 	 */
+	@Column(name = "CTAX_RATE")
+	public BigDecimal ctaxRate;
+	/**
+	 *
+	 */
 	@Column(name = "COST_TOTAL")
 	public BigDecimal costTotal;
 	/**

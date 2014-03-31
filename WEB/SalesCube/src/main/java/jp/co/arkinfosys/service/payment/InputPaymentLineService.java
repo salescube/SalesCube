@@ -3,16 +3,13 @@
  */
 package jp.co.arkinfosys.service.payment;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
-import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.payment.InputPaymentDto;
 import jp.co.arkinfosys.dto.payment.InputPaymentLineDto;
 import jp.co.arkinfosys.entity.PaymentLineTrn;
@@ -185,11 +182,6 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 				dtoList.add(lineDto);
 			}
 
-			if(dtoList.size() > 0) {
-				// 先頭の明細行の消費税率を伝票にセットする
-				dto.supplierTaxRate = dtoList.get(0).ctaxRate;
-			}
-
 			return dtoList;
 
 		} catch(Exception e) {
@@ -219,17 +211,17 @@ public class InputPaymentLineService extends AbstractLineService<PaymentLineTrn,
 
 					entity.status = Constants.STATUS_PAYMENT_LINE.PAID;
 					entity.paymentSlipId = Integer.parseInt(slipDto.paymentSlipId);
-					entity.ctaxRate = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX, StringUtil.getCurrentDateString(Constants.FORMAT.DATE)).taxRate;
+//					entity.ctaxRate = taxRateService.findTaxRateById(CategoryTrns.TAX_TYPE_CTAX, StringUtil.getCurrentDateString(Constants.FORMAT.DATE)).taxRate;
 
 					// 以下の２つの条件を満たす場合のみ、消費税を設定する
 					// 1.【仕入先マスタ】レートタイプが空欄でない
 					// 2.【仕入先マスタ】税転嫁が「外税伝票計」or「外税締単位」である
-					if("".equals(slipDto.rateId)) {
-						if(CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL.equals(slipDto.taxShiftCategory) || CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(slipDto.taxShiftCategory)) {
-							// 金額 * (レート / 100.0)
-							entity.ctaxPrice = entity.price.multiply((entity.ctaxRate.divide(new BigDecimal(100.0))));
-						}
-					}
+//					if("".equals(slipDto.rateId)) {
+//						if(CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL.equals(slipDto.taxShiftCategory) || CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(slipDto.taxShiftCategory)) {
+//							 金額 * (レート / 100.0)
+//							entity.ctaxPrice = entity.price.multiply((entity.ctaxRate.divide(new BigDecimal(100.0))));
+//						}
+//					}
 
 					if(dto.paymentLineId == null || dto.paymentLineId.length() == 0) {
 						// チェックされていない明細行の登録はしない

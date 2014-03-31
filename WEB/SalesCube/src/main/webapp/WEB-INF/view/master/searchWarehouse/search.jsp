@@ -122,14 +122,8 @@
 			"${f:url("/ajax/master/searchWarehouseAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleWarehouseCode")) {
-					var warehouseCode = jData.filter("#singleWarehouseCode");
-					window.location.doHref("${f:url("/master/editWarehouse/edit/")}" + warehouseCode.val());
-					return;
-				}
-
+				
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
 				$("#ListContainer").append(data);
@@ -344,8 +338,8 @@
 	    </div><!-- /.form_section_wrap -->
 
         <div style="text-align: right; width: 1160px">
-			<button type="button" tabindex="150" style="width: 80px;"  onclick="initForm();" class="btn_medium">初期化</button>
-			<button type="button" tabindex="151" style="width: 80px;" onclick="searchWarehouse();" class="btn_medium">検索</button>
+			<button type="button" tabindex="150" onclick="initForm();" class="btn_medium">初期化</button>
+			<button type="button" tabindex="151" onclick="searchWarehouse();" class="btn_medium">検索</button>
         </div>
 
 		<div id="ListContainer">

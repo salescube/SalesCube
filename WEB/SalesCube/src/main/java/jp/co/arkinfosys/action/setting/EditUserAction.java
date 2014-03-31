@@ -9,15 +9,18 @@ import javax.annotation.Resource;
 
 import jp.co.arkinfosys.action.CommonResources;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.EncryptUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.UserDto;
 import jp.co.arkinfosys.dto.setting.MenuDto;
 import jp.co.arkinfosys.entity.Dept;
+import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.entity.User;
 import jp.co.arkinfosys.entity.join.MenuJoin;
 import jp.co.arkinfosys.form.setting.EditUserForm;
 import jp.co.arkinfosys.service.DeptService;
 import jp.co.arkinfosys.service.MenuService;
+import jp.co.arkinfosys.service.MineService;
 import jp.co.arkinfosys.service.UserService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 import jp.co.arkinfosys.service.exception.UnabledLockException;
@@ -59,6 +62,9 @@ public class EditUserAction extends CommonResources {
 	@Resource
 	private MenuService menuService;
 
+	@Resource
+	private MineService mineService;
+
 	/**
 	 * 新規登録時の初期化処理を行います.<br>
 	 * 処理実行後、{@link Mapping#INPUT}で定義されたURIに遷移します.
@@ -73,6 +79,8 @@ public class EditUserAction extends CommonResources {
 			super.errorLog(e);
 			throw new ServiceException(e);
 		}
+
+
 
 		return EditUserAction.Mapping.INPUT;
 	}
@@ -114,6 +122,30 @@ public class EditUserAction extends CommonResources {
 				return EditUserAction.Mapping.INPUT;
 			}
 
+			//最新の自社マスタ情報を取得
+			Mine mine = this.mineService.getMine();
+
+			//パスワード文字数チェック セキュリテイ設定画面で設定したパスワード桁数と比較
+			if( mine.passwordLength != null)	{
+				if(this.editUserForm.password.length() < mine.passwordLength){
+					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage("errors.userPassword.length",mine.passwordLength));
+					ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+					return EditUserAction.Mapping.INPUT;
+				}
+			}
+
+			//パスワードの文字種チェック
+			if(mine.passwordCharType != null)	{
+				if(!this.userService.checkPasswordCharType(mine.passwordCharType,this.editUserForm.password)){
+					super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+							new ActionMessage("errors.userPassword.passwordCharType"+mine.passwordCharType));
+					ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+					return EditUserAction.Mapping.INPUT;
+				}
+			}
+
+
 			UserDto dto = Beans.createAndCopy(UserDto.class, this.editUserForm)
 					.execute();
 
@@ -144,6 +176,44 @@ public class EditUserAction extends CommonResources {
 		try {
 			UserDto dto = Beans.createAndCopy(UserDto.class, this.editUserForm)
 					.execute();
+
+			//パスワード関連チェック
+			if (this.editUserForm.password.length() > 0 ){
+
+				//最新の自社マスタ情報を取得
+				Mine mine = this.mineService.getMine();
+
+				//パスワード文字数チェック　セキュリテイ設定画面で設定したパスワード桁数と比較
+				if( mine.passwordLength != null)	{
+					if(this.editUserForm.password.length() < mine.passwordLength){
+						super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("errors.userPassword.length",mine.passwordLength));
+						ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+						return EditUserAction.Mapping.INPUT;
+					}
+				}
+
+				//パスワードの文字種チェック
+				if( mine.passwordCharType != null)	{
+					if(!this.userService.checkPasswordCharType(mine.passwordCharType,this.editUserForm.password)){
+						super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("errors.userPassword.passwordCharType"+ mine.passwordCharType));
+						ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+						return EditUserAction.Mapping.INPUT;
+					}
+				}
+
+				//パスワード更新時のチェック
+				if( mine.passwordHistCount != null)	{
+					//自社マスタで設定した回数前まで同一のパスワードが存在した場合は、更新不可とする
+					if(userService.countPasswordMakerByIdAndPass(dto.userId,dto.password,mine.passwordHistCount) > 0){
+						super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+								new ActionMessage("errors.userPassword.already.exists",mine.passwordHistCount));
+						ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+						return EditUserAction.Mapping.INPUT;
+					}
+				}
+			}
 
 			// ユーザー情報更新
 			this.userService.updateRecord(dto);

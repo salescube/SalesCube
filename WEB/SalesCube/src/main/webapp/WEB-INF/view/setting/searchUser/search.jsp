@@ -97,13 +97,7 @@
 			"${f:url('/ajax/setting/searchUserResultAjax/search')}",
 			data,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(autoEdit && jData.is("#singleUserId")) {
-					var userId = jData.filter("#singleUserId");
-					window.location.doHref("${f:url('/setting/editUser/edit/')}" + userId.attr("value"));
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -227,13 +221,13 @@
 		<s:form onsubmit="return false;">
 			<html:hidden styleId="sortColumn" property="sortColumn" />
 			<html:hidden styleId="sortOrderAsc" property="sortOrderAsc" />
-			
+
 			<div class="function_forms">
 				<div style="padding-left: 20px">
 					<html:errors/>
 					<span id="ajax_errors"></span>
 				</div>
-			
+
 			<div class="form_section_wrap">
 				<div class="form_section">
 					<div class="section_title">
@@ -291,14 +285,16 @@
 			<table id="search_result" summary="searchResult" class="forms detail_info" summary="社員検索結果" style="table-layout: auto; margin-top: 20px;">
 				<colgroup>
 					<col span="1" style="width: 10%">
+					<col span="1" style="width: 5%">
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 20%">
-					<col span="1" style="width: 30%">
+					<col span="1" style="width: 25%">
 					<col span="1" style="width: 10%">
 				</colgroup>
 				<tr>
 					<th class="rd_top_left" style="height: 30px; cursor: pointer">社員コード</th>
+					<th style="cursor: pointer">ロック</th>
 					<th style="cursor: pointer">社員名</th>
 					<th style="cursor: pointer">社員名カナ</th>
 					<th style="cursor: pointer">部門</th>

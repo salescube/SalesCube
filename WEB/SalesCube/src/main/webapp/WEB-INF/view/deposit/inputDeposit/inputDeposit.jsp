@@ -13,6 +13,7 @@
 	<title><bean:message key='titles.system'/> 入金入力</title>
 	<script type="text/javascript" src="${f:url('/scripts/dialogs.js')}"></script>
 
+
 	<meta http-equiv="Content-Style-Type" content="text/css">
 
 	<script type="text/javascript">
@@ -510,6 +511,7 @@
 		for(var i in DeliveryInfosIDList){
 			$("#"+ DeliveryInfosIDList[i]).attr("value","");
 		}
+		
 		$("#nowPaybackPriceInput").html("");
 		$("#nowPaybackPriceBack").attr("value","");
 		catrgoryListInit("#baPcPreCatrgory");
@@ -517,7 +519,7 @@
 		catrgoryListInit("#cutoffGroupCategory");
 		$("#lastBillingPrice").html( "" );
 		$("#nowSalesPrice").html( "" );
-
+		
 		// 端数処理初期設定
 		applyNumeralStyles();
 
@@ -621,22 +623,42 @@
 			id = trId.replace("trLine", "");
 			calcPrice += _Number($("#depLineList\\["+id+"\\]\\.price").get(0).value);
 		}
+		
+		// 今回回収額
 		$("#nowPaybackPriceInput").html( calcPrice );
+		SetBigDecimalScale_Obj($("#nowPaybackPriceInput"));
+		
 		// 請求残
-
 		var lastBillingPriceNum = _Number($("#lastBillingPrice").text());
 		var nowPaybackPriceInputNum = _Number($("#nowPaybackPriceInput").text());
 		var nowSalesPriceNum = _Number($("#nowSalesPrice").text());
 		var billingBalancePriceNum = lastBillingPriceNum - nowPaybackPriceInputNum + nowSalesPriceNum;
 
 		$("#billingBalancePrice").html( billingBalancePriceNum );
+		SetBigDecimalScale_Obj($("#billingBalancePrice"));
 
 		// カンマをつける
 		_after_load($(".numeral_commas"));
 
 	}
 
+	// 税端数処理
 	function applyNumeralStyles(){
+		
+		var bp = $("#lastBillingPrice").val();
+		var sp = $("#nowSalesPrice").val();
+
+		if (bp == "") {
+			$("#lastBillingPrice").html( "0" );
+		}
+		
+		if (sp == "") {
+			$("#nowSalesPrice").html( "0" );
+		}
+		
+		SetBigDecimalScale_Obj($("#lastBillingPrice"));
+		SetBigDecimalScale_Obj($("#nowSalesPrice"));
+		
 		// 明細行のIndex管理
 		var maxIndex = $("#tbodyLine").get(0).children.length-1;
 
@@ -653,7 +675,7 @@
 		applyNumeralStylesToObj($("#priceFractCategory").val(),priceAlignment,$("#nowSalesPrice"));
 		// 請求残 billingBalancePrice
 		applyNumeralStylesToObj($("#priceFractCategory").val(),priceAlignment,$("#billingBalancePrice"));
-
+		
 		ChangePrice();
 
 		// カンマをつける
@@ -786,7 +808,7 @@ function copyDummy(){
 							<html:text tabindex="100" property="depositSlipId" styleId="depositSlipId" errorStyleClass="err" readonly="true" styleClass="c_disable" style="ime-mode:disabled;" maxlength="10"/>
 							</c:if>
 						</td>
-						<th><div class="col_title_right">入金日※</div></th>
+						<th><div class="col_title_right_req">入金日<bean:message key='labels.must'/></div></th>
 						<td>
 							<html:text tabindex="101" title="入金日" property="depositDate" styleId="depositDate" styleClass="date_input" style="ime-mode:disabled; width: 135px;" maxlength="10" />
 						</td>
@@ -803,7 +825,7 @@ function copyDummy(){
 					<tr>
 					
 <!-- TODO 入金区分表示用JSPをインクルードする -->
-						<th><div class="col_title_right">入金区分※</div></th>
+						<th><div class="col_title_right_req">入金区分<bean:message key='labels.must'/></div></th>
 						<td>
 							<html:select tabindex="105" property="depositCategory"  styleId="depositCategory" >
 								<c:forEach var="dcl" items="${depositCategoryList}">
@@ -841,7 +863,7 @@ function copyDummy(){
 						<col span="1" style="width: 30%">
 					</colgroup>
 					<tr>
-						<th><div class="col_title_right">顧客コード※</div></th>
+						<th><div class="col_title_right_req">顧客コード<bean:message key='labels.must'/></div></th>
 						<td>
 							<html:text tabindex="200" property="customerCode" styleId="customerCode" style="width: 100px; ime-mode:disabled;"
 								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeCustomerCode(); }" />
@@ -1006,7 +1028,7 @@ function copyDummy(){
 								</td>
 								
 								<!-- 金額 -->
-								<td style="width: 160px;">
+								<td style="width: 160px; background-color: #fae4eb;">
 									<div class="box_1of1" style="margin: 5px;">
 										<html:text tabindex="${401+s.index*5}" maxlength="9" name="depLineList" property="price" style="width: 100%; ime-mode:disabled;" styleClass="numeral_commas" indexed="true" styleId="depLineList[${s.index}].price" onchange="ChangePrice()" />
 									</div>
@@ -1024,34 +1046,34 @@ function copyDummy(){
 								<!-- 備考・手形番号/手形期日など -->
 								<td style="width: 520px;">
 									<div class="box_1of1" style="margin: 5px;">
-										<html:textarea tabindex="${403+s.index*5}" name="depLineList" property="remarks" style="width: 100%; height: 55px; ime-mode:active;" indexed="true" styleId="depLineList[${s.index}].remarks" />
+										<html:textarea tabindex="${403+s.index*5}" name="depLineList" property="remarks" style="width: 100%; height: 65px; ime-mode:active;" indexed="true" styleId="depLineList[${s.index}].remarks" />
 									</div>
 								</td>
 								<td>
 								
 								<div class="box_1of2">
 									<c:if test="${!menuUpdate}">
-										<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
+										<button id="deleteBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${404+s.index*5}" disabled="disabled">削除</button><!-- (行)削除 -->
 									</c:if>
 									<c:if test="${menuUpdate}">
 										<c:if test="${menuUpdate && !closed}">
-											<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
+											<button id="deleteBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
 										</c:if>
 										<c:if test="${!menuUpdate || closed}">
-											<button id="deleteBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${404+s.index*5}">削除</button><!-- (行)削除 -->
+											<button id="deleteBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${404+s.index*5}" disabled="disabled">削除</button><!-- (行)削除 -->
 										</c:if>
 									</c:if>
 								</div>
 								<div class="box_2of2">
 									<c:if test="${s.first}" >
-										<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
+										<button id="copyBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${405+s.index*5}" disabled="disabled">前行複写</button><!-- 前行複写 -->
 									</c:if>
 									<c:if test="${!s.first}" >
 										<c:if test="${menuUpdate && !closed}">
-											<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
+											<button id="copyBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
 										</c:if>
 										<c:if test="${!menuUpdate || closed}">
-											<button id="copyBtn${s.index}" class="btn_small" style="width: 80px" tabindex="${405+s.index*5}">前行複写</button><!-- 前行複写 -->
+											<button id="copyBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${405+s.index*5}" disabled="disabled">前行複写</button><!-- 前行複写 -->
 										</c:if>
 									</c:if>
 								</div>
@@ -1063,7 +1085,10 @@ function copyDummy(){
 						<tr id="addLineTr" style="text-align: center;height: 60px;">
 							<td class="rd_bottom_left rd_bottom_right"  colspan="10">
 							<c:if test="${closed || !menuUpdate}">
-								<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled">行追加</html:button>
+								<!--<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled">行追加</html:button>-->
+								<button tabindex="1999" id="addLine" disabled="disabled">
+								<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
+								</button>
 							</c:if>
 							<c:if test="${!closed && menuUpdate}">
 								<button tabindex="1999" id="addLine" onclick="addRow();">
@@ -1091,17 +1116,17 @@ function copyDummy(){
 							<th class="rd_top_right">請求残高</th>
 						</tr>
 						<tr>
-							<td id="lastBillingPrice" style="text-align: center; height: 100px;" class="numeral_commas">
-								<c:out value="${f:h(lastBillingPrice)}" />
+							<td id="lastBillingPrice" style="text-align: center; height: 100px;" class="BDCyen yen_value">
+								&nbsp;<c:out value="${f:h(lastBillingPrice)}" />&nbsp;
 							</td>
-							<td id="nowPaybackPriceInput" style="text-align: center" class="numeral_commas">
-								<c:out value="${f:h(nowPaybackPrice)}" />
+							<td id="nowPaybackPriceInput" style="text-align: center" class="BDCyen yen_value">
+								&nbsp;<c:out value="${f:h(nowPaybackPrice)}" />&nbsp;
 							</td>
-							<td id="nowSalesPrice" style="text-align: center" class="numeral_commas">
-								<c:out value="${f:h(nowSalesPrice)}" />
+							<td id="nowSalesPrice" style="text-align: center" class="BDCyen yen_value">
+								&nbsp;<c:out value="${f:h(nowSalesPrice)}" />&nbsp;
 							</td>
-							<td id="billingBalancePrice" style="text-align: center" class="numeral_commas">
-								<c:out value="${f:h(billingBalancePrice)}" />
+							<td id="billingBalancePrice" style="text-align: center" class="BDCyen yen_value">
+								&nbsp;<c:out value="${f:h(billingBalancePrice)}" />&nbsp;
 							</td>
 							<html:hidden styleId="nowPaybackPriceBack" property="nowPaybackPrice"/>
 						</tr>
@@ -1112,25 +1137,25 @@ function copyDummy(){
 				<div style="width: 1160px; text-align: center; margin-top: 10px;">
 					<c:if test="${newData}" >
 					<c:if test="${menuUpdate && !closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">
-							<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<button id="btnF3btm" type="button" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();">
+							<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 						</button>
 					</c:if>
 					<c:if test="${!menuUpdate || closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>
-							<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<button id="btnF3btm" type="button" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();" disabled>
+							<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 						</button>
 					</c:if>
 					</c:if>
 					<c:if test="${!newData}" >
 					<c:if test="${menuUpdate && !closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();">
-							<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<button id="btnF3btm" type="button" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();">
+							<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 						</button>
 					</c:if>
 					<c:if test="${!menuUpdate || closed}">
-						<button id="btnF3btm" type="button" tabindex="1999" onclick="onF3();" disabled>
-							<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<button id="btnF3btm" type="button" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();" disabled>
+							<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 						</button>
 					</c:if>
 					</c:if>

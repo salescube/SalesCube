@@ -93,11 +93,11 @@
                </td>
        		<td style="text-align: center">
        			<c:if test="${isUpdate}">
-       			<button onclick="editCustomerRank('${bean.rankCode}');" class="btn_small">編集</button>
-       			<button onclick="deleteCustomerRank('${bean.rankCode}', '${bean.updDatetm}');" class="btn_small">削除</button>
+       			<button onclick="editCustomerRank('${bean.rankCode}');" class="btn_list_action">編集</button>
+       			<button onclick="deleteCustomerRank('${bean.rankCode}', '${bean.updDatetm}');" class="btn_list_action">削除</button>
        			</c:if>
        			<c:if test="${!isUpdate}">
-       			<button onclick="editCustomerRank('${bean.rankCode}');" class="btn_small">参照</button>
+       			<button onclick="editCustomerRank('${bean.rankCode}');" class="btn_list_action">参照</button>
        			</c:if>
        		</td>
 		</tr>

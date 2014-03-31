@@ -33,6 +33,7 @@ INSERT
 			,SUPPLIER_CM_CATEGORY
 			,PRICE_TOTAL
 			,CTAX_TOTAL
+			,CTAX_RATE
 			,FE_PRICE_TOTAL
 			,PRINT_COUNT
 			,CRE_FUNC
@@ -79,6 +80,7 @@ SELECT
 			,SUP.SUPPLIER_CM_CATEGORY
 			,NULL
 			,NULL
+			,/*ctaxRate*/
 			,NULL
 			,0
 			,/*creFunc*/

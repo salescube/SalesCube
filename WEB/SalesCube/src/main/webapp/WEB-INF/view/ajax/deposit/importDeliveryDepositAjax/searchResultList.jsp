@@ -24,7 +24,7 @@
 	<thead>
 	<tr>
 		<th class="rd_top_left" style="cursor: pointer; height:30px;" onclick="sort('status');"><bean:message key='labels.slipStatus.status'/><!-- 状態 -->
-			<span id="sortStatus_status" style="color: blue">
+			<span id="sortStatus_status" style="color: white">
 				<c:if test="${sortColumn == 'status'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -32,7 +32,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('salesSlipId');"><bean:message key='labels.salesSlipId'/><!-- 売上番号 -->
-			<span id="sortStatus_salesSlipId" style="color: blue">
+			<span id="sortStatus_salesSlipId" style="color: white">
 				<c:if test="${sortColumn == 'salesSlipId'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -40,7 +40,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('depositSlipId');"><bean:message key='labels.depositSlipId'/><!-- 入金番号 -->
-			<span id="sortStatus_depositSlipId" style="color: blue">
+			<span id="sortStatus_depositSlipId" style="color: white">
 				<c:if test="${sortColumn == 'depositSlipId'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -48,7 +48,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('deliverySlipId');"><bean:message key='labels.delivery.slipid'/><!-- 伝票番号  -->
-			<span id="sortStatus_deliverySlipId" style="color: blue">
+			<span id="sortStatus_deliverySlipId" style="color: white">
 				<c:if test="${sortColumn == 'deliverySlipId'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -56,7 +56,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('customer');"><bean:message key='labels.customer'/><!-- 顧客 -->
-			<span id="sortStatus_customer" style="color: blue">
+			<span id="sortStatus_customer" style="color: white">
 				<c:if test="${sortColumn == 'customer'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -64,7 +64,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('deliveryDate');"><bean:message key='labels.delivery.deliveryDate'/><!-- 発送日 -->
-			<span id="sortStatus_deliveryDate" style="color: blue">
+			<span id="sortStatus_deliveryDate" style="color: white">
 				<c:if test="${sortColumn == 'deliveryDate'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -72,7 +72,7 @@
 			</span>
 		</th>
 		<th style="cursor: pointer; height:30px;" onclick="sort('productPrice');"><bean:message key='labels.delivery.productPrice'/><!-- 品代金 -->
-			<span id="sortStatus_productPric" style="color: blue">
+			<span id="sortStatus_productPric" style="color: white">
 				<c:if test="${sortColumn == 'productPrice'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
@@ -80,7 +80,7 @@
 			</span>
 		</th>
 		<th class="rd_top_right" style="cursor: pointer; height:30px;" onclick="sort('salesMoney');"><bean:message key='labels.salesMoney'/><!-- 売上金額 -->
-			<span id="sortStatus_salesMoney" style="color: blue">
+			<span id="sortStatus_salesMoney" style="color: white">
 				<c:if test="${sortColumn == 'salesMoney'}">
 					<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
 					<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>

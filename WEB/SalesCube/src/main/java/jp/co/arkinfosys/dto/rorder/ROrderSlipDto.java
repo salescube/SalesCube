@@ -157,6 +157,11 @@ public class ROrderSlipDto extends AbstractSlipDto<ROrderLineDto> {
 	public String dcName;					// S 配送業者名
 	public String dcTimezoneCategory;		// L 配送時間帯コード
 	public String dcTimezone;				// S 配送時間帯文字列
+	
+	/**
+	 * 消費税率
+	 */
+	public String ctaxRate;
 
 	/**
 	 * 受注伝票明細行を作成します.

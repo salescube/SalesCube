@@ -37,6 +37,12 @@ public class SearchBankForm extends AbstractSearchForm<BankDto> {
 	/** 口座番号 */
 	public String accountNum;
 
+	/** 口座名義 */
+	public String accountOwnerName;
+
+	/** 口座名義カナ */
+	public String accountOwnerKana;
+
 	/** 科目プルダウンリスト */
 	public List<LabelValueBean> dwbTypeList = new ArrayList<LabelValueBean>();
 

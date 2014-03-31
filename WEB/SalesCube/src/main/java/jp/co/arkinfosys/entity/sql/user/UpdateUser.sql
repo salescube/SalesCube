@@ -17,10 +17,24 @@ UPDATE USER_MST_/*$domainId*/ SET
 
 		/*IF password != null */
 		PASSWORD=/*password*/NULL,
+
 		/*END*/
 
 		/*IF passwordValidDays != null */
 		EXPIRE_DATE=DATE_ADD(now(), INTERVAL /*passwordValidDays*/ DAY),
+		/*END*/
+		/*IF failCount != null */
+		FAIL_COUNT=/*failCount*/,
+		/*END*/
+
+		/*IF lockflg != null */
+		LOCK_FLG=/*lockflg*/,
+			/*IF lockflg == 1 */
+            LOCK_DATETM=now(),
+        	/*END*/
+            /*IF lockflg != 1 */
+            	LOCK_DATETM=NULL,
+        	/*END*/
 		/*END*/
 
         UPD_FUNC=/*updFunc*/NULL,

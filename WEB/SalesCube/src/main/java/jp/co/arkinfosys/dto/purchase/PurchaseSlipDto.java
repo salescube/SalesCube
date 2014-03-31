@@ -35,6 +35,7 @@ public class PurchaseSlipDto extends AbstractSlipDto<PurchaseLineDto> {
 	public String taxFractCategory;/* 税端数処理 */
 	public String priceFractCategory;/* 単価端数処理 */
 	public String ctaxTotal;
+	public String ctaxRate;
 	public String priceTotal;
 	public String fePriceTotal;
 	public String costTotal;
@@ -56,7 +57,6 @@ public class PurchaseSlipDto extends AbstractSlipDto<PurchaseLineDto> {
     public String rate;
     public String rateName;
     public String sign;
-    public String supplierTaxRate;
 
 	// 新規作成状態の管理フラグ
 	public Boolean newData;

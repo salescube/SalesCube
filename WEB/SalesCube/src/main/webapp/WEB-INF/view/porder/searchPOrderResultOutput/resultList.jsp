@@ -10,14 +10,14 @@
 			<c:forEach var="colInfo" items="${columnInfoList}" varStatus="status">
 				<c:choose>
 					<c:when test="${status.first}" >
-						<th class="xl64 rd_top_left" id='result_${f:h(colInfo.itemId)}'
+						<th class="rd_top_left" id='result_${f:h(colInfo.itemId)}'
 							<c:if test='${colInfo.sortFlag=="1"}'>
 								style='cursor: pointer;white-space: nowrap; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')"
 							</c:if>
 						>
 					</c:when>
 					<c:when test="${status.last}" >
-						<th class="xl64 rd_top_right" id='result_${f:h(colInfo.itemId)}'
+						<th class="rd_top_right" id='result_${f:h(colInfo.itemId)}'
 							<c:if test='${colInfo.sortFlag=="1"}'>
 								style='cursor: pointer;white-space: nowrap; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')"
 							</c:if>
@@ -33,7 +33,7 @@
 				</c:choose>
 					${f:h(colInfo.itemName)}
 					<c:if test='${!outputExcel}'>
-						<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: blue">
+						<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: white">
 							<c:if test='${sortColumn==colInfo.itemId}'>
 								<c:if test='${sortOrderAsc}'>
 									<bean:message key='labels.asc'/>

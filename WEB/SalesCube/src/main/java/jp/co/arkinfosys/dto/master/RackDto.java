@@ -55,8 +55,12 @@ public class RackDto implements Serializable, MasterEditDto {
 	public String updDatetm;
 
 	public String updUser;
+	
+	public List<String> duplicateList;
 
 	public List<String> productCodeList;
+	
+	public List<String> productNameList;
 	
 	public boolean exist;
 

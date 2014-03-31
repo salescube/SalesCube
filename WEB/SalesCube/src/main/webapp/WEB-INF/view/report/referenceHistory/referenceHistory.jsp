@@ -330,7 +330,7 @@
 										<html:options collection="outputTargetList" property="value" labelProperty="label"/>
 									</html:select>
 								</td>
-								<th><div class="col_title_right">&nbsp;<bean:message key='labels.recDateRange'/><bean:message key='labels.must'/>&nbsp;</div></th> <!-- 入力／変更日範囲 -->
+								<th><div class="col_title_right_req">&nbsp;<bean:message key='labels.recDateRange'/><bean:message key='labels.must'/>&nbsp;</div></th> <!-- 入力／変更日範囲 -->
 								<td style="padding-right: 0;">
 									<div class="pos_r">
 										<html:text property="recDateFrom" styleId="recDateFrom" style="text-align:center; width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="101" />

@@ -226,7 +226,6 @@ function searchMain(isSort, optData){
 
 				if( parseInt($("#searchResultCount").val()) > 0 ) {
 					$("#btnF4").attr("disabled", false);
-
 					if( ($("#searchPOCategory").val() == "<%=CategoryTrns.IMMEDIATELY_PORDER%>" &&
 						 $("#searchImmediatelyPOCategory").val() == "<%=CategoryTrns.NORMAL_PORDER%>" )
 						 || $("#searchPOCategory").val() == "<%=CategoryTrns.ENTRUST_PORDER%>") {
@@ -414,7 +413,7 @@ function immediatelyPOCategoryChange() {
 		<html:errors/>
 	</div>
 	<div id="ajax_errors" style="color: red"></div>
-	<div id="messages" style="color: blue;">
+	<div id="messages" style="color: white;">
 		<html:messages id="msg" message="true">
 			<bean:write name="msg" ignore="true"/><br>
 		</html:messages>
@@ -508,7 +507,7 @@ function immediatelyPOCategoryChange() {
 				</colgroup>
 				<tbody>
 				<tr>
-				<th><div class="col_title_right"><bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/></div></th><!-- 納期 -->
+				<th><div class="col_title_right_req"><bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/></div></th><!-- 納期 -->
 				<td><html:text styleId="deliveryDate" property="deliveryDate" maxlength="${f:h(ML_DATE)}" styleClass="date_input" style="width:135px;" tabindex="101"/></td>
 				<th><div class="col_title_right"><bean:message key='labels.transportCategory'/></div></th><!-- 運送便区分 -->
 				<td>
@@ -539,8 +538,8 @@ function immediatelyPOCategoryChange() {
 	</div>
 </div>
 
-<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small" disabled="disabled">全て選択</button>
-<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small" disabled="disabled">全て解除</button>
+<button id="allCheck" name="allCheck" tabindex="300" onclick="checkAll(true)" class="btn_list_action" disabled="disabled">全て選択</button>
+<button id="allUnCheck" name="allUnCheck" tabindex="301" onclick="checkAll(false)" class="btn_list_action" disabled="disabled">全て解除</button>
 
 <html:hidden property="sortColumn" styleId="sortColumn" />
 <html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />

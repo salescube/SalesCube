@@ -26,6 +26,9 @@ import org.seasar.struts.annotation.Required;
  */
 public class FileUploadForm extends AbstractSearchForm<FileInfoDto> {
 
+	/**ファイルID*/
+	public String fileId;
+
 	/**
 	 * タイトル
 	 */
@@ -33,10 +36,14 @@ public class FileUploadForm extends AbstractSearchForm<FileInfoDto> {
 	@Maxlength(maxlength = 60, arg0 = @Arg(key = "labels.file.title", resource = true))
 	public String title;
 
+	/*ファイル名*/
+	public String fileName;
+
 	/**
 	 * アップロードファイルオブジェクト
-	 */
-	@Required(arg0 = @Arg(key = "labels.file.formFile", resource = true))
+    */
+	/* 削除 @Required(arg0 = @Arg(key = "labels.file.formFile", resource = true))*/
+
 	@Binding(bindingType = BindingType.NONE)
 	public FormFile formFile;
 
@@ -52,13 +59,49 @@ public class FileUploadForm extends AbstractSearchForm<FileInfoDto> {
 	public List<LabelValueBean> openLevelList = new ArrayList<LabelValueBean>();
 
 	/**
+	 * 作成日時
+	 */
+	public String creDatetm;
+
+	/**
+	 * 作成日時（表示用）
+	 */
+	public String creDatetmShow;
+
+	/**
+	 * 更新日時
+	 */
+	public String updDatetm;
+
+	/**
+	 * 更新日時（表示用）
+	 */
+	public String updDatetmShow;
+
+
+	/**
+	 * 編集フラグ
+	 */
+	public boolean editMode = false;
+
+	/**
+	 * 更新権限
+	 */
+	public boolean isUpdate = false;
+
+	/**
 	 * フォームを初期化します.
 	 */
 	public void reset() {
+		this.fileId = null;
 		this.title = null;
 		this.formFile = null;
 		this.openLevel = Constants.MENU_VALID_LEVEL.VALID_LIMITATION;
 		this.openLevelList.clear();
+
+
+		this.editMode = false;
+		this.isUpdate = false;
 	}
 
 	/**
@@ -77,4 +120,5 @@ public class FileUploadForm extends AbstractSearchForm<FileInfoDto> {
 
 		return errors;
 	}
+
 }

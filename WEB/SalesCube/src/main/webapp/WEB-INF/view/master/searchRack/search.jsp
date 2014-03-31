@@ -110,13 +110,7 @@
 			"${f:url("/ajax/master/searchRackAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleRackCode")) {
-					var rackCode = jData.filter("#singleRackCode");
-					window.location.doHref("${f:url("/master/editRack/edit/")}" + rackCode.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -419,8 +413,8 @@
 	    </div><!-- /.form_section_wrap -->
 
         <div style="text-align: right; width: 1160px">
-			<button type="button" tabindex="250" style="width: 80px;" onclick="initForm();" class="btn_medium">初期化</button>
-			<button type="button" tabindex="251" style="width: 80px;" onclick="searchRack();" class="btn_medium">検索</button>
+			<button type="button" tabindex="250" onclick="initForm();" class="btn_medium">初期化</button>
+			<button type="button" tabindex="251" onclick="searchRack();" class="btn_medium">検索</button>
         </div>
 
 		<div id="ListContainer">
@@ -430,15 +424,23 @@
 			</div>
             <table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
                 <colgroup>
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 15%">
-					<col span="1" style="width: 10%">
-					<col span="1" style="width: 45%">
+				    <col span="1" style="width: 10%">
+				    <col span="1" style="width: 10%">
+				    <col span="1" style="width: 10%">
+				    <col span="1" style="width: 20%">
+				    <col span="1" style="width: 5%">
+				    <col span="1" style="width: 20%">
+				    <col span="1" style="width: 20%">
+				    <col span="1" style="width: 15%">
                 </colgroup>
                 <tr>
-					<th class="rd_top_left" style="cursor: pointer; height: 30px;">棚番コード</th>
+					<th class="rd_top_left" style="cursor: pointer; height: 30px;">倉庫コード</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">倉庫名</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">棚番コード</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">棚番名</th>
+					<th class="xl64" style="height: 30px;">重複登録可能</th>
 					<th class="xl64" style="height: 30px;">商品コード</th>
+					<th class="xl64" style="height: 30px;">商品名</th>
 			        <th class="rd_top_right" style="height: 30px;">&nbsp;</th>
 			     </tr>
             </table>

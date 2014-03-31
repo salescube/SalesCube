@@ -94,6 +94,8 @@ public class PoSlipTrn implements Serializable {
 	public BigDecimal priceTotal;
 	@Column(name = "CTAX_TOTAL")
 	public BigDecimal ctaxTotal;
+	@Column(name = "CTAX_RATE")
+	public BigDecimal ctaxRate;
 	@Column(name = "FE_PRICE_TOTAL")
 	public BigDecimal fePriceTotal;
 	@Column(name = "PRINT_COUNT")

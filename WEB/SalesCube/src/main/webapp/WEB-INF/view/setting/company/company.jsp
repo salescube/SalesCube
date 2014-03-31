@@ -104,7 +104,7 @@
 			<button tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form action="update" onsubmit="return false;" enctype="multipart/form-data">
 
 			<div class="function_forms">
@@ -130,19 +130,19 @@
 								<col span="1" style="width: 35%">
 							</colgroup>
 							<tr>
-								<th><div class="col_title_right">会社名※</div></th>
+								<th><div class="col_title_right_req">会社名<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 350px;" tabindex="100" property="companyName" /></td>
-								<th><div class="col_title_right">会社略名※</div></th>
+								<th><div class="col_title_right_req">会社略名<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 350px;" tabindex="101" property="companyAbbr" /></td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">会社名カナ※</div></th>
+								<th><div class="col_title_right_req">会社名カナ<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 350px;" tabindex="102" property="companyKana" /></td>
-								<th><div class="col_title_right">代表取締役※</div></th>
+								<th><div class="col_title_right_req">代表取締役<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 350px;" tabindex="103" property="companyCeoName" /></td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">代表者肩書※</div></th>
+								<th><div class="col_title_right_req">代表者肩書<bean:message key='labels.must'/></div></th>
 								<td colspan="3"><html:text style="width: 350px;" tabindex="104" property="companyCeoTitle" /></td>
 							</tr>
 							<tr>
@@ -162,13 +162,13 @@
 								<col span="1" style="width: 35%">
 							</colgroup>
 							<tr>
-								<th><div class="col_title_right">郵便番号※</div></th>
+								<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 								<td colspan="3"><html:text style="width: 100px; ime-mode: disabled;" tabindex="200" property="companyZipCode" styleId="companyZipCode" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}"/>
 								<html:image src="${f:url('/images//customize/btn_search.png')}"  tabindex="201" style="vertical-align: middle; cursor: pointer;" onclick="zipSearch($('#companyZipCode'))"/>
 								</td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">住所１※</div></th>
+								<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 								<td colspan="3"><html:text style="width: 500px;" tabindex="202" property="companyAddress1" styleId="companyAddress1"/></td>
 							</tr>
 							<tr>
@@ -176,13 +176,13 @@
 								<td colspan="3"><html:text style="width: 500px;" tabindex="203" property="companyAddress2" /></td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">TEL※</div></th>
+								<th><div class="col_title_right_req">TEL<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="204" property="companyTel" /></td>
-								<th><div class="col_title_right">FAX※</div></th>
+								<th><div class="col_title_right_req">FAX<bean:message key='labels.must'/></div></th>
 								<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="205" property="companyFax" /></td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">E-MAIL※</div></th>
+								<th><div class="col_title_right_req">E-MAI<bean:message key='labels.must'/></div></th>
 								<td colspan="3"><html:text style="width: 500px; ime-mode: disabled;" tabindex="206" property="companyEmail" /></td>
 							</tr>
 							<tr>
@@ -201,7 +201,7 @@
 							<tr>
 								<th><div class="col_title_right">締日</div></th>
 								<td>
-								<html:select property="cutoffGroup"  tabindex="301" >
+								<html:select property="cutoffGroup"  tabindex="301" style="width: 200px;">
 								<html:option value="01">01</html:option>
 								<html:option value="02">02</html:option>
 								<html:option value="03">03</html:option>
@@ -237,7 +237,7 @@
 								日</td>
 								<th><div class="col_title_right">決算月</div></th>
 								<td>
-								<html:select property="closeMonth"  tabindex="302" >
+								<html:select property="closeMonth"  tabindex="302" style="width: 200px;">
 								<html:option value="01">01</html:option>
 								<html:option value="02">02</html:option>
 								<html:option value="03">03</html:option>
@@ -254,6 +254,8 @@
 								月</td>
 							</tr>
 						</table>
+
+
 					</div><!-- /.section_body -->
 	    		</div><!-- /.form_section -->
 	   		</div><!-- /.form_section_wrap -->

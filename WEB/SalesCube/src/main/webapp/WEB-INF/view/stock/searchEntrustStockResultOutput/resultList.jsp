@@ -31,7 +31,7 @@
 					</c:otherwise>
 				</c:choose>
 					${f:h(colInfo.itemName)}
-					<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: blue">
+					<span id="sortStatus_${f:h(colInfo.itemId)}" style="color: white">
 						<c:if test='${sortColumn==colInfo.itemId}'>
 							<c:if test='${!outputExcel && sortOrderAsc}'>
 								<bean:message key='labels.asc'/>

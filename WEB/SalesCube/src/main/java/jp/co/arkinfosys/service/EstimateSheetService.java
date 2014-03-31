@@ -69,6 +69,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		public static final String CUSTOMER_COMMENT_DATA = "customerCommentData";
 		public static final String DELIVERY_ZIP_CODE = "deliveryZipCode";
 		public static final String CTAX_PRICE_TOTAL = "ctaxPriceTotal";
+		public static final String CTAX_RATE = "ctaxRate";
 		public static final String COST_TOTAL = "costTotal";
 		public static final String RETAIL_PRICE_TOTAL = "retailPriceTotal";
 		public static final String ESTIMATE_TOTAL = "estimateTotal";
@@ -271,6 +272,7 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		param.put(Param.CUSTOMER_COMMENT_DATA, entity.customerCommentData);
 		param.put(Param.DELIVERY_ZIP_CODE, entity.deliveryZipCode);
 		param.put(Param.CTAX_PRICE_TOTAL, entity.ctaxPriceTotal);
+		param.put(Param.CTAX_RATE, entity.ctaxRate);
 		param.put(Param.COST_TOTAL, entity.costTotal);
 		param.put(Param.RETAIL_PRICE_TOTAL, entity.retailPriceTotal);
 		param.put(Param.ESTIMATE_TOTAL, entity.estimateTotal);

@@ -21,6 +21,7 @@ INSERT INTO ESTIMATE_SHEET_TRN_/*$domainId*/'DEFAULT' (
         ,CUSTOMER_COMMENT_DATA
         ,DELIVERY_ZIP_CODE
         ,CTAX_PRICE_TOTAL
+        ,CTAX_RATE
         ,COST_TOTAL
         ,RETAIL_PRICE_TOTAL
         ,ESTIMATE_TOTAL
@@ -56,6 +57,7 @@ INSERT INTO ESTIMATE_SHEET_TRN_/*$domainId*/'DEFAULT' (
         ,/*customerCommentData*/NULL
         ,/*deliveryZipCode*/NULL
         ,/*ctaxPriceTotal*/NULL
+        ,/*ctaxRate*/NULL
         ,/*costTotal*/NULL
         ,/*retailPriceTotal*/NULL
         ,/*estimateTotal*/NULL

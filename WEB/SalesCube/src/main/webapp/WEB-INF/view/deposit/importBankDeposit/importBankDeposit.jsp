@@ -181,7 +181,7 @@ function execSearch(paramData){
 		</div>
 		<br><br><br>
 
-		<s:form enctype="multipart/form-data">
+		<s:form enctype="multipart/form-data" onsubmit="return false;">
 		<div id="errors" style="color: red">
 			<html:errors />
 		</div>

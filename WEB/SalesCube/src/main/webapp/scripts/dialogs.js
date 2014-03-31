@@ -685,14 +685,9 @@ function _searchDiscount(dialogId) {
   * @param dialogId
   * @return
   */
-function _updateDiscountData(dialogId, radioId) {
-	// ダイアログ内で選択されたラジオボタンの値を取得する
-	var radios = $("input[name='" + dialogId + "_" + radioId + "']:checked");
+function _updateDiscountData(dialogId, radioId, selectedVal) {
 	var selectedValue = null;
-	for ( var i = 0; i < radios.length; i++) {
-		selectedValue = radios[0].value;
-		break;
-	}
+	selectedValue = selectedVal;
 
 	// 既存の数量割引データテーブルをクリアする
 	$("#" + dialogId + "DataListContainer").empty();
@@ -750,6 +745,7 @@ function _updateDiscountData(dialogId, radioId) {
 
 			table.append(tr);
 		}
+		return "<table class='popup_resultList'>" + table.html() + "</table>";
 	}
 
 	// 検索結果スクロールの再設定

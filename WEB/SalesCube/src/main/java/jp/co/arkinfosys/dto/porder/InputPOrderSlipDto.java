@@ -49,6 +49,7 @@ public class InputPOrderSlipDto extends AbstractSlipDto<InputPOrderLineDto>{
 	public String supplierCmCategory;
 	public String priceTotal;
 	public String ctaxTotal;
+	public String ctaxRate;
 	public String fePriceTotal;
 	public String printCount;
 	public String creFunc;

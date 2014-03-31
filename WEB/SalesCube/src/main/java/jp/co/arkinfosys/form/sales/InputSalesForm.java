@@ -39,7 +39,6 @@ import org.seasar.struts.annotation.Msg;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.annotation.ShortType;
 import org.seasar.struts.annotation.Validwhen;
-import org.seasar.struts.util.MessageResourcesUtil;
 
 
 /**
@@ -242,6 +241,10 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 
 	// 仮納品書出力フラグ（顧客情報と納入先情報が一致時はfalse)
 	public Boolean reportEFlag;
+	
+	// 消費税率
+	public String ctaxRate;
+
 
 	/**
 	 * フォームを初期化状態にします.
@@ -327,8 +330,7 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		shippingPrintCount = "0";	// 出荷指示書発行フラグ
 		siPrintCount = "0";			// 送り状データ出力フラグ
 		adlabel = "";				// 宛名
-									// 但書
-		disclaimer = MessageResourcesUtil.getMessage("labels.disclaimer");
+		disclaimer = "";			// 但書
 		creFunc = "";				// 作成機能
 		creDatetm = "";				// 作成日時
 		creUser = "";				// 作成者
@@ -405,6 +407,7 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		taxFractCategory = rosDto.taxFractCategory;		// 税端数処理
 		priceFractCategory = rosDto.priceFractCategory;	// 単価端数処理
 		ctaxPriceTotal = rosDto.ctaxPriceTotal;		// 伝票合計消費税
+		ctaxRate = rosDto.ctaxRate;					// 消費税率
 		priceTotal = rosDto.priceTotal;			// 伝票合計金額
 		gmTotal = "";				// 伝票合計粗利益
 		codSc = rosDto.codSc;					// 代引手数料
@@ -414,8 +417,8 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		shippingPrintCount = "0";	// 出荷指示書発行フラグ
 		siPrintCount = "0";			// 送り状データ出力フラグ
 		adlabel = rosDto.customerName + customer.customerPcPreCategoryName;		// 宛名→得意先名＋敬称
-									// 但書
-		disclaimer = MessageResourcesUtil.getMessage("labels.disclaimer");
+		disclaimer = "";							// 但書
+		creFunc = "";				// 作成機能
 		creFunc = "";				// 作成機能
 		creDatetm = "";				// 作成日時
 		creUser = "";				// 作成者
@@ -488,8 +491,8 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		baUrl = dap.deliveryUrl;					// 請求先URL
 	}
 
-	
-	
+
+
 
 
 	/* (非 Javadoc)
@@ -504,13 +507,13 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 
 	/**
 	 * 売上日の税率を税率マスタから取得して、設定する。
-	 * @throws ServiceException 
-	 * 
+	 * @throws ServiceException
+	 *
 	 */
 	public void setSalesDateTaxRate() throws ServiceException{
-		
+
 		String date = "";
-		
+
 		// 現在の税率を取得し、画面に設定する
 		if(StringUtil.hasLength(salesDate)){
 			date = salesDate;
@@ -522,7 +525,7 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		this.taxRate = tx.taxRate.toString();
 
 	}
-	
+
 	/**
 	 * 登録エラーが発生した時の処理を行います.<BR>
 	 * 登録時のみで、更新時は関係しません.<BR>
@@ -541,13 +544,30 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 	}
 
 	/**
-	 * 入力担当者を設定します.
+	 * 入力担当者、消費税率を設定します.
 	 */
 	@Override
 	public void initializeScreenInfo() {
 		// 入力担当者の設定
 		this.userId = userDto.userId;
 		this.userName = userDto.nameKnj;
+		
+		// 消費税率
+		this.ctaxRate = super.taxRate;
+	}
+	
+	/**
+	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
+	 */
+	@Override
+	public void setSlipTaxRate() {
+		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
+			super.taxRate = this.ctaxRate;
+		}
+		
+		if (this.ctaxRate == "" || this.ctaxRate == null) {
+			this.ctaxRate = super.taxRate;
+		}
 	}
 
 	/**

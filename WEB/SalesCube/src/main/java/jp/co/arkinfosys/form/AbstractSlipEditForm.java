@@ -128,7 +128,15 @@ public abstract class AbstractSlipEditForm<LINEDTOCLASS extends AbstractLineDto>
 		//taxShiftCategory = mineDto.taxShiftCategory;
 		//priceFractCategory = mineDto.priceFractCategory;
 	}
-
+	
+	/**
+	 * 各伝票で適用する消費税率を設定する。
+	 * ・税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
+	 * @throws ServiceException
+	 */
+	public void setSlipTaxRate() {
+		
+	}
 
 	/**
 	 * メニューＩＤを返します.

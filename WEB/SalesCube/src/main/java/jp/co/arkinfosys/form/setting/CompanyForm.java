@@ -103,6 +103,8 @@ public class CompanyForm {
      * 決算月
      */
     public String closeMonth;
+
+
 	/**
      * 更新日時
      */

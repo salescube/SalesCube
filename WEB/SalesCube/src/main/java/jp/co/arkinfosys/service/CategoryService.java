@@ -60,7 +60,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 		return this.selectBySqlFile(CategoryJoin.class,
 				"category/FindCategoryJoinById.sql", param).getResultList();
 	}
-	
+
 	/**
 	 * カテゴリIDを指定して、カテゴリ情報のマップを返します.
 	 * @param categoryId カテゴリID
@@ -216,6 +216,23 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	}
 
 	/**
+	 * カテゴリIDとカテゴリコードを指定して、画面に表示されていないカテゴリ情報を返します.
+	 * @param categoryId カテゴリID
+	 * @param categoryCode カテゴリコード
+	 * @return カテゴリ情報{@link CategoryTrn}
+	 * @throws ServiceException
+	 */
+	public CategoryTrn findCategoryTrnNoDspByIdAndCode(CategoryDto dto) throws ServiceException {
+
+		Map<String, Object> param = super.createSqlParam();
+		param.put(Param.CATEGORY_ID, dto.categoryId);
+		param.put(Param.CATEGORY_CODE, dto.categoryCode);
+
+		return this.selectBySqlFile(CategoryTrn.class,
+				"category/FindCategoryTrnNoDspByIdAndCode.sql", param).getSingleResult();
+	}
+
+	/**
 	 * カテゴリを削除します.
 	 * @param dto {@link CategoryDto}
 	 * @throws Exception
@@ -318,7 +335,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	}
 
 	/**
-	 * 
+	 *
 	 * @return {CATEGORY_ID, CATEGORY_CODE}
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#getKeyColumnNames()
 	 */
@@ -328,7 +345,7 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 	}
 
 	/**
-	 * 
+	 *
 	 * @return {@link CategoryTrn#TABLE_NAME}
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#getTableName()
 	 */

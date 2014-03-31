@@ -51,6 +51,7 @@ UPDATE
 					PO_SLIP_ID = /*poSlipId*/
 			) TEMPTABLE
 		)
+		,CTAX_TOTAL = /*ctaxTotal*/
 		,FE_PRICE_TOTAL = (
 			SELECT TEMPVALUE FROM
 			(

@@ -62,7 +62,7 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 		public static final String RATE = "rate";
 		public static final String SUPPLIER_RATE = "supplierRate";
 		public static final String CTAX_RATE = "ctaxRate";
-		public static final String SUPPLIER_TAX_RATE = "supplierTaxRate";
+//		public static final String SUPPLIER_TAX_RATE = "supplierTaxRate";
 		public static final String PRODUCT_CODE_LIST = "productCodeList";
 		public static final String STATUS = "status";
 	}
@@ -79,8 +79,11 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 		public static final String PRODUCT_STATUS_SALE_CANCEL = "productStatusSaleCancel";
 
 		private static final String UNPAID = "slipPaymentStatusUnpaid";
+		private static final String PAYING = "slipPaymentStatusPaying";
 		private static final String PAID = "slipPaymentStatusPaid";
 		private static final String STATUS_SUPPLIER_SLIP_UNPAID = "statusSupplierSlipUnpaid";
+		private static final String STATUS_SUPPLIER_SLIP_PAYING = "statusSupplierSlipPaying";
+		private static final String STATUS_SUPPLIER_SLIP_PAID = "statusSupplierSlipPaid";
 		private static final String STATUS_PORDER_SLIP_PURCHASED = "statusPorderSlipPurchased";
 
 	}
@@ -333,13 +336,19 @@ public class InputPOrderSlipService extends AbstractSlipService<PoSlipTrn,InputP
 			// 未払い
 			param.put(ParamLocal.UNPAID, MessageResourcesUtil
 					.getMessage("labels.slipPaymentStatus.unpaid"));
+			// 支払中
+			param.put(ParamLocal.PAYING, MessageResourcesUtil
+					.getMessage("labels.slipPaymentStatus.paying"));
 			// 済
 			param.put(ParamLocal.PAID, MessageResourcesUtil
 					.getMessage("labels.slipPaymentStatus.paid"));
+			
 			// 発注伝票状態 仕入完了：Constants.STATUS_PORDER_SLIP.PURCHASED
 			param.put(ParamLocal.STATUS_PORDER_SLIP_PURCHASED, Constants.STATUS_PORDER_SLIP.PURCHASED);
 			// 仕入伝票状態 未払い：Constants.STATUS_SUPPLIER_SLIP.UNPAID
 			param.put(ParamLocal.STATUS_SUPPLIER_SLIP_UNPAID, Constants.STATUS_SUPPLIER_SLIP.UNPAID);
+			param.put(ParamLocal.STATUS_SUPPLIER_SLIP_PAYING, Constants.STATUS_SUPPLIER_SLIP.PAYING);
+			param.put(ParamLocal.STATUS_SUPPLIER_SLIP_PAID, Constants.STATUS_SUPPLIER_SLIP.PAID);
 
 			PoSlipTrnJoin poSlipTrnJoin = this.selectBySqlFile(
 					PoSlipTrnJoin.class,

@@ -18,6 +18,7 @@ import jp.co.arkinfosys.action.AbstractSlipEditAction;
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.ListUtil;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
@@ -167,6 +168,11 @@ public class InputROrderAction extends
 	 */
 	@Resource
 	protected ProductStockService productStockService;
+	
+	/**
+	 *  消費税率プルダウン
+	 */
+	public List<LabelValueBean> ctaxRateList;
 
 	/**
 	 * オンライン受注データの表示を行います.
@@ -572,6 +578,10 @@ public class InputROrderAction extends
 
 		// 完納区分　リスト作成
 		createCategoryList(Categories.RO_LINE_STATUS, statusCategoryList, false);
+		
+		// 消費税率プルダウンリスト
+		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
+		
 	}
 
 	/**

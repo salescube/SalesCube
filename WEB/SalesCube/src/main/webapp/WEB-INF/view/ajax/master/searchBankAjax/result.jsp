@@ -9,13 +9,16 @@
 
 		<table id="detail_info" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 			<colgroup>
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 25%">
-				<col span="1" style="width: 8%">
-				<col span="1" style="width: 25%">
+				<col span="1" style="width: 6%">
 				<col span="1" style="width: 10%">
-				<col span="1" style="width: 19%">
-				<col span="1" style="width: 5%">
+				<col span="1" style="width: 20%">
+				<col span="1" style="width: 7%">
+				<col span="1" style="width: 13%">
+				<col span="1" style="width: 6%">
+				<col span="1" style="width: 10%">
+				<col span="1" style="width: 10%">
+				<col span="1" style="width: 10%">
+				<col span="1" style="width: 8%">
 			</colgroup>
 				<th class="rd_top_left" style="cursor: pointer; height: 30px;" onclick="sort('valid');">有効
     			<c:if test="${sortColumn == 'valid'}">
@@ -23,7 +26,7 @@
     				<c:if test="${!sortOrderAsc}">▼</c:if>
     			</c:if>
                 </th>
-				<th class="rd_top_left" style="cursor: pointer; height: 30px;" onclick="sort('bankCode');">銀行コード
+				<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('bankCode');">銀行コード
     			<c:if test="${sortColumn == 'bankCode'}">
     				<c:if test="${sortOrderAsc}">▲</c:if>
     				<c:if test="${!sortOrderAsc}">▼</c:if>
@@ -59,6 +62,20 @@
     				<c:if test="${!sortOrderAsc}">▼</c:if>
     			</c:if>
                 </th>
+                <th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('accountOwnerName');">口座名義
+    			<c:if test="${sortColumn == 'accountNum'}">
+    				<c:if test="${sortOrderAsc}">▲</c:if>
+    				<c:if test="${!sortOrderAsc}">▼</c:if>
+    			</c:if>
+                </th>
+
+                <th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('accountOwnerKana');">口座名義カナ
+    			<c:if test="${sortColumn == 'accountNum'}">
+    				<c:if test="${sortOrderAsc}">▲</c:if>
+    				<c:if test="${!sortOrderAsc}">▼</c:if>
+    			</c:if>
+                </th>
+
 				<th class="rd_top_right">&nbsp;</th>
 			</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
@@ -84,13 +101,15 @@
 				<td>&nbsp;${f:h(bean.storeName)}&nbsp;</td>
 				<td>&nbsp;${f:h(bean.dwbName)}&nbsp;</td>
 				<td>&nbsp;${f:h(bean.accountNum)}&nbsp;</td>
+				<td>&nbsp;${f:h(bean.accountOwnerName)}&nbsp;</td>
+				<td>&nbsp;${f:h(bean.accountOwnerKana)}&nbsp;</td>
         		<td style="text-align: center">
         			<c:if test="${isUpdate}">
-        			<button class="btn_small" onclick="editBank('${sw:u(bean.bankId)}');">編集</button>
-        			<button class="btn_small" onclick="deleteBank('${bean.bankId}', '${bean.updDatetm}');">削除</button>
+        			<button class="btn_list_action" onclick="editBank('${sw:u(bean.bankId)}');">編集</button>
+        			<button class="btn_list_action" onclick="deleteBank('${bean.bankId}', '${bean.updDatetm}');">削除</button>
         			</c:if>
         			<c:if test="${!isUpdate}">
-        			<button class="btn_small" onclick="editBank('${sw:u(bean.bankId)}');">参照</button>
+        			<button class="btn_list_action" onclick="editBank('${sw:u(bean.bankId)}');">参照</button>
         			</c:if>
         		</td>
 			</tr>
@@ -107,6 +126,8 @@
 <input type="hidden" id="prev_storeCode" name="prev_storeCode" value="${f:h(storeCode)}">
 <input type="hidden" id="prev_dwbType" name="prev_dwbType" value="${f:h(dwbType)}">
 <input type="hidden" id="prev_accountNum" name="prev_accountNum" value="${f:h(accountNum)}">
+<input type="hidden" id="prev_accountOwnerName" name="prev_accountOwnerName" value="${f:h(accountOwnerName)}">
+<input type="hidden" id="prev_accountOwnerKana" name="prev_accountOwnerKana" value="${f:h(accountOwnerKana)}">
 
 <c:if test="${searchResultCount == 1}">
 <%-- 検索結果が1件の場合にはその棚番コードをhiddenで配置する --%>

@@ -72,7 +72,7 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 		public static final String RATE = "rate";
 		public static final String SUPPLIER_RATE = "supplierRate";
 		public static final String CTAX_RATE = "ctaxRate";
-		public static final String SUPPLIER_TAX_RATE = "supplierTaxRate";
+//		public static final String SUPPLIER_TAX_RATE = "supplierTaxRate";
 		public static final String PRODUCT_CODE_LIST = "productCodeList";
 		public static final String STATUS = "status";
 		public static final String PO_LINE_IDS = "poLineIds";
@@ -134,12 +134,12 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 
 	@Resource
 	private SupplierLineService supplierLineService;
-	
+
 	@Resource
 	private PoSlipService poSlipService;
 
 
-	
+
 	/**
 	 * 発注伝票番号を指定して発注伝票明細行を削除します.
 	 * @param id 発注伝票番号
@@ -256,9 +256,9 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 					Integer rest = stockInfoDto.porderRestQuantity + stockInfoDto.entrustRestQuantity;
 					lineDto.productRestQuantity = rest.toString();
 				}
-				
+
 				lineDto.quantityDB = lineDto.quantity;
-				
+
 				dtoList.add(lineDto);
 			}
 			return dtoList;
@@ -312,15 +312,25 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 						if(entity.restQuantity.compareTo(new BigDecimal(0)) <= 0){
 							entity.status = Constants.STATUS_PORDER_LINE.PURCHASED;
 						}
+
+						//変更前の数量
+						BigDecimal quantityDB = new BigDecimal( dto.quantityDB );
+
+						//差分 = 変更前数量-変更後数量
+						BigDecimal diffvalue  = quantityDB.subtract(entity.quantity);
+
+						//数量変更後の発注残数　= 数量変更前の発注残数 - 差分
+						entity.restQuantity = entity.restQuantity.subtract(diffvalue);
+
 						updateRecord(entity);
-						
+
 						// 仕入伝票のステータスも変更する
 						// 完納
 						if(entity.restQuantity.compareTo(new BigDecimal(0)) <= 0){
-							
+
 							supplierLineService.updateDeliveryProcessCategory(entity.poLineId,CategoryTrns.DELIVERY_PROCESS_CATEGORY_FULL);
-						
-							
+
+
 						}
 					}
 				}
@@ -332,11 +342,11 @@ public class InputPOrderLineService extends AbstractLineService<PoLineTrn,InputP
 				super.updateAudit(ids);
 				deleteRecordsByLineId(ids);
 			}
-			
-			
+
+
 			// 発注伝票ステータス更新
 			poSlipService.updatePOrderTrnStatusByPoSlipId(slipDto.poSlipId);
-			
+
 
 		} catch (NumberFormatException e) {
 			throw new ServiceException(e);

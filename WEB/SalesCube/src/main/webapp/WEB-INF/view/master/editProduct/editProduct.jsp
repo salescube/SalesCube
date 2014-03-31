@@ -254,11 +254,12 @@
 
 				// 本日付の円/外貨レート情報を取得する
 				var today = new Date();
+
 				asyncRequest(
 					contextRoot + "/ajax/commonPOrder/getSupplierRate/",
 					{
 						"tempSupplierCode" : $("#supplierCode").val(),
-						"targetDate" : (today.getYear() < 2000)?(today.getYear()+1900):today.getYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate()
+						"targetDate" : (today.getYear() < 2000)?(today.getYear()+1900)+ "/" + (today.getMonth() + 1) + "/" + today.getDate():today.getYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate()
 					},
 					function(result) {
 						$("#supplierRate").val(result);
@@ -552,7 +553,7 @@
 			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<div class="function_forms">
 
 			<%-- エラー表示部分 --%>
@@ -565,9 +566,9 @@
 					<bean:write name="msg" ignore="true"/>
 				</html:messages>
 			</div>
-			
+
 			<s:form onsubmit="return false;">
-			
+
 			    <div class="form_section_wrap">
 				    <div class="form_section">
 				        <div class="section_title">
@@ -576,42 +577,45 @@
 				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 				            </button>
 						</div><!-- /.section_title -->
-						
+
 						<html:hidden styleId="isUpdate" property="isUpdate"/>
 						<html:hidden styleId="editMode" property="editMode"/>
-		
+
 						<html:hidden styleId="fractCategory" property="fractCategory"/>
 						<html:hidden styleId="taxCategory" property="taxCategory"/>
 						<html:hidden styleId="productFractCategory" property="productFractCategory"/>
 						<input type="hidden" id="numDecAlignment" name="numDecAlignment" value="0">
-		
+
 						<html:hidden styleId="priceFractCategory" property="priceFractCategory"/>
 						<html:hidden styleId="unitPriceDecAlignment" property="unitPriceDecAlignment"/>
 						<html:hidden styleId="dolUnitPriceDecAlignment" property="dolUnitPriceDecAlignment"/>
 						<html:hidden styleId="statsDecAlignment" property="statsDecAlignment"/>
 						<html:hidden styleId="supplierRate" property="supplierRate"/>
-		
+
 						<div id="order_section" class="section_body">
 							<table id="product_info" class="forms" summary="商品情報">
 								<tr>
-									<th><div class="col_title_right">商品コード※</div></th>
+									<th><div class="col_title_right_req">商品コード<bean:message key='labels.must'/></div></th>
 									<td>
 										<html:text styleId="productCode" property="productCode" style="width: 160px; ime-mode: disabled;" tabindex="100" maxlength="20"
 											styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"
 											readonly="${editMode || !isUpdate}"
 											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); checkNMJStockCtlCategory(); }" />
+										
+										<c:if test="${!editMode}">
 										<html:image src="${f:url('/images//customize/btn_search.png')}"
 											style="vertical-align: middle; cursor: pointer;"
 											tabindex="101" onclick="openProductSearchDialog();" />
+										</c:if>
 									</td>
-									<th><div class="col_title_right">商品名※</div></th>
+									<th><div class="col_title_right_req">商品名<bean:message key='labels.must'/></div></th>
 									<td><html:text styleId="productName" property="productName" style="width: 200px;" tabindex="102" maxlength="60"/></td>
 									<th><div class="col_title_right">商品名カナ</div></th>
 									<td><html:text styleId="productKana" property="productKana" style="width: 200px;" tabindex="103" maxlength="60"/></td>
 								</tr>
 								<tr>
 									<th><div class="col_title_right"><bean:message key='labels.onlineorder.pcode'/></div></th>
-									<td><html:text styleId="onlinePcode" property="onlinePcode" style="width: 170px;ime-mode: disabled;" tabindex="104" maxlength="50"/></td>
+									<td><html:text styleId="onlinePcode" property="onlinePcode" style="width: 160px;ime-mode: disabled;" tabindex="104" maxlength="50"/></td>
 									<th><div class="col_title_right">JANコード</div></th>
 									<td><html:text styleId="janPcode" property="janPcode" style="width: 150px;ime-mode: disabled;" tabindex="105" maxlength="13"
 										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ chkdigit(this); }"/></td>
@@ -643,7 +647,7 @@
 									<th><div class="col_title_right">仕入単価（外貨）</div></th>
 									<td colspan="3"><html:text styleClass="numeral_commas dollar_value BDCdol" styleId="supplierPriceDol" property="supplierPriceDol"
 											style="width: 150px;" tabindex="205" onchange="exchangePrice();" maxlength="9"/></td>
-			
+
 								</tr>
 							</table>
 							<html:hidden styleId="sign" property="sign" />
@@ -690,7 +694,7 @@
 									<td>
 										<html:text styleClass="numeral_commas BDCqua"  styleId="mineSafetyStock" property="mineSafetyStock" style="width: 100px;" tabindex="309" maxlength="6"/>
 										<html:checkbox styleId="mineSafetyStockUpdFlag" property="mineSafetyStockUpdFlag" value="1" tabindex="310" />自動更新</td>
-			
+
 										<html:hidden property="entrustSafetyStock"/>
 										<html:hidden property="salesStandardDeviation"/>
 								</tr>
@@ -712,7 +716,7 @@
 									</td>
 								</tr>
 							</table>
-			
+
 							<table class="forms" summary="ランク・割引情報">
 								<tr>
 									<th><div class="col_title_right">受注限度数</div></th>
@@ -747,7 +751,7 @@
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">
-							<table id="product_category_info" class="forms" summary="商品分類">		
+							<table id="product_category_info" class="forms" summary="商品分類">
 								<tr>
 									<th><div class="col_title_right">状況</div></th>
 									<td><html:select tabindex="500" property="productStatusCategory">
@@ -781,7 +785,7 @@
 										</html:select>
 									</td>
 								</tr>
-			
+
 								<tr>
 									<th><div class="col_title_right">カテゴリ（大）</div></th>
 									<td colspan="5">
@@ -899,19 +903,19 @@
 								<tr>
 									<th><div class="col_title_right">備考</div></th>
 									<td>
-										<html:textarea styleId="remarks" property="remarks" style="width: 750px;" tabindex="700" rows="2"/>
+										<html:textarea styleId="remarks" property="remarks" style="width:750px; height:45px;" tabindex="700" rows="2"/>
 									</td>
 								</tr>
 								<tr>
 									<th><div class="col_title_right">ピッキング備考</div></th>
 									<td>
-										<html:textarea styleId="eadRemarks" property="eadRemarks" style="width: 750px;" tabindex="701" rows="2"/>
+										<html:textarea styleId="eadRemarks" property="eadRemarks" style="width: 750px; height:45px;" tabindex="701" rows="2"/>
 									</td>
 								</tr>
 								<tr>
 									<th><div class="col_title_right">コメント</div></th>
 									<td>
-										<html:textarea styleId="commentData" property="commentData" style="width: 750px;" tabindex="702" rows="2"/>
+										<html:textarea styleId="commentData" property="commentData" style="width: 750px; height:45px;" tabindex="702" rows="2"/>
 									</td>
 								</tr>
 							</table>

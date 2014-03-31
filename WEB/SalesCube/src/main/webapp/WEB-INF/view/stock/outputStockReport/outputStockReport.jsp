@@ -103,7 +103,7 @@
 								<col span="1" style="width: 80%">
 							</colgroup>
 							<tr>
-								<th><div class="col_title_right"><bean:message key='labels.targetYm'/><bean:message key='labels.must'/></th><%// 出力対象年月 %></div>
+								<th><div class="col_title_right_req"><bean:message key='labels.targetYm'/><bean:message key='labels.must'/></th><%// 出力対象年月 %></div>
 								<td>
 									<html:text property="targetYm" styleId="targetYm" styleClass="c_referable" style="width: 100px; ime-mode: disabled;" tabindex="100" maxlength="7" />
 								</td>

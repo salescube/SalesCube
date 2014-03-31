@@ -22,7 +22,7 @@
 			<tr>
 				<th rowspan="2" id='result_status' class="rd_top_left"  style='cursor: pointer; height:60px;' onclick="sort('status')">
 					<bean:message key='labels.onlineorder.status' /><%// 状態 %>
-					<span id="sortStatus_status" style="color: blue">
+					<span id="sortStatus_status" style="color: white">
 						<c:if test='${sortColumn=="status"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -35,7 +35,7 @@
 				</th>
 				<th rowspan="2" id='result_roSlipId' style='cursor: pointer; height:60px;' onclick="sort('roSlipId')">
 					<bean:message key='labels.roSlipId' /><%// 受注番号 %>
-					<span id="sortStatus_roSlipId" style="color: blue">
+					<span id="sortStatus_roSlipId" style="color: white">
 						<c:if test='${sortColumn=="roSlipId"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -51,7 +51,7 @@
 				</th>
 				<th rowspan="2" id='result_loadDate' style='cursor: pointer; height:30px;' onclick="sort('loadDate')">
 					<bean:message key='labels.loadDate' /><%// 取込日 %>
-					<span id="sortStatus_status" style="color: blue">
+					<span id="sortStatus_status" style="color: white">
 						<c:if test='${sortColumn=="loadDate"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -67,7 +67,7 @@
 			<tr>
 				<th id='result_onlineOrderId' style='cursor: pointer; height:30px;' onclick="sort('onlineOrderId')">
 					<bean:message key='labels.onlineorder.orderId' /><%// 注文番号 %>
-					<span id="sortStatus_onlineOrderId" style="color: blue">
+					<span id="sortStatus_onlineOrderId" style="color: white">
 						<c:if test='${sortColumn=="onlineOrderId"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -80,7 +80,7 @@
 				</th>
 				<th id='result_supplierDate' style='cursor: pointer; height:30px;' onclick="sort('supplierDate')">
 					<bean:message key='labels.onlineorder.roDate' /><%// 受注日 %>
-					<span id="sortStatus_supplierDate" style="color: blue">
+					<span id="sortStatus_supplierDate" style="color: white">
 						<c:if test='${sortColumn=="supplierDate"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -93,7 +93,7 @@
 				</th>
 				<th id='result_customerName' style='cursor: pointer; height:30px;' onclick="sort('customerName')">
 					<bean:message key='labels.onlineorder.orderCustomerName' /><%// 注文者氏名 %>
-					<span id="sortStatus_customerName" style="color: blue">
+					<span id="sortStatus_customerName" style="color: white">
 						<c:if test='${sortColumn=="customerName"}'>
 							<c:if test='${sortOrderAsc}'>
 								<bean:message key='labels.asc'/>
@@ -117,7 +117,7 @@
 							</span>
 						</c:if>
 						<c:if test='${rowData.roSlipId!=null}'>
-							<span style="color: blue">
+							<span style="color: white">
 								<bean:message key='labels.onlineorder.status.input' /><%// 済 %>
 							</span>
 						</c:if>

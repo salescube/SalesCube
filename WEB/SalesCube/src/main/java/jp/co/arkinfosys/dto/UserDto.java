@@ -44,6 +44,12 @@ public class UserDto implements Serializable, MasterEditDto {
 
 	public String expireDate;
 
+	public String lockflg;
+
+	public String lockDatetm;
+
+	public Integer failCount;
+
 	public String creFunc;
 
 	public String creDatetm;
@@ -63,6 +69,7 @@ public class UserDto implements Serializable, MasterEditDto {
 	public List<MenuDto> menuDtoList;
 
 	public List<MenuDto> originalMenuDtoList;
+
 
 	/**
 	 * ファイル参照権限

@@ -258,7 +258,7 @@
 				<div id="order_section" class="section_body">
 					<table id="discount_info" class="forms" summary="割引パターン情報" style="width: 600px">
 						<tr>
-							<th><div class="col_title_right">割引コード<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">割引コード<bean:message key='labels.must'/></div></th>
 							<td>
 			                <c:if test="${editMode}">
 			                    <html:text maxlength="20" styleId="discountId" property="discountId" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
@@ -271,7 +271,7 @@
 							<td><html:checkbox tabindex="101" styleId="useFlag" property="useFlag" value="1"/></td>
 						</tr>
 						<tr>
-							<th><div class="col_title_right">割引名<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">割引名<bean:message key='labels.must'/></div></th>
 							<td colspan="3"><html:text maxlength="60" styleId="discountName" property="discountName" style="width: 230px"  tabindex="102"/></td>
 						</tr>
 						<tr>
@@ -301,7 +301,7 @@
 							<col span="1" style="width: 10%">
 						</colgroup>
 						<tr>
-							<th class="rd_top_left" style="height: 30px;">no</th>
+							<th class="rd_top_left" style="height: 30px;">No</th>
 							<th class="xl64" style="height: 30px;"><bean:message key="labels.discountTrn.dataRange"/><bean:message key='labels.must'/></th>
 							<th class="xl64" style="height: 30px;"><bean:message key="labels.discountTrn.discountRate"/><bean:message key='labels.must'/></th>
 							<th class="rd_top_right" style="height: 30px;">&nbsp;</th>
@@ -309,24 +309,24 @@
 						<tr id="discountTrnList_dummy" style="display:none;">
 							<td id="discountTrnList_dummy" style="text-align: center">0
 			                </td>
-							<td style="text-align: center">
+							<td style="text-align: center; background-color: #fae4eb;">
 			                    <input type="hidden" id="dataId">
 			                    <input type="hidden" id="lineNo">
 								<input type="text" maxlength="13" id="from" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
 								～
 								<input type="text" maxlength="13" id="to" style="width:120px;ime-mode:disabled;" class="numeral_commas style_quantity" indexed="true" />
-							<td style="text-align: center">
+							<td style="text-align: center; background-color: #fae4eb;">
 								<input type="text" maxlength="7" id="rate" style="width:80px;ime-mode:disabled;text-align:right;" indexed="true" /> ％
 			                </td>
 							<td style="text-align: center">
-			                    <button id="deleteBtn" class="btn_small">削除</button>
+			                    <button id="deleteBtn" class="btn_list_action">削除</button>
 			                </td>
 						</tr>
 			            <c:forEach var="discountTrnList" varStatus="s" items="${discountTrnList}">
 						<tr id="discountTrnList_${s.index}">
 							<td id="discountTrnList_${s.index}.no" style="text-align: center">${s.index+1}
 			                </td>
-							<td style="text-align: center">
+							<td style="text-align: center;">
 			                    <html:hidden styleId="discountTrnList_${s.index}.discountDataId" name="discountTrnList" property="discountDataId" indexed="true" />
 			                    <html:hidden styleId="discountTrnList_${s.index}.lineNo" name="discountTrnList" property="lineNo" indexed="true"/>
 								<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataFrom" name="discountTrnList" property="dataFrom" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+200}" indexed="true" styleClass="numeral_commas style_quantity" />
@@ -337,10 +337,10 @@
 			                </td>
 							<td style="text-align: center">
 			<c:if test="${!isUpdate}">
-			                    <button disabled="disabled" class="btn_small">削除</button>
+			                    <button disabled="disabled" class="btn_list_action">削除</button>
 			</c:if>
 			<c:if test="${isUpdate}">
-			                    <button id="discountTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_small">削除</button>
+			                    <button id="discountTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_list_action">削除</button>
 			</c:if>
 			                </td>
 						</tr>
@@ -351,7 +351,7 @@
 			            </script>
 			            </c:forEach>
 						<tr id="trAddLine">
-							<td style="text-align: right" colspan="4"><button onclick="addRow()" class="btn_small">行追加</button></td>
+							<td style="text-align: right" colspan="4"><button onclick="addRow()" class="btn_list_action">行追加</button></td>
 						</tr>
 					</table>
 				</div><!-- /.section_body -->

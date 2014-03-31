@@ -177,7 +177,7 @@
 				<div id="order_section" class="section_body">
 					<table id="supplier_info" class="forms" summary="仕入先情報">
 						<tr>
-							<th><div class="col_title_right">仕入先コード<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">仕入先コード<bean:message key='labels.must'/></div></th>
 							<td>
 								<c:if test="${editMode}">
 									<html:text maxlength="9" styleId="supplierCode" property="supplierCode" style="width: 250px"  tabindex="100" readonly="true" styleClass="c_disable"/>
@@ -186,9 +186,9 @@
 									<html:text maxlength="9" styleId="supplierCode" property="supplierCode" style="width: 120px;ime-mode:disabled;"  tabindex="100"/>
 							    </c:if>
 			                </td>
-							<th><div class="col_title_right">仕入先名<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">仕入先名<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="60" property="supplierName" style="width: 250px" tabindex="101"/></td>
-							<th><div class="col_title_right">仕入先名カナ<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">仕入先名カナ<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="60" property="supplierKana" style="width: 250px" tabindex="102"/></td>
 						</tr>
 						<tr>
@@ -201,10 +201,10 @@
 
 					<table class="forms" style="width: 930px" summary="仕入先情報2">
 						<tr>
-							<th><div class="col_title_right">郵便番号<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">郵便番号<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="8" styleId="supplierZipCode" property="supplierZipCode" style="width:90px;ime-mode:disabled;" tabindex="200" onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){searchZipCodeDirect();}"/>
 			                <html:image tabindex="201" src='${f:url("/images//customize/btn_search.png")}' style="vertical-align: middle; cursor: pointer;" onclick="openSearchZipDialog('supplier', setZipCode);$('#supplier_zipCode').val($('#supplierZipCode').val());" />
-							<th><div class="col_title_right">住所１<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">住所１<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="50" styleId="supplierAddress1" property="supplierAddress1" tabindex="202" style="width: 250px"/></td>
 							<th><div class="col_title_right">住所２</div></th>
 							<td><html:text maxlength="50" styleId="supplierAddress2" property="supplierAddress2" tabindex="203" style="width: 250px"/></td>
@@ -214,7 +214,7 @@
 							<td><html:text maxlength="60" styleId="supplierPcName" property="supplierPcName" style="width: 250px" tabindex="204"/></td>
 							<th><div class="col_title_right">担当者カナ</div></th>
 							<td><html:text maxlength="60" styleId="supplierPcKana" property="supplierPcKana" style="width: 250px" tabindex="205"/></td>
-							<th><div class="col_title_right">敬称<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">敬称<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="supplierPcPreCategory" property="supplierPcPreCategory" tabindex="206">
 			                        <html:options collection="supplierPcPreTypeCategoryList" property="value" labelProperty="label"/>
@@ -251,25 +251,25 @@
 							<col span="1" style="width: 13%">
 						</colgroup>
 						<tr>
-							<th><div class="col_title_right">取引区分<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">取引区分<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="supplierCmCategory" property="supplierCmCategory" tabindex="300" style="width: 120px;">
 			                        <html:options collection="supplierCmCategoryList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><div class="col_title_right">税転稼<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">税転嫁<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="taxShiftCategory" property="taxShiftCategory" tabindex="301" style="width: 120px;">
 			                        <html:options collection="taxShiftCategoryList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><div class="col_title_right">支払方法<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">支払方法<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="paymentTypeCategory" property="paymentTypeCategory" tabindex="302" style="width: 120px;">
 			                        <html:options collection="paymentTypeCategoryList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><div class="col_title_right">支払間隔<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">支払間隔<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="paymentCycleCategory" property="paymentCycleCategory" tabindex="303" style="width: 120px;">
 			                        <html:options collection="paymentCycleCategoryList" property="value" labelProperty="label"/>
@@ -287,7 +287,7 @@
 			                        <html:options collection="rateList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th><div class="col_title_right">振込方法<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">振込方法<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="transferTypeCategory" property="transferTypeCategory" tabindex="307" style="width: 120px;">
 			                        <html:options collection="transferTypeCategoryList" property="value" labelProperty="label"/>
@@ -312,13 +312,13 @@
 							<td>
 								<html:checkbox styleId="poSlipComeoutCategory" property="poSlipComeoutCategory" value="1"  tabindex="402"/>発行する
 							</td>
-							<th><div class="col_title_right">手数料負担<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">手数料負担<bean:message key='labels.must'/></div></th>
 							<td>
 			                    <html:select styleId="serviceChargeCategory" property="serviceChargeCategory" tabindex="403" style="width: 120px;">
 			                        <html:options collection="serviceChargeCategoryList" property="value" labelProperty="label"/>
 								</html:select>
 							</td>
-							<th ><div class="col_title_right">税端数処理<bean:message key='labels.must'/></div></th>
+							<th ><div class="col_title_right_req">税端数処理<bean:message key='labels.must'/></div></th>
 							<td colspan="3">
 			                  	<html:select style="width: 120px;" styleId="taxFractCategory" property="taxFractCategory" tabindex="306" styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"  disabled="${editMode || !isUpdate ? 'true' : '' }"  >
                         		<html:options collection="taxFractCategoryList" property="value" labelProperty="label"/>

@@ -14,6 +14,7 @@ import jp.co.arkinfosys.action.AbstractSlipEditAction;
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.ListUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.common.ValidateUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
@@ -66,6 +67,11 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 	 * 敬称リスト
 	 */
 	public List<LabelValueBean> preTypeCategoryList = new ArrayList<LabelValueBean>();
+	
+	/**
+	 * 消費税率プルダウン
+	 */
+	public List<LabelValueBean> ctaxRateList = new ArrayList<LabelValueBean>();
 
 	/**
 	 * アクションフォーム
@@ -204,6 +210,9 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 			}
 			//通貨単位のリスト
 			inputPOrderForm.cUnitSignList = supplierService.getCUnitSignList();
+			
+			// 消費税率プルダウンリスト
+			this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
 
 			//モード設定
 			inputPOrderForm.lockMode = false;
@@ -236,6 +245,8 @@ public class InputPOrderAction extends AbstractSlipEditAction<InputPOrderSlipDto
 			if( dto == null ){
 				return false;
 			}
+			
+			dto.taxRate = dto.ctaxRate;
 
 			Beans.copy(dto, inputPOrderForm).execute();
 

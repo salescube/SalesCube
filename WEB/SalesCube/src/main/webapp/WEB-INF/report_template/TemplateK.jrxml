@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TemplateK" language="groovy" pageWidth="595" pageHeight="842" columnWidth="520" leftMargin="40" rightMargin="35" topMargin="10" bottomMargin="41">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TemplateK" language="groovy" pageWidth="595" pageHeight="842" columnWidth="520" leftMargin="40" rightMargin="35" topMargin="10" bottomMargin="41" uuid="65e9f09a-e51f-4dc4-ae4f-1f2422dd39da">
 	<property name="ireport.zoom" value="1.9487171000000014"/>
 	<property name="ireport.x" value="2"/>
 	<property name="ireport.y" value="0"/>
@@ -31,7 +31,7 @@
 		<groupHeader>
 			<band height="15">
 				<staticText>
-					<reportElement x="320" y="0" width="50" height="15"/>
+					<reportElement uuid="c8423553-f42c-428a-85c1-61b8971febcf" x="320" y="0" width="50" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -45,7 +45,7 @@
 					<text><![CDATA[数量]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="261" y="0" width="59" height="15"/>
+					<reportElement uuid="bc5b496e-5907-4ae8-bbca-a0cdc4e1b23c" x="261" y="0" width="59" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -59,7 +59,7 @@
 					<text><![CDATA[棚番号]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="0" width="31" height="15"/>
+					<reportElement uuid="db73cd59-60be-4c7e-9bbc-4c3c28839614" x="0" y="0" width="31" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -73,7 +73,7 @@
 					<text><![CDATA[行番]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="146" y="0" width="115" height="15"/>
+					<reportElement uuid="b285b331-2dcb-421c-b1be-c55f27f8a1f5" x="146" y="0" width="115" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -87,7 +87,7 @@
 					<text><![CDATA[子型番]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="370" y="0" width="50" height="15"/>
+					<reportElement uuid="e293ae72-57ea-4d91-8b05-e98fd01d668d" x="370" y="0" width="50" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -101,7 +101,7 @@
 					<text><![CDATA[現在庫数]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="420" y="0" width="50" height="15"/>
+					<reportElement uuid="39affb19-f4e6-4586-9934-57be7bec1a4e" x="420" y="0" width="50" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -115,7 +115,7 @@
 					<text><![CDATA[仕入予定１]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="470" y="0" width="50" height="15"/>
+					<reportElement uuid="f9a52255-0d29-456f-9217-25c0f4a24bd3" x="470" y="0" width="50" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -129,7 +129,7 @@
 					<text><![CDATA[仕入予定２]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="31" y="0" width="115" height="15"/>
+					<reportElement uuid="ffac0fbf-c854-45fc-beaa-7763b1b61aff" x="31" y="0" width="115" height="15"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -151,31 +151,31 @@
 	<pageHeader>
 		<band height="102">
 			<textField evaluationTime="Report">
-				<reportElement x="480" y="25" width="40" height="12"/>
+				<reportElement uuid="380f4c26-08be-4516-86ef-fac39125e25d" x="480" y="25" width="40" height="12"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="25" width="110" height="12"/>
+				<reportElement uuid="d6ffa43c-da20-41a2-844a-65215db6e575" x="370" y="25" width="110" height="12"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}+" /"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}+" /"]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd HH:mm:ss">
-				<reportElement x="370" y="0" width="150" height="24"/>
+				<reportElement uuid="f8dbf182-d8df-409f-8ece-d28cb43b6a44" x="370" y="0" width="150" height="24"/>
 				<box leftPadding="2" bottomPadding="2">
 					<bottomPen lineWidth="2.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="261" y="0" width="109" height="24"/>
+				<reportElement uuid="ee74f258-7cc8-4536-8777-f68294a9d315" x="261" y="0" width="109" height="24"/>
 				<box bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -189,7 +189,7 @@
 				<text><![CDATA[ 処理日：]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="261" height="24"/>
+				<reportElement uuid="8c82c54e-9d26-4337-bf47-a7ebe97c44fc" x="0" y="0" width="261" height="24"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -203,21 +203,21 @@
 				<text><![CDATA[　組立指示票]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="261" y="72" width="259" height="30"/>
+				<reportElement uuid="dd046617-d314-46f6-a486-18b9a5529ad7" x="261" y="72" width="259" height="30"/>
 				<textElement verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{customerName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{customerName}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="0" y="72" width="261" height="15"/>
+				<reportElement uuid="7f3f7dad-28c8-4ed2-9fed-652654d65229" x="0" y="72" width="261" height="15"/>
 				<textElement verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["お客様番号　　" + ($P{customerCode}==null?"":$P{customerCode})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["お客様番号　　" + ($P{customerCode}==null?"":$P{customerCode})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="146" y="37" width="115" height="15"/>
+				<reportElement uuid="5845844e-8da6-4388-99a6-5e46347ae776" x="146" y="37" width="115" height="15"/>
 				<box leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -231,7 +231,7 @@
 				<text><![CDATA[受注日]]></text>
 			</staticText>
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
-				<reportElement x="146" y="52" width="115" height="15"/>
+				<reportElement uuid="792bc9ab-4895-456a-a92e-132322e68770" x="146" y="52" width="115" height="15"/>
 				<box leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -242,10 +242,10 @@
 				<textElement verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$P{roDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{roDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="37" width="146" height="15"/>
+				<reportElement uuid="990a596e-c766-4d81-9cb7-832a6884471a" x="0" y="37" width="146" height="15"/>
 				<box leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -259,7 +259,7 @@
 				<text><![CDATA[受注No.]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="0" y="52" width="146" height="15"/>
+				<reportElement uuid="35fcc8a4-03f5-4782-bc1c-1160f877825c" x="0" y="52" width="146" height="15"/>
 				<box leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -270,10 +270,10 @@
 				<textElement verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$P{roSlipId}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{roSlipId}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="67" width="520" height="5"/>
+				<reportElement uuid="534273eb-d6cc-41fb-9db2-5e03f70215ff" x="0" y="67" width="520" height="5"/>
 				<box leftPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
@@ -285,7 +285,7 @@
 	<detail>
 		<band height="28" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="31" height="28"/>
+				<reportElement uuid="eb85e38c-8fec-4c48-84e0-89d00471d6cd" x="0" y="0" width="31" height="28"/>
 				<box rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -296,10 +296,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ROW_NUM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{ROW_NUM}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="261" y="0" width="59" height="28"/>
+				<reportElement uuid="e3270625-9f1a-4389-b1ac-2e73f6ea5e30" x="261" y="0" width="59" height="28"/>
 				<box topPadding="2" leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -310,10 +310,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{rackCodeSrc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rackCodeSrc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="370" y="0" width="50" height="28"/>
+				<reportElement uuid="556f7fde-396e-4781-955f-e842bf5619ee" x="370" y="0" width="50" height="28"/>
 				<box topPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -324,10 +324,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{stockNum}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{stockNum}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yy/MM/dd" isBlankWhenNull="true">
-				<reportElement x="420" y="0" width="50" height="14"/>
+				<reportElement uuid="28fe9de8-699e-484c-8d5a-98c153dda7e6" x="420" y="0" width="50" height="14"/>
 				<box rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -338,10 +338,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{purchaseDate1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{purchaseDate1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yy/MM/dd" isBlankWhenNull="true">
-				<reportElement x="470" y="0" width="50" height="14"/>
+				<reportElement uuid="426a13e8-0634-4072-9b44-51f12fa98aa4" x="470" y="0" width="50" height="14"/>
 				<box rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -352,10 +352,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{purchaseDate2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{purchaseDate2}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="420" y="14" width="50" height="14"/>
+				<reportElement uuid="00d1332f-8c4e-4ee4-b426-8ed3ac0b7946" x="420" y="14" width="50" height="14"/>
 				<box bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -366,10 +366,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{purchaseNum1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{purchaseNum1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="470" y="14" width="50" height="14"/>
+				<reportElement uuid="1880eea0-9f81-4678-9207-9e2e7f3e1d5f" x="470" y="14" width="50" height="14"/>
 				<box bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -380,10 +380,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{purchaseNum2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{purchaseNum2}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="320" y="0" width="50" height="28"/>
+				<reportElement uuid="e26fb469-3267-4d8d-8f4b-0b2627fbe6e0" x="320" y="0" width="50" height="28"/>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -394,10 +394,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{quantity}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="146" y="0" width="115" height="28"/>
+				<reportElement uuid="324b3c8c-a55f-4fe1-890f-1492ecfeed87" x="146" y="0" width="115" height="28"/>
 				<box topPadding="2" leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -408,10 +408,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{productCode}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="31" y="28" width="115" height="0"/>
+				<reportElement uuid="2db5c1b9-6473-4421-b489-ddfa61caa51f" x="31" y="28" width="115" height="0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -425,7 +425,7 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="31" y="0" width="115" height="28"/>
+				<reportElement uuid="9c149c0e-8625-4bcd-9e12-9e2a7f5c0466" isPrintRepeatedValues="false" x="31" y="0" width="115" height="28"/>
 				<box topPadding="2" leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -436,14 +436,14 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{setProductCode}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{setProductCode}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="58">
 			<staticText>
-				<reportElement x="0" y="10" width="102" height="24"/>
+				<reportElement uuid="48cf2313-1ef4-4196-b500-6e113c0c7cbe" x="0" y="10" width="102" height="24"/>
 				<box topPadding="2" leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -457,7 +457,7 @@
 				<text><![CDATA[得意先備考]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="10" width="418" height="24"/>
+				<reportElement uuid="88140ec4-7f3a-4d73-8dd4-eb66c8b42aa9" x="102" y="10" width="418" height="24"/>
 				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -468,10 +468,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{customerRemarks}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{customerRemarks}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="34" width="102" height="24"/>
+				<reportElement uuid="175a6732-6d7d-4ff4-9a9c-3c0931c42005" x="0" y="34" width="102" height="24"/>
 				<box topPadding="2" leftPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -485,7 +485,7 @@
 				<text><![CDATA[伝票備考]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="102" y="34" width="418" height="24"/>
+				<reportElement uuid="f5705952-b3d7-4d47-9681-da80dfc98324" x="102" y="34" width="418" height="24"/>
 				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -496,10 +496,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{pickingRemarks}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{pickingRemarks}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="0" width="520" height="10"/>
+				<reportElement uuid="a05e82c1-1476-4d10-8b39-541e58fb2de9" x="0" y="0" width="520" height="10"/>
 				<box leftPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>

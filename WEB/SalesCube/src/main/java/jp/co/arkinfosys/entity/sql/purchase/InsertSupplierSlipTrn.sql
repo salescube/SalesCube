@@ -19,6 +19,7 @@ INSERT INTO
 	,TAX_FRACT_CATEGORY
 	,PRICE_FRACT_CATEGORY
 	,CTAX_TOTAL
+	,CTAX_RATE
 	,PRICE_TOTAL
 	,FE_PRICE_TOTAL
 	,PO_SLIP_ID
@@ -54,6 +55,7 @@ VALUES
 	,/*taxFractCategory*/NULL
 	,/*priceFractCategory*/NULL
 	,/*ctaxTotal*/NULL
+	,/*ctaxRate*/NULL
 	,/*priceTotal*/NULL
 	,/*fePriceTotal*/NULL
 	,/*poSlipId*/NULL

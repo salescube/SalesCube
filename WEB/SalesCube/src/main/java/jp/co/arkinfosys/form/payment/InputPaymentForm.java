@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.payment.InputPaymentDto;
@@ -76,9 +77,6 @@ public class InputPaymentForm extends AbstractSlipEditForm<InputPaymentLineDto> 
 
 	/** 税転嫁 */
 	public String taxShiftCategory;
-
-	/** 仕入先レート(消費税計算で使用) */
-	public String supplierTaxRate;
 
 	/**  */
 	public boolean initCalc = false;

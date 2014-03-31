@@ -481,10 +481,10 @@ function setDisplayCheckState() {
 	<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 </s:form>
 
-		   <button onclick="checkAll()" tabindex="1000" class="btn_small">
+		   <button onclick="checkAll()" tabindex="1000" class="btn_list_action">
 				<bean:message key='words.action.selectAll'/>
 		   </button><!--
-		--><button onclick="checkNone()" tabindex="1001" class="btn_small">
+		--><button onclick="checkNone()" tabindex="1001" class="btn_list_action">
 				<bean:message key='words.action.selectNone'/>
 		   </button>
 		<span id="listContainer">

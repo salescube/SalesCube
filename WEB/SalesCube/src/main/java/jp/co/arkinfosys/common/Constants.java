@@ -77,6 +77,7 @@ public final class Constants {
 		public static final String DATE_DOT = "yyyy.MM.dd";
 
 		public static final String TIMESTAMP = "yyyy/MM/dd HH:mm:ss.S";
+		public static final String TIMESTAMP2 = "yyyy/MM/dd HH:mm:ss";
 
 		public static final String TIMESTAMP_NOSEC = "yyyy/MM/dd HH:mm";
 
@@ -342,6 +343,8 @@ public final class Constants {
 		public static final String NOTHANNUM_EXIST_MASK = ".*[^0-9].*";
 		// 半角カタカナが存在
 		public static final String HANKANA_EXIST_MASK = ".*[\uFF65-\uFF9F].*";
+		//半角のみ
+		public static final String HANKAKU_MASK = "^[a-zA-Z0-9-/:-@\\[-\\^\\{-\\~]+$";
 	}
 
 	public static class NUMBER_MASK {

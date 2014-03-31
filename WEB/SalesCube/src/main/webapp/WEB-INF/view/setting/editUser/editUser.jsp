@@ -9,12 +9,12 @@
 var dataTmp = new Object();
 
 function init(){
-	
+
 	if($("#userId").val() == null || $("#userId").val().length == 0){
 		$("#password").val("");
 		$("#nameKana").val("");
 	}
-	
+
 }
 
 
@@ -93,7 +93,7 @@ function onF12() {
 		<div class="function_buttons">
 			<button type="button" tabindex="2000" onclick="onF1();">F1<br>初期化</button>
 			<button type="button" tabindex="2001" onclick="onF2();">F2<br>戻る</button>
-			<button type="button" tabindex="2002" onclick="onF3();" 
+			<button type="button" tabindex="2002" onclick="onF3();"
 				<c:if test="${!isUpdate}">disabled</c:if> >F3<br>
 				<c:if test="${!editMode}">登録</c:if>
 				<c:if test="${editMode}">更新</c:if></button>
@@ -108,7 +108,7 @@ function onF12() {
 			<button type="button" tabindex="2009" onclick="onF12();">F12<br>全有効</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 			<div class="function_forms">
 				<div style="padding-left: 20px">
@@ -119,7 +119,7 @@ function onF12() {
 						<bean:write name="msg" ignore="true"/>
 					</html:messages>
 				</div>
-			
+
 			<div class="form_section_wrap">
 				<div class="form_section">
 					<div class="section_title">
@@ -132,8 +132,8 @@ function onF12() {
 					<div>
 						<table class="forms" style="width: 800px" summary="社員情報">
 							<tr>
-								<th colspan="2"><div class="col_title_right">社員コード※</div></th>
-								<td colspan="3">
+								<th colspan="2"><div class="col_title_right_req">社員コード<bean:message key='labels.must'/></div></th>
+								<td>
 									<c:if test="${!editMode}">
 									<html:text property="userId" styleId="userId"  tabindex="100" style="width: 150px; ime-mode: disabled;" />
 									</c:if>
@@ -141,25 +141,48 @@ function onF12() {
 									<html:text property="userId" styleId="userId"  tabindex="100" style="width: 150px; ime-mode: disabled;"  readonly="true" styleClass="c_disable"/>
 									</c:if>
 								</td>
+
+								<th><div class="col_title_right">パスワードロック</div></th>
+								<td colspan="2">
+									<html:checkbox styleId="lockflg" property="lockflg" value="1" tabindex="301">ロック中</html:checkbox>
+								</td>
+
+								<th colspan="2"><div class="col_title_right">ロック日時</div></th>
+								<td colspan="2">
+									<html:text property="lockDatetm" styleId="lockDatetm"  tabindex="100" style="width: 150px; ime-mode: disabled;"  readonly="true" styleClass="c_disable"/>
+								</td>
 							</tr>
+
 							<tr>
-								<th colspan="2"><div class="col_title_right">社員名※</div></th>
+								<th colspan="2"><div class="col_title_right_req">社員名<bean:message key='labels.must'/></div></th>
 								<td colspan="3">
 									<html:text property="nameKnj"  tabindex="101" style="width: 150px"/>
 								</td>
 							</tr>
 							<tr>
-								<th colspan="2"><div class="col_title_right">社員名カナ※</div></th>
+								<th colspan="2"><div class="col_title_right_req">社員名カナ<bean:message key='labels.must'/></div></th>
 								<td colspan="3">
 									<html:text property="nameKana" styleId="nameKana"  tabindex="102" style="width: 150px"/>
 								</td>
 							</tr>
 							<tr>
-								<th colspan="2"><div class="col_title_right">パスワード</div><c:if test="${!editMode}">※</c:if></th>
+								<!-- <th colspan="2"><div class="col_title_right">パスワード</div><c:if test="${!editMode}">※</c:if></th> -->
+								<c:if test="${!editMode}">
+									<th colspan="2"><div class="col_title_right_req">パスワード<bean:message key='labels.must'/></div></th>
+								</c:if>
+								<c:if test="${editMode}">
+									<th colspan="2"><div class="col_title_right">パスワード</div></th>
+								</c:if>
 								<td>
 									<html:password style="width: 150px;" tabindex="103" property="password" styleId="password" redisplay="false"/>
 								</td>
-								<th><div class="col_title_right">パスワード（確認）</div><c:if test="${!editMode}">※</c:if></th>
+								<!-- <th><div class="col_title_right">パスワード（確認）</div><c:if test="${!editMode}">※</c:if></th> -->
+								<c:if test="${!editMode}">
+									<th><div class="col_title_right_req">&nbsp;パスワード（確認）<bean:message key='labels.must'/>&nbsp;</div></th>
+								</c:if>
+								<c:if test="${editMode}">
+									<th><div class="col_title_right">パスワード（確認）</div></th>
+								</c:if>
 								<td>
 									<html:password style="width: 150px;" tabindex="104" property="passwordConfirm" redisplay="false"/>
 								</td>

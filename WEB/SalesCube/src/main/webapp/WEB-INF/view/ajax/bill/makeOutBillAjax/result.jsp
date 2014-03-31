@@ -12,11 +12,10 @@
 <table id="order_myself_output_list" summary="order_myself_output_list"
 	class="forms detail_info" style="table-layout: auto; margin-top: 10px;">
 	<colgroup>
-		<col span="1" style="width: 2%;">
 		<col span="1" style="width: 4%;">
-		<col span="1" style="width: 9%;">
-		<col span="1" style="width: 9%;">
 		<col span="1" style="width: 4%;">
+		<col span="1" style="width: 7%;">
+		<col span="1" style="width: 15%;">
 		<col span="1" style="width: 10%;">
 		<col span="1" style="width: 20%;">
 		<col span="1" style="width: 10%;">
@@ -48,13 +47,6 @@
 				<c:if test="${!sortOrderAsc}">▼</c:if>
 			</c:if></th>
 			<%-- 請求書発行日 --%>
-			<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('singlePrintCount');">
-			<bean:message key='labels.singlePrint' /> <c:if
-				test="${sortColumn == 'singlePrintCount'}">
-				<c:if test="${sortOrderAsc}">▲</c:if>
-				<c:if test="${!sortOrderAsc}">▼</c:if>
-			</c:if></th>
-			<%-- 個別発行 --%>
 			<th class="xl64" style="cursor: pointer; height: 30px;" onclick="sort('customerCode');"><bean:message
 				key='labels.customerCode' /> <c:if
 				test="${sortColumn == 'customerCode'}">
@@ -128,14 +120,6 @@
 					name="rowData" property="billId" styleId="billId_${f:h(s.index)}"
 					indexed="true" /></td>
 				<td style="text-align: center; ${doaCol}">&nbsp;${f:h(rowData.lastPrintDate)}&nbsp;</td>
-				<td style="text-align: center; ${doaCol}">&nbsp;<c:if
-					test="${rowData.singlePrintCount > 0}">
-					<bean:message key='labels.exist' />
-				</c:if> <c:if test="${rowData.singlePrintCount == 0}">
-					<bean:message key='labels.notexist' />
-				</c:if> <c:if test="${rowData.singlePrintCount == null}">
-					<bean:message key='labels.notexist' />
-				</c:if>&nbsp;</td>
 				<td style="text-align: left; ${doaCol}">&nbsp;${f:h(rowData.customerCode)}&nbsp;</td>
 				<td style="text-align: left; ${doaCol}">&nbsp;${f:h(rowData.deliveryName)}&nbsp;</td>
 				<td style="text-align: right; ${doaCol}">&nbsp;<span

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.EncryptUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.entity.Domain;
 import jp.co.arkinfosys.entity.Mine;
@@ -107,6 +108,7 @@ public class LoginAction extends CommonResources {
 			}
 
 			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+			
 		} catch (Exception e) {
 			super.errorLog(e);
 		}
@@ -129,16 +131,78 @@ public class LoginAction extends CommonResources {
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return LoginAction.Mapping.INPUT;
 			}
-
-			User user = this.userService.findUserByIdAndPassword(
-					loginForm.userId, loginForm.password);
+			
+			// 自社マスタのパスワード入力失敗回数を取得する
+			Integer retryCount = 0;
+			Mine mine = this.mineService.getMine();
+			if (mine != null) {
+				retryCount = mine.totalFailCount;
+			}
+			
+			// ユーザIDでユーザ存在チェック
+			User user = this.userService.findById(loginForm.userId);
+			
+			// ユーザが存在しない場合はエラー
 			if (user == null) {
-				// ユーザー存在チェック
 				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
 						new ActionMessage("errors.invalid.login"));
 				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
 				return LoginAction.Mapping.INPUT;
 			}
+			
+			// ユーザが存在する場合の処理
+			if (user.lockflg == null) {
+				user.lockflg = "0";
+			}
+			
+			// パスワードロックされているユーザの場合はエラー
+			if (user.lockflg.equalsIgnoreCase("1")) {
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.invalid.login"));
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE, 
+						new ActionMessage("errors.lock.user", retryCount.toString()));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+				return LoginAction.Mapping.INPUT;
+			}
+			
+			String encryptPassword = EncryptUtil.encrypt(loginForm.password);
+		
+			// 入力されたパスワードが社員マスタに登録されたパスワードと異なる場合はエラー
+			if (!encryptPassword.equalsIgnoreCase(user.password)) {
+				
+				// エラーメッセージ
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.invalid.login"));
+
+				// 自社マスタのパスワード入力失敗回数に値が設定されている場合
+				if (retryCount != null) {
+					
+					// 失敗カウントがnullの場合は0を設定する
+					if (user.failCount == null) {
+						user.failCount = 0;
+					}
+					
+					user.failCount++;
+					
+					// 社員マスタの失敗カウントが自社マスタのパスワード入力失敗回数以上になった場合は、社員マスタのロックフラグをONにする
+					if (user.failCount > retryCount) {
+						user.lockflg = "1";
+					}
+					
+					this.userService.updateFailCountAndLockFlg(user.userId, user.lockflg, user.failCount);
+
+					// 指定回数以上のエラーでロックされる旨のメッセージを出力
+					super.messages.add(ActionMessages.GLOBAL_MESSAGE, 
+							new ActionMessage("errors.lock.user", retryCount.toString()));
+				}
+				
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+				return LoginAction.Mapping.INPUT;
+			}
+
+			// 入力されたパスワードが社員マスタに登録されたパスワードと同じ場合はOK
+			// 社員マスタの失敗カウントを0に更新する
+			this.userService.updateFailCountAndLockFlg(user.userId, "0", 0);
 
 			// ログイン情報をセッション管理DTOに格納する
 			Beans.copy(user, super.userDto).execute();
@@ -162,10 +226,10 @@ public class LoginAction extends CommonResources {
 			}
 
 			// 自社マスタの情報を取得する
-			Mine mine = this.mineService.getMine();
+			//Mine mine = this.mineService.getMine();
 			if (mine != null) {
 				// 自社情報をセッション管理DTOに格納する
-				Beans.copy(mine, super.mineDto).execute();
+				Beans.copy(mine,super.mineDto).execute();
 				mineDto.initDecAlignFormat();
 
 				if (mine.passwordValidDays != null

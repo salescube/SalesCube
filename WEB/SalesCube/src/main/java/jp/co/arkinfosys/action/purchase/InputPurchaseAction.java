@@ -13,6 +13,7 @@ import jp.co.arkinfosys.action.AbstractSlipEditAction;
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.ListUtil;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.common.ValidateUtil;
@@ -118,6 +119,11 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	public List<LabelValueBean> deliveryProcessCategoryList;
 
 	/**
+	 * 消費税率プルダウン
+	 */
+	public List<LabelValueBean> ctaxRateList;
+	
+	/**
 	 *
 	 * 伝票データを取得します.
 	 * @return 読み込みできたか否か
@@ -188,7 +194,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 		// 複写元が委託在庫発注伝票の場合、明細の数量を無効化する必要があるため、Formにフラグをセットする
 		PoSlipTrn poSlipTrnSingle = poSlipService
 				.loadPOSlip(inputPurchaseForm.poSlipId);
-		if( CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) ) {
+		if(poSlipTrnSingle != null && CategoryTrns.TRANSPORT_CATEGORY_ENTRUST.equals(poSlipTrnSingle.transportCategory) ) {
 			inputPurchaseForm.isEntrustPorder = true;
 		} else {
 			inputPurchaseForm.isEntrustPorder = false;
@@ -346,6 +352,8 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 */
 	@Execute( urlPattern = "copySlipFromPorder/{copySlipId}", validator = false)
 	public String copy() throws Exception {
+
+		inputPurchaseForm.newData = true;
 		return copySlipFromPorderFunc();
 	}
 
@@ -466,6 +474,9 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 			} else {
 				inputPurchaseForm.isEntrustPorder = false;
 			}
+			
+			// 消費税率
+			inputPurchaseForm.ctaxRate = poSlipTrnSingle.ctaxRate.toString();
 
 			// 仕入先情報
 			inputPurchaseForm.supplierCode = poSlipTrnSingle.supplierCode;
@@ -560,7 +571,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				dto.restQuantity = String.valueOf(poLineTrn.restQuantity);
 
 				if (poLineTrn.ctaxRate != null) {
-					inputPurchaseForm.supplierTaxRate = String
+					inputPurchaseForm.ctaxRate = String
 							.valueOf(poLineTrn.ctaxRate);
 				}
 				// 標準棚番、倉庫名を設定
@@ -948,6 +959,9 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				deliveryProcessCategoryList.remove(removeLabelValueBean);
 			}
 		}
+		
+		// 消費税率プルダウンリスト
+		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
 	}
 
 	/**

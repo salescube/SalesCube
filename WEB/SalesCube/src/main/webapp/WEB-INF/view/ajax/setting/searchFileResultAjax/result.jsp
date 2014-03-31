@@ -1,5 +1,11 @@
-<span>登録ファイル件数： ${searchResultCount}件</span>
-<div id="detail_info_wrap">
+<div style="width: 1010px; height: 25px;">
+		<div style="position:absolute; left: 0px;">検索結果件数： ${searchResultCount}件</div>
+		<div style="position:absolute; width: 1160px; text-align: center;">
+			${sw:pageLink(searchResultCount,rowCount,pageNo)}
+		</div>
+        <jsp:include page="/WEB-INF/view/common/rowcount.jsp"/>
+</div>
+
 <table  id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 10px;" summary="ファイル一覧">
 	<colgroup>
 		<col span="1" style="width: 5%">
@@ -51,12 +57,20 @@
 			<td>&nbsp;${bean.creDate}&nbsp;</td>
 			<td>&nbsp;${f:h(bean.creUserName)}&nbsp;</td>
 			<td>
-			<button type="button" class="btn_small"
-				onclick="deleteFile('${bean.fileId}', '${bean.updDatetm}');"
+			<c:if test="${isUpdate}">
+				<button class="btn_list_action"  onclick="editFileUpload('${sw:u(bean.fileId)}');">編集</button>
+				<button class="btn_list_action"  onclick="deleteFileUpload('${bean.fileId}', '${bean.updDatetm}');"
 				tabindex="${200 + (2 * status.index) + 1}">削除</button>
+				</c:if>
+				<c:if test="${!isUpdate}">
+				<button class="btn_list_action"  onclick="editFileUpload'${sw:u(bean.fileId)}');">参照</button>
+			</c:if>
 			</td>
 		</tr>
 	</c:forEach>
-
 </table>
+
+<div style="position:absolute; width: 1160px; text-align: center; margin-top: 20px;">
+	${sw:pageLink(searchResultCount,rowCount,pageNo)}
+</div>
 </div>

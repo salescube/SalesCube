@@ -14,6 +14,7 @@ import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.master.RackDto;
 import jp.co.arkinfosys.entity.AuditInfo;
+import jp.co.arkinfosys.entity.Warehouse;
 import jp.co.arkinfosys.entity.join.RackJoin;
 import jp.co.arkinfosys.form.master.AbstractEditForm;
 import jp.co.arkinfosys.form.master.EditRackForm;
@@ -21,6 +22,7 @@ import jp.co.arkinfosys.service.CategoryService;
 import jp.co.arkinfosys.service.AbstractMasterEditService;
 import jp.co.arkinfosys.service.RackService;
 import jp.co.arkinfosys.service.exception.ServiceException;
+import jp.co.arkinfosys.service.WarehouseService;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -46,6 +48,9 @@ public class EditRackAction extends AbstractEditAction<RackDto, RackJoin> {
 
 	@Resource
 	public CategoryService categoryService;
+
+	@Resource
+	public WarehouseService warehouseService;
 
 	/**
 	 * 画面遷移用のマッピングクラスです.
@@ -90,6 +95,17 @@ public class EditRackAction extends AbstractEditAction<RackDto, RackJoin> {
 	@Execute(validator = true, validate = "validate", input = "index", stopOnValidationError = false)
 	public String insert() throws Exception {
 		initList();
+
+		if(this.editRackForm.warehouseCode != ""){
+			//存在しない倉庫の場合エラーとする
+			Warehouse warehouse = this.warehouseService.findById(this.editRackForm.warehouseCode);
+			if (warehouse == null) {
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.warehouse.not.exist"));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+				return EditRackAction.Mapping.INPUT;
+			}
+		}
 		return doInsert();
 	}
 
@@ -101,6 +117,18 @@ public class EditRackAction extends AbstractEditAction<RackDto, RackJoin> {
 	 */
 	@Execute(validator = true, validate = "validate", input = "initEdit", stopOnValidationError = false)
 	public String update() throws Exception {
+
+		if(this.editRackForm.warehouseCode != ""){
+			//存在しない倉庫の場合エラーとする
+			Warehouse warehouse = this.warehouseService.findById(this.editRackForm.warehouseCode);
+			if (warehouse == null) {
+				this.editRackForm.editMode = true;
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.warehouse.not.exist"));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+				return EditRackAction.Mapping.INPUT;
+			}
+		}
 		return doUpdate();
 	}
 
@@ -133,6 +161,7 @@ public class EditRackAction extends AbstractEditAction<RackDto, RackJoin> {
 			ActionMessagesUtil.addErrors(super.httpRequest,
 					super.messages);
 			initList();
+			this.editRackForm.editMode = true;
 			return getInputURL();
 		}
 		return doDelete();

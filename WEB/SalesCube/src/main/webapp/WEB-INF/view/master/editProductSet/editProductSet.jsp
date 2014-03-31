@@ -371,7 +371,7 @@
 										<%-- オリジナルの商品コード --%>
 										<html:hidden name="product" property="originalProductCode"/>
 									</td>
-									<td>
+									<td style="text-align: center; background-color: #fae4eb;">
 										<html:text name="product" property="productCode" style="width: 170px; ime-mode: disabled;" tabindex="${200 + (5 * status.index)}" maxlength="20"
 											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
 										<input type="image" name="searchProductButton" src="${f:url('/images//customize/btn_search.png')}"
@@ -382,13 +382,13 @@
 										<html:text name="product" property="productName" style="width: 400px;"
 											styleClass="c_disable" readonly="true" tabindex="${202 + (5 * status.index)}"/>
 									</td>
-									<td style="text-align: center;">
+									<td style="text-align: center; background-color: #fae4eb;">
 										<html:text name="product" property="quantity" style="width: 80px; ime-mode: disabled;"
 											styleClass="numeral_commas BDCqua" tabindex="${203 + (5 * status.index)}" maxlength="6"/>
 									</td>
 									<td>
 										<html:hidden name="product" property="deleted"/>
-										<button type="button" name="deleteButton" class="btn_small" tabindex="${204 + (5 * status.index)}"
+										<button type="button" name="deleteButton" class="btn_list_action" tabindex="${204 + (5 * status.index)}"
 												onclick="deleteRow(this);"
 												<c:if test="${!isUpdate || childProductCount == 1}">disabled="disabled"</c:if>>削除</button>
 									</td>
@@ -403,12 +403,12 @@
 								<tr>
 									<c:if test="${isUpdate}">
 									<td style="text-align: right" colspan="6">
-										<button type="button" onclick="addRow();" tabindex="400" class="btn_small">行追加</button>
+										<button type="button" onclick="addRow();" tabindex="400" class="btn_list_action">行追加</button>
 									</td>
 									</c:if>
 									<c:if test="${!isUpdate}">
 									<td style="text-align: right" colspan="6">
-										<button type="button" disabled="disabled" tabindex="400" class="btn_small">行追加</button>
+										<button type="button" disabled="disabled" tabindex="400" class="btn_list_action">行追加</button>
 									</td>
 									</c:if>
 								</tr>
@@ -428,7 +428,7 @@
 										<%-- オリジナルの商品コード --%>
 										<input type="hidden" name="originalProductCode" value="">
 									</td>
-									<td>
+									<td style="text-align: center; background-color: #fae4eb;">
 										<input type="text" name="productCode" style="width: 170px; ime-mode: disabled;" tabindex="-1"  maxlength="20"
 											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); changeProductCode(this); }"/>
 										<input type="image"  name="searchProductButton" src="${f:url('/images//customize/btn_search.png')}"
@@ -438,12 +438,12 @@
 									<td>
 										<input type="text" name="productName" style="width: 400px;" class="c_disable" readonly="readonly" tabindex="-1">
 									</td>
-									<td style="text-align: center;">
+									<td style="text-align: center; background-color: #fae4eb;">
 										<input type="text" name="quantity" style="width: 80px; ime-mode: disabled;" class="numeral_commas BDCqua" tabindex="-1" maxlength="6">
 									</td>
 									<td>
 										<input type="hidden" name="deleted" value="false">
-										<button type="button" name="deleteButton" class="btn_small" tabindex="-1"
+										<button type="button" name="deleteButton" class="btn_list_action" tabindex="-1"
 												onclick="deleteRow(this);">削除</button>
 									</td>
 								</tr>

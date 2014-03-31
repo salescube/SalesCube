@@ -168,7 +168,7 @@
 			                	<html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" readonly="true" styleClass="c_disable" tabindex="-1"/>
 			                </td>
 			                <td>
-			                	<input type=button class="btn_small" value="クリア" onclick="warehouseClear();"/>
+			                	<input type=button class="btn_list_action" value="クリア" onclick="warehouseClear();"/>
 			                </td>
 			            </tr>
 			        </table>
@@ -183,7 +183,7 @@
 			                <col span="1" style="width: 10%">
 						</colgroup>
 						<tr>
-							<th><div class="col_title_right">棚番コード<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">棚番コード<bean:message key='labels.must'/></div></th>
 							<td>
 			                <c:if test="${editMode}">
 			                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200" readonly="true" styleClass="c_disable"/>
@@ -192,7 +192,7 @@
 			                    <html:text maxlength="${code_size_rack}" styleId="rackCode" property="rackCode" style="width: 100px; ime-mode: disabled;"  tabindex="200"/>
 			                </c:if>
 			                </td>
-							<th><div class="col_title_right">棚番名<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">棚番名<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="60" styleId="rackName" property="rackName" style="width: 200px" tabindex="201"/></td>
 							<th><div class="col_title_right">重複登録可能</div></th>
 							<td><html:checkbox styleId="multiFlag" property="multiFlag" value="1" tabindex="203"></html:checkbox></td>

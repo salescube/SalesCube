@@ -376,7 +376,7 @@
 					</td>
 					<th><div class="col_title_right"><bean:message key='labels.poSlipId'/></div></th>
 					<td><html:text tabindex="101" property="poSlipId" styleClass="${poSlipId==''?'':'c_disable'}" styleId="poSlipId" readonly="${poSlipId==''?'false':'true'}" style="width:100px; ime-mode:disabled;"  maxlength="10"  onblur="findCopy()"/></td>
-					<th><div class="col_title_right"><bean:message key='labels.paymentDate'/><bean:message key='labels.must'/></div></th>
+					<th><div class="col_title_right_req"><bean:message key='labels.paymentDate'/><bean:message key='labels.must'/></div></th>
 					<td><html:text tabindex="102" property="paymentDate" styleId="paymentDate" styleClass="date_input" style="width:135px" /></td>
 					<th><div class="col_title_right"><bean:message key='labels.userName'/></div></th>
 					<td>
@@ -413,7 +413,6 @@
 						<html:hidden property="taxShiftCategory" styleId="taxShiftCategory" />
 						<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
 						<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
-						<html:hidden property="supplierTaxRate" styleId="supplierTaxRate" />
 					</td>
 					<th><div class="col_title_right"><bean:message key='labels.supplierName'/></div></th>
 					<td colspan="3">
@@ -434,8 +433,8 @@
 			<html:hidden name="inputPaymentForm" property="newData" />
 			
 			<div style="width: 10px;">
-				<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
-				<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
+				<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_list_action">全て選択</button>
+				<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_list_action">全て解除</button>
 			</div>
 			
 			<!-- 3.支払伝票明細リスト -->
@@ -483,6 +482,8 @@
 					<html:hidden name="lineDtoList" property="supUpdDatetm" indexed="true" />
 					<html:hidden name="lineDtoList" property="productAbstract" indexed="true" />
 					<html:hidden name="lineDtoList" property="paymentLineNo" indexed="true" />
+					<html:hidden name="lineDtoList" property="ctaxRate"  indexed="true" styleId="lineDtoList[${status.index}].ctaxRate" styleClass="AutoCalcCtaxRate"/>
+					<html:hidden name="lineDtoList" property="ctaxPrice"  indexed="true" styleId="lineDtoList[${status.index}].ctaxPrice" styleClass="AutoCalcCtaxPrice"/>
 					<tr>
 						<!-- 選択 -->
 						<td style="text-align: center;">
@@ -511,7 +512,7 @@
 							<!-- <html:text name="lineDtoList" property="supplierDetailCategoryName" style="width: 85px;" styleClass="c_disable" readonly="true"  indexed="true" /><br> -->
 							
 							<div class="box_2of2">
-								<html:text tabindex="${1000+s.index*10}" name="lineDtoList" property="supplierDate" style="text-align: center;" 
+								<html:text tabindex="${1000+s.index*10}" name="lineDtoList" property="supplierDate" style="margin:8px 0; text-align: center; height: 30px; vertical-align: middle;" 
 									styleClass="c_disable"  readonly="true"  indexed="true" />
 							</div>
 						</td>
@@ -519,7 +520,7 @@
 						<!-- 商品コード/商品名 -->
 						<td>
 							<div class="box_1of2">
-								<html:text tabindex="${1001+s.index*10}" name="lineDtoList" property="productCode" styleClass="goods_code c_disable" readonly="true"  indexed="true" />
+								<html:text tabindex="${1001+s.index*10}" name="lineDtoList" property="productCode" styleClass="goods_code c_disable" style="margin:8px 0; height: 30px; vertical-align: middle;" readonly="true"  indexed="true" />
 							</div>
 							<div class="box_2of2">
 								${f:h(lineDtoList.productAbstract)}
@@ -529,7 +530,7 @@
 						<!-- 支払明細区分/円単価/外貨単価 -->
 						<td>
 							<div class="box_1of3" style="vertical-align: middle;">
-								<html:select tabindex="${1002+s.index*10}" name="lineDtoList" property="paymentCategory" indexed="true" style="width:94%; margin:3px;">
+								<html:select tabindex="${1002+s.index*10}" name="lineDtoList" property="paymentCategory" indexed="true" style="width:94%; margin:3px; height: 25px;">
 									<html:options collection="paymentDetailList" property="value" labelProperty="label"/>
 								</html:select>
 							</div>
@@ -612,13 +613,13 @@
 			<!-- 登録・更新ボタン -->
 			<div style="width: 1160px; text-align: center; margin-top: 10px;">
 				<c:if test="${f:h(newData)}">
-					<button type="button" id="F3btm" class="btn_medium"  style="width:260px;height:51px;" tabindex="1999" ${notRegisterable? "disabled='disabled'":"onclick='onF3()'"}>
-						<bean:message key='words.action.register'/>
+					<button type="button" id="F3btm" class="btn_medium" style="width:260px; height:51px;" tabindex="1999" ${notRegisterable? "disabled='disabled'":"onclick='onF3()'"}>
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span>
 					</button><!--登録-->
 				</c:if>
 				<c:if test="${!f:h(newData)}">
-					<button type="button" id="F3btm" class="btn_medium" tabindex="1999" ${notRegisterable? "disabled='disabled'":"onclick='onF3()'"}>
-						<bean:message key='words.action.renew'/>
+					<button type="button" id="F3btm" class="btn_medium" style="width:260px; height:51px;" tabindex="1999" ${notRegisterable? "disabled='disabled'":"onclick='onF3()'"}>
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span>
 					</button><!--更新-->
 				</c:if>
 			</div>

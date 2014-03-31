@@ -546,8 +546,8 @@
 				</div>
 			</div>
 
-			<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
-			<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
+			<button id="allCheck" name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_list_action">全て選択</button>
+			<button id="allUnCheck" name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_list_action">全て解除</button>
 
 			<span id="ListContainer">
 				<%@ include file="/WEB-INF/view/ajax/bill/makeOutBillAjax/result.jsp" %>

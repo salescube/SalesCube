@@ -511,15 +511,8 @@ public class InputEntrustStockAction extends AbstractSlipEditAction<EntrustEadSl
 			EntrustEadSlipTrnDto entrustEadSlipTrnDto = (EntrustEadSlipTrnDto)inputEntrustStockService.loadBySlipId(inputEntrustStockForm.entrustEadSlipId);
 			// 存在する委託入出庫伝票のみ参照
 			if( entrustEadSlipTrnDto == null ){
-				// 存在なしメッセージ表示
-				String strLabel = MessageResourcesUtil.getMessage("erroes.db.eadSlip");
 
-				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
-						new ActionMessage("errors.notExist",strLabel));
-				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
-
-				// 検索画面へ戻る
-				return true;
+				return false;
 			}
 
 			// DTOの値をFormへコピー

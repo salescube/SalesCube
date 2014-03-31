@@ -46,4 +46,5 @@ public class PaymentSlipLineJoin  implements Serializable{
 	public Timestamp supUpdDatetm;			/* 仕入伝票.更新日時 */
 	public String updSupId;					/* 仕入伝票.更新ID(更新時に使用) */
 	public BigDecimal ctaxRate;				/* 仕入伝票.消費税率 */
+	public BigDecimal ctaxPrice;			/* 仕入伝票.消費税額 */
 }

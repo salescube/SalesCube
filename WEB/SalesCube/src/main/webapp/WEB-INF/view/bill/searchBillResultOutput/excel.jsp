@@ -29,7 +29,7 @@ td
 	mso-protection:locked visible;
 	white-space:nowrap;
 	mso-rotate:0;}
-.xl64
+.xl64, .rd_top_left, .rd_top_right
 	{mso-style-parent:style0;
 	font-size: 10pt;
 	font-weight: normal;

@@ -25,4 +25,10 @@ SELECT
     	/*IF accountNum != null*/
     	AND B.ACCOUNT_NUM = /*accountNum*/'%S%'
     	/*END*/
+    	/*IF accountOwnerName != null*/
+    	AND B.ACCOUNT_OWNER_NAME LIKE /*accountOwnerName*/'%S%'
+    	/*END*/
+    	/*IF accountOwnerKana != null*/
+    	AND B.ACCOUNT_OWNER_KANA LIKE /*accountOwnerKana*/'%S%'
+    	/*END*/
     /*END*/

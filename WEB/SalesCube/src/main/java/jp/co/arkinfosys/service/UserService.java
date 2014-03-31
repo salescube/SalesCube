@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.EncryptUtil;
@@ -14,13 +18,20 @@ import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.RoleDto;
 import jp.co.arkinfosys.dto.UserDto;
 import jp.co.arkinfosys.dto.setting.MenuDto;
+import jp.co.arkinfosys.dto.setting.MineDto;
+
 import jp.co.arkinfosys.entity.GrantRole;
+import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.entity.join.UserJoin;
 import jp.co.arkinfosys.service.exception.ServiceException;
 import jp.co.arkinfosys.service.exception.UnabledLockException;
+import jp.co.arkinfosys.service.MineService;
 
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.beans.util.Beans;
+import org.seasar.struts.util.ActionMessagesUtil;
 
 /**
  *
@@ -30,6 +41,15 @@ import org.seasar.framework.beans.util.Beans;
  */
 public class UserService extends AbstractMasterEditService<UserDto, UserJoin> implements
 		MasterSearch<UserJoin> {
+
+	//発番用サービス
+	@Resource
+	public SeqMakerService seqMakerService;
+
+
+	//自社マスタ
+	@Resource
+	private MineService mineService;
 
 	/**
 	 * パラメータ定義クラスです.
@@ -61,6 +81,16 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 		private static final String ROW_COUNT = "rowCount";
 
 		private static final String OFFSET = "offsetRow";
+
+		private static final String LOCK_FLG = "lockflg";
+
+		private static final String FAIL_COUNT = "failCount";
+
+		public static final String PASSWORD_MAKER_ID = "passwordMakerId";
+
+		private static final String LOCK_DATETM = "lockDatetm";
+
+		private static final String PASS_HIST_COUNT = "passwordHistCount";
 	}
 
 	private static final String COLUMN_USER_ID = "USER_ID";
@@ -72,6 +102,9 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	private static final String COLUMN_DEPT_NAME = "NAME";
 
 	private static final String COLUMN_EMAIL = "EMAIL";
+
+	private static final String COLUMN_LOCK_FLG = "LOCK_FLG";
+
 
 	/**
 	 * ユーザIDを指定してユーザ情報を取得します.
@@ -310,6 +343,10 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			// E-MAIL
 			param.put(UserService.Param.SORT_COLUMN_USER,
 					UserService.COLUMN_EMAIL);
+		}else if (UserService.Param.LOCK_FLG.equals(sortColumn)) {
+			// ロックフラグ
+			param.put(UserService.Param.SORT_COLUMN_USER,
+					UserService.COLUMN_LOCK_FLG);
 		}
 
 		// ソートオーダーを設定する
@@ -335,6 +372,9 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 		}
 		try {
 
+			//最新の自社マスタ情報を取得
+			Mine mine = this.mineService.getMine();
+
 			// ユーザーの登録
 			Map<String, Object> param = super.createSqlParam();
 			BeanMap userInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -343,13 +383,15 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 							UserService.Param.USER_ID,
 							UserService.Param.NAME_KNJ,
 							UserService.Param.NAME_KANA,
-							UserService.Param.DEPT_ID, UserService.Param.EMAIL)
+							UserService.Param.DEPT_ID,
+							UserService.Param.EMAIL,
+							UserService.Param.LOCK_FLG)
 					.execute();
 			param.putAll(userInfo);
 			param.put(UserService.Param.PASSWORD, EncryptUtil
 					.encrypt(dto.password));
 			param.put(UserService.Param.PASSWORD_VALID_DAYS,
-					super.mineDto.passwordValidDays);
+					mine.passwordValidDays);
 			this.updateBySqlFile("user/InsertUser.sql", param).execute();
 
 			// ユーザー権限の登録
@@ -370,6 +412,23 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 				this.updateBySqlFile("user/InsertGrantRole.sql", param)
 						.execute();
 			}
+
+			//使用可能過去パスワード件数が設定済
+			if (mine.passwordHistCount != null) {
+
+				// パスワード管理テーブルへの登録
+				param = super.createSqlParam();
+
+				Long newId = this.getNextVal();
+				param.put(UserService.Param.PASSWORD_MAKER_ID, Integer.parseInt(newId.toString()));
+				param.put(UserService.Param.USER_ID, dto.userId);
+				param.put(UserService.Param.PASSWORD, EncryptUtil
+						.encrypt(dto.password));
+				this.updateBySqlFile("user/InsertPasswordMaker.sql", param)
+				.execute();
+			}
+
+
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -394,6 +453,9 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 			super.lockRecordBySqlFile("user/LockUserById.sql", param,
 					dto.updDatetm);
 
+			//最新の自社マスタ情報を取得
+			Mine mine = this.mineService.getMine();
+
 			// ユーザーの更新
 			param = super.createSqlParam();
 			BeanMap userInfo = Beans.createAndCopy(BeanMap.class, dto)
@@ -402,20 +464,56 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 							UserService.Param.USER_ID,
 							UserService.Param.NAME_KNJ,
 							UserService.Param.NAME_KANA,
-							UserService.Param.DEPT_ID, UserService.Param.EMAIL)
+							UserService.Param.DEPT_ID,
+							UserService.Param.EMAIL,
+							 UserService.Param.LOCK_FLG)
 					.execute();
 			param.putAll(userInfo);
 			if (StringUtil.hasLength(dto.password)) {
+
 				param.put(UserService.Param.PASSWORD, EncryptUtil
 						.encrypt(dto.password));
 				param.put(UserService.Param.PASSWORD_VALID_DAYS,
-						super.mineDto.passwordValidDays);
+						mine.passwordValidDays);
+
+				//失敗カウントリセット
+				param.put(UserService.Param.FAIL_COUNT,'0');
 			}
+
+			if (dto.lockflg == "0") {
+			//	失敗カウントリセット
+				param.put(UserService.Param.FAIL_COUNT,'0');
+			}
+
 			this.updateBySqlFile("user/UpdateUser.sql", param).execute();
+
+
+			//パスワード管理テーブルの更新
+			if (StringUtil.hasLength(dto.password)) {
+				//使用可能過去パスワード件数が設定済
+				if (mine.passwordHistCount != null) {
+					if(this.countPasswordMakerById(dto.userId) < mine.passwordHistCount){
+
+					//使用可能過去パスワード件数未満の場合 INSERT
+						Long newId = this.getNextVal();
+						param.put(UserService.Param.PASSWORD_MAKER_ID, Integer.parseInt(newId.toString()));
+						this.updateBySqlFile("user/InsertPasswordMaker.sql", param)
+							.execute();
+					}
+					else{
+					//使用可能過去パスワード件数存在する場合 最も古いデータをUPDATE
+						this.updateBySqlFile("user/UpdatePasswordMaker.sql", param)
+						.execute();
+					}
+				}
+			}
+
 
 			// 権限情報の差分を判断し、更新する
 			param = super.createSqlParam();
 			param.put(UserService.Param.USER_ID, dto.userId);
+
+
 
 			for (MenuDto originalMenuDto : dto.originalMenuDtoList) {
 				for (MenuDto menuDto : dto.menuDtoList) {
@@ -528,7 +626,109 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	 * @param password パスワード
 	 * @throws ServiceException
 	 */
-	public void updatePassword(String userId, String password)
+	public void updatePassword(String userId, String password,Mine mine)
+			throws ServiceException {
+		try {
+
+			// SQLパラメータを構築する
+			Map<String, Object> param = super.createSqlParam();
+			param.put(UserService.Param.USER_ID, userId);
+			param
+					.put(UserService.Param.PASSWORD, EncryptUtil
+							.encrypt(password));
+
+			if (mine.passwordValidDays != null) {
+				// 自社マスタの設定がある場合には本日から指定日数の期限を設定
+				param.put(UserService.Param.PASSWORD_VALID_DAYS,
+						mine.passwordValidDays);
+			}
+
+			//失敗カウントリセット
+			param.put(UserService.Param.FAIL_COUNT,'0');
+
+			this.updateBySqlFile("user/UpdateUser.sql", param).execute();
+			//使用可能過去パスワード件数設定済
+			if (mine.passwordHistCount != null) {
+				//パスワード管理テーブルへ登録
+				if(this.countPasswordMakerById(userId) < mine.passwordHistCount){
+				//使用可能過去パスワード件数未満の場合 INSERT
+					Long newId = this.getNextVal();
+					param.put(UserService.Param.PASSWORD_MAKER_ID, Integer.parseInt(newId.toString()));
+					this.updateBySqlFile("user/InsertPasswordMaker.sql", param)
+						.execute();
+				}
+				else{
+				//使用可能過去パスワード件数存在する場合 最も古いデータをUPDATE
+					this.updateBySqlFile("user/UpdatePasswordMaker.sql", param)
+					.execute();
+				}
+			}
+
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+
+	/**
+	 * パスワード管理テーブルにパスワードが存在しないか問い合わせる
+	 * @param ID パスワード
+	 * @return 結果件数
+	 * @throws ServiceException
+	 */
+	public int countPasswordMakerByIdAndPass(String userId, String password,Integer passwordHistCount)
+			throws ServiceException {
+
+		try {
+			// SQLパラメータを構築する
+			Map<String, Object> param = super.createSqlParam();
+			param.put(UserService.Param.USER_ID, userId);
+			param
+					.put(UserService.Param.PASSWORD, EncryptUtil
+							.encrypt(password));
+
+			param.put(UserService.Param.USER_ID, userId);
+
+			param.put(UserService.Param.PASS_HIST_COUNT, passwordHistCount);
+
+			return this.selectBySqlFile(Integer.class,
+					"user/CountByIdAndPassword.sql", param).getSingleResult()
+					.intValue();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	/**
+	 * パスワード管理テーブルにパスワード登録件数を問い合わせる
+	 * @param ID パスワード
+	 * @return 結果件数
+	 * @throws ServiceException
+	 */
+	public int countPasswordMakerById(String userId)
+			throws ServiceException {
+
+		try {
+			// SQLパラメータを構築する
+			Map<String, Object> param = super.createSqlParam();
+			param.put(UserService.Param.USER_ID, userId);
+
+			return this.selectBySqlFile(Integer.class,
+					"user/CountPasswordMakerById.sql", param).getSingleResult()
+					.intValue();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	/**
+	 * ユーザID指定して、パスワード管理テーブルのユーザのパスワードを更新します.
+	 *
+	 * @param userId ユーザID
+	 * @param password パスワード
+	 * @throws ServiceException
+	 */
+	public void updatePasswordMaker(String userId, String password)
 			throws ServiceException {
 		try {
 			// SQLパラメータを構築する
@@ -538,12 +738,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 					.put(UserService.Param.PASSWORD, EncryptUtil
 							.encrypt(password));
 
-			if (super.mineDto.passwordValidDays != null) {
-				// 自社マスタの設定がある場合には本日から指定日数の期限を設定
-				param.put(UserService.Param.PASSWORD_VALID_DAYS,
-						super.mineDto.passwordValidDays);
-			}
-			this.updateBySqlFile("user/UpdateUser.sql", param).execute();
+			this.updateBySqlFile("user/UpdatePasswordMaker.sql", param).execute();
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -610,4 +805,78 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	protected String getTableName() {
 		return UserJoin.TABLE_NAME;
 	}
+
+	/**
+	 * 管理パスワードIDを発番します.
+	 * @return　管理パスワードID
+	 * @throws Exception
+	 */
+	public Long getNextVal() throws Exception {
+
+		Long newPasswordMakerId = -1L;
+		//伝票番号の発番
+		try {
+			newPasswordMakerId = seqMakerService.nextval(UserJoin.TABLE_NAME);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return newPasswordMakerId;
+	}
+
+
+	/**
+	 * 失敗カウント、ロック状態を更新する
+	 *
+	 * @param userId ユーザID
+	 * @param password パスワード
+	 * @throws ServiceException
+	 */
+	public void updateFailCountAndLockFlg(String userId, String lockflg, Integer failCnt) throws ServiceException {
+		try {
+			// SQLパラメータを構築する
+			Map<String, Object> param = super.createSqlParam();
+			param.put(UserService.Param.USER_ID, userId);
+			param.put(UserService.Param.LOCK_FLG, lockflg);
+			param.put(UserService.Param.FAIL_COUNT, failCnt);
+			this.updateBySqlFile("user/UpdateFailCount.sql", param).execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
+		}
+	}
+
+	/**
+	 * パスワード文字種によって、パスワードの文字内容をチェックする
+	 *
+	 * @param passwordCharType 文字種
+	 * @param password パスワード
+	 * @throws ServiceException
+	 */
+
+    public boolean checkPasswordCharType(String passwordCharType, String newPassword) {
+
+    	boolean ret = false ;
+
+    	//無制限
+    	if (passwordCharType.equals("1")){
+    		return true;
+    	}
+    	//英数字のみ
+    	if (passwordCharType.equals("2")){
+    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)^([\\!-~]+)$" );
+    	}
+    	//英数記号のみ
+    	if (passwordCharType.equals("3")){
+    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)(?!^[^(\\!-\\/|:-@|\\[-`|{-~]*$)^([\\!-~]+)$" );
+    	}
+
+        return ret;
+
+    }
+
+
+
+
 }

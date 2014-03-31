@@ -50,11 +50,11 @@
 		<td style="white-space: normal">&nbsp;${f:h(bean.useFlagName)}&nbsp;</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button class="btn_small" onclick="editDiscount('${sw:u(bean.discountId)}');">編集</button>
-			<button class="btn_small" onclick="deleteDiscount('${bean.discountId}', '${bean.updDatetm}');">削除</button>
+			<button class="btn_list_action" onclick="editDiscount('${sw:u(bean.discountId)}');">編集</button>
+			<button class="btn_list_action" onclick="deleteDiscount('${bean.discountId}', '${bean.updDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button class="btn_small" onclick="editDiscount('${sw:u(bean.discountId)}');">参照</button>
+			<button class="btn_list_action" onclick="editDiscount('${sw:u(bean.discountId)}');">参照</button>
 			</c:if>
 		</td>
 	</tr>

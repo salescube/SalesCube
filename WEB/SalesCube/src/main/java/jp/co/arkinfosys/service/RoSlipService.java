@@ -86,6 +86,7 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 		public static final String TAX_FRACT_CATEGORY = "taxFractCategory";
 		public static final String PRICE_FRACT_CATEGORY = "priceFractCategory";
 		public static final String CTAX_PRICE_TOTAL = "ctaxPriceTotal";
+		public static final String CTAX_RATE = "ctaxRate";
 		public static final String COST_TOTAL = "costTotal";
 		public static final String RETAIL_PRICE_TOTAL = "retailPriceTotal";
 		public static final String PRICE_TOTAL = "priceTotal";
@@ -193,6 +194,7 @@ public class RoSlipService extends AbstractSlipService<RoSlipTrn,ROrderSlipDto> 
 		param.put(RoSlipService.Param.TAX_FRACT_CATEGORY, entity.taxFractCategory);
 		param.put(RoSlipService.Param.PRICE_FRACT_CATEGORY, entity.priceFractCategory);
 		param.put(RoSlipService.Param.CTAX_PRICE_TOTAL, entity.ctaxPriceTotal);
+		param.put(RoSlipService.Param.CTAX_RATE, entity.ctaxRate);
 		param.put(RoSlipService.Param.COST_TOTAL, entity.costTotal);
 		param.put(RoSlipService.Param.RETAIL_PRICE_TOTAL, entity.retailPriceTotal);
 		param.put(RoSlipService.Param.PRICE_TOTAL, entity.priceTotal);

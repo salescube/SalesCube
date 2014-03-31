@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import jp.co.arkinfosys.dto.setting.MineDto;
 import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
@@ -51,6 +52,11 @@ public class MineService extends AbstractService<Mine> {
 		public static final String COMPANY_WEB_SITE = "companyWebSite";
 		public static final String CUTOFF_GROUP = "cutoffGroup";
 		public static final String CLOSE_MONTH = "closeMonth";
+		public static final String PASSWORD_VALID_DAYS = "passwordValidDays";
+		public static final String TOTAL_FAIL_COUNT = "totalFailCount";
+		public static final String PASSWORD_HIST_COUNT = "passwordHistCount";
+		public static final String PASSWORD_LENGTH = "passwordLength";
+		public static final String PASSWORD_CHAR_TYPE = "passwordCharType";
 
 		public static final String STOCK_HOLD_TERM_CALC_CATEGORY = "stockHoldTermCalcCategory";
 		public static final String STOCK_HOLD_DAYS = "stockHoldDays";
@@ -61,6 +67,8 @@ public class MineService extends AbstractService<Mine> {
 		public static final String DEFICIENCY_RATE = "deficiencyRate";
 		public static final String MAX_ENTRUST_PO_TIMELAG = "maxEntrustPoTimelag";
 		public static final String SAFETY_COEFFICIENT = "safetyCoefficient";
+
+		public static final String UPD_DATETM = "updDatetm";
 	}
 
 	/**
@@ -235,7 +243,24 @@ public class MineService extends AbstractService<Mine> {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public void updateMineSecurity(MineDto dto) throws ServiceException {
+		try {
 
+			// SQLパラメータを構築する
+			Map<String, Object> param = super.createSqlParam();
+			param.put(MineService.Param.PASSWORD_VALID_DAYS, dto.passwordValidDays);
+			param.put(MineService.Param.TOTAL_FAIL_COUNT, dto.totalFailCount);
+			param.put(MineService.Param.PASSWORD_HIST_COUNT , dto.passwordHistCount);
+			param.put(MineService.Param.PASSWORD_LENGTH  , dto.passwordLength);
+			param.put(MineService.Param.PASSWORD_CHAR_TYPE , dto.passwordCharType);
+
+			this.updateBySqlFile("mine/UpdateMineSecurity.sql", param).execute();
+
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 	/**
 	 * 在庫管理情報を更新します.
 	 *

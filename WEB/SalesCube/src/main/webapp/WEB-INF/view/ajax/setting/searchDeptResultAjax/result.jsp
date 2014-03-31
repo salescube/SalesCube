@@ -42,11 +42,11 @@
 		<td style="white-space: normal">&nbsp;${f:h(bean.parentName)}&nbsp;</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button class="btn_small"  onclick="editDept('${sw:u(bean.deptId)}');">編集</button>
-			<button class="btn_small"  onclick="deleteDept('${bean.deptId}', '${bean.updDatetm}');">削除</button>
+			<button class="btn_list_action"  onclick="editDept('${sw:u(bean.deptId)}');">編集</button>
+			<button class="btn_list_action"  onclick="deleteDept('${bean.deptId}', '${bean.updDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button class="btn_small"  onclick="editDept('${sw:u(bean.deptId)}');">参照</button>
+			<button class="btn_list_action"  onclick="editDept('${sw:u(bean.deptId)}');">参照</button>
 			</c:if>
 		</td>
 	</tr>

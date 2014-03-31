@@ -142,17 +142,17 @@
 							<td><html:text styleId="rankCode" property="rankCode" style="width: 100px"  tabindex="100" readonly="true" styleClass="c_disable"/></td>
 						</tr>
 						<tr>
-							<th colspan="2"><div class="col_title_right">顧客ランク名<bean:message key='labels.must'/></div></th>
+							<th colspan="2"><div class="col_title_right_req">顧客ランク名<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="60" styleId="rankName" property="rankName" style="width: 100px" tabindex="101"/></td>
 						</tr>
 						<tr>
-							<th colspan="2"><div class="col_title_right">値引率<bean:message key='labels.must'/></div></th>
+							<th colspan="2"><div class="col_title_right_req">値引率<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="${(3 + mineDto.statsDecAlignment)}" styleId="rankRate" property="rankRate"
 								onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ applyStatsAlignment($(this)); }"
 								style="width: 100px;ime-mode:disabled;text-align:right;" styleClass="numeral_commas BDCrate" tabindex="102"/> ％</td>
 						</tr>
 						<tr>
-							<th colspan="2"><div class="col_title_right">送料区分<bean:message key='labels.must'/></div></th>
+							<th colspan="2"><div class="col_title_right_req">送料区分<bean:message key='labels.must'/></div></th>
 							<td>
 			    				<html:select styleId="postageType" property="postageType" tabindex="104">
 			    					<html:options collection="postageTypeList" property="value" labelProperty="label"/>

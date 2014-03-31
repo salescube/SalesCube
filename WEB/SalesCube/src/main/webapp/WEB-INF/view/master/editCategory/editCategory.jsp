@@ -372,8 +372,8 @@
 	            </tr>
 	            <tr style="display:none;" id="categoryTrnList_dummy">
 	                <td style="text-align:center;"></td>
-	                <td><input id="categoryCode" maxlength="${category.categoryCodeSize}" type="text" style="width:175px;"></td>
-	                <td><input id="categoryCodeName" type="text" style="width:175px;"></td>
+	                <td style="background-color: #fae4eb;"><input id="categoryCode" maxlength="${category.categoryCodeSize}" type="text" style="width:175px;"></td>
+	                <td style="background-color: #fae4eb;"><input id="categoryCodeName" type="text" style="width:175px;"></td>
 	                <td>
 	<c:if test='${category.categoryUpd == 0}'>
 	                <input type="text" readonly="true" class="c_disable" style="width:175px;">
@@ -401,10 +401,10 @@
 	                </td>
 					<td style="text-align: center">
 	<c:if test="${!isUpdate}">
-	                    <button class="btn_small" disabled="disabled">削除</button>
+	                    <button class="btn_list_action" disabled="disabled">削除</button>
 	</c:if>
 	<c:if test="${isUpdate}">
-	                    <button class="btn_small"  id="deleteBtn" >削除</button>
+	                    <button class="btn_list_action"  id="deleteBtn" >削除</button>
 	</c:if>
 						<input type="hidden" id="categoryDsp" name="categoryDsp" value="1"/>
 	            </tr>
@@ -437,7 +437,7 @@
 	<c:forEach var="categoryTrnList" varStatus="s" items="${categoryTrnList}">
 	            <tr id="categoryTrnList_${s.index}">
 	                <td id="categoryTrnList_${s.index}.mark" style="text-align:center;">&nbsp;</td>
-	                <td>
+	                <td style="background-color: #fae4eb;">
 	    <c:if test='${category.categoryUpd == 0}'>
 	                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
 	    </c:if>
@@ -445,7 +445,7 @@
 	                    <html:text name="categoryTrnList" maxlength="${category.categoryCodeSize}" styleId="categoryTrnList_${s.index}.categoryCode" property="categoryCode" style="width:175px;" indexed="true"/>
 	    </c:if>
 	                </td>
-	                <td>
+	                <td style="background-color: #fae4eb;">
 	    <c:if test='${category.categoryUpd == 0}'>
 	                    <html:text name="categoryTrnList" maxlength="60" readonly="true" styleClass="c_disable" styleId="categoryTrnList_${s.index}.categoryCodeName" property="categoryCodeName" style="width:175px;" indexed="true"/>
 	    </c:if>
@@ -497,17 +497,17 @@
 	                </td>
 					<td style="text-align: center">
 	<c:if test="${!isUpdate}">
-	                    <button class="btn_small"  disabled="disabled">削除</button>
+	                    <button class="btn_list_action"  disabled="disabled">削除</button>
 	</c:if>
 	<c:if test="${isUpdate}">
 	<c:if test='${category.categoryDel == 0}'>
-	                    <button class="btn_small"  disabled="disabled">削除</button>
+	                    <button class="btn_list_action"  disabled="disabled">削除</button>
 	</c:if>
 	<c:if test="${category.categoryDel == 1}">
-	                    <button class="btn_small"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
+	                    <button class="btn_list_action"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
 	</c:if>
 	<c:if test="${category.categoryDel == 2}">
-	                    <button class="btn_small"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
+	                    <button class="btn_list_action"  id="categoryTrnList_${s.index}.deleteBtn" tabindex="${s.index*4+203}">削除</button>
 	</c:if>
 	</c:if>
 						<html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryDsp" property="categoryDsp" indexed="true"/>
@@ -523,10 +523,10 @@
 				<tr id="trAddLine">
 					<td colspan="5" style="text-align:right;">
 	<c:if test='${category.categoryAdd == 0}'>
-	                    <button class="btn_small"  disabled="disabled" style="width:80px;">行追加</button>
+	                    <button class="btn_list_action"  disabled="disabled" style="width:80px;">行追加</button>
 	</c:if>
 	<c:if test='${category.categoryAdd == 1}'>
-	                    <button class="btn_small"  onclick="addRow();" style="width:80px;">行追加</button>
+	                    <button class="btn_list_action"  onclick="addRow();" style="width:80px;">行追加</button>
 	</c:if>
 	                </td>
 				</tr>

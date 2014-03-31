@@ -20,7 +20,7 @@
 			<tr>
 				<td>
 					<div style=" color: #FFFFFF;">非表示項目リスト</div>
-					<select id="${dialogId}_disabledItemList" size="10" style="width: 200px; height: 200px;" tabindex="13000">
+					<select id="${dialogId}_disabledItemList" size="10" style="width: 200px; height: 200px; background:none; background-color: #fffadf;" tabindex="13000">
 						<c:forEach var="bean" items="${disabledItemList}">
 							<option value="${bean.value}">${f:h(bean.label)}</option>
 						</c:forEach>
@@ -34,7 +34,7 @@
 				</td>
 				<td>
 					<div style=" color: #FFFFFF;">表示項目リスト</div>
-					<select id="${dialogId}_enabledItemList" size="10" style="width: 200px; height: 200px;" tabindex="13003">
+					<select id="${dialogId}_enabledItemList" size="10" style="width: 200px; height: 200px; background:none; background-color: #fffadf;" tabindex="13003">
 						<c:forEach var="bean" items="${enabledItemList}">
 							<option value="${bean.value}">${f:h(bean.label)}</option>
 						</c:forEach>

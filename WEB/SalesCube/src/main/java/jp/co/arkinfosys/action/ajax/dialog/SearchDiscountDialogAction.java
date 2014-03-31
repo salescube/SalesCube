@@ -133,4 +133,15 @@ public class SearchDiscountDialogAction extends
 	protected MasterSearch<DiscountJoin> getService() {
 		return this.discountService;
 	}
+	
+	
+	/**
+	 * 検索実行後に行う処理のデフォルト実装です.通常は何も行いません.
+	 *
+	 * @throws Exception 例外発生時
+	 */
+	@Override
+	protected void doAfterSearch() throws Exception {
+		searchDiscountDialogForm.searchResultCount = searchDiscountDialogForm.searchResultList.size();
+	}	
 }

@@ -142,6 +142,9 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 
 			// 初期値を設定する
 			this.inputPaymentForm.initCopy();
+			this.inputPaymentForm.newData = true;
+			//支払日を初期値に設定する
+			this.inputPaymentForm.paymentDate = "";
 
 			createList();
 
@@ -386,8 +389,6 @@ public class InputPaymentAction extends AbstractSlipEditAction<InputPaymentDto, 
 				inputPaymentForm.aptBalance = df.format(aptBalance);
 			}
 
-			// 仕入先税率を設定
-			this.inputPaymentForm.supplierTaxRate = dto.supplierTaxRate;
 
 			inputPaymentForm.initLoad();
 			createList();

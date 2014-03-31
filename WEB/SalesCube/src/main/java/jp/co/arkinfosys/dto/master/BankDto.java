@@ -34,13 +34,19 @@ public class BankDto implements MasterEditDto {
 	/** 口座番号 */
 	public String accountNum;
 
+	/** 口座名義 */
+	public String accountOwnerName;
+
+	/** 口座名義カナ */
+	public String accountOwnerKana;
+
 	/** 備考 */
 	public String remarks;
 
 	/** 有効 */
 	public String valid;
 
-	
+
 	/** 更新日時（排他制御用）*/
 	public String updDatetm;
 

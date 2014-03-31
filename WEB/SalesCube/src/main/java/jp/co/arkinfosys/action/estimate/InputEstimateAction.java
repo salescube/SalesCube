@@ -13,6 +13,7 @@ import jp.co.arkinfosys.action.AbstractSlipEditAction;
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.DiscountUtil;
+import jp.co.arkinfosys.common.ListUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.estimate.InputEstimateDto;
@@ -73,6 +74,11 @@ public class InputEstimateAction extends
 	 * 提出先　敬称プルダウン
 	 */
 	public List<LabelValueBean> submitPreList;
+	
+	/**
+	 *  消費税率プルダウン
+	 */
+	public List<LabelValueBean> ctaxRateList;
 
 	/**
 	 * 画面表示に使用しているプルダウン等の情報を作成します.
@@ -84,12 +90,14 @@ public class InputEstimateAction extends
 			// 敬称プルダウンリスト
 			submitPreList = categoryService
 					.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
-
+			
+			// 消費税率プルダウンリスト
+			this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
+			
 		} catch (ServiceException e) {
 			super.errorLog(e);
 			throw e;
 		}
-
 	}
 
 	/**
@@ -384,12 +392,13 @@ public class InputEstimateAction extends
 								new ActionMessage("errors.line.num0",
 										line.lineNo, labelUnitRetailPrice));
 					}
-					if (StringUtil.hasLength(line.unitRetailPrice)
+					//見積もりでは値引きがあるので、マイナスも入力可とする
+					/*if (StringUtil.hasLength(line.unitRetailPrice)
 							&& Float.parseFloat(line.unitRetailPrice) < 0) {
 						errors.add(ActionMessages.GLOBAL_MESSAGE,
 								new ActionMessage("errors.line.integer.plus",
 										line.lineNo, labelUnitRetailPrice, "0"));
-					}
+					}*/
 				} catch (NumberFormatException e) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("errors.line.float", line.lineNo,

@@ -175,7 +175,7 @@
 								<col span="1" style="width: 85%">
 							</colgroup>
 							<tr>
-								<th><div class="col_title_right"><bean:message key='labels.onlineorder.file' /><bean:message key='labels.must'/><%// 注文データ %></div></th>
+								<th><div class="col_title_right_req"><bean:message key='labels.onlineorder.file' /><bean:message key='labels.must'/><%// 注文データ %></div></th>
 								<td><html:file property="uploadFile" styleId="uploadFile" style="width: 600px" tabindex="100" onchange="$('#importBtn').focus();" /></td>
 							</tr>
 							<tr>

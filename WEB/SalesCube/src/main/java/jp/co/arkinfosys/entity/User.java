@@ -52,4 +52,10 @@ public class User implements Serializable {
     public Timestamp updDatetm;
 
     public String updUser;
+
+    public Integer failCount;
+
+    public String lockflg;
+
+    public Timestamp lockDatetm;
 }

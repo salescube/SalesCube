@@ -47,6 +47,7 @@ public class POrderSlipDto implements Serializable{
 	public String supplierCmCategory;
 	public BigDecimal priceTotal;
 	public BigDecimal ctaxTotal;
+	public BigDecimal ctaxRate;
 	public BigDecimal fePriceTotal;
 	public Integer printCount;
 	public String creFunc;

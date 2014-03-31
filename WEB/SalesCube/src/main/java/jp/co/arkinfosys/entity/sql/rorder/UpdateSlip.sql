@@ -37,6 +37,7 @@ SET
 	DELIVERY_URL=/*deliveryUrl*/,
 	TAX_SHIFT_CATEGORY=/*taxShiftCategory*/,
 	CTAX_PRICE_TOTAL=/*ctaxPriceTotal*/,
+	CTAX_RATE=/*ctaxRate*/,
 	COST_TOTAL=/*costTotal*/,
 	RETAIL_PRICE_TOTAL=/*retailPriceTotal*/,
 	PRICE_TOTAL=/*priceTotal*/,

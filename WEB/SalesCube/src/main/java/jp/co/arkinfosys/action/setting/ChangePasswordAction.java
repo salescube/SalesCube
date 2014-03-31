@@ -7,9 +7,12 @@ import javax.annotation.Resource;
 
 import jp.co.arkinfosys.action.CommonResources;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.entity.User;
 import jp.co.arkinfosys.form.setting.ChangePasswordForm;
 import jp.co.arkinfosys.service.UserService;
+import jp.co.arkinfosys.service.MineService;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -40,6 +43,10 @@ public class ChangePasswordAction extends CommonResources {
 
 	@Resource
 	private UserService userService;
+
+	@Resource
+	private MineService mineService;
+
 
 	public boolean isUpdate;
 
@@ -88,9 +95,60 @@ public class ChangePasswordAction extends CommonResources {
 			return ChangePasswordAction.Mapping.INPUT;
 		}
 
+
+		//最新の自社マスタ情報を取得
+		Mine mine = this.mineService.getMine();
+
+		//パスワード文字数チェック　セキュリテイ設定画面で設定したパスワード桁数と比較
+		if( mine.passwordLength != null)	{
+			if(changePasswordForm.newPassword.length() < mine.passwordLength){
+
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.userPassword.length",mine.passwordLength));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+
+				this.isUpdate = this.userDto
+						.isMenuUpdate(Constants.MENU_ID.SETTING_CHANGE_PASSWORD);
+				this.changePasswordForm.userId = this.userDto.userId;
+				return ChangePasswordAction.Mapping.INPUT;
+			}
+		}
+
+		//パスワードの文字種チェック
+		if( mine.passwordCharType != null)	{
+			if(!this.userService.checkPasswordCharType(mine.passwordCharType,changePasswordForm.newPassword)){
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.userPassword.passwordCharType"+ mine.passwordCharType));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+
+				this.isUpdate = this.userDto
+						.isMenuUpdate(Constants.MENU_ID.SETTING_CHANGE_PASSWORD);
+				this.changePasswordForm.userId = this.userDto.userId;
+				return ChangePasswordAction.Mapping.INPUT;
+			}
+		}
+
+
+		//パスワード更新時のチェック
+		//自社マスタで設定した回数前まで同一のパスワードが存在した場合は、更新不可とする
+		if( mine.passwordHistCount != null)	{
+			if(userService.countPasswordMakerByIdAndPass(userDto.userId,changePasswordForm.newPassword,mine.passwordHistCount) > 0){
+
+				super.messages.add(ActionMessages.GLOBAL_MESSAGE,
+						new ActionMessage("errors.userPassword.already.exists",mineDto.passwordHistCount));
+				ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+
+				this.isUpdate = this.userDto
+						.isMenuUpdate(Constants.MENU_ID.SETTING_CHANGE_PASSWORD);
+				this.changePasswordForm.userId = this.userDto.userId;
+				return ChangePasswordAction.Mapping.INPUT;
+			}
+		}
+
+
 		// パスワードを更新する
 		this.userService.updatePassword(super.userDto.userId,
-				changePasswordForm.newPassword);
+				changePasswordForm.newPassword,mine);
 
 		// 更新したユーザー情報でセッションのDTOを更新する
 		user = this.userService.findUserByIdAndPassword(

@@ -86,20 +86,20 @@
 	<div id="${dialogId}ListContainer"  style="padding: 0 20px;">
 		<div style=" color: #FFFFFF;">検索結果件数： 0件</div>
 		<div style="border: none; width: 100%; height: 220px; overflow: hidden;">
-			<table class="dialog_resultList" id="${dialogId}List" summary="商品検索結果" style="width: 100%;">
+			<table class="dialog_resultList" id="${dialogId}List" summary="商品検索結果" style="width: 96%;">
 				<col span="1" style="width: 30%">
 				<col span="1" style="width: 50%">
 				<col span="1" style="width: 20%">
 				<tr>
 					<th>商品コード</th>
 					<th>商品名</th>
-					<th>長さ</th>
+					<th>仕入先名</th>
 				</tr>
 			</table>
 		</div>
 	</div>
 
-	<div style="width: 96%; text-align: right; margin-top: 15px;">
+	<div style="width: 90%; text-align: right; margin-top: 15px;">
 		<button id="" type="button" style="width: 70px" tabindex="5151"
 			onclick="$('#${dialogId}').dialog('close');">閉じる</button>
 	</div>

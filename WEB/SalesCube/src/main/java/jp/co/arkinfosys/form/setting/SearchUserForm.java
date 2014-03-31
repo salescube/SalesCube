@@ -22,6 +22,17 @@ public class SearchUserForm extends AbstractSearchForm<UserDto> {
 	 * 社員コード
 	 */
 	public String userId;
+
+	/**
+	 * ロックフラグ
+	 */
+	public String lockflg;
+
+	/**
+	 * ロックフラグ
+	 */
+	public String lockdatetm;
+
 	/**
 	 * 社員名
 	 */

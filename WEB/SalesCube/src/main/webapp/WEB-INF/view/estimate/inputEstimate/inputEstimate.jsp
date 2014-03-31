@@ -44,16 +44,21 @@ var changeFlag = false;
 //ページ読込時の動作
 function init() {
 	// 初期フォーカス　見積番号手入力対応
-	if( $("#estimateSheetId").val() != "" ){
+
+	if(${!newData}){
 		$("#estimateSheetId").attr("readOnly", "true");
 		$("#estimateSheetId").addClass("c_disable");
+		$("#estimateSheetId").css("background-color", "#CCCCCC");
+		$("#estimateSheetId").css("border-top", "2px solid #AEAEAE");
 		$("#estimateDate").focus();
 	}else{
 		$("#estimateSheetId").focus();
-		$("#btnF3").attr("disabled","true");
+
 	}
 
-
+	if($("#estimateSheetId").val() == "" ){
+		$("#btnF3").attr("disabled","true");
+	}
 
 	// 明細行のIndex管理
 	var tBodyLine = $("#tbodyLine");
@@ -98,7 +103,7 @@ function init() {
 
 	}
 
-	applyNumeralStyles(false);
+	applyNumeralStyles(true);
 
 	// 帳票出力時の更新チェックのため
 	bindOnChange();
@@ -186,8 +191,10 @@ function findSlip(){
 					}
 				}else{
 					$("#messages").append('<bean:message key="infos.mode.new" />');
-					$("#estimateSheetId").attr("readOnly", "true");
-					$("#estimateSheetId").addClass("c_disable");
+					//$("#estimateSheetId").attr("readOnly", "true");
+					//$("#estimateSheetId").addClass("c_disable");
+					//$("#estimateSheetId").css("background-color", "#CCCCCC");
+					//$("#estimateSheetId").css("border-top", "2px solid #AEAEAE");
 					if( ${menuUpdate} ){
 						$("#btnF3").removeAttr("disabled");
 					}
@@ -231,16 +238,21 @@ function onF3(){
 	}
 
 	// 見積番号編集可⇒保存不可
-	if( $("#estimateSheetId").attr("readOnly") == false) {
-		$("#estimateSheetId").focus();
-		$("#errors").append(document.createTextNode('<bean:message key="errors.estimateSheetId.upd" />'));
-		return;
-	}
+//	if( $("#estimateSheetId").attr("readOnly") == false) {
+//		$("#estimateSheetId").focus();
+//		$("#errors").append(document.createTextNode('<bean:message key="errors.estimateSheetId.upd" />'));
+//		return;
+//	}
 
 	if(confirm('<bean:message key="confirm.insert" />')){
 
 		// カンマ除去
 		_before_submit($(".numeral_commas"));
+		
+		$("#grossMargin").val(_rmv_cunit($("#grossMargin").val()));
+		$("#retailPriceTotal").val(_rmv_cunit($("#retailPriceTotal").val()));
+		$("#ctaxPriceTotal").val(_rmv_cunit($("#ctaxPriceTotal").val()));
+		$("#estimateTotal").val(_rmv_cunit($("#estimateTotal").val()));
 
 		// 登録前のデータ調整
 		beforeRegister();
@@ -706,6 +718,7 @@ function setProductStock(map,data){
 
 }
 
+
 // 商品コード変更
 function changeProductCode(event) {
 
@@ -893,11 +906,10 @@ function onChangeQuantity(event){
 
 // 数量変更
 function changeQuantity(index){
-
 	var objQuantity= $("#estimateLineTrnDtoList\\["+index+"\\]\\.quantity");
 	var l_quantity = oBDCS(objQuantity.val()).setSettingsFromObj(objQuantity);
     var bExceptianal = sc_isLooseExceptianalProductCode($("#estimateLineTrnDtoList\\["+index+"\\]\\.productCode").val() );
-
+    
 	if(l_quantity.isNum()){
 		// 受注限度数を超えている場合
 		if(IsCheckOverQuantity(index)){
@@ -997,6 +1009,11 @@ function culcCost(index){
 
 }
 
+function changeTaxRate(){
+	sum(true);
+}
+
+
 // 売上単価変更
 function onChangeUnitRetailPrice(event){
 	var index = event.data.index;
@@ -1059,7 +1076,7 @@ function sum(hasChanged){
 
 	// [粗利益] 	= [売価金額]の合計―[仕入金額]の合計
 	var grossMargin = sumRetailPrice-sumCost;
-	$("#grossMargin").val(grossMargin);
+	$("#grossMargin").val(grossMargin);	
 	SetBigDecimalScale_Obj($("#grossMargin"));
 
 	// [金額合計]	= [売価金額]の合計
@@ -1068,7 +1085,7 @@ function sum(hasChanged){
 
 	// [粗利益率]	= [粗利益]／[金額合計]
 	if(sumRetailPrice == 0){
-		$("#grossMarginRate").val("");
+		$("#grossMarginRate").val("0.00%");
 	}else{
 
 		// 2010.04.22 add kaki 粗利益率は％表示とする。まず100倍する。
@@ -1083,7 +1100,6 @@ function sum(hasChanged){
 		// 2010.04.22 add kaki 粗利益率は％表示とする。
 		var sgrossMarginRate = $("#grossMarginRate").val()+"%";
 		 $("#grossMarginRate").val(sgrossMarginRate);
-
 	}
 
 	// [消費税]
@@ -1107,21 +1123,20 @@ function sum(hasChanged){
 	if(taxTypeExclude){
 		// 外税
 		if(hasChanged){
-			var taxRate = $("#taxRate").val() / 100.0;
+			var taxRate = $("#ctaxRate").val() / 100.0;
 			ctaxPriceTotal = sumRetailPrice*taxRate;
-			$("#ctaxPriceTotal").val(ctaxPriceTotal);
-			
 		}
-		SetBigDecimalScale_Obj($("#ctaxPriceTotal"));
 	}else{
 		// 内税
 		ctaxPriceTotal = 0;
-		$("#ctaxPriceTotal").val("");
 	}
+	
+	$("#ctaxPriceTotal").val(ctaxPriceTotal);
+	SetBigDecimalScale_Obj($("#ctaxPriceTotal"));
 
 	// [伝票合計]	= [金額合計]＋[消費税]
 	var estimateTotal = sumRetailPrice+ctaxPriceTotal;
-	$("#estimateTotal").val(estimateTotal);
+	$("#estimateTotal").val(estimateTotal);	
 	SetBigDecimalScale_Obj($("#estimateTotal"));
 
 	// [原価合計]（画面には表示しないがDBに登録する）
@@ -1319,13 +1334,13 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 	<jsp:param name="PARENT_MENU_ID" value="0002"/>
 	<jsp:param name="MENU_ID" value="0200"/>
 </jsp:include>
-	
+
 <%-- メイン機能領域 --%>
 <div id="main_function">
 
 	<!-- タイトル -->
 	<span class="title"><bean:message key='titles.inputEstimate'/></span>
-	
+
 	<div class="function_buttons">
 		<button type="button" id="btnF1" tabindex="2000" onclick="onF1();" onkeypress="onF1();">F1<br>初期化</button>
 		<button	type="button" id="btnF2" tabindex="2001" onclick="onF2();" onkeypress="onF2();" ${!newData && menuUpdate ?"":"disabled"}>F2<br>削除</button>
@@ -1341,10 +1356,9 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 		<button	type="button" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-		
+
 	<s:form onsubmit="return false;">
 		<html:hidden property="deleteLineIds"  styleId="deleteLineIds"/>
-		<html:hidden property="taxRate" styleId="taxRate" />
 		<html:hidden property="menuUpdate" />
 		<html:hidden property="userId" styleId="userId" />
 		<html:hidden property="submitPre" styleId="submitPre" />
@@ -1355,7 +1369,7 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 		<html:hidden property="priceFractCategory" styleId="priceFractCategory"/>
 		<html:hidden property="taxFractCategory" styleId="taxFractCategory"/>
 		<html:hidden property="salesCmCategory" styleId="salesCmCategory" />
-	
+
 		<div id="errors" style="padding-top: 5px; padding-left: 20px">
 			<html:errors/>
 		</div>
@@ -1365,7 +1379,7 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 				<bean:write name="msg" ignore="true"/><br>
 			</html:messages>
 		</div>
-		
+
 		<div class="function_forms">
 		    <div class="form_section_wrap">
 			    <div class="form_section">
@@ -1375,13 +1389,13 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 					<div id="order_section" class="section_body">
 					<table id="order_info" class="forms" summary="見積伝票情報">
 						<tr>
-							<th><div class="col_title_right">見積番号※</div></th>
-							<td><html:text property="estimateSheetId"  styleId="estimateSheetId" styleClass="" style="width: 110px; ime-mode:disabled;" readonly="false" tabindex="100" maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){findSlip();}"/></td>
-							<th><div class="col_title_right">見積日※</div></th>
+							<th><div class="col_title_right_req">見積番号<bean:message key='labels.must'/></div></th>
+							<td><html:text property="estimateSheetId"  styleId="estimateSheetId" styleClass="" style="width: 135px; ime-mode: disabled;" readonly="false" tabindex="100" maxlength="10"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){findSlip();}"/></td>
+							<th><div class="col_title_right_req">見積日<bean:message key='labels.must'/></div></th>
 							<td><html:text property="estimateDate" styleId="estimateDate" styleClass="date_input" style="width: 135px;ime-mode:disabled;" maxlength="10"  tabindex="101"/></td>
 							<th><div class="col_title_right">納期または出荷日</div></th>
 							<td>
@@ -1410,6 +1424,14 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 								<html:image src="${f:url('/images//customize/btn_search.png')}" style="cursor: pointer;" onclick="showEstimateCondition()" onkeypress="showEstimateCondition()" tabindex="109" />
 							</td>
 						</tr>
+						<tr>
+							<th><div class="col_title_right">消費税率</div></th>
+							<td colspan="5">
+								<html:select property="ctaxRate" styleId="ctaxRate" tabindex="109" style="width: 135px;"  onchange="changeTaxRate()">
+								    <html:options collection="ctaxRateList" property="value" labelProperty="label"/>
+								</html:select>&nbsp;％
+							</td>
+						</tr>
 						<html:hidden name="inputEstimateForm" property="newData" />
 					</table>
 					</div><!-- /.section_body -->
@@ -1424,13 +1446,13 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 					<div id="order_section" class="section_body">
 					<table id="customer_info1" class="forms" summary="顧客情報">
 						<tr>
-							<th><div class="col_title_right">提出先名※</div></th>
+							<th><div class="col_title_right_req">提出先名<bean:message key='labels.must'/></div></th>
 							<td><html:text property="submitName" style="width: 430px" styleId="submitName" maxlength="60" tabindex="200"  /></td>
-		
+
 							<th><div class="col_title_right">提出先敬称</div></th>
 							<td>
 								<html:select property="submitPreCategory" styleId="submitPreCategory" tabindex="201" >
@@ -1481,14 +1503,14 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 					<div id="order_section" class="section_body">
 						<table id="bikou" class="forms" summary="摘要">
 							<tr>
 								<th><div class="col_title_right">摘要</div></th>
 								<td colspan="5">
 									<html:textarea property="remarks" style="width: 800px; height: 40px"  tabindex="300" />
-			
+
 								</td>
 							</tr>
 							<tr>
@@ -1536,7 +1558,7 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 
 						<c:if test="${estimateLineTrnDtoList.lineNo > 0}">
 						<tr id="trLine${status.index}">
-						
+
 							<!-- No -->
 							<td id="tdNo${status.index}">
 								<div class="box_1of1">
@@ -1551,32 +1573,32 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 								<html:hidden name="estimateLineTrnDtoList" property="possibleDrawQuantity" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].possibleDrawQuantity" />
 								<html:hidden name="estimateLineTrnDtoList" property="stockCtlCategory" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].stockCtlCategory" />
 							</td>
-							
+
 							<!-- 商品コード※ -->
-							<td>
+							<td style="background-color: #fae4eb;">
 								<div class="box_1of1" style="margin: 5px;">
 									<html:text name="estimateLineTrnDtoList" property="productCode" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].productCode"  styleClass="goods_code c_referable" style="width: 160px; ime-mode:disabled;" maxlength="20" tabindex="<%=String.valueOf(lineTab++) %>" />
 									<html:image src='${f:url("/images//customize/btn_search.png")}' styleId="productCodeImg${status.index}" style="width: auto; vertical-align: middle; cursor: pointer;" tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 							</td>
-							
+
 							<!-- 商品名・摘要 -->
 							<td>
 								<div class="box_1of1" style="margin:5px;">
 									<html:textarea name="estimateLineTrnDtoList" property="productAbstract" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].productAbstract" style="width: 100%; height: 60px;"  tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 							</td>
-							
+
 							<!-- 数量※ -->
-							<td>
+							<td style="background-color: #fae4eb;">
 								<div class="box_1of2" style="border-bottom: 0;">
 									<html:text name="estimateLineTrnDtoList" property="quantity" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].quantity"  styleClass="numeral_commas" style="width: 62px;ime-mode:disabled;" maxlength="6" tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 								<div class="box_2of2">
-									<button type="button" id="stockBtn${status.index}" tabindex="<%=String.valueOf(lineTab++) %>" class="btn_small">在庫</button>
+									<button type="button" id="stockBtn${status.index}" tabindex="<%=String.valueOf(lineTab++) %>" class="btn_list_action">在庫</button>
 								</div>
 							</td>
-							
+
 							<!-- 仕入単価/仕入金額 -->
 							<td>
 								<div class="box_1of2">
@@ -1586,9 +1608,9 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 									<html:text name="estimateLineTrnDtoList" property="cost" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].cost" styleClass="numeral_commas c_disable" readonly="true" style="width: 75px;ime-mode:disabled;" maxlength="9" tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 							</td>
-							
+
 							<!-- 売上単価※/売価金額※ -->
-							<td>
+							<td style="background-color: #fae4eb;">
 								<div class="box_1of2">
 									<html:text name="estimateLineTrnDtoList" property="unitRetailPrice" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].unitRetailPrice"  styleClass="numeral_commas" style="width: 75px;ime-mode:disabled;" maxlength="9" tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
@@ -1596,27 +1618,27 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
 									<html:text name="estimateLineTrnDtoList" property="retailPrice" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].retailPrice" styleClass="numeral_commas" style="width: 75px;ime-mode:disabled;" maxlength="9" tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 							</td>
-							
+
 							<!-- 備考 -->
 							<td>
 								<div class="box_1of1" style="margin:5px;">
 									<html:textarea name="estimateLineTrnDtoList" property="remarks" indexed="true" styleId="estimateLineTrnDtoList[${status.index}].remarks" style="width: 100%; height: 60px;"  tabindex="<%=String.valueOf(lineTab++) %>" />
 								</div>
 							</td>
-							
+
 							<!-- ボタン -->
 							<td style="text-align:right;">
 								<div class="box_1of2">
-									<button id="deleteBtn${status.index}" type="button" alt="この行を削除" style="width:80px;" ${menuUpdate?"":"disabled"}  tabindex="<%=String.valueOf(lineTab++) %>" class="btn_small">削除</button><br>
+									<button id="deleteBtn${status.index}" type="button" alt="この行を削除" style="width:80px;" ${menuUpdate?"":"disabled"}  tabindex="<%=String.valueOf(lineTab++) %>" class="btn_list_action">削除</button><br>
 								</div>
 								<div class="box_2of2">
-									<button id="copyBtn${status.index}" type="button" alt="前行から複写" style="width:80px;" ${!status.first && menuUpdate ?"":"disabled"}  tabindex="<%=String.valueOf(lineTab++) %>" class="btn_small">前行複写</button>
+									<button id="copyBtn${status.index}" type="button" alt="前行から複写" style="width:80px;" ${!status.first && menuUpdate ?"":"disabled"}  tabindex="<%=String.valueOf(lineTab++) %>" class="btn_list_action">前行複写</button>
 								</div>
 							</td>
 						</tr>
 						</c:if>
 					</c:forEach>
-					
+
 					<!-- 追加ボタン -->
 					<tr id="trAddLine">
 						<td style="height: 60px; text-align: center" colspan="9" class="rd_bottom_left rd_bottom_right">
@@ -1642,37 +1664,36 @@ function ajaxErrorCallback(xmlHttpRequest, textStatus, errorThrown) {
    					<tr>
 						<html:hidden property="costTotal" styleId="costTotal" styleClass="numeral_commas" />
 						<td class="rd_bottom_left" style="height: 100px;" >
-							<html:text property="grossMargin" styleId="grossMargin" size="10" readonly="true" 
+							<html:text property="grossMargin" styleId="grossMargin" size="10" readonly="true"
+								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="BDCyen yen_value" />
+						</td>
+						<td>
+							<html:text property="grossMarginRate" styleId="grossMarginRate" size="10" readonly="true"
 								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="numeral_commas" />
 						</td>
 						<td>
-							<html:text property="grossMarginRate" styleId="grossMarginRate" size="10" readonly="true" 
-								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="numeral_commas" />
+							<html:text property="retailPriceTotal" styleId="retailPriceTotal" size="10" readonly="true"
+								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="BDCyen yen_value" />
 						</td>
 						<td>
-							<html:text property="retailPriceTotal" styleId="retailPriceTotal" size="10" readonly="true" 
-								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="numeral_commas" />
-						</td>
-						<td>
-							<html:text property="ctaxPriceTotal" styleId="ctaxPriceTotal" size="10" readonly="true"  
-								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="numeral_commas" />
+							<html:text property="ctaxPriceTotal" styleId="ctaxPriceTotal" size="10" readonly="true"
+								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="BDCtax yen_value" />
 						</td>
 						<td class="rd_bottom_right">
-							<html:text property="estimateTotal" styleId="estimateTotal" size="10"  readonly="true"  
-								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="numeral_commas" />
+							<html:text property="estimateTotal" styleId="estimateTotal" size="10"  readonly="true"
+								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;"  styleClass="BDCyen yen_value" />
 						</td>
 					</tr>
 				</table>
 			</div>
 			</div>
-			
 			<div style="width: 1160px; text-align: center; margin-top: 10px;">
-				<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" onkeypress="onF3();" ${menuUpdate?"":"disabled"}>
+				<button type="button" id="btnF3btm" tabindex="1999" style="width:260px;height:51px;" class="btn_medium" onclick="onF3();" onkeypress="onF3();" ${menuUpdate?"":"disabled"}>
 					<c:if test="${newData}">
-						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 					</c:if>
 					<c:if test="${!newData}">
-						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 					</c:if>
 				</button>
 			</div>

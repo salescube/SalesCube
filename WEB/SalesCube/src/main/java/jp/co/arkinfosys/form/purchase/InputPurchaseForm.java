@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.purchase.PurchaseLineDto;
@@ -121,15 +122,15 @@ public class InputPurchaseForm extends AbstractSlipEditForm<PurchaseLineDto>{
 
 	/** 消費税合計 */
 	public String ctaxTotal;
+	
+	/** 消費税率 */
+	public String ctaxRate;
 
 	/** 伝票合計金額 */
 	public String priceTotal;
 
 	/** 伝票合計外貨金額 */
 	public String fePriceTotal;
-
-	/** 消費税率 */
-	public String supplierTaxRate;
 
 	/** 支払実績締日付 */
 	public String paymentCutoffDate;
@@ -216,12 +217,12 @@ public class InputPurchaseForm extends AbstractSlipEditForm<PurchaseLineDto>{
 
 		nonTaxPriceTotal = null;
 		ctaxTotal = null;
+		ctaxRate = null;
 		priceTotal = null;
 		fePriceTotal = null;
 		taxShiftCategory = null;
 		taxFractCategory = null;
 		priceFractCategory = null;
-		supplierTaxRate = null;
 		paymentCutoffDate = null;
 
 		tempSupplierCode = null;
@@ -265,12 +266,25 @@ public class InputPurchaseForm extends AbstractSlipEditForm<PurchaseLineDto>{
 	}
 
 	/**
-	 * 入力担当者を設定します.
+	 * 入力担当者、消費税率を設定します.
 	 */
 	@Override
 	public void initializeScreenInfo() {
 		userId = userDto.userId;
 		userName = userDto.nameKnj;
+		
+		// 消費税率
+		this.ctaxRate = super.taxRate;
+	}
+	
+	/**
+	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
+	 */
+	@Override
+	public void setSlipTaxRate() {
+		if (super.taxRate != this.ctaxRate) {
+			super.taxRate = this.ctaxRate;
+		}
 	}
 
 	/**

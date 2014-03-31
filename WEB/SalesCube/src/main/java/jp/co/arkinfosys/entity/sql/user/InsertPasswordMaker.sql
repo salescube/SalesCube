@@ -1,0 +1,27 @@
+INSERT
+    INTO
+        PASSWORD_MAKER_/*$domainId*/ (
+        	PASSWORD_MAKER_ID
+            ,USER_ID
+            ,PASSWORD
+            ,PASS_UPD_DATETM
+            ,CRE_FUNC
+            ,CRE_DATETM
+            ,CRE_USER
+            ,UPD_FUNC
+            ,UPD_DATETM
+            ,UPD_USER
+        )
+    VALUES
+        (
+        	/*passwordMakerId*/''
+            ,/*userId*/''
+            ,/*password*/''
+			,now()
+            ,/*creFunc*/NULL
+            ,now()
+            ,/*creUser*/NULL
+            ,/*updFunc*/NULL
+            ,now()
+            ,/*updUser*/NULL
+        )

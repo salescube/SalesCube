@@ -1,5 +1,5 @@
-<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_small">全て選択</button>
-<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_small">全て解除</button>
+<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_list_action">全て選択</button>
+<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_list_action">全て解除</button>
 
 	<div id="detail_info_wrap">
 	<table class="detail_info"  id="billing_close" summary="締処理リスト" class="forms" style="width: 800px;">

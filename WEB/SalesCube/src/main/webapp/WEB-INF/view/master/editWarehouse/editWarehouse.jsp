@@ -21,7 +21,7 @@
 			$("#editRackList_" + i + "\\.rackCodeImg").bind("click", {"index": i}, searchRack);
         }
     }
-    
+
     // ファンクションキーとのマッピング
     function onF1() { initForm(); }
     function onF2() { backToSearch(); }
@@ -69,7 +69,7 @@
         $("#warehouseAddress1").val(map["zipAddress1"]);
         $("#warejpiseAddress2").val(map["zipAddress2"]);
     }
-    
+
 	//郵便番号ダイアログ
 	function zipSearch(jqObject) {
 		openSearchZipDialog( 'zipCode1',setZipCode);
@@ -121,22 +121,22 @@
             var elemWork = elemTd.children("#editRackList_" + nextId + "\\.exist");
             elemWork.attr("name", "editRackList[" + i + "].exist");
             elemWork.attr("id", "editRackList_" + i  + ".exist");
-            
+
             // 更新日
             elemWork = elemTd.children("#editRackList_" + nextId + "\\.updDatetm");
             elemWork.attr("name", "editRackList[" + i + "].updDatetm");
             elemWork.attr("id", "editRackList_" + i  + ".updDatetm");
-            
+
             // 棚番コード
             elemWork = elemTd.children("#editRackList_" + nextId + "\\.rackCode");
             elemWork.attr("name", "editRackList[" + i + "].rackCode");
             elemWork.attr("id", "editRackList_" + i  + ".rackCode");
-            
+
 			// 棚番検索
             elemWork = elemTd.children("#editRackList_" + nextId + "\\.rackCodeImg");
             elemWork.attr("id", "editRackList_" + i  + ".rackCodeImg");
             elemWork.bind("click", {"index": i}, searchRack);
-            
+
             // 棚番名
             elemTd = elemTd.next();
             elemWork = elemTd.children("#editRackList_" + nextId + "\\.rackName");
@@ -163,7 +163,7 @@
         	$("#editDiscountForm").trigger("submit");
         }
     }
-    
+
     // 行追加
     function addRow() {
 		var elemTr, elemTd;
@@ -220,13 +220,13 @@
         // 行番号を増やす
         maxRowCount++;
     }
-    
+
 	// 棚検索
 	function searchRack(event) {
 		var index = event.data.index;
 		// 棚検索ダイアログを開く
 		openSearchRackDialog(index, setRackInfo );
-		
+
 		$("#"+ index +"_rackCode").val($("#editRackList_"+index+"\\.rackCode").val());
 		$("#"+ index +"_rackName").val($("#editRackList_"+index+"\\.rackName").val());
 		//空き棚チェックを外す
@@ -254,7 +254,7 @@
 		$("#editRackList_"+index+"\\.exist").val("true");
 	}
 
-    
+
     function deleteRow(event) {
         var index = event.data.index;
 
@@ -328,7 +328,7 @@
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
 		<div id="errors" style="color: red" style="padding-left: 20px"><html:errors/></div>
 		<div style="padding-left: 20px;color: blue;">
@@ -345,7 +345,7 @@
 		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 		            </button>
 				</div><!-- /.section_title -->
-				
+
 				<div id="order_section" class="section_body">
 					<table id="user_info" class="forms" style="width: 800px" summary="倉庫情報1">
 						<colgroup>
@@ -355,7 +355,7 @@
 							<col span="1" style="width: 35%">
 						</colgroup>
 						<tr>
-							<th><div class="col_title_right">倉庫コード<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">倉庫コード<bean:message key='labels.must'/></div></th>
 							<td>
 			                <c:if test="${editMode}">
 			                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100" readonly="true" styleClass="c_disable"/>
@@ -364,7 +364,7 @@
 			                    <html:text maxlength="${code_size_warehouse}" styleId="warehouseCode" property="warehouseCode" style="width: 100px; ime-mode: disabled;"  tabindex="100"/>
 			                </c:if>
 			                </td>
-							<th><div class="col_title_right">倉庫名<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">倉庫名<bean:message key='labels.must'/></div></th>
 							<td><html:text maxlength="60" styleId="warehouseName" property="warehouseName" style="width: 200px" tabindex="101"/></td>
 						</tr>
 						<tr>
@@ -418,7 +418,7 @@
 							<col span="1" style="width: 85%">
 						</colgroup>
 						<tr>
-							<th><div class="col_title_right">倉庫状況<bean:message key='labels.must'/></div></th>
+							<th><div class="col_title_right_req">倉庫状況<bean:message key='labels.must'/></div></th>
 							<td>
 			                  <html:select styleId="warehouseState" property="warehouseState" style="width: 100px; ime-mode: disabled;"  tabindex="300">
 								<html:option value="運用中" />
@@ -431,7 +431,7 @@
 				</div><!-- /.section_body -->
 			</div><!-- /.form_section -->
 		</div><!-- /.form_section_wrap -->
-					
+
 	    <div class="form_section_wrap">
 		    <div class="form_section">
 		        <div class="section_title">
@@ -440,13 +440,13 @@
 		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 		            </button>
 				</div><!-- /.section_title -->
-				
+
 				<div id="order_section" class="section_body">
 					<table id="editRackList" class="forms detail_info" style="width: 600px" summary="棚番情報1">
 						<colgroup>
 			                <col span="1" style="width: 10%">
-			                <col span="1" style="width: 10%">
-			                <col span="1" style="width: 70%">
+			                <col span="1" style="width: 20%">
+			                <col span="1" style="width: 60%">
 			                <col span="1" style="width: 10%">
 						</colgroup>
 						<tr>
@@ -459,19 +459,19 @@
 						<tr id="editRackList_dummy" style="display:none;">
 							<td id="editRackList_dummy" style="text-align: center">0
 			                </td>
-							<td>
+							<td style="background-color: #fae4eb;">
 			                    <input type="hidden" id="exist" value="false" />
 			                    <input type="hidden" id="updDatetm" />
-								<input type="text" maxlength="10" id="rackCode" style="width:100px;ime-mode:disabled;" indexed="true">
-								<input type="image" src="${f:url('/images//customize/btn_search.png')}" id="rackCodeImg" indexed="true" style="width: auto;"/>
+								<input type="text" maxlength="10" id="rackCode" style="width:95px;ime-mode:disabled;" indexed="true">
+								<input type="image" src="${f:url('/images//customize/btn_search.png')}" id="rackCodeImg" indexed="true" style="vertical-align: middle; cursor: pointer; width: auto;"/>
 							</td>
-							<td>
-								<input type="text" maxlength="60" id="rackName" style="width:100%;" indexed="true" />
+							<td style="background-color: #fae4eb;">
+								<input type="text" maxlength="60" id="rackName" style="width:95%;" indexed="true" />
 							<td style="text-align: center">
 								<input type="checkbox" id="multi" value="1" indexed="true" />
 			                </td>
 							<td style="text-align: center">
-			                    <button id="deleteBtn" class="btn_small">削除</button>
+			                    <button id="deleteBtn" class="btn_list_action">削除</button>
 			                </td>
 						</tr>
 						<c:if test="${isUpdate}">
@@ -497,10 +497,10 @@
 									</td>
 									<td>
 										<c:if test="${!isUpdate}">
-										     <button disabled="disabled" class="btn_small">削除</button>
+										     <button disabled="disabled" class="btn_list_action">削除</button>
 										</c:if>
 										<c:if test="${isUpdate}">
-										     <button id="editRackList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_small">削除</button>
+										     <button id="editRackList_${s.index}.deleteBtn" tabindex="${s.index*4+203}" class="btn_list_action">削除</button>
 										</c:if>
 									</td>
 								</tr>
@@ -513,7 +513,7 @@
 						</c:if>
 						<c:if test="${isUpdate}">
 						<tr id="trAddLine">
-							<td style="text-align: right" colspan="5"><button onclick="addRow()" class="btn_small">行追加</button></td>
+							<td style="text-align: right" colspan="5"><button onclick="addRow()" class="btn_list_action">行追加</button></td>
 						</tr>
 						</c:if>
 					</table>

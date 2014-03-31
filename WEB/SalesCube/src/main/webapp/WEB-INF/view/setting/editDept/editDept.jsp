@@ -111,7 +111,7 @@ function onF4() {
 					<div>
 						<table class="forms" summary="部門情報" style="width: 500px">
 							<tr>
-								<th><div class="col_title_right">部門コード※</div></th>
+								<th><div class="col_title_right_req">部門コード<bean:message key='labels.must'/></div></th>
 								<td>
 									<c:if test="${!editMode}">
 									<html:text styleId="deptId" property="deptId" style="width: 120px;ime-mode:disabled;"  tabindex="100"/>

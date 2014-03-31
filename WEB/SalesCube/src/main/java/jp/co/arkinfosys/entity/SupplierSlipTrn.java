@@ -5,8 +5,8 @@ package jp.co.arkinfosys.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -63,6 +63,8 @@ public class SupplierSlipTrn implements Serializable {
 	public String priceFractCategory;
 
 	public BigDecimal ctaxTotal;
+	
+	public BigDecimal ctaxRate;
 
 	public BigDecimal priceTotal;
 

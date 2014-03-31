@@ -668,7 +668,7 @@
 					<tr>
 						<th><div class="col_title_right"><bean:message key='labels.eadSlipId'/></div></th><%// 入出庫番号 %>
 						<td><html:text property="eadSlipId" styleId="eadSlipId"  style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10" onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))) {findSlip();}"/></td>
-						<th><div class="col_title_right"><bean:message key='labels.eadDate'/><bean:message key='labels.must'/></div></th><%// 入出庫日 %>
+						<th><div class="col_title_right_req"><bean:message key='labels.eadDate'/><bean:message key='labels.must'/></div></th><%// 入出庫日 %>
 						<td><html:text property="eadDate" styleId="eadDate" style="width: 135px; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
 						<th><div class="col_title_right"><bean:message key='labels.eadSlipCategory.short'/></div></th><%// 入出庫伝票区分 %>
 						<td>
@@ -741,7 +741,7 @@
 									</td>
 									
 									<!-- 商品コード -->
-									<td>
+									<td style="background-color: #fae4eb;">
 									<div class="box_1of1">
 										<html:text name="eadLineTrnDtoList" property="productCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productCode" styleClass="c_referable" style="width: 165px; ime-mode: disabled;" tabindex="<%=String.valueOf(lineTab++) %>" maxlength="20" />
 										<html:image styleId="productCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer;" tabindex="<%=String.valueOf(lineTab++) %>"/>
@@ -759,7 +759,7 @@
 									
 									<!-- 数量・現在庫数・変更後在庫数 -->
 									<td>
-									<div class="box_1of3">
+									<div class="box_1of3" style="background-color: #fae4eb;">
 										<html:text name="eadLineTrnDtoList" property="quantity" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantity" styleClass="numeral_commas" style="width: 55px; height: 24px; margin: 3px; ime-mode: disabled;" tabindex="<%=String.valueOf(lineTab++) %>" maxlength="6"/>
 									</div>
 									<div class="box_2of3">
@@ -779,7 +779,7 @@
 										<html:textarea name="eadLineTrnDtoList" property="remarks" indexed="true" styleId="eadLineTrnDtoList[${status.index}].remarks" style="width: 96%; height: 3em; margin: 3px;" tabindex="<%=String.valueOf(lineTab++) %>" />
 									</div>
 									</td>
-									<td>
+									<td style="background-color: #fae4eb;">
 									
 									<!-- 棚番 -->
 									<div class="box_1of1">
@@ -791,14 +791,14 @@
 									<!-- ボタン -->
 									<td style="text-align:right;">
 										<div class="box_1of2">
-										<button id="deleteBtn${status.index}" type="button" style="width:80px;" class="btn_small"  tabindex="<%=String.valueOf(lineTab++) %>"
+										<button id="deleteBtn${status.index}" type="button" style="width:80px;" class="btn_list_action"  tabindex="<%=String.valueOf(lineTab++) %>"
 											<c:if test="${!newData}">
 												disabled
 											</c:if>
 										><bean:message key='words.action.delete'/><%// 削除 %></button>
 										</div>
 										<div class="box_2of2">
-										<button id="copyBtn${status.index}" type="button" style="width:80px;"  class="btn_small" tabindex="<%=String.valueOf(lineTab++) %>"
+										<button id="copyBtn${status.index}" type="button" style="width:80px;"  class="btn_list_action" tabindex="<%=String.valueOf(lineTab++) %>"
 											<c:if test="${status.first || !newData}">
 												disabled
 											</c:if>
@@ -827,8 +827,8 @@
 			</div>
 			</div>
 				<div style="text-align: center; width: 1160px; margin-top: 10px;">
-					<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>
-						<img alt="<bean:message key='words.action.register'/>" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 登録 %>
+					<button type="button" id="btnF3btm" class="btn_medium" style="width:260px; height:51px;" tabindex="1999" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 					</button>
 				</div>
 		</s:form>

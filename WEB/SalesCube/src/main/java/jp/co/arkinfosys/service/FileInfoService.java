@@ -104,8 +104,22 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	@Override
 	public int countByCondition(Map<String, Object> conditions)
 			throws ServiceException {
-		// 未使用メソッド
-		return 0;
+		if (conditions == null) {
+			return 0;
+		}
+		try {
+			Map<String, Object> param = super.createSqlParam();
+			this.setEmptyCondition(param);
+
+			// 検索条件を設定する
+			this.setCondition(conditions, null, false, param);
+
+			return this.selectBySqlFile(Integer.class,
+					"fileinfo/CountFilesByCondition.sql", param).getSingleResult()
+					.intValue();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	/**
@@ -140,15 +154,14 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	@Override
 	public List<FileInfoJoin> findByCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc) throws ServiceException {
-		if(!conditions.containsKey(Param.OPEN_LEVEL)) {
-			conditions.put(FileInfoService.Param.OPEN_LEVEL, null);
-		}
 
 		Map<String, Object> params = super.createSqlParam();
+		this.setEmptyCondition(params);
+
 		setCondition(conditions, sortColumn, sortOrderAsc, params);
 
 		return this.selectBySqlFile(FileInfoJoin.class,
-				"fileinfo/FindFilesByOpenLevel.sql", params).getResultList();
+		"fileinfo/FindFilesByCondition.sql", params).getResultList();
 	}
 
 	/**
@@ -187,6 +200,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#insertRecord(java.lang.Object)
 	 */
 	public void insertRecord(FileInfoDto dto) throws ServiceException {
+
 		try {
 			// 内部管理用ファイルオブジェクト
 			File uploadedFile = File.createTempFile(
@@ -214,12 +228,13 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 
 			// 発番
 			long fileId = seqMakerService.nextval(FileInfo.TABLE_NAME);
+			dto.fileId = String.valueOf(fileId);
 
 			// ファイルの登録
 			Map<String, Object> param = super.createSqlParam();
 			param.put(FileInfoService.Param.FILE_ID, fileId);
 
-			BeanMap deptInfo = Beans.createAndCopy(BeanMap.class, dto)
+			BeanMap fileInfo = Beans.createAndCopy(BeanMap.class, dto)
 					.timestampConverter(Constants.FORMAT.TIMESTAMP)
 					.dateConverter(Constants.FORMAT.DATE).includes(
 							FileInfoService.Param.TITLE,
@@ -227,10 +242,12 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 							FileInfoService.Param.REAL_FILE_NAME,
 							FileInfoService.Param.FILE_SIZE,
 							FileInfoService.Param.OPEN_LEVEL).execute();
-			param.putAll(deptInfo);
+			param.putAll(fileInfo);
 
 			this.updateBySqlFile("fileinfo/InsertFileInfo.sql", param)
 					.execute();
+
+
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -286,7 +303,33 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	 */
 	@Override
 	public void updateRecord(FileInfoDto dto) throws Exception {
-		// 未使用メソッド
+
+		try {
+
+			// 半角カナ→全角カナ
+			dto.title = dto.title;
+
+			int fileId = Integer.valueOf(dto.fileId).intValue();
+
+			// ファイルの登録
+			Map<String, Object> param = super.createSqlParam();
+			param.put(FileInfoService.Param.FILE_ID, fileId);
+
+			BeanMap fileInfo = Beans.createAndCopy(BeanMap.class, dto)
+					.timestampConverter(Constants.FORMAT.TIMESTAMP)
+					.dateConverter(Constants.FORMAT.DATE).includes(
+							FileInfoService.Param.TITLE,
+							FileInfoService.Param.OPEN_LEVEL).execute();
+			param.putAll(fileInfo);
+
+			//更新処理
+			 this.updateBySqlFile("fileinfo/UpdateFileInfo.sql", param)
+					.execute();
+
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+
 	}
 
 	/**
@@ -299,15 +342,26 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 	private void setCondition(Map<String, Object> conditions,
 			String sortColumn, boolean sortOrderAsc, Map<String, Object> param) {
 
+		// タイトル
+		if (conditions.containsKey(FileInfoService.Param.TITLE)) {
+			param.put(FileInfoService.Param.TITLE, super
+					.createPartialSearchCondition((String) conditions
+							.get(FileInfoService.Param.TITLE)));
+		}
+		// ファイル名
+		if (conditions.containsKey(FileInfoService.Param.FILE_NAME)) {
+			param.put(FileInfoService.Param.FILE_NAME, super
+					.createPartialSearchCondition((String) conditions
+							.get(FileInfoService.Param.FILE_NAME)));
+		}
+
 		// 公開範囲
 		if (conditions.containsKey(FileInfoService.Param.OPEN_LEVEL)) {
-			if (Constants.MENU_VALID_LEVEL.VALID_LIMITATION.equals(conditions
-					.get(FileInfoService.Param.OPEN_LEVEL))) {
+
+			// 親部門ID
+			if (conditions.containsKey(FileInfoService.Param.OPEN_LEVEL)) {
 				param.put(FileInfoService.Param.OPEN_LEVEL, conditions
 						.get(FileInfoService.Param.OPEN_LEVEL));
-			} else if (Constants.MENU_VALID_LEVEL.VALID_FULL.equals(conditions
-					.get(FileInfoService.Param.OPEN_LEVEL))) {
-				param.put(FileInfoService.Param.OPEN_LEVEL, null);
 			}
 		}
 
@@ -324,6 +378,18 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 			param.put(FileInfoService.Param.SORT_ORDER, Constants.SQL.DESC);
 		}
 	}
+
+
+	/**
+	 * 空の検索条件マップを作成します.
+	 * @param param 検索条件マップ
+	 */
+	private void setEmptyCondition(Map<String, Object> param) {
+		param.put(FileInfoService.Param.TITLE, null);
+		param.put(FileInfoService.Param.FILE_NAME, null);
+		param.put(FileInfoService.Param.OPEN_LEVEL, null);
+	}
+
 
 	/**
 	 * ファイルアップロードパスを返します.

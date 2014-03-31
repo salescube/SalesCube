@@ -83,7 +83,7 @@
 		}
 		// ソート列を設定する
 		$("#sortColumn").attr("value", itemId);
-		
+
 		// 1回以上検索しており、前回の結果が1件以上ある場合のみ再検索
 		if(paramDataTmp != null && $("#searchResultCount").val() != "0") {
 			// 前回の検索条件からソート条件のみを変更
@@ -147,6 +147,19 @@
         if ($(id).val()) {
             paramData["accountNum"] = $(id).val();
         }
+
+        // 口座名義
+        id = "#" + prev + "accountOwnerName";
+        if ($(id).val()) {
+            paramData["accountOwnerName"] = $(id).val();
+        }
+
+        // 口座名義カナ
+        id = "#" + prev + "accountOwnerKana";
+        if ($(id).val()) {
+            paramData["accountOwnerKana"] = $(id).val();
+        }
+
 		// ソート列
 		id = "#" + prev + "sortColumn";
 		paramData["sortColumn"] = $(id).val();
@@ -179,13 +192,7 @@
 			"${f:url("/ajax/master/searchBankAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleBankId")) {
-					var bankId = jData.filter("#singleBankId");
-					window.location.doHref("${f:url("/master/editBank/edit/")}" + bankId.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -240,7 +247,7 @@
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
@@ -255,7 +262,7 @@
 		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 		            </button>
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 					<table id="user_info" class="forms" summary="銀行情報" style="width: 500px">
 						<tr>
@@ -290,14 +297,26 @@
 								<html:text tabindex="105" maxlength="7" styleId="accountNum" property="accountNum" style="width: 100px; ime-mode: disabled;"/>
 							</td>
 						</tr>
+						<tr>
+							<th><div class="col_title_right">口座名義</div></th>
+							<td colspan="3">
+								<html:text tabindex="106" maxlength="20" styleId="accountOwnerName" property="accountOwnerName" style="width: 200px; ime-mode: disabled;"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">口座名義カナ</div></th>
+							<td colspan="3">
+								<html:text tabindex="107" maxlength="20" styleId="accountOwnerKana" property="accountOwnerKana" style="width: 200px; ime-mode: disabled;"/>
+							</td>
+						</tr>
 					</table>
 				</div>
 	    	</div><!-- /.form_section -->
 	    </div><!-- /.form_section_wrap -->
-	    
+
 		<div style="text-align: right; width: 1160px">
-			<button tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchBank()" class="btn_medium">検索</button>
+			<button tabindex="150" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="151" onclick="searchBank()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">
@@ -307,22 +326,27 @@
 			</div>
 			<table id="search_result" summary="searchResult" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
 				<colgroup>
-					<col span="1" style="width: 8%">
-					<col span="1" style="width: 25%">
-					<col span="1" style="width: 8%">
-					<col span="1" style="width: 25%">
+					<col span="1" style="width: 6%">
 					<col span="1" style="width: 10%">
-					<col span="1" style="width: 19%">
-					<col span="1" style="width: 5%">
+					<col span="1" style="width: 20%">
+					<col span="1" style="width: 7%">
+					<col span="1" style="width: 13%">
+					<col span="1" style="width: 6%">
+					<col span="1" style="width: 10%">
+				<col span="1" style="width: 10%">
+				<col span="1" style="width: 10%">
+				<col span="1" style="width: 8%">
 				</colgroup>
 				<tr>
 					<th class="rd_top_left" style="cursor: pointer; height: 30px;">有効</th>
-					<th class="rd_top_left" style="cursor: pointer; height: 30px;">銀行コード</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">銀行コード</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">銀行名</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">店番</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">店名</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">科目</th>
 					<th class="xl64" style="cursor: pointer; height: 30px;">口座番号</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">口座名義</th>
+					<th class="xl64" style="cursor: pointer; height: 30px;">口座名義カナ</th>
 					<th class="rd_top_right" style="cursor: pointer; height: 30px;">&nbsp;</th>
 				</tr>
 			</table>

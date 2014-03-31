@@ -22,7 +22,7 @@
 	<tr>
 		<th>商品コード</th>
 		<th>商品名</th>
-		<th>長さ</th>
+		<th>仕入先名</th>
 	</tr>
 	<c:forEach var="bean" items="${searchResultList}" varStatus="status">
 		<tr>
@@ -31,7 +31,7 @@
 				$('#${dialogId}').dialog('close');" >${f:h(bean.productCode)}</a>
 			</td>
 			<td>${f:h(bean.productName)}</td>
-			<td>${f:h(bean.length)}${f:h(bean.lengthUnitSizeCategoryName)}</td>
+			<td>${f:h(bean.supplierName)}</td>
 		</tr>
 	</c:forEach>
 </table>

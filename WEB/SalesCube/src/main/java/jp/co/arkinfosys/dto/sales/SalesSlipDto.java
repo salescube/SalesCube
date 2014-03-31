@@ -291,6 +291,9 @@ public class SalesSlipDto extends AbstractSlipDto<SalesLineDto> {
 	public String copySlipName;
 	/** 複写対象　伝票番号 */
 	public String copySlipId;
+	
+	/** 消費税率 */
+	public String ctaxRate;
 
 	/**
 	 * 売上伝票明細行を作成します.

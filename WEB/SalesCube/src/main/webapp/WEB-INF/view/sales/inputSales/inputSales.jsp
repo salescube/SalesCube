@@ -149,9 +149,9 @@
 
 					if($("#salesSlipId").val() == "" ){
 						// 明細行にて、伝票呼出された行は金額を再計算
-						
+
 						calcQuantity( i );
-						
+
 						// calcUnitRetailPrice( i );
 						// calcUnitCost(i);
 						// calcGm( i );
@@ -187,15 +187,26 @@
 		if( $("#salesSlipId").val() != "" ){
 			$("#salesSlipId").attr("readOnly", "true");
 			$("#salesSlipId").addClass("c_disable");
+			$("#salesSlipId").css("background-color", "#CCCCCC");
+			$("#salesSlipId").css("border-top", "2px solid #AEAEAE");
 			// 受注番号も変更不可とする。
 			$("#roSlipId").attr("readOnly", "true");
 			$("#roSlipId").addClass("c_disable");
+			$("#roSlipId").css("background-color", "#CCCCCC");
+			$("#roSlipId").css("border-top", "2px solid #AEAEAE");
 			$("#salesDate").focus();
 		}else{
 			$("#salesSlipId").focus();
 		}
+		
 		// 当日消費税の保持
+		// 伝票に税率が設定されている場合は、伝票の税率を有効にする
 		todaysTaxRate = $("#taxRate").val();
+		var slipRate = $("#ctaxRate").val();
+		
+		if (slipRate != null && slipRate != "" && todaysTaxRate != slipRate) {
+			todaysTaxRate = slipRate;
+		}
 
 		$("#customerCode").attr("maxlength", <%=Constants.CODE_SIZE.CUSTOMER%>);	//顧客コードの文字数制限10桁
 
@@ -1580,7 +1591,9 @@
 			if(( cat == "${TAX_CATEGORY_IMPOSITION}" )
 					||( cat == "${TAX_CATEGORY_IMPOSITION_OLD}" )){
 				// 消費税の計算対象を税率ごとに加算する
-				var pos = $("#salesLineList\\["+id+"\\]\\.ctaxRate").val();
+				//var pos = $("#salesLineList\\["+id+"\\]\\.ctaxRate").val();
+				var pos = $("#ctaxRate").val();
+				
 				var total = Number(arryPriceTotal[pos]);
 				if( isNaN(total) == true ){
 					arryPriceTotal[pos] = nPrice;
@@ -1593,35 +1606,62 @@
 		for (var key in arryPriceTotal) {
 			var total = arryPriceTotal[key];
 			var rate = Number( key );
+			
 			// 税率は％表記なので100.0で割る
 			nCtaxPriceTotal += ( rate / 100.0 * total );
 		}
+		
 		// 表示
+		// 粗利益
 		var gmTotal = nPriceTotal - nCostTotal;
 		$("#gmTotal").html( gmTotal.toString() );
+		SetBigDecimalScale_Obj($("#gmTotal"));
+		
+		// 粗利益率
 		if( (isNaN(nPriceTotal)==true)||( nPriceTotal == "0.0" )){
-			$("#gmTotalPer").html( "&nbsp;" );
+			$("#gmTotalPer").html( "0" );
 		}else{
 			// 2010.04.22 add kaki 粗利益率は％表示とする。まず100倍する。
 			$("#gmTotalPer").html( (( nPriceTotal - nCostTotal ) / nPriceTotal) * 100 );
 		}
+
+		// 金額合計
 		$("#priceTotal").html( nPriceTotal );
+		SetBigDecimalScale_Obj($("#priceTotal"));
+		
 		// 税転嫁が内税の時には消費税の表示は行わない
 		if( $("#taxShiftCategory") == ${TAX_SHIFT_CATEGORY_INCLUDE_CTAX}){
-			$("#ctaxPriceTotal").html( "&nbsp;" );
+			
+			// 消費税
+			$("#ctaxPriceTotal").html( "0" );
+			
+			
+			// 伝票合計
 			$("#total").html( nPriceTotal );
-		}else{
-			$("#ctaxPriceTotal").html( nCtaxPriceTotal );
+			
+		} else {
+
+			// 消費税
+			$("#ctaxPriceTotal").html(nCtaxPriceTotal);
+
+			// 伝票合計
 			var l_nCtaxPriceTotal = oBDCS(nCtaxPriceTotal.toString()).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString();
 			var l_nPriceTotal = oBDCS(nPriceTotal.toString()).setScale($("#priceFractCategory").val(),priceAlignment).setComma(false).toBDCString();
-			$("#total").html( Number(l_nCtaxPriceTotal) + Number(l_nPriceTotal) );
+			var ttl = Number(l_nCtaxPriceTotal) + Number(l_nPriceTotal);
+			$("#total").html( ttl );
+			
 		}
+		
+		SetBigDecimalScale_Obj($("#ctaxPriceTotal"));
+		SetBigDecimalScale_Obj($("#total"));
+		
 		// カンマをつける
 		_after_load($(".numeral_commas"));
 
 		// 2010.04.22 add kaki 粗利益率は％表示とする。
-		var sgmTotalPer = $("#gmTotalPer").html()+"%";
-		$("#gmTotalPer").html(sgmTotalPer);
+		var sgmTotalPer = $("#gmTotalPer").html();
+		$("#gmTotalPer").html(sgmTotalPer + "%");
+		SetBigDecimalScale_Obj($("#gmTotalPer"));
 
 	}
 
@@ -1731,6 +1771,11 @@ function doPrint( type ){
 function setRate( rate ){
 	// 消費税保持
 	$("#taxRate").val(rate);
+	changeRate();
+}
+
+
+function changeRate(){
 	// 行のレートを変更
 	lineSize = $("#tbodyLine").get(0).children.length-1;
 	for(i=0; i<lineSize; i++) {
@@ -1743,7 +1788,9 @@ function setRate( rate ){
 	}
 	// 合計の再計算
 	calcTotal();
+
 }
+
 function changeDate(){
 	var map = new Object();
 	var date = $("#salesDate").val();
@@ -1885,7 +1932,7 @@ function changeDate(){
 				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 				            </button>
 						</div><!-- /.section_title -->
-						
+
 						<div id="order_section" class="section_body">
 							<table id="order_info1" class="forms" summary="売上伝票情報">
 								<tr>
@@ -1897,7 +1944,7 @@ function changeDate(){
 									<td>
 										<html:text tabindex="101" property="roSlipId" styleId="roSlipId" style="width: 135px; ime-mode:disabled;" maxlength="10"  onchange="findCopy();"/>
 									</td>
-									<th><div class="col_title_right">売上日※</div></th>
+									<th><div class="col_title_right_req">売上日<bean:message key='labels.must'/></div></th>
 									<td>
 										<html:text tabindex="102" property="salesDate" styleId="salesDate" styleClass="date_input"  style="width: 135px; ime-mode:disabled; text-align:center;" maxlength="10" onchange="changeDate();"/>
 									</td>
@@ -1945,7 +1992,7 @@ function changeDate(){
 								<tr>
 									<th><div class="col_title_right">ピッキング備考</div></th>
 									<td colspan="7">
-										<html:text tabindex="110" property="pickingRemarks" styleId="pickingRemarks" style="width: 810px; ime-mode:active;" maxlength="120" />
+										<html:text tabindex="110" property="pickingRemarks" styleId="pickingRemarks" style="width: 800px; ime-mode:active;" maxlength="120" />
 									</td>
 								</tr>
 								<tr>
@@ -1958,11 +2005,19 @@ function changeDate(){
 										<html:text tabindex="112" property="disclaimer" styleId="disclaimer" style="width: 135px; ime-mode:active;" maxlength="60" />
 									</td>
 								</tr>
+								<tr>
+									<th><div class="col_title_right">消費税率</div></th>
+									<td colspan="3">
+										<html:select property="ctaxRate" styleId="ctaxRate" tabindex="113" style="width: 135px;" onchange="changeRate()">
+										    <html:options collection="ctaxRateList" property="value" labelProperty="label"/>
+										</html:select>&nbsp;％
+									</td>
+								</tr>
 							</table>
 						</div><!-- /.section_body -->
 					</div><!-- /.form_section -->
 				</div><!-- /.form_section_wrap -->
-				
+
 			    <div class="form_section_wrap">
 				    <div class="form_section">
 				    	<div class="section_title">
@@ -1971,11 +2026,11 @@ function changeDate(){
 				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 				            </button>
 						</div><!-- /.section_title -->
-						
+
 						<div id="order_section" class="section_body">
 							<table id="customer_info" class="forms" summary="顧客情報">
 								<tr>
-									<th><div class="col_title_right">顧客コード※</div></th>
+									<th><div class="col_title_right_req">顧客コード<bean:message key='labels.must'/></div></th>
 									<td>
 										<html:text tabindex="200" property="customerCode" styleId="customerCode" style="width: 130px; ime-mode:disabled;"
 											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ ChangeCustomerCode(); }"/>
@@ -2003,7 +2058,7 @@ function changeDate(){
 											</c:forEach>
 										</html:select>
 									</td>
-									<th><div class="col_title_right">取引区分</div></th>
+									<th width="120px"><div class="col_title_right">取引区分</div></th>
 									<td>
 										<html:select tabindex="204" property="salesCmCategory"  styleId="salesCmCategory" >
 											<c:forEach var="scmcl" items="${salesCmCategoryList}">
@@ -2011,56 +2066,56 @@ function changeDate(){
 											</c:forEach>
 										</html:select>
 									</td>
-										<td style="display: none;">
-											<html:hidden property="userId" styleId="userId" />
-											<html:hidden property="status" styleId="status" />
-											<html:hidden property="billId" styleId="billId" />
-											<html:hidden property="salesBillId" styleId="salesBillId" />
-											<html:hidden property="billDate" styleId="billDate" />
-											<html:hidden property="billCutoffGroup" styleId="billCutoffGroup" />
-											<html:hidden property="paybackCycleCategory" styleId="paybackCycleCategory" />
-											<html:hidden property="billCutoffDate" styleId="billCutoffDate" />
-											<html:hidden property="billCutoffPdate" styleId="billCutoffPdate" />
-											<html:hidden property="salesCutoffDate" styleId="salesCutoffDate" />
-											<html:hidden property="salesCutoffPdate" styleId="salesCutoffPdate" />
-											<html:hidden property="baCode" styleId="baCode" />
-											<html:hidden property="baName" styleId="baName" />
-											<html:hidden property="baKana" styleId="baKana" />
-											<html:hidden property="baOfficeName" styleId="baOfficeName" />
-											<html:hidden property="baOfficeKana" styleId="baOfficeKana" />
-											<html:hidden property="baDeptName" styleId="baDeptName" />
-											<html:hidden property="baZipCode" styleId="baZipCode" />
-											<html:hidden property="baAddress1" styleId="baAddress1" />
-											<html:hidden property="baAddress2" styleId="baAddress2" />
-											<html:hidden property="baPcName" styleId="baPcName" />
-											<html:hidden property="baPcKana" styleId="baPcKana" />
-											<html:hidden property="baPcPreCategory" styleId="baPcPreCategory" />
-											<html:hidden property="baPcPre" styleId="baPcPre" />
-											<html:hidden property="baTel" styleId="baTel" />
-											<html:hidden property="baFax" styleId="baFax" />
-											<html:hidden property="baEmail" styleId="baEmail" />
-											<html:hidden property="baUrl" styleId="baUrl" />
-											<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
-											<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
-											<html:hidden property="billPrintCount" styleId="billPrintCount" />
-											<html:hidden property="deliveryPrintCount" styleId="deliveryPrintCount" />
-											<html:hidden property="tempDeliveryPrintCount" styleId="tempDeliveryPrintCount" />
-											<html:hidden property="shippingPrintCount" styleId="shippingPrintCount" />
-											<html:hidden property="siPrintCount" styleId="siPrintCount" />
-											<html:hidden property="updDatetm" styleId="updDatetm" />
-											<html:hidden styleId="copySlipName" property="copySlipName"/>
-											<html:hidden styleId="copySlipId" property="copySlipId"/>
-											<html:hidden styleId="roUpdDatetm" property="roUpdDatetm"/>
-											<html:hidden styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag"/>
-											<html:hidden styleId="taxRate" property="taxRate"/>
-											<html:hidden styleId="codSc" property="codSc"/>
-											<html:hidden property="custsalesCmCategory" styleId="custsalesCmCategory" />
-											<html:hidden styleId="reportEFlag" property="reportEFlag"/>
-											<html:hidden styleId="artId" property="artId"/>
-											<html:hidden styleId="billPrintUnit" property="billPrintUnit"/>
-											<html:hidden styleId="billDatePrint" property="billDatePrint"/>
-											<html:hidden property="newData" />
-										</td>
+									<td style="display: none;">
+										<html:hidden property="userId" styleId="userId" />
+										<html:hidden property="status" styleId="status" />
+										<html:hidden property="billId" styleId="billId" />
+										<html:hidden property="salesBillId" styleId="salesBillId" />
+										<html:hidden property="billDate" styleId="billDate" />
+										<html:hidden property="billCutoffGroup" styleId="billCutoffGroup" />
+										<html:hidden property="paybackCycleCategory" styleId="paybackCycleCategory" />
+										<html:hidden property="billCutoffDate" styleId="billCutoffDate" />
+										<html:hidden property="billCutoffPdate" styleId="billCutoffPdate" />
+										<html:hidden property="salesCutoffDate" styleId="salesCutoffDate" />
+										<html:hidden property="salesCutoffPdate" styleId="salesCutoffPdate" />
+										<html:hidden property="baCode" styleId="baCode" />
+										<html:hidden property="baName" styleId="baName" />
+										<html:hidden property="baKana" styleId="baKana" />
+										<html:hidden property="baOfficeName" styleId="baOfficeName" />
+										<html:hidden property="baOfficeKana" styleId="baOfficeKana" />
+										<html:hidden property="baDeptName" styleId="baDeptName" />
+										<html:hidden property="baZipCode" styleId="baZipCode" />
+										<html:hidden property="baAddress1" styleId="baAddress1" />
+										<html:hidden property="baAddress2" styleId="baAddress2" />
+										<html:hidden property="baPcName" styleId="baPcName" />
+										<html:hidden property="baPcKana" styleId="baPcKana" />
+										<html:hidden property="baPcPreCategory" styleId="baPcPreCategory" />
+										<html:hidden property="baPcPre" styleId="baPcPre" />
+										<html:hidden property="baTel" styleId="baTel" />
+										<html:hidden property="baFax" styleId="baFax" />
+										<html:hidden property="baEmail" styleId="baEmail" />
+										<html:hidden property="baUrl" styleId="baUrl" />
+										<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
+										<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
+										<html:hidden property="billPrintCount" styleId="billPrintCount" />
+										<html:hidden property="deliveryPrintCount" styleId="deliveryPrintCount" />
+										<html:hidden property="tempDeliveryPrintCount" styleId="tempDeliveryPrintCount" />
+										<html:hidden property="shippingPrintCount" styleId="shippingPrintCount" />
+										<html:hidden property="siPrintCount" styleId="siPrintCount" />
+										<html:hidden property="updDatetm" styleId="updDatetm" />
+										<html:hidden styleId="copySlipName" property="copySlipName"/>
+										<html:hidden styleId="copySlipId" property="copySlipId"/>
+										<html:hidden styleId="roUpdDatetm" property="roUpdDatetm"/>
+										<html:hidden styleId="tempDeliverySlipFlag" property="tempDeliverySlipFlag"/>
+										<html:hidden styleId="taxRate" property="taxRate"/>
+										<html:hidden styleId="codSc" property="codSc"/>
+										<html:hidden property="custsalesCmCategory" styleId="custsalesCmCategory" />
+										<html:hidden styleId="reportEFlag" property="reportEFlag"/>
+										<html:hidden styleId="artId" property="artId"/>
+										<html:hidden styleId="billPrintUnit" property="billPrintUnit"/>
+										<html:hidden styleId="billDatePrint" property="billDatePrint"/>
+										<html:hidden property="newData" />
+									</td>
 								</tr>
 								<tr>
 									<th><div class="col_title_right">備考</div></th>
@@ -2078,7 +2133,7 @@ function changeDate(){
 						</div><!-- /.section_body -->
 					</div><!-- /.form_section -->
 				</div><!-- /.form_section_wrap -->
-				
+
 			    <div class="form_section_wrap">
 				    <div class="form_section">
 				    	<div class="section_title">
@@ -2087,14 +2142,19 @@ function changeDate(){
 				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 				            </button>
 						</div><!-- /.section_title -->
-						
+
 						<div id="order_section" class="section_body">
 							<table id="delivery_info" class="forms" summary="納入先情報">
 								<tr>
-									<th><div class="col_title_right">顧客納入先<c:if test="${!onlineOrderData}">※</c:if></div></th>
+									<c:if test="${!onlineOrderData}">
+										<th><div class="col_title_right_req">顧客納入先<bean:message key='labels.must'/></div></th>
+									</c:if>
+									<c:if test="${onlineOrderData}">
+										<th><div class="col_title_right">顧客納入先</div></th>
+									</c:if>
 									<td colspan="7">
 										<c:if test="${!onlineOrderData}">
-										<html:select tabindex="300" property="deliveryCode"  styleId="deliveryCode" onchange="changedelivery()" >
+										<html:select tabindex="300" property="deliveryCode"  styleId="deliveryCode" onchange="changedelivery()" style="width: 970px">
 											<c:forEach var="dell" items="${deliveryList}">
 												<html:option value="${dell.value}">${dell.label}</html:option>
 											</c:forEach>
@@ -2103,7 +2163,7 @@ function changeDate(){
 										</c:if>
 										<c:if test="${onlineOrderData}">
 										<html:hidden styleId="deliveryCode" property="deliveryCode"/>
-										<html:text tabindex="300" property="deliveryName" styleId="deliveryName" style="width: 500px" readonly="true" styleClass="c_disable"  />
+										<html:text tabindex="300" property="deliveryName" styleId="deliveryName" style="width: 970px" readonly="true" styleClass="c_disable"  />
 										</c:if>
 									</td>
 								</tr>
@@ -2179,7 +2239,7 @@ function changeDate(){
 						</div><!-- /.section_body -->
 					</div><!-- /.form_section -->
 				</div><!-- /.form_section_wrap -->
-				
+
 				<div id="order_detail_info_wrap">
 				<table summary="受注商品明細リスト" class="forms detail_info" style="margin-top: 20px;">
 					<tr>
@@ -2204,7 +2264,7 @@ function changeDate(){
 						<c:forEach var="salesLineList" items="${salesLineList}" varStatus="s" >
 							<c:if test='${salesLineList.lineNo != null}'>
 							<tr id="trLine${s.index}">
-							
+
 								<!-- No -->
 								<td id="tdNo${s.index}">
 									<div class="box_1of1">
@@ -2237,43 +2297,43 @@ function changeDate(){
 									// 受注伝票行ID
 									// 数量
 								</td>
-								
+
 								<!-- 商品コード -->
-								<td style="text-align: right;">
+								<td style="text-align: right; background-color: #fae4eb;">
 									<div class="box_1of1" style="margin: 5px;">
 										<html:text tabindex="${1000+s.index*16}" name="salesLineList" property="productCode"
 											style="width: 120px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].productCode" maxlength="20" />
-										<html:image styleId="productCodeImg${s.index}" tabindex="${1001+s.index*16}" src="${f:url('/images//customize/btn_search.png')}" 
+										<html:image styleId="productCodeImg${s.index}" tabindex="${1001+s.index*16}" src="${f:url('/images//customize/btn_search.png')}"
 											style="width: auto; vertical-align: middle; cursor: pointer;" />
 									</div>
 								</td>
-								
+
 								<!-- 商品名・摘要、商品備考 -->
 								<td  style="white-space: normal">
 									<div class="box_1of2" id="productAbstract${s.index}" style="position: static; white-space: normal;">
 										<c:out value="${salesLineList.productAbstract}" />
 									</div>
 									<div class="box_2of2">
-										<html:textarea name="salesLineList"  styleId="salesLineList[${s.index}].productRemarks" property="productRemarks" 
-											tabindex="${1002+s.index*16}" readonly="true" styleClass="c_disable" indexed="true" style="width: 110px;"/>
+										<html:textarea name="salesLineList"  styleId="salesLineList[${s.index}].productRemarks" property="productRemarks"
+											tabindex="${1002+s.index*16}" readonly="true" styleClass="c_disable" indexed="true" style="margin: 2px 0 7px 0; width: 110px;"/>
 									</div>
 								</td>
-								
+
 								<!-- 数量※ -->
-								<td>
+								<td style="background-color: #fae4eb;">
 									<div class="box_1of2" style="border-bottom: 0;">
 										<html:text tabindex="${1003+s.index*16}" name="salesLineList" property="quantity"
 											style="width: 40px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].quantity"  styleClass="numeral_commas" maxlength="6" />
 									</div>
 									<div class="box_2of2">
-										<button id="stockBtn${s.index}" tabindex="${1005+s.index*16}" class="btn_small">在庫</button>
+										<button id="stockBtn${s.index}" tabindex="${1005+s.index*16}" class="btn_list_action">在庫</button>
 									</div>
 								</td>
-								
+
 								<!-- 完納区分※ -->
-								<td>
+								<td style="background-color: #fae4eb;">
 									<div class="box_1of1" style="width: 80px; margin: 5px;">
-										<html:select tabindex="${1006+s.index*16}" name="salesLineList" property="deliveryProcessCategory" 
+										<html:select tabindex="${1006+s.index*16}" name="salesLineList" property="deliveryProcessCategory"
 											styleId="salesLineList[${s.index}].deliveryProcessCategory"  indexed="true" >
 											<c:forEach var="dpcl" items="${delivertProcessCategoryList}">
 												<html:option value="${dpcl.value}">${dpcl.label}</html:option>
@@ -2281,23 +2341,23 @@ function changeDate(){
 										</html:select>
 									</div>
 								</td>
-								
+
 								<!-- 仕入単価※、仕入金額※ -->
-								<td>
+								<td style="background-color: #fae4eb;">
 									<div class="box_1of2">
 										<html:text tabindex="${1007+s.index*16}" name="salesLineList" property="unitCost"
-											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitCost" 
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitCost"
 											styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
 									</div>
 									<div class="box_2of2">
 										<html:text tabindex="${1008+s.index*16}" name="salesLineList" property="cost"
-											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].cost" 
+											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].cost"
 											styleClass="numeral_commas c_disable" readonly="true" maxlength="9" />
 									</div>
 								</td>
-								
+
 								<!-- 売上単価※、売価金額※ -->
-								<td>
+								<td style="background-color: #fae4eb;">
 									<div class="box_1of2">
 										<html:text tabindex="${1009+s.index*16}" name="salesLineList" property="unitRetailPrice"
 											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].unitRetailPrice" styleClass="numeral_commas" maxlength="9" />
@@ -2307,19 +2367,19 @@ function changeDate(){
 											style="width: 70px; ime-mode:disabled;" indexed="true" styleId="salesLineList[${s.index}].retailPrice" styleClass="numeral_commas" maxlength="9" />
 									</div>
 								</td>
-								
+
 								<!-- 備考、ピッキング備考 -->
 								<td>
 									<div class="box_1of2">
-										<html:textarea tabindex="${1011+s.index*16}" name="salesLineList" property="remarks" style="width: 150px; ime-mode:active;" 
+										<html:textarea tabindex="${1011+s.index*16}" name="salesLineList" property="remarks" style="margin: 2px 0 7px 0; width: 150px; ime-mode:active;"
 										indexed="true" styleId="salesLineList[${s.index}].remarks" />
 									</div>
 									<div class="box_2of2">
-										<html:textarea tabindex="${1012+s.index*16}" name="salesLineList" property="eadRemarks" style="width: 150px; ime-mode:active;" 
+										<html:textarea tabindex="${1012+s.index*16}" name="salesLineList" property="eadRemarks" style="margin: 2px 0 7px 0; width: 150px; ime-mode:active;"
 										indexed="true" styleId="salesLineList[${s.index}].eadRemarks" readonly="true" styleClass="c_disable"/>
 									</div>
 								</td>
-								
+
 								<!-- 棚番 -->
 								<td style="text-align: right;">
 									<div class="box_1of1" style="margin: 5px;">
@@ -2327,27 +2387,27 @@ function changeDate(){
 											style="width: 55px; ime-mode:inactive;" indexed="true" styleId="salesLineList[${s.index}].rackCodeSrc" maxlength="7" />
 									</div>
 								</td>
-								
+
 								<!--  -->
 								<td>
 									<div class="box_1of2">
 									<c:if test="${closed || !menuUpdate}">
-										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_small" disabled="disabled" >削除</button>
+										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_list_action" disabled="disabled" >削除</button>
 									</c:if>
 									<c:if test="${!closed && menuUpdate}">
-										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_small" >削除</button>
+										<button name="salesLineList" id="deleteBtn${s.index}" style="width:70px;" tabindex="${1014+s.index*16}" class="btn_list_action" >削除</button>
 									</c:if>
 									</div>
 									<div class="box_2of2">
 									<c:if test="${s.first}" >
-										<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small" disabled="disabled" >前行複写</button>
+										<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_list_action" disabled="disabled" >前行複写</button>
 									</c:if>
 									<c:if test="${!s.first}" >
 										<c:if test="${closed || !menuUpdate}">
-											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small" disabled="disabled" >前行複写</button>
+											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_list_action" disabled="disabled" >前行複写</button>
 										</c:if>
 										<c:if test="${!closed && menuUpdate}">
-											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_small">前行複写</button>
+											<button name="copyLine" id="copyBtn${s.index}" style="width:70px;" tabindex="${1015+s.index*16}" class="btn_list_action">前行複写</button>
 										</c:if>
 									</c:if>
 									</div>
@@ -2355,20 +2415,20 @@ function changeDate(){
 							</tr>
 							</c:if>
 						</c:forEach>
-						
+
 						<!-- 追加ボタン -->
 						<tr id="trAddLine">
 							<td style="height: 60px; text-align: center" colspan="10" class="rd_bottom_left rd_bottom_right">
 							<c:if test="${closed || !menuUpdate}">
 								<!--<html:button tabindex="1999" styleId ="addLine" property="addLine" disabled="disabled" styleClass="btn_small">追加</html:button>-->
-								
+
 								<button type="button" tabindex="1999" id="addRowBtn" style="width:80px;" disabled="disabled" >
 									<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
 								</button>
 							</c:if>
 							<c:if test="${!closed && menuUpdate}">
 								<!--<html:button tabindex="1999" styleId ="addLine" property="addLine" onclick="addRow();" style="cursor: pointer;" styleClass="btn_small">追加</html:button>-->
-								
+
 								<button type="button" tabindex="1999" id="addRowBtn" style="width:80px; cursor: pointer;" onclick="addRow();" onkeypress="addRow();">
 									<img alt="行追加" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
 								</button>
@@ -2378,10 +2438,10 @@ function changeDate(){
 					</tbody>
 				</table>
 				</div>
-				
+
 				<!-- 削除された行のCSVデータ -->
 		        <html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-		        
+
 				<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
 		        <div id="information" class="information" style="">
 					<table id="voucher_info" class="forms" summary="伝票情報" style="">
@@ -2393,19 +2453,19 @@ function changeDate(){
 							<th class="rd_top_right">伝票合計</th>
 						</tr>
 						<tr>
-							<td id="gmTotal" style="text-align: center; height: 100px;" class="numeral_commas">
+							<td id="gmTotal" style="text-align: center; height: 100px;" class="BDCyen yen_value">
 								&nbsp;<c:out value="${f:h(gmTotal)}" />
 							</td>
 							<td id="gmTotalPer" style="text-align: center" class="numeral_commas">
 								&nbsp;<c:out value="${f:h(gmTotalPer)}" />
 							</td>
-							<td id="priceTotal" style="text-align: center" class="numeral_commas">
+							<td id="priceTotal" style="text-align: center" class="BDCyen yen_value">
 								&nbsp;<c:out value="${f:h(priceTotal)}" />
 							</td>
-							<td id="ctaxPriceTotal" style="text-align: center" class="numeral_commas">
+							<td id="ctaxPriceTotal" style="text-align: center" class="BDCyen yen_value">
 								&nbsp;<c:out value="${f:h(ctaxPriceTotal)}" />
 							</td>
-							<td id="total" style="text-align: center" class="numeral_commas">
+							<td id="total" style="text-align: center" class="BDCyen yen_value">
 								&nbsp;<c:out value="${f:h(total)}" />
 							</td>
 						</tr>
@@ -2416,25 +2476,25 @@ function changeDate(){
 				<div style="width: 1160px; text-align: center; margin-top: 10px;">
 					<c:if test="${newData}" >
 						<c:if test="${closed || !menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" disabled>
-								<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							<button type="button" tabindex="1999" id="btnF3btm" style="width:260px; height:51px;" class="btn_medium" disabled>
+								<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 							</button>
 						</c:if>
 						<c:if test="${!closed && menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();">
-								<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							<button type="button" tabindex="1999" id="btnF3btm" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();">
+								<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 							</button>
 						</c:if>
 					</c:if>
 					<c:if test="${!newData}" >
 						<c:if test="${closed || !menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" disabled>
-								<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							<button type="button" tabindex="1999" id="btnF3btm" style="width:260px; height:51px;" class="btn_medium" disabled>
+								<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 							</button>
 						</c:if>
 						<c:if test="${!closed && menuUpdate}">
-							<button type="button" tabindex="1999" id="btnF3btm" onclick="onF3();">
-								<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+							<button type="button" tabindex="1999" id="btnF3btm" style="width:260px; height:51px;" class="btn_medium" onclick="onF3();">
+								<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 							</button>
 						</c:if>
 					</c:if>
@@ -2442,7 +2502,7 @@ function changeDate(){
 			</div>
 		</s:form>
 	</div>
-	
+
 	<div id="output_dialog" title="出力選択" style="display: none;">
 		<div style="padding: 20px 20px 0 20px;">
 			<form name="printForm" method="post" style="margin: 0px;">

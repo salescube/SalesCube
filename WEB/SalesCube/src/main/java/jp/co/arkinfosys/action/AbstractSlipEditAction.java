@@ -93,6 +93,7 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 		prepareForm();
 		form.initialize();
 		this.createList();
+		
 		try {
 			if( !loadData()){
 
@@ -115,6 +116,10 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 
 				afterLoad();
 			}
+			
+			// 伝票の消費税率設定
+			form.setSlipTaxRate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -180,6 +185,9 @@ public abstract class AbstractSlipEditAction<DTOCLASS extends AbstractSlipDto<LI
 			//form.initialize();
 			form.upsertInitialize();
 			this.createList();
+			
+			// 伝票の消費税率設定
+			form.setSlipTaxRate();
 
 			// 伝票ヘッダと明細を登録する
 			boolean bInsert = form.isNewData();

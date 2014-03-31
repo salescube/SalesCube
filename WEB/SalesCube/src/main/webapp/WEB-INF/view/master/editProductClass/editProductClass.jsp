@@ -366,7 +366,7 @@
 				<th><div class="col_title_right">分類コード</div></th>
 				<td><html:text maxlength="4" styleId="classCode" property="classCode" style="width: 100px" tabindex="103" readonly="true" styleClass="c_disable"/>
 				</td>
-				<th><div class="col_title_right">分類名</div><bean:message key='labels.must'/></th>
+				<th><div class="col_title_right_req">分類名<bean:message key='labels.must'/></div></th>
 				<td><html:text maxlength="250" styleId="className" property="className" style="width: 250px" tabindex="104"/></td>
 			</tr>
 		</table>

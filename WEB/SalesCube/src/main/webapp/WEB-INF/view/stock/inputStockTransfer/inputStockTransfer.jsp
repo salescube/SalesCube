@@ -750,7 +750,7 @@
 					<tr>
 						<th><div class="col_title_right"><bean:message key='labels.eadSlipId.transfer'/></div></th><%// 在庫移動番号 %>
 						<td><html:text property="eadSlipId" styleId="eadSlipId" style="width: 140px; ime-mode: disabled;" styleClass="" tabindex="100" readonly="false"  maxlength="10"  onblur="findSlip();"/></td>
-						<th><div class="col_title_right"><bean:message key='labels.eadDate.transfer'/><bean:message key='labels.must'/></div></th><%// 在庫移動日 %>
+						<th><div class="col_title_right_req"><bean:message key='labels.eadDate.transfer'/><bean:message key='labels.must'/></div></th><%// 在庫移動日 %>
 						<td><html:text property="eadDate" styleId="eadDate" style="width: 135px; vertical-align: middle; ime-mode: disabled;" styleClass="date_input" tabindex="101" maxlength="10" /></td>
 						<th><div class="col_title_right"><bean:message key='labels.userName'/></div></th><%// 入力担当者 %>
 						<td>
@@ -815,8 +815,8 @@
 									
 									<!-- 商品コード・商品名 -->
 									<td>
-										<div class="box_1of2">
-											<html:text name="eadLineTrnDtoList" property="productCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productCode" styleClass="c_referable" style="width: 165px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1000}" maxlength="20" />
+										<div class="box_1of2" style="background-color: #fae4eb;">
+											<html:text name="eadLineTrnDtoList" property="productCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productCode" styleClass="c_referable" style="width: 165px; height: 30px; ime-mode: disabled; margin: 0; vertical-align: middle;" tabindex="${status.index*lineElementCount+1000}" maxlength="20" />
 											<html:image styleId="productCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1001}"/>
 										</div>
 										<div class="box_2of2">
@@ -828,7 +828,7 @@
 									
 									<!-- 数量・移動可能数・現在庫数 -->
 									<td>
-										<div class="box_1of3">
+										<div class="box_1of3" style="background-color: #fae4eb;">
 											<html:text name="eadLineTrnDtoList" property="quantity" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantity" styleClass="numeral_commas" style="width: 80px; height: 24px; ime-mode: disabled; margin: 3px;" tabindex="${status.index*lineElementCount+1002}" maxlength="6" /><br>
 										</div>
 										<div class="box_2of3">
@@ -840,13 +840,13 @@
 									</td>
 									
 									<!-- 移動元棚番・移動先棚番 -->
-									<td>
+									<td style="background-color: #fae4eb;">
 										<div class="box_1of2">
-											<html:text name="eadLineTrnDtoList" property="rackCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCode" styleClass="c_referable" style="width: 120px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1005}"  maxlength="${code_size_rack}" />
+											<html:text name="eadLineTrnDtoList" property="rackCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCode" styleClass="c_referable" style="width: 120px; height: 30px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1005}"  maxlength="${code_size_rack}" />
 											<html:image styleId="rackCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1006}"/>
 										</div>
 										<div class="box_2of2">
-											<html:text name="eadLineTrnDtoList" property="rackCodeDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCodeDest" styleClass="c_referable" style="width: 120px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1007}"  maxlength="${code_size_rack}" />
+											<html:text name="eadLineTrnDtoList" property="rackCodeDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCodeDest" styleClass="c_referable" style="width: 120px; height: 30px; ime-mode: disabled; margin: 0;" tabindex="${status.index*lineElementCount+1007}"  maxlength="${code_size_rack}" />
 											<html:image styleId="rackCodeDestImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1008}"/>
 										</div>
 									</td>
@@ -871,14 +871,14 @@
 									<!-- ボタン -->
 									<td style="text-align:right;">
 										<div class="box_1of2">
-										<button id="deleteBtn${status.index}" type="button" style="width:80px;" class="btn_small"  tabindex="${status.index*lineElementCount+1010}"
+										<button id="deleteBtn${status.index}" type="button" style="width:80px;" class="btn_list_action"  tabindex="${status.index*lineElementCount+1010}"
 											<c:if test="${!newData}">
 												disabled
 											</c:if>
 										><bean:message key='words.action.delete'/><%// 削除 %></button>
 										</div>
 										<div class="box_2of2">
-										<button id="copyBtn${status.index}" type="button" style="width:80px;" class="btn_small"  tabindex="${status.index*lineElementCount+1011}"
+										<button id="copyBtn${status.index}" type="button" style="width:80px;" class="btn_list_action"  tabindex="${status.index*lineElementCount+1011}"
 											<c:if test="${status.first || !newData}">
 												disabled
 											</c:if>
@@ -908,8 +908,8 @@
 			</div>
 			</div>
 				<div style="text-align: center; width: 1160px; margin-top: 10px;">
-					<button type="button" id="btnF3btm" tabindex="1999" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>
-						<img alt="<bean:message key='words.action.register'/>" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51"><%// 登録 %>
+					<button type="button" id="btnF3btm" class="btn_medium" style="width:260px; height:51px;" tabindex="1999" onclick="onF3();" ${newData&&menuUpdate?"":"disabled"}>
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 					</button>
 				</div>
 		</s:form>

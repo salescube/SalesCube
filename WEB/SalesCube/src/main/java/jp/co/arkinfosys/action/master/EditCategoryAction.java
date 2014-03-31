@@ -108,6 +108,7 @@ public class EditCategoryAction extends
 		}
 
 		// 区分マスタを更新する
+
 		try {
 			categoryService.updateMasterRecordUpdDatetm(Integer.parseInt(this
 					.getKey()), this.editCategoryForm.updDatetm);
@@ -123,6 +124,7 @@ public class EditCategoryAction extends
 			return this.getInputURL();
 		}
 
+
 		// 既存レコードを削除する
 		List<CategoryJoin> categoryTrns = categoryService
 				.findCategoryJoinById(Integer.parseInt(this.getKey()));
@@ -130,24 +132,56 @@ public class EditCategoryAction extends
 		for (CategoryJoin categoryJoin : categoryTrns) {
 			CategoryDto dto = Beans.createAndCopy(CategoryDto.class,
 					categoryJoin).execute();
+
+			//更新履歴を残すためのUPDATE
 			categoryService.updateAudit(new String[] { this.getKey(),
 					dto.categoryCode });
+
+			//IDが可変なので一度Deleteする
 			categoryService.deleteRecord(dto);
 		}
+
+		int noInsertCount = 0;
 
 		// 画面上のレコードを登録する
 		for (CategoryDto dto : this.editCategoryForm.categoryTrnList) {
 			dto.categoryId = this.getKey();
-			categoryService.insertRecord(dto);
+
+			//対象のIDが区分データテーブル上に非表示項目として存在しないかチェックする
+			if(categoryService.findCategoryTrnNoDspByIdAndCode(dto) == null){
+				//INSERT
+				categoryService.insertRecord(dto);
+			}
+			else
+			{
+				//非表示項目として存在するためINSERTはしない。
+				//カウントのみ
+				noInsertCount =+ 1;
+
+				/*
+				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"errors.already.exists.CategoryCode"));
+				ActionMessagesUtil.addErrors(this.httpRequest, this.messages);
+				return this.getInputURL();
+				*/
+			}
+
 		}
 
 		super.init(this.getKey());
 
-		// メッセージ設定
-		this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-				"infos.update"));
+		if (noInsertCount != 0){
+			// メッセージ設定
+			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"infos.update" ));
+			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"errors.already.exists.CategoryCode" ));
+		}else{
+			// メッセージ設定
+			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"infos.update"));
+		}
 		ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
-
 		return getInputURL();
 	}
 

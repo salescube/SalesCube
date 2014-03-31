@@ -73,6 +73,10 @@ public class InputPaymentLineDto extends AbstractLineDto {
 	/** 仕入伝票明細行.消費税率 */
 	public String ctaxRate;
 
+	/** 仕入伝票明細行.消費税額 */
+	public String ctaxPrice;				
+
+	
 	/** 支払対象明細の選択に使用するチェックボックスの状態 */
 	public Boolean checkPayLine = false;
 

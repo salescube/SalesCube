@@ -71,6 +71,7 @@ INSERT
 		,TAX_FRACT_CATEGORY
 		,PRICE_FRACT_CATEGORY
 		,CTAX_PRICE_TOTAL
+		,CTAX_RATE
 		,PRICE_TOTAL
 		,GM_TOTAL
 		,COD_SC
@@ -178,6 +179,7 @@ INSERT
 		,/*taxFractCategory*/NULL
 		,/*priceFractCategory*/NULL
 		,/*ctaxPriceTotal*/NULL
+		,/*ctaxRate*/NULL
 		,/*priceTotal*/NULL
 		,/*gmTotal*/NULL
 		,/*codSc*/NULL

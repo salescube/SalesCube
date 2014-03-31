@@ -38,9 +38,9 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 		public static final String WAREHOUSE_CODE="warehouseCode";
 
 		public static final String WAREHOUSE_NAME="warehouseName";
-		
+
 		public static final String WAREHOUSE_STATE="warehouseState";
-		
+
 		public static final String RACK_CODE = "rackCode";
 
 		public static final String RACK_NAME = "rackName";
@@ -116,7 +116,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	/**
 	 * 倉庫コードから棚番情報を取得します.
 	 *
@@ -262,7 +262,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			param.put(RackService.Param.EMPTY_RACK, conditions
 					.get(RackService.Param.EMPTY_RACK));
 		}
-		
+
 		// 倉庫コード
 		if (conditions.containsKey(RackService.Param.WAREHOUSE_CODE)) {
 			param.put(RackService.Param.WAREHOUSE_CODE, super
@@ -282,7 +282,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			param.put(RackService.Param.WAREHOUSE_STATE, conditions
 					.get(RackService.Param.WAREHOUSE_STATE));
 		}
-		
+
 		// 区分IDは固定で棚分類を指定する
 		param.put(RackService.Param.CATEGORY_ID, Categories.RACK_CATEGORY);
 
@@ -350,7 +350,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 		param.put(RackService.Param.SORT_COLUMN_RACK, null);
 		param.put(RackService.Param.CATEGORY_ID, null);
 		param.put(RackService.Param.SORT_ORDER, null);
-		
+
 		param.put(RackService.Param.WAREHOUSE_CODE, null);
 		param.put(RackService.Param.WAREHOUSE_NAME, null);
 		param.put(RackService.Param.WAREHOUSE_STATE, null);
@@ -407,11 +407,11 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 		param.putAll(rackInfo);
 		this.updateBySqlFile("rack/UpdateRack.sql", param).execute();
 	}
-	
+
 
 	/**
 	 * 倉庫削除時に、棚情報を更新、削除します。
-	 * 
+	 *
 	 * @param dto 棚番情報
 	 * @throws Exception
 	 */
@@ -493,18 +493,27 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 					"rack/FindProductsByRackCode.sql", param).getResultList();
 			for (RackDto dto : dtoList) {
 				if (Constants.FLAG.ON.equals(dto.multiFlag)) {
-					// 重複許可棚の場合は「重複許可」を設定
-					dto.productCodeList = new ArrayList<String>();
-					dto.productCodeList.add(Constants.RACK_NAME.MULTI_ON);
-					continue;
+					dto.duplicateList = new ArrayList<String>();
+					dto.duplicateList.add("○");
 				}
 
 				for (Product p : productList) {
+
+					// 重複許可棚の場合
+					if (Constants.FLAG.ON.equals(dto.multiFlag)) {
+						//商品コード・商品名を出さない
+						break;
+					}
+
 					if (p.rackCode.equals(dto.rackCode)) {
 						if (dto.productCodeList == null) {
+							dto.duplicateList = new ArrayList<String>();
 							dto.productCodeList = new ArrayList<String>();
+							dto.productNameList = new ArrayList<String>();
 						}
+						dto.duplicateList.add("");
 						dto.productCodeList.add(p.productCode);
+						dto.productNameList.add(p.productName);
 					}
 				}
 			}

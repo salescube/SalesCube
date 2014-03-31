@@ -316,7 +316,7 @@ public class CustomerDto implements Serializable, MasterEditDto {
 		if( !checkEquals( dto.salesCmCategory, salesCmCategory ) ){
 			return false;
 		}
-		// 税転稼
+		// 税転嫁
 		if( !checkEquals( dto.taxShiftCategory, taxShiftCategory ) ){
 			return false;
 		}

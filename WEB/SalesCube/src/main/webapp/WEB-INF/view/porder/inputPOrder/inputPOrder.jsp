@@ -528,20 +528,22 @@ function GetSupplierRate(){
 function GetSupplierTaxRate(){
 	if( ( $("#supplierCode").attr("value") == "" )
 			|| ($("#supplierIsExist").attr("value") == CODE_NOEXIST)
-			|| ( $("#poDate").attr("value") == "" ) ){
+	//		|| ( $("#poDate").attr("value") == "" ) 
+	){
+	//	
 		$("#supplierTaxRate").attr("value","");
 	}else{
-		var data = new Object();
-		data["tempSupplierCode"] = $("#supplierCode").attr("value");
-		data["targetDate"] = $("#poDate").attr("value");
-		pseudoSyncRequestElement(
-				contextRoot + "/ajax/commonPOrder/getSupplierTaxRate/",
-				data,
-				function(result) {
-					$("#supplierTaxRate").attr("value",result);
-				},
-				null
-		);
+		//var data = new Object();
+		//data["tempSupplierCode"] = $("#supplierCode").attr("value");
+		//data["targetDate"] = $("#poDate").attr("value");
+		//pseudoSyncRequestElement(
+		//		contextRoot + "/ajax/commonPOrder/getSupplierTaxRate/",
+		//		data,
+		//		function(result) {
+		//			$("#supplierTaxRate").attr("value",result);
+		//		},
+		//		null
+		//);
 	}
 }
 
@@ -687,6 +689,7 @@ function sumPricesOnLoad(){
 	var l_priceTotal = oBDCS($("#priceTotal").val()).setSettingsFromObj($("#priceTotal"));
 	//本体金額が有効なら
 	if( l_priceTotal.isNum() ){
+		
 		//DBにある伝票合計情報は再計算はしない
 		$("#DISPctaxTotal").valueBDC($("#ctaxTotal").val());
 		$("#DISPpriceTotal").valueBDC($("#priceTotal").val());
@@ -711,7 +714,8 @@ function sumPricesOnLoad(){
  	//レートを取得
  	pseudoSyncAjaxFunctionList.push(GetSupplierRate);
  	//税率取得
- 	pseudoSyncAjaxFunctionList.push(GetSupplierTaxRate);
+ 	// 発注日の変更で税率を変更しないようにする。
+ 	//pseudoSyncAjaxFunctionList.push(GetSupplierTaxRate);
  	//レート・税率変更に伴う再計算
  	pseudoSyncAjaxFunctionList.push(ChangeSupplierRateAndTaxRate);
  	pseudoSyncRequest();
@@ -1000,15 +1004,14 @@ function dolPriceChange(id){
  	$("#ctaxPrice_"+id).val("");
 
  	var l_price = oBDCS($("#price_"+id).val());
- 	var l_supplierTaxRate = oBDCS($("#supplierTaxRate").val());
- 	var l_supplierRate = oBDCS($("#supplierRate").val());
+  	var l_ctaxRate = oBDCS($("#ctaxRate").val());
 
  	//レートが無効で、税率、金額が有効であること。税転嫁が有効範囲内であるとこ
-	if( ($("#rateId").val() == "") && (l_supplierTaxRate.isNum()) && (l_price.isNum()) &&
+	if( ($("#rateId").val() == "") && (l_ctaxRate.isNum()) && (l_price.isNum()) &&
 			( ($("#taxShiftCategory").val() == taxShiftCategorySlipTotal) ||
 			  ($("#taxShiftCategory").val() == taxShiftCategoryCloseTheBooks) )
 				){
- 		var TaxRate = l_supplierTaxRate.BDValue();
+ 		var TaxRate = l_ctaxRate.BDValue();
  		var Price = l_price.BDValue();
  		var Tax = Price.multiply(TaxRate).divide(new BigDecimal("100.0")).toString();
  		$("#ctaxPrice_"+id).valueBDC(Tax);
@@ -1033,29 +1036,31 @@ function sumPrices(){
 			}
 		}
 	}
-	$("#DISPpurePriceTotal").valueBDC((validValueCount>0 ? purePriceTotal.toString() : ""));
+	$("#DISPpurePriceTotal").valueBDC((validValueCount>0 ? purePriceTotal.toString() : "0"));
 }
 
 //伝票合計消費税計算 → 伝票合計金額計算
 function calcTaxAndTotalPrice(){
 	//初期化
-	$("#DISPctaxTotal").text("");
-	$("#ctaxTotal").val("");
-	$("#DISPpriceTotal").text("");
-	$("#priceTotal").val("");
-
+	$("#DISPctaxTotal").text("0");
+	$("#ctaxTotal").val("0");
+	$("#DISPpriceTotal").text("0");
+	$("#priceTotal").val("0");
+	
 	var l_purePriceTotal = oBDCS($("#DISPpurePriceTotal").text()).setSettingsFromObj($("#DISPpurePriceTotal"));
+	
 	//本体金額が有効であること
 	if( l_purePriceTotal.isNum() ){
 		var purePriceTotal = l_purePriceTotal.BDValue();
 		var Tax = "";
-		var l_supplierTaxRate = oBDCS($("#supplierTaxRate").val());
+		var l_ctaxRate = oBDCS($("#ctaxRate").val());
+		
 		//レートIDが無効で、税率が有効であること、税転嫁が指定範囲内であること
-		if( ($("#rateId").val() == "") && (l_supplierTaxRate.isNum()) &&
+		if( ($("#rateId").val() == "") && (l_ctaxRate.isNum()) &&
 			( ($("#taxShiftCategory").val() == taxShiftCategorySlipTotal) ||
 			  ($("#taxShiftCategory").val() == taxShiftCategoryCloseTheBooks) )
 				){
-			var TaxRate = l_supplierTaxRate.BDValue();
+			var TaxRate = l_ctaxRate.BDValue();
 			var Tax = purePriceTotal.multiply(TaxRate).divide(new BigDecimal("100.0")).toString();
 			$("#DISPctaxTotal").valueBDC(Tax);
 			$("#ctaxTotal").valueBDC(Tax);
@@ -1066,13 +1071,17 @@ function calcTaxAndTotalPrice(){
 		$("#DISPpriceTotal").valueBDC(TotalPrice);
 		$("#priceTotal").valueBDC(TotalPrice);
 	}
+	
+	// 消費税, 伝票合計(円)
+	SetBigDecimalScale_Obj($("#DISPctaxTotal"));
+	SetBigDecimalScale_Obj($("#DISPpriceTotal"));
 }
 
 //外貨伝票合計
 function calcfePriceTotal(){
 	//初期化
-	$("#DISPfePriceTotal").text("");
-	$("#fePriceTotal").val("");
+	$("#DISPfePriceTotal").text("0");
+	$("#fePriceTotal").val("0");
 
 	//レートIDが有効であること
 	var l_rateId = oBDCS($("#rateId").val());
@@ -1090,8 +1099,10 @@ function calcfePriceTotal(){
 				}
 			}
 		}
-		$("#DISPfePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : ""));
-		$("#fePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : ""));
+		$("#DISPfePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : "0"));
+		$("#fePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : "0"));
+		
+		SetBigDecimalScale_Obj($("#DISPfePriceTotal"));
 	}
 }
 
@@ -1164,6 +1175,11 @@ function applyBDCsettingForPrice(){
 function applyBDCsettingForQuantity(){
 	//数量に対して端数処理の適用
 	$(".BDCqua").setBDCStyle( defProductFractCategory ,defNumDecAlignment ).attBDC();
+}
+
+
+function changeTaxRate(){
+	ChangeSupplierRateAndTaxRate();
 }
 
 /*******************************************************************************
@@ -1637,7 +1653,7 @@ function showProductInfos(id){
 				</div></th>
 				<td><html:text styleId="poSlipId" property="poSlipId" readonly="false" styleClass="" style="width:100px; ime-mode:disabled;" tabindex="100"  onfocus="this.curVal=this.value;" onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){ findSlip()}"/></td>
 			<!-- 発注日 -->
-				<th><div class="col_title_right">
+				<th><div class="col_title_right_req">
 					<bean:message key='labels.poDate'/><bean:message key='labels.must'/>
 				</div></th>
 				<td>
@@ -1646,7 +1662,7 @@ function showProductInfos(id){
 					</div>
 				</td>
 			<!-- 納期 -->
-				<th><div class="col_title_right">
+				<th><div class="col_title_right_req">
 					<bean:message key='labels.deliveryDate'/><bean:message key='labels.must'/>
 				</div></th>
 				<td>
@@ -1658,7 +1674,7 @@ function showProductInfos(id){
 				<th><div class="col_title_right">
 					<bean:message key='labels.userName'/>
 				</div></th>
-				<td><html:text styleId="userName" property="userName" readonly="true" styleClass="c_disable" style="width:120px;" tabindex="103"/>
+				<td><html:text styleId="userName" property="userName" readonly="true" styleClass="c_disable" style="width:190px;" tabindex="103"/>
 			<!-- hiddenたち -->
 				<html:hidden property="userId"/></td>
 				<html:hidden property="menuUpdate"/>
@@ -1672,7 +1688,7 @@ function showProductInfos(id){
 				<th><div class="col_title_right">
 					<bean:message key='labels.memorandum'/>
 				</div></th>
-				<td colspan="5"><html:text styleId="remarks" property="remarks" maxlength="${f:h(ML_REMARK)}" style="width: 550px" tabindex="105"/></td>
+				<td colspan="5"><html:text styleId="remarks" property="remarks" maxlength="${f:h(ML_REMARK)}" style="width: 660px" tabindex="105"/></td>
 				<!-- 運送便区分 -->
 				<th><div class="col_title_right">
 					<bean:message key='labels.transportCategory'/>
@@ -1683,6 +1699,14 @@ function showProductInfos(id){
 							<html:option value="${bean.value}">${f:h(bean.label)}</html:option>
 						</c:forEach>
 					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<th><div class="col_title_right">消費税率</div></th>
+				<td colspan="5">
+					<html:select property="ctaxRate" styleId="ctaxRate" tabindex="107" style="width: 135px;" onchange="changeTaxRate()">
+					    <html:options collection="ctaxRateList" property="value" labelProperty="label"/>
+					</html:select>&nbsp;％
 				</td>
 			</tr>
 		</table>
@@ -1705,7 +1729,7 @@ function showProductInfos(id){
 		<table class="forms" summary="supplierInfos">
 			<tr>
 			<!-- 仕入先コード -->
-				<th><div class="col_title_right">
+				<th><div class="col_title_right_req">
 					<bean:message key='labels.supplierCode'/><bean:message key='labels.must'/>
 				</div></th>
 				<td><html:text styleId="supplierCode" styleClass="c_ime_off" property="supplierCode" maxlength="${f:h(ML_SUPPLIERCODE)}" style="width: 100px" tabindex="200"
@@ -1721,14 +1745,14 @@ function showProductInfos(id){
 				<th><div class="col_title_right">
 					<bean:message key='labels.supplierKana'/>
 				</div></th>
-				<td colspan="3"><html:text styleId="supplierKana" property="supplierKana" style="width: 300px" tabindex="203" readonly="true" styleClass="c_disable"/></td>
+				<td colspan="3"><html:text styleId="supplierKana" property="supplierKana" style="width: 345px" tabindex="203" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
 			<!-- 郵便番号 -->
 				<th><div class="col_title_right">
 					<bean:message key='labels.zipCode'/>
 				</div></th>
-				<td><html:text styleId="supplierZipCode" property="supplierZipCode" tabindex="204" style="width: 80px" readonly="true" styleClass="c_disable"/></td>
+				<td><html:text styleId="supplierZipCode" property="supplierZipCode" tabindex="204" style="width: 100px" readonly="true" styleClass="c_disable"/></td>
 			<!-- 住所1 -->
 				<th><div class="col_title_right">
 					<bean:message key='labels.address1'/>
@@ -1738,7 +1762,7 @@ function showProductInfos(id){
 				<th><div class="col_title_right">
 					<bean:message key='labels.address2'/>
 				</div></th>
-				<td colspan="3"><html:text styleId="supplierAddress2" property="supplierAddress2" tabindex="206" style="width: 300px" readonly="true" styleClass="c_disable"/></td>
+				<td colspan="3"><html:text styleId="supplierAddress2" property="supplierAddress2" tabindex="206" style="width: 345px" readonly="true" styleClass="c_disable"/></td>
 			</tr>
 			<tr>
 			<!-- 担当者 -->
@@ -1756,7 +1780,7 @@ function showProductInfos(id){
 					<bean:message key='labels.pcPreCategory'/>
 				</div></th>
 				<td>
-					<html:select styleId="supplierPcPreCategory" property="supplierPcPreCategory" tabindex="209" styleClass="c_disable" style="width:55px">
+					<html:select styleId="supplierPcPreCategory" property="supplierPcPreCategory" tabindex="209" styleClass="c_disable" style="width:100px">
 							<html:option value="-1">&nbsp;</html:option>
 						<c:forEach var="bean" items="${preTypeCategoryList}">
 							<html:option value="${bean.value}">${f:h(bean.label)}</html:option>
@@ -1789,7 +1813,6 @@ function showProductInfos(id){
 				<td><html:text styleId="supplierFax" property="supplierFax" tabindex="213" style="width: 150px" readonly="true" styleClass="c_disable"/></td>
 				<td colspan="6">
 					<html:hidden property="supplierRate" styleId="supplierRate"/>
-					<html:hidden property="taxRate" styleId="supplierTaxRate"/>
 					<html:hidden property="supplierAbbr" styleId="supplierAbbr"/>
 					<html:hidden property="supplierDeptName" styleId="supplierDeptName"/>
 					<html:hidden property="supplierPcPre" styleId="supplierPcPre"/>
@@ -1879,12 +1902,12 @@ function showProductInfos(id){
 					</div>
 				</td>
 				<td>
-                    <div style="border-bottom: 1px dotted #CCCCCC; height: 45px; line-height: 45px;">
-						<html:text styleId="productCode_${s.index}" styleClass="c_ime_off" name="poLineList" property="productCode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1000}" style="width:125px; height:25px;"/>
+                    <div style="border-bottom: 1px dotted #CCCCCC; height: 45px; line-height: 45px; background-color: #fae4eb;">
+						<html:text styleId="productCode_${s.index}" styleClass="c_ime_off" name="poLineList" property="productCode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1000}" style="width:125px; height:30px;"/>
 						<html:image styleId="productSrhImg_${s.index}" src="${f:url('/images/customize/btn_search.png')}" style="cursor: pointer; width: auto; vertical-align: middle;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1002}"/>
                     </div>
                     <div class="box_2of2">
-						<html:text styleId="supplierPcode_${s.index}" styleClass="c_ime_off" name="poLineList" property="supplierPcode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1001}" style="width:90%; margin:10px;"/>
+						<html:text styleId="supplierPcode_${s.index}" styleClass="c_ime_off" name="poLineList" property="supplierPcode" indexed="true" maxlength="${f:h(ML_PRODUCTCODE)}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1001}" style="width:90%; height: 30px; margin:8px 0;"/>
 						<input type="hidden" id="productSupplierCode_${s.index}">
                     </div>
 				</td>
@@ -1907,11 +1930,11 @@ function showProductInfos(id){
 						<html:hidden styleId="maxStockNum_${f:h(s.index)}" name="poLineList" property="maxStockNum" indexed="true" /><!-- 在庫限度数 -->
 						<html:hidden styleId="holdingStockNum_${f:h(s.index)}" name="poLineList" property="holdingStockNum" indexed="true" /><!-- 在庫限度数 -->
 					</div>
-                    <div style="height: 25px; line-height: 25px; margin: 10px 5px 10px 5px;">
+                    <div class="box_2of2" style="background-color: #fae4eb;">
 						<html:text styleId="quantity_${s.index}" name="poLineList" property="quantity" indexed="true" maxlength="${f:h(ML_S_QUANTITY)}" styleClass="numeral_commas BDCqua" tabindex="${f:h(s.index)*f:h(lineElementCount)+1005}" style="width:75px; height: 25px;"/>
 						<input type="hidden" id="backup_quantity_${s.index}" value=""/>
 	 					<html:hidden styleId="quantityDB_${s.index}" name="poLineList" property="quantityDB" indexed="true" style="width: 50px; text-align:right; background-color: #FFFFFF; border-style: none;" styleClass="numeral_commas BDCqua" />
-						<button type="button" id="productStkBtn_${s.index}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1007}" class="btn_small" style="width:30px; margin:0; vertical-align: top;">在庫</button>
+						<button type="button" id="productStkBtn_${s.index}" tabindex="${f:h(s.index)*f:h(lineElementCount)+1007}" class="btn_list_action" style="width:30px; margin:10px 0; vertical-align: middle;">在庫</button>&nbsp;
 					</div>
 				</td>
 				<td>
@@ -1925,7 +1948,7 @@ function showProductInfos(id){
 					</div>
 				</td>
 				<td>
-                    <div class="box_1of2">
+                    <div class="box_1of2" style="background-color: #fae4eb;">
 						<html:text styleId="unitPrice_${s.index}" name="poLineList" property="unitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1009}"/>
 					</div>
                     <div class="box_2of2">
@@ -1934,7 +1957,7 @@ function showProductInfos(id){
 					</div>
 				</td>
 				<td>
-                    <div class="box_1of2">
+                    <div class="box_1of2" style="background-color: #fae4eb;"">
 						<html:text styleId="price_${s.index}" name="poLineList" property="price" indexed="true" maxlength="${f:h(ML_S_PRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1011}"/>
 					</div>
                     <div class="box_2of2">
@@ -1952,23 +1975,23 @@ function showProductInfos(id){
 				<td style="text-align:right;">
 	            <div class="box_1of2">
 <c:if test="${!lockMode}">
-					<button id="delButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1015}" class="btn_small" ><bean:message key='words.action.delLine'/></button><!-- (行)削除 -->
+					<button id="delButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1015}" class="btn_list_action" ><bean:message key='words.action.delLine'/></button><!-- (行)削除 -->
 </c:if>
 <c:if test="${lockMode}">
-					<button id="delButton_${s.index}" style="width:80px;" disabled="disabled" class="btn_small" ><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
+					<button id="delButton_${s.index}" style="width:80px;" disabled="disabled" class="btn_list_action" ><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
 </c:if>
 				</div>
 	            <div class="box_2of2">
 <c:if test="${!lockMode}">
 		<c:if test="${s.count == 1}">
-					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small" disabled="disabled" ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_list_action" disabled="disabled" ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 		</c:if>
 		<c:if test="${s.count >  1}">
-					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_list_action"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 		</c:if>
 </c:if>
 <c:if test="${lockMode}">
-					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_small" disabled="disabled"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
+					<button id="copyButton_${s.index}" style="width:80px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1016}" class="btn_list_action" disabled="disabled"  ><bean:message key='words.action.copyFromPreviousLine'/></button><!-- 前行複写 -->
 </c:if>
 				</div>
 				</td>
@@ -2025,25 +2048,25 @@ function showProductInfos(id){
 		<div style="width: 1160px; text-align: center; margin-top: 10px;">
 			<c:if test="${!newData}">
 				<c:if test="${!lockMode}">
-					<button onclick="onF3()" tabindex="1999">
-						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					<button onclick="onF3()" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" >
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 					</button>
 				</c:if>
 				<c:if test="${lockMode}">
-					<button disabled="disabled"   tabindex="1999">
-						<img alt="更新" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					<button disabled="disabled" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" >
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.renew'/></span><%// 更新 %>
 					</button>
 				</c:if>
 			</c:if>
 			<c:if test="${newData}">
 				<c:if test="${!lockMode}">
-					<button onclick="onF3()" tabindex="1999">
-						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					<button onclick="onF3()" tabindex="1999" style="width:260px; height:51px;" class="btn_medium" >
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 					</button>
 				</c:if>
 				<c:if test="${lockMode}">
-					<button disabled="disabled"   tabindex="1999">
-						<img alt="登録" border="0" src="${f:url('/images/customize/btn_registration.png')}" width="260" height="51">
+					<button disabled="disabled"   tabindex="1999" style="width:260px; height:51px;" class="btn_medium" >
+						<span style="font-weight:bold; font-size:16px;"><bean:message key='words.action.register'/></span><%// 登録 %>
 					</button>
 				</c:if>
 			</c:if>

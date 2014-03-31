@@ -76,11 +76,11 @@
 		<td style="white-space: normal">&nbsp;${f:h(bean.className3)}&nbsp;</td>
 		<td style="text-align: center">
 			<c:if test="${isUpdate}">
-			<button class="btn_small"  onclick="editProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}');">編集</button>
-			<button class="btn_small"  onclick="deleteProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}','${bean.updDatetm}');">削除</button>
+			<button class="btn_list_action"  onclick="editProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}');">編集</button>
+			<button class="btn_list_action"  onclick="deleteProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}','${bean.updDatetm}');">削除</button>
 			</c:if>
 			<c:if test="${!isUpdate}">
-			<button class="btn_small"  onclick="editProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}');">参照</button>
+			<button class="btn_list_action"  onclick="editProductClass('${bean.classCode1}','${bean.classCode2}','${bean.classCode3}');">参照</button>
 			</c:if>
 		</td>
 	</tr>

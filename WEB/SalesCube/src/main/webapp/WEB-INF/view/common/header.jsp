@@ -28,6 +28,7 @@
 	<script type="text/javascript" src="${f:url('/scripts/mathcontext.js')}"></script>
 	<script type="text/javascript" src="${f:url('/scripts/bigdecimal.js')}"></script>
 	<script type="text/javascript" src="${f:url('/scripts/customize.js')}"></script>
+	<script type="text/javascript" src="${f:url('/scripts/balloon.js')}"></script>
 
 	<script type="text/javascript">
 	<!--

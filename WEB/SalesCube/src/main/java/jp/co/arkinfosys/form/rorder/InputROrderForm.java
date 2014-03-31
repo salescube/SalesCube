@@ -12,6 +12,7 @@ import java.util.List;
 
 import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.common.DiscountUtil;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.SlipStatusCategoryTrns;
@@ -153,6 +154,11 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 	/** URL */
 	public String deliveryUrl;
+	
+	/**
+	 * 消費税率
+	 */
+	public String ctaxRate;
 
 	/** 明細行 */
 	public List<ROrderLineDto> lineList = new ArrayList<ROrderLineDto>();
@@ -810,8 +816,22 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		// 入力担当者の設定
 		this.userId = userDto.userId;
 		this.userName = userDto.nameKnj;
+		// 消費税率
+		this.ctaxRate = super.taxRate;
 	}
-
+	/**
+	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
+	 */
+	@Override
+	public void setSlipTaxRate() {
+		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
+			super.taxRate = this.ctaxRate;
+		}
+		
+		if (this.ctaxRate == "" || this.ctaxRate == null) {
+			this.ctaxRate = super.taxRate;
+		}
+	}
 	/**
 	 * @param dto {@link ROrderSlipDto}
 	 */

@@ -106,7 +106,7 @@ function productSearch(jqObject) {
 					<tr>
 						<th>商品コード</th>
 						<td><html:text property="productCode" styleId="productCode" tabindex="100" style="ime-mode:disabled;" />
-						<html:image styleId="productCodeImg" tabindex="101" src="${f:url('/images/icon_04_02.gif')}" style="vertical-align: middle; cursor: pointer;" onclick="productSearch($('#productCode'));" />
+						<html:image styleId="productCodeImg" tabindex="101" src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="productSearch($('#productCode'));" />
 						</td>
 					</tr>
 				</table>

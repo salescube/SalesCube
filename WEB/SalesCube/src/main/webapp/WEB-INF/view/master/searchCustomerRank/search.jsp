@@ -178,13 +178,7 @@
 			"${f:url("/ajax/master/searchCustomerRankAjax/search")}",
 			paramData,
 			function(data) {
-				// 検索結果件数が1件であれば編集画面に遷移する
 				var jData = $(data);
-				if(jData.is("#singleCustomerRankCode")) {
-					var rankCode = jData.filter("#singleCustomerRankCode");
-					window.location.doHref("${f:url("/master/editCustomerRank/edit/")}" + rankCode.val());
-					return;
-				}
 
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
@@ -307,8 +301,8 @@
 	    </div><!-- /.form_section_wrap -->
 	    
 		<div style="text-align: right; width: 1160px">
-			<button tabindex="150" style="width:80px" onclick="initForm()" class="btn_medium">初期化</button>
-			<button tabindex="151" style="width:80px" onclick="searchCustomerRank()" class="btn_medium">検索</button>
+			<button tabindex="150" onclick="initForm()" class="btn_medium">初期化</button>
+			<button tabindex="151" onclick="searchCustomerRank()" class="btn_medium">検索</button>
 		</div>
 
 		<div id="ListContainer">

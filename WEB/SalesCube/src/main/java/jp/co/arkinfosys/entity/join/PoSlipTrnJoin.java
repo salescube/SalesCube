@@ -32,11 +32,6 @@ public class PoSlipTrnJoin extends PoSlipTrn {
 	public String supplierRate;
 
 	/**
-	 * 仕入先税率（明細行より）
-	 */
-	public String supplierTaxRate;
-
-	/**
 	 * 伝票作成時点でのレートIDから引ける現在のレートマスタの通貨単位(矛盾)
 	 */
 	public String cUnitSign;

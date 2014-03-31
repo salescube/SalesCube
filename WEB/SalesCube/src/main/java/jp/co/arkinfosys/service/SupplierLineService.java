@@ -91,7 +91,7 @@ public class SupplierLineService extends AbstractLineService<SupplierLineTrn,Pur
 			if (dto.rateId != null && dto.rateId.length() > 0) {
 				lineDto.ctaxRate = null;
 			} else {
-				lineDto.ctaxRate = dto.supplierTaxRate;
+				lineDto.ctaxRate = dto.ctaxRate;
 			}
 
 			SupplierLineTrn line = Beans.createAndCopy(SupplierLineTrn.class,
@@ -159,7 +159,7 @@ public class SupplierLineService extends AbstractLineService<SupplierLineTrn,Pur
 				if (inDto.rateId != null && inDto.rateId.length() > 0) {
 					lineDto.ctaxRate = null;
 				} else {
-					lineDto.ctaxRate = inDto.supplierTaxRate;
+					lineDto.ctaxRate = inDto.ctaxRate;
 				}
 
 				SupplierLineTrn line = Beans.createAndCopy(

@@ -9,10 +9,10 @@
 			<logic:equal name="colInfo" property="sortFlag" value="1">
 				<c:choose>
 					<c:when test="${status.first}" >
-						<th class="xl64 rd_top_left"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
+						<th class="rd_top_left"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
 					</c:when>
 					<c:when test="${status.last}" >
-						<th class="xl64 rd_top_right"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
+						<th class="rd_top_right"  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
 					</c:when>
 					<c:otherwise>
 						<th class=xl64  style='cursor: pointer; height:30px;' onclick="sort('${f:h(colInfo.itemId)}')">
@@ -24,7 +24,7 @@
 					</c:if>
 					<c:if test='${!outputExcel}'>
 						<logic:equal name="colInfo" property="itemId" value="${sortColumn}">
-							<span style="color: blue">
+							<span style="color: white">
 							<logic:equal name="sortOrderAsc" value="true"><bean:message key='labels.asc'/></logic:equal>
 							<logic:equal name="sortOrderAsc" value="false"><bean:message key='labels.desc'/></logic:equal>
 							</span>
@@ -36,10 +36,10 @@
 				<!-- <th class=xl64>${f:h(colInfo.itemName)}</th> -->
 				<c:choose>
 					<c:when test="${status.first}" >
-						<th class="xl64 rd_top_left"  style="height:30px;">${f:h(colInfo.itemName)}</th>
+						<th class="rd_top_left"  style="height:30px;">${f:h(colInfo.itemName)}</th>
 					</c:when>
 					<c:when test="${status.last}" >
-						<th class="xl64 rd_top_right" style="height:30px;">${f:h(colInfo.itemName)}</th>
+						<th class="rd_top_right" style="height:30px;">${f:h(colInfo.itemName)}</th>
 					</c:when>
 					<c:otherwise>
 						<th class=xl64  style="height:30px;">${f:h(colInfo.itemName)}</th>
