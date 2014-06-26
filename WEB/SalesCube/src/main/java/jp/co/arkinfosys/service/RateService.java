@@ -146,7 +146,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	/**
 	 * 検索条件を指定して結果件数を取得します.
 	 * @param conditions 検索条件
@@ -195,6 +195,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 			this.setEmptyCondition(param);
 
 			this.setCondition(conditions, sortColumn, sortOrderAsc, param);
+
 
 			// LIMITを設定する
 			if (rowCount > 0) {
@@ -272,16 +273,20 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 							.get(Param.REMARKS)));
 		}
 
+
+
 		// 検索期間（開始）
 		if (conditions.containsKey(Param.START_DATE_1)) {
-			param.put(Param.START_DATE_1, (String) conditions
-					.get(Param.START_DATE_1));
+			param.put(Param.START_DATE_1, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.START_DATE_1)));
+
 		}
+
 
 		// 検索期間（終了）
 		if (conditions.containsKey(Param.START_DATE_2)) {
-			param.put(Param.START_DATE_2, (String) conditions
-					.get(Param.START_DATE_2));
+			param.put(Param.START_DATE_2, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.START_DATE_2)));
 		}
 
 		// ソートカラムを設定する
@@ -327,11 +332,11 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 		return this.selectBySqlFile(RateTrn.class,
 				"rate/FindRateTrnsByRateId.sql", param).getResultList();
 	}
-	
+
 	/**
 	 * レートIDを指定して現在適用されている
 	 * レート情報を取得します.
-	 * 
+	 *
 	 * @param rateId レートID
 	 * @return レートエンティティ
 	 * @throws Exception
@@ -418,6 +423,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 
 				BeanMap trnInfo = Beans.createAndCopy(BeanMap.class, trn)
 						.timestampConverter(Constants.FORMAT.TIMESTAMP)
+						.dateConverter(Constants.FORMAT.DATE, "startDate")
 						.dateConverter(Constants.FORMAT.DATE).execute();
 				param.putAll(trnInfo);
 				this.updateBySqlFile("rate/InsertRateTrn.sql", param).execute();
@@ -446,8 +452,9 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 		param = super.createSqlParam();
 
 		BeanMap rateInfo = Beans.createAndCopy(BeanMap.class, dto)
-				.timestampConverter(Constants.FORMAT.TIMESTAMP).dateConverter(
-						Constants.FORMAT.DATE).execute();
+				.timestampConverter(Constants.FORMAT.TIMESTAMP)
+				.dateConverter(Constants.FORMAT.DATE, "startDate")
+				.dateConverter(Constants.FORMAT.DATE).execute();
 
 		param.putAll(rateInfo);
 		this.updateBySqlFile("rate/UpdateRate.sql", param).execute();
@@ -496,6 +503,7 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 				param = super.createSqlParam();
 				BeanMap trnInfo = Beans.createAndCopy(BeanMap.class, trn)
 						.timestampConverter(Constants.FORMAT.TIMESTAMP)
+						.dateConverter(Constants.FORMAT.DATE, "startDate")
 						.dateConverter(Constants.FORMAT.DATE).execute();
 				param.putAll(trnInfo);
 				int sqlResult = 0;

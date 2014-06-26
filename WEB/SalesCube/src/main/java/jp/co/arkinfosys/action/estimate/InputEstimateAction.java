@@ -74,7 +74,7 @@ public class InputEstimateAction extends
 	 * 提出先　敬称プルダウン
 	 */
 	public List<LabelValueBean> submitPreList;
-	
+
 	/**
 	 *  消費税率プルダウン
 	 */
@@ -90,10 +90,10 @@ public class InputEstimateAction extends
 			// 敬称プルダウンリスト
 			submitPreList = categoryService
 					.findCategoryLabelValueBeanListById(Categories.PRE_TYPE);
-			
+
 			// 消費税率プルダウンリスト
-			this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
-			
+			this.ctaxRateList =  ListUtil.getRateTaxNoBlankList(super.taxRateService);
+
 		} catch (ServiceException e) {
 			super.errorLog(e);
 			throw e;

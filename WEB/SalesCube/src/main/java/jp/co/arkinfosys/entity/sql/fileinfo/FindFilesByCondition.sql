@@ -18,7 +18,7 @@ SELECT
     /*BEGIN*/
     WHERE
     	/*IF openLevel != null */
-    	F.OPEN_LEVEL = /*openLevel*/'0'
+    	F.OPEN_LEVEL <= /*openLevel*/'0'
     	/*END*/
     	/*IF title != null */
 		AND F.TITLE LIKE /*title*/'%S%'

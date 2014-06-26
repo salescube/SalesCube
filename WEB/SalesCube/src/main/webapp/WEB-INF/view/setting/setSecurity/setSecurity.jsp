@@ -96,7 +96,7 @@
 									<html:radio tabindex="2" property="passwordCharType" value="1" />指定なし
 									<html:radio tabindex="2" property="passwordCharType" value="2" />英数
 									<html:radio tabindex="2" property="passwordCharType" value="3" />英数記号
-								
+
 								</td>
 							</tr>
 							<tr>

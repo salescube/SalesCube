@@ -93,6 +93,27 @@ public class ProductClassService extends
 	}
 
 	/**
+	 * 大分類コードと中部分類コードを指定して、商品分類(小)情報のリストを返します.
+	 * @param classCode1 大分類コード
+	 * @param classCode2 中分類コード
+	 * @return 商品分類情報{@link ProductClass}のリスト
+	 * @throws ServiceException
+	 */
+	public List<ProductClass> findAllProductClass3(String classCode1,String classCode2)
+			throws ServiceException {
+		try {
+			Map<String, Object> param = super.createSqlParam();
+			param.put(Param.CLASS_CODE_1, classCode1);
+			param.put(Param.CLASS_CODE_2, classCode2);
+			return this.selectBySqlFile(ProductClass.class,
+					"productclass/FindAllProductClass3.sql", param)
+					.getResultList();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}	
+	
+	/**
 	 * 検索条件を指定して、商品分類情報を返します.
 	 * @param conditions 検索条件マップ
 	 * @return 商品分類情報{@link ProductClass}のリスト
@@ -236,6 +257,27 @@ public class ProductClassService extends
 		return labelValueList;
 	}
 
+	/**
+	 * 分類(中)のプルダウン要素のリストを返します.
+	 * @param classCode1 大分類コード
+	 * @return プルダウン要素のリスト
+	 * @throws ServiceException
+	 */
+	public List<LabelValueBean> findAllProductClass3LabelValueBeanList(
+			String classCode1,String classCode2) throws ServiceException {
+
+		List<ProductClass> list = findAllProductClass3(classCode1,classCode2);
+		List<LabelValueBean> labelValueList = new ArrayList<LabelValueBean>();
+
+		for (ProductClass productClass : list) {
+			labelValueList.add(new LabelValueBean(productClass.className,
+					productClass.classCode3));
+		}
+		
+		return labelValueList;
+	}
+	
+	
 	/**
 	 * 次の商品コードを採番して返します.
 	 * @param conditions 検索条件のマップ

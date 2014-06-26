@@ -117,8 +117,11 @@ public class SupplierLineService extends AbstractLineService<SupplierLineTrn,Pur
 			// 2.【仕入先マスタ】税転嫁が「外税伝票計」or「外税締単位」である
 			if("".equals(dto.rateId)){
 				if(CategoryTrns.TAX_SHIFT_CATEGORY_SLIP_TOTAL.equals(dto.taxShiftCategory)  				// 外税伝票計
-						|| CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(dto.taxShiftCategory)){	// 外税締単位
-					line.ctaxPrice = line.price.multiply((line.ctaxRate.divide(new BigDecimal(100.0)))); 	// 金額 * (レート / 100.0)
+						|| CategoryTrns.TAX_SHIFT_CATEGORY_CLOSE_THE_BOOKS.equals(dto.taxShiftCategory)	// 外税締単位
+						){
+					if(line.ctaxRate != null){
+						line.ctaxPrice = line.price.multiply((line.ctaxRate.divide(new BigDecimal(100.0)))); 	// 金額 * (レート / 100.0)
+					}
 				}
 			}
 			// 仕入伝票明細行を登録

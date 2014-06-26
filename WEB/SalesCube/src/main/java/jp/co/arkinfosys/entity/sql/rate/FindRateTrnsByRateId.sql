@@ -12,7 +12,7 @@ WHERE
 	RATE_ID=/*rateId*/'0'
 	/*END*/
 	/*IF startDate != null*/
-	AND START_DATE <= /*startDate*/'0'
+	AND START_DATE <= CAST(/*startDate*/'2000/01/01' AS DATE)
 	/*END*/
 /*END*/
 

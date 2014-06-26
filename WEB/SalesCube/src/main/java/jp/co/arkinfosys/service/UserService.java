@@ -7,31 +7,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.EncryptApiUtil;
 import jp.co.arkinfosys.common.EncryptUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.RoleDto;
 import jp.co.arkinfosys.dto.UserDto;
 import jp.co.arkinfosys.dto.setting.MenuDto;
-import jp.co.arkinfosys.dto.setting.MineDto;
-
 import jp.co.arkinfosys.entity.GrantRole;
 import jp.co.arkinfosys.entity.Mine;
+import jp.co.arkinfosys.entity.User;
 import jp.co.arkinfosys.entity.join.UserJoin;
 import jp.co.arkinfosys.service.exception.ServiceException;
 import jp.co.arkinfosys.service.exception.UnabledLockException;
-import jp.co.arkinfosys.service.MineService;
 
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.beans.util.Beans;
-import org.seasar.struts.util.ActionMessagesUtil;
 
 /**
  *
@@ -91,6 +86,8 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 		private static final String LOCK_DATETM = "lockDatetm";
 
 		private static final String PASS_HIST_COUNT = "passwordHistCount";
+
+
 	}
 
 	private static final String COLUMN_USER_ID = "USER_ID";
@@ -104,6 +101,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	private static final String COLUMN_EMAIL = "EMAIL";
 
 	private static final String COLUMN_LOCK_FLG = "LOCK_FLG";
+
 
 
 	/**
@@ -865,18 +863,18 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
     	}
     	//英数字のみ
     	if (passwordCharType.equals("2")){
-    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)^([\\!-~]+)$" );
+    		//ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)^([\\!-~]+)$" );
+    		ret = newPassword.matches("^[a-zA-Z0-9]+$");
     	}
     	//英数記号のみ
     	if (passwordCharType.equals("3")){
-    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)(?!^[^(\\!-\\/|:-@|\\[-`|{-~]*$)^([\\!-~]+)$" );
+    		//ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)(?!^[^(\\!-\\/|:-@|\\[-`|{-~]*$)^([\\!-~]+)$" );
+    		ret = newPassword.matches("^[a-zA-Z0-9 -/:-@\\[-\\`\\{-\\~]+$");
     	}
 
         return ret;
 
     }
-
-
 
 
 }

@@ -78,8 +78,11 @@
 					</tr>
 <c:forEach var="rowData" items="${rorderRestDetailList}" varStatus="status">
 					<tr>
-						<td style="text-align: center">${f:h(rowData.roSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</td>
+						<bean:define id="concatUrl" value="/rorder/inputROrder/load/?roSlipId=${rowData.roSlipId}" />
 						<td style="text-align: center">
+						<a href="javascript:location.doHref('${f:url(concatUrl)}')">${f:h(rowData.roSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</a>
+						<td style="text-align: center">
+
 	<c:if test="${rowData.shipDate != null}">
 						<fmt:formatDate value="${rowData.shipDate}" pattern="yyyy/MM/dd" />
 	</c:if>
@@ -108,7 +111,9 @@
 					</tr>
 <c:forEach var="rowData" items="${porderRestDetailList}" varStatus="status">
 					<tr>
-						<td style="text-align: center">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</td>
+						<bean:define id="concatUrl" value="/porder/inputPOrder/load/?poSlipId=${rowData.poSlipId}" />
+						<td style="text-align: center">
+						<a href="javascript:location.doHref('${f:url(concatUrl)}')">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</a>
 						<td style="text-align: center">
 	<c:if test="${rowData.deliveryDate != null}">
 						<fmt:formatDate value="${rowData.deliveryDate}" pattern="yyyy/MM/dd" />
@@ -146,7 +151,9 @@
 					</tr>
 <c:forEach var="rowData" items="${entrustPorderRestDetailList}" varStatus="status">
 					<tr>
-						<td style="text-align: center">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</td>
+						<bean:define id="concatUrl" value="/porder/inputPOrder/load/?poSlipId=${rowData.poSlipId}" />
+						<td style="text-align: center">
+						<a href="javascript:location.doHref('${f:url(concatUrl)}')">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</a>
 						<td style="text-align: center">
 	<c:if test="${rowData.poDate != null}">
 						<fmt:formatDate value="${rowData.poDate}" pattern="yyyy/MM/dd" />
@@ -184,7 +191,9 @@
 					</tr>
 <c:forEach var="rowData" items="${entrustStockDetailList}" varStatus="status">
 					<tr>
-						<td style="text-align: center">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</td>
+						<bean:define id="concatUrl" value="/porder/inputPOrder/load/?poSlipId=${rowData.poSlipId}" />
+						<td style="text-align: center">
+						<a href="javascript:location.doHref('${f:url(concatUrl)}')">${f:h(rowData.poSlipId)}&nbsp-&nbsp${f:h(rowData.lineNo)}</a>
 						<td style="text-align: center">
 	<c:if test="${rowData.entrustEadDate != null}">
 						<fmt:formatDate value="${rowData.entrustEadDate}" pattern="yyyy/MM/dd" />

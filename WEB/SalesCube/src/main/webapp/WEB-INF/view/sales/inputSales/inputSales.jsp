@@ -41,7 +41,6 @@
 	var rateCategory = scale_half_up;
 
 	var changeFlag = false;
-	var todaysTaxRate;
 
 	 var SalesCatList;
 
@@ -198,15 +197,10 @@
 		}else{
 			$("#salesSlipId").focus();
 		}
-		
-		// 当日消費税の保持
-		// 伝票に税率が設定されている場合は、伝票の税率を有効にする
-		todaysTaxRate = $("#taxRate").val();
-		var slipRate = $("#ctaxRate").val();
-		
-		if (slipRate != null && slipRate != "" && todaysTaxRate != slipRate) {
-			todaysTaxRate = slipRate;
-		}
+
+		// 消費税の初期値を設定する
+		$("#taxRate").val($("#ctaxRate").val());
+
 
 		$("#customerCode").attr("maxlength", <%=Constants.CODE_SIZE.CUSTOMER%>);	//顧客コードの文字数制限10桁
 
@@ -1593,7 +1587,7 @@
 				// 消費税の計算対象を税率ごとに加算する
 				//var pos = $("#salesLineList\\["+id+"\\]\\.ctaxRate").val();
 				var pos = $("#ctaxRate").val();
-				
+
 				var total = Number(arryPriceTotal[pos]);
 				if( isNaN(total) == true ){
 					arryPriceTotal[pos] = nPrice;
@@ -1606,17 +1600,17 @@
 		for (var key in arryPriceTotal) {
 			var total = arryPriceTotal[key];
 			var rate = Number( key );
-			
+
 			// 税率は％表記なので100.0で割る
 			nCtaxPriceTotal += ( rate / 100.0 * total );
 		}
-		
+
 		// 表示
 		// 粗利益
 		var gmTotal = nPriceTotal - nCostTotal;
 		$("#gmTotal").html( gmTotal.toString() );
 		SetBigDecimalScale_Obj($("#gmTotal"));
-		
+
 		// 粗利益率
 		if( (isNaN(nPriceTotal)==true)||( nPriceTotal == "0.0" )){
 			$("#gmTotalPer").html( "0" );
@@ -1628,17 +1622,17 @@
 		// 金額合計
 		$("#priceTotal").html( nPriceTotal );
 		SetBigDecimalScale_Obj($("#priceTotal"));
-		
+
 		// 税転嫁が内税の時には消費税の表示は行わない
 		if( $("#taxShiftCategory") == ${TAX_SHIFT_CATEGORY_INCLUDE_CTAX}){
-			
+
 			// 消費税
 			$("#ctaxPriceTotal").html( "0" );
-			
-			
+
+
 			// 伝票合計
 			$("#total").html( nPriceTotal );
-			
+
 		} else {
 
 			// 消費税
@@ -1649,12 +1643,12 @@
 			var l_nPriceTotal = oBDCS(nPriceTotal.toString()).setScale($("#priceFractCategory").val(),priceAlignment).setComma(false).toBDCString();
 			var ttl = Number(l_nCtaxPriceTotal) + Number(l_nPriceTotal);
 			$("#total").html( ttl );
-			
+
 		}
-		
+
 		SetBigDecimalScale_Obj($("#ctaxPriceTotal"));
 		SetBigDecimalScale_Obj($("#total"));
-		
+
 		// カンマをつける
 		_after_load($(".numeral_commas"));
 
@@ -1791,37 +1785,6 @@ function changeRate(){
 
 }
 
-function changeDate(){
-	var map = new Object();
-	var date = $("#salesDate").val();
-	if(jQuery.trim(date) == "") {
-		setRate(todaysTaxRate);
-		return;
-	}
-
-	$("#errors").empty();
-	if(!date.match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
-		// 日付型チェック
-		$("#errors").append(document.createTextNode("<bean:message key="errors.date" arg0="売上日"/>"));
-		setRate(todaysTaxRate);
-		return;
-	}
-
-	var date2 = date.replace(/\//g, "*");
-	asyncRequest(
-			contextRoot + "/ajax/commonTaxRate/getTaxRateByDate/" + date2,
-			null,
-			function(data) {
-				if(data==""){
-					setRate(todaysTaxRate);
-					alert('<bean:message key="errors.notExist" arg0="消費税" />');
-				} else {
-					var value = eval("(" + data + ")");
-					setRate( value );
-				}
-			});
-}
-
 	// 完納区分変更
 	function changeCategory( event ){
 		var index = event.data.index;
@@ -1946,7 +1909,7 @@ function changeDate(){
 									</td>
 									<th><div class="col_title_right_req">売上日<bean:message key='labels.must'/></div></th>
 									<td>
-										<html:text tabindex="102" property="salesDate" styleId="salesDate" styleClass="date_input"  style="width: 135px; ime-mode:disabled; text-align:center;" maxlength="10" onchange="changeDate();"/>
+										<html:text tabindex="102" property="salesDate" styleId="salesDate" styleClass="date_input"  style="width: 135px; ime-mode:disabled; text-align:center;" maxlength="10" />
 									</td>
 									<th><div class="col_title_right">納期指定日</div></th>
 									<td>
@@ -2008,7 +1971,7 @@ function changeDate(){
 								<tr>
 									<th><div class="col_title_right">消費税率</div></th>
 									<td colspan="3">
-										<html:select property="ctaxRate" styleId="ctaxRate" tabindex="113" style="width: 135px;" onchange="changeRate()">
+										<html:select property="ctaxRate" styleId="ctaxRate" tabindex="113" style="width: 135px;" onchange="setRate(this.value)">
 										    <html:options collection="ctaxRateList" property="value" labelProperty="label"/>
 										</html:select>&nbsp;％
 									</td>

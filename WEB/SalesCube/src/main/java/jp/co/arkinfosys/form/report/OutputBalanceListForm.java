@@ -45,13 +45,13 @@ public class OutputBalanceListForm {
     /**
      * 顧客コードFrom
      */
-    @Maxlength(maxlength = 13)
+    @Maxlength(maxlength = 15)
     public String customerCodeFrom;
 
     /**
      * 顧客コードTo
      */
-    @Maxlength(maxlength = 13)
+    @Maxlength(maxlength = 15)
     public String customerCodeTo;
 
     /**

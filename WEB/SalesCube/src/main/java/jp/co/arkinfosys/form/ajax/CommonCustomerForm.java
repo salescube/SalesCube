@@ -12,9 +12,12 @@ public class CommonCustomerForm {
 	/**
 	 * 	顧客コード
 	 */
+	//API
 	public String customerCode;
 	/**
 	 * 顧客名
 	 */
 	public String customerName;
+
+
 }

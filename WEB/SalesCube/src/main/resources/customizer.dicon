@@ -35,6 +35,10 @@
             <arg>"jp.co.arkinfosys.action.ajax"</arg>
             <arg>".*Action"</arg>
           </initMethod>
+          <initMethod name="addIgnoreClassPattern">
+            <arg>"jp.co.arkinfosys.action.api"</arg>
+            <arg>".*Action"</arg>
+          </initMethod>
         </component>
       </arg>
     </initMethod>
@@ -46,6 +50,19 @@
           <property name="pointcut">".*"</property>
           <initMethod name="addClassPattern">
             <arg>"jp.co.arkinfosys.action.ajax"</arg>
+            <arg>".*Action"</arg>
+          </initMethod>
+        </component>
+      </arg>
+    </initMethod>
+      <initMethod name="addCustomizer">
+      <arg>
+        <component class="jp.co.arkinfosys.s2extend.ExecuteAnnotationAspectCustomizer">
+          <property name="interceptorName">"apiInvocationInterceptor"</property>
+          <property name="useLookupAdapter">true</property>
+          <property name="pointcut">".*"</property>
+          <initMethod name="addClassPattern">
+            <arg>"jp.co.arkinfosys.action.api"</arg>
             <arg>".*Action"</arg>
           </initMethod>
         </component>

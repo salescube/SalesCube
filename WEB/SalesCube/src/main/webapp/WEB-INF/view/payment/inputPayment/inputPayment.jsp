@@ -356,7 +356,7 @@
 					<bean:write name="msg" ignore="true"/>
 				</html:messages>
 			</div>
-			
+
 			<div class="form_section_wrap">
 			<div class="form_section">
 			<div class="section_title">
@@ -370,8 +370,8 @@
 			<table id="payment_info" class="forms" summary="支払伝票情報">
 				<tr>
 					<th><div class="col_title_right"><bean:message key='labels.paymentSlipId'/></div></th>
-					<td><html:text tabindex="100" property="paymentSlipId" styleClass="" styleId="paymentSlipId" readonly="false" 
-						style="width:100px; ime-mode:disabled;"  maxlength="10"  onfocus="this.curVal=this.value;" 
+					<td><html:text tabindex="100" property="paymentSlipId" styleClass="" styleId="paymentSlipId" readonly="false"
+						style="width:100px; ime-mode:disabled;"  maxlength="10"  onfocus="this.curVal=this.value;"
 						onblur="if((this.curVal == '') || ((this.curVal != '')&&(this.curVal!=this.value))){ findSlip()}"/>
 					</td>
 					<th><div class="col_title_right"><bean:message key='labels.poSlipId'/></div></th>
@@ -404,7 +404,7 @@
 				</button>
 			</div>
 			<div class="section_body">
-			
+
 			<table id="supplier_info" class="forms" summary="仕入先情報">
 				<tr>
 					<th><div class="col_title_right"><bean:message key='labels.supplierCode'/></div></th>
@@ -428,15 +428,15 @@
 			</div>
 			</div>
 			</div>
-			
+
 			<html:hidden name="inputPaymentForm" property="cUnitSign" />
 			<html:hidden name="inputPaymentForm" property="newData" />
-			
+
 			<div style="width: 10px;">
 				<button name="allCheck" type="button" tabindex="300" onclick="checkAll(true)" class="btn_list_action">全て選択</button>
 				<button name="allUnCheck" type="button" tabindex="301" onclick="checkAll(false)" class="btn_list_action">全て解除</button>
 			</div>
-			
+
 			<!-- 3.支払伝票明細リスト -->
 			<div id="order_detail_info_wrap">
 			<table id="order_detail_info" summary="支払明細リスト" class="forms" style="margin-top: 0px;">
@@ -471,7 +471,7 @@
 					<th colspan="2" style="height:20px;"><bean:message key='labels.dolPrice'/></th><!-- 外貨金額 -->
 				</tr>
 				</thead>
-				
+
 				<tbody>
 				<!-- 繰り返し部分開始(明細行) -->
 				<c:forEach var="lineDtoList" varStatus="s" items="${lineDtoList}">
@@ -489,12 +489,12 @@
 						<td style="text-align: center;">
 							<c:if test="${newData}">
 								<div class="box_1of1" style="width:30px;">
-									<html:checkbox name="lineDtoList" property="checkPayLine"  indexed="true" styleId="checkPayLine${s.index}" 
+									<html:checkbox name="lineDtoList" property="checkPayLine"  indexed="true" styleId="checkPayLine${s.index}"
 										styleClass="AutoCalcCheckPayLine"  onclick="changePrice();" />
 								</div>
 							</c:if>
 						</td>
-						
+
 						<!-- 仕入番号 - 行/仕入日 -->
 						<td style="vertical-align: middle;">
 							<div class="box_1of2">
@@ -506,17 +506,17 @@
 									<c:if test="${!isInputPurchaseValid}">${f:h(lineDtoList.supplierSlipId)} - ${f:h(lineDtoList.supplierLineNo)}</c:if>
 								</c:if>
 							</div>
-							
+
 							<html:hidden name="lineDtoList" property="supplierSlipId" indexed="true" />
 							<html:hidden name="lineDtoList" property="supplierLineNo" indexed="true" />
 							<!-- <html:text name="lineDtoList" property="supplierDetailCategoryName" style="width: 85px;" styleClass="c_disable" readonly="true"  indexed="true" /><br> -->
-							
+
 							<div class="box_2of2">
-								<html:text tabindex="${1000+s.index*10}" name="lineDtoList" property="supplierDate" style="margin:8px 0; text-align: center; height: 30px; vertical-align: middle;" 
+								<html:text tabindex="${1000+s.index*10}" name="lineDtoList" property="supplierDate" style="margin:8px 0; text-align: center; height: 30px; vertical-align: middle;"
 									styleClass="c_disable"  readonly="true"  indexed="true" />
 							</div>
 						</td>
-						
+
 						<!-- 商品コード/商品名 -->
 						<td>
 							<div class="box_1of2">
@@ -526,43 +526,43 @@
 								${f:h(lineDtoList.productAbstract)}
 							</div>
 						</td>
-						
+
 						<!-- 支払明細区分/円単価/外貨単価 -->
 						<td>
 							<div class="box_1of3" style="vertical-align: middle;">
-								<html:select tabindex="${1002+s.index*10}" name="lineDtoList" property="paymentCategory" indexed="true" style="width:94%; margin:3px; height: 25px;">
+								<html:select tabindex="${1002+s.index*10}" name="lineDtoList" property="paymentCategory" indexed="true" style="width:94%; margin:1px; height: 27px;">
 									<html:options collection="paymentDetailList" property="value" labelProperty="label"/>
 								</html:select>
 							</div>
 							<div class="box_2of3" style="vertical-align: middle;">
-								<html:text tabindex="${1003+s.index*10}" name="lineDtoList" styleId="unitPrice${s.index}" property="unitPrice" 
-									styleClass="c_disable AutoCalcUnitPrice numeral_commas yen_value" 
+								<html:text tabindex="${1003+s.index*10}" name="lineDtoList" styleId="unitPrice${s.index}" property="unitPrice"
+									styleClass="c_disable AutoCalcUnitPrice numeral_commas yen_value"
 									style="text-align:right; width:94%; margin:3px; height:25px;" indexed="true" readonly="true" maxlength="9" />
 							</div>
 							<div class="box_3of3">
-								<html:text tabindex="${1004+s.index*10}" name="lineDtoList" styleId="dolUnitPrice${s.index}" property="dolUnitPrice" 
-									styleClass="c_disable AutoCalcDolUnitPrice numeral_commas dollar_value" 
+								<html:text tabindex="${1004+s.index*10}" name="lineDtoList" styleId="dolUnitPrice${s.index}" property="dolUnitPrice"
+									styleClass="c_disable AutoCalcDolUnitPrice numeral_commas dollar_value"
 									style="text-align:right; width:94%; margin:3px; height:25px;" readonly="true"  indexed="true" maxlength="9" />
 							</div>
 						</td>
-						
+
 						<!-- 数量・前回レート/金額（円）/外貨金額 -->
 						<td colspan="2">
 							<div class="box_1of3">
-								<html:text tabindex="${1005+s.index*10}" name="lineDtoList" styleId="quantity${s.index}" property="quantity" 
-									styleClass="c_disable AutoCalcQuantity numeral_commas" 
+								<html:text tabindex="${1005+s.index*10}" name="lineDtoList" styleId="quantity${s.index}" property="quantity"
+									styleClass="c_disable AutoCalcQuantity numeral_commas"
 									style="text-align:right; width:45%; margin:3px; height:25px;" readonly="true" indexed="true" />
-								<html:text tabindex="${1006+s.index*10}" name="lineDtoList" styleId="rate${s.index}" property="rate" styleClass="c_disable AutoCalcRate" 
+								<html:text tabindex="${1006+s.index*10}" name="lineDtoList" styleId="rate${s.index}" property="rate" styleClass="c_disable AutoCalcRate"
 									style="text-align:right; width:45%; margin:3px; height:25px;" readonly="true" indexed="true" />
 							</div>
 							<div class="box_2of3">
-								<html:text tabindex="${1007+s.index*10}" name="lineDtoList" styleId="price${s.index}" property="price" 
-									styleClass="c_disable AutoCalcPrice numeral_commas yen_value" 
+								<html:text tabindex="${1007+s.index*10}" name="lineDtoList" styleId="price${s.index}" property="price"
+									styleClass="c_disable AutoCalcPrice numeral_commas yen_value"
 									style="text-align:right; ime-mode:disabled; width:94%; margin:3px; height:25px;" readonly="true" indexed="true"  />
 							</div>
 							<div class="box_3of3">
-								<html:text tabindex="${1008+s.index*10}" name="lineDtoList" styleId="dolPrice${s.index}" property="dolPrice" 
-									styleClass="c_disable AutoCalcDolPrice numeral_commas dollar_value" 
+								<html:text tabindex="${1008+s.index*10}" name="lineDtoList" styleId="dolPrice${s.index}" property="dolPrice"
+									styleClass="c_disable AutoCalcDolPrice numeral_commas dollar_value"
 									style="text-align:right; ime-mode:disabled;  width:94%; margin:3px; height:25px;" readonly="true" indexed="true" />
 							</div>
 						</td>
@@ -590,26 +590,26 @@
 					</tr>
 					<tr>
 						<td class="rd_bottom_left" style="text-align: center; height: 100px;">
-							<html:text property="priceTotal" styleId="priceTotal" 
+							<html:text property="priceTotal" styleId="priceTotal"
 								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555; font-size: 24px;" readonly="true"/>
 						</td>
 						<td style="text-align: center">
-							<html:text property="fePriceTotal" styleId="fePriceTotal" 
+							<html:text property="fePriceTotal" styleId="fePriceTotal"
 								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555;font-size: 24px;" readonly="true"/>
 						</td>
 						<td style="text-align: center">
-							<input type="text" id="paymentBalance" value=""  
+							<input type="text" id="paymentBalance" value=""
 								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555;font-size: 24px;" readonly>
 						</td>
 						<td class="rd_bottom_right" style="text-align: center">
-							<html:text styleId="aptBalance" property="aptBalance" 
+							<html:text styleId="aptBalance" property="aptBalance"
 								style="width: 100%; text-align:center; background-color: #FFFFFF; border-style: none;font-weight: bold;color: #555555;font-size: 24px;" readonly="true" />
 						</td>
 					</tr>
 				</table>
 			</div>
 			</div>
-			
+
 			<!-- 登録・更新ボタン -->
 			<div style="width: 1160px; text-align: center; margin-top: 10px;">
 				<c:if test="${f:h(newData)}">

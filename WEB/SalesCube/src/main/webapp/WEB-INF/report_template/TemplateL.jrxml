@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TemplateL" language="groovy" pageWidth="595" pageHeight="842" columnWidth="520" leftMargin="40" rightMargin="35" topMargin="10" bottomMargin="50" uuid="72e9c643-18bf-41f0-a1ce-24efa14c06d2">
 	<property name="ireport.zoom" value="1.771561000000001"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="336"/>
 	<style name="DefaultStyle" isDefault="true" forecolor="#010101" backcolor="#010101"/>
 	<parameter name="poSlipId" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="poDate" class="java.util.Date" isForPrompting="false"/>
@@ -26,6 +26,8 @@
 	<parameter name="fePriceTotal" class="java.math.BigDecimal" isForPrompting="false"/>
 	<parameter name="sign" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="fobName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="ctaxTotal" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="priceTotal" class="java.math.BigDecimal" isForPrompting="false"/>
 	<field name="productCode" class="java.lang.String"/>
 	<field name="supplierPcode" class="java.lang.String"/>
 	<field name="productAbstract" class="java.lang.String"/>
@@ -321,9 +323,21 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="24">
+			<band height="85">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="c167ca9f-13b6-4cf2-902c-30132131b174" x="431" y="0" width="89" height="30"/>
+					<box rightPadding="2">
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{fePriceTotal}]]></textFieldExpression>
+				</textField>
 				<staticText>
-					<reportElement uuid="3da8aeed-e003-4f4c-8bf5-3fbcf18ef16c" x="362" y="0" width="69" height="24"/>
+					<reportElement uuid="3da8aeed-e003-4f4c-8bf5-3fbcf18ef16c" x="362" y="0" width="69" height="30"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -337,7 +351,7 @@
 					<text><![CDATA[合計]]></text>
 				</staticText>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="c167ca9f-13b6-4cf2-902c-30132131b174" x="431" y="0" width="89" height="24"/>
+					<reportElement uuid="c167ca9f-13b6-4cf2-902c-30132131b174" x="275" y="0" width="87" height="30"/>
 					<box rightPadding="2">
 						<leftPen lineWidth="0.5"/>
 						<bottomPen lineWidth="0.5"/>
@@ -346,8 +360,22 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{fePriceTotal}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{ctaxTotal}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement uuid="3da8aeed-e003-4f4c-8bf5-3fbcf18ef16c" x="206" y="0" width="69" height="30"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" pdfFontName="HeiseiMin-W3" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[消費税]]></text>
+				</staticText>
 			</band>
 		</groupFooter>
 	</group>
@@ -650,6 +678,6 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="15"/>
+		<band height="45"/>
 	</pageFooter>
 </jasperReport>

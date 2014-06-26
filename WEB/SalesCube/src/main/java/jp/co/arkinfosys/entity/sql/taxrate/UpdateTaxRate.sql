@@ -7,4 +7,4 @@ UPDATE
 WHERE
 	TAX_TYPE_CATEGORY=/*taxTypeCategory*/0
 	AND
-	START_DATE=/*startDate*/NULL
+	START_DATE=CAST(/*startDate*/'2000/01/01' AS DATE)

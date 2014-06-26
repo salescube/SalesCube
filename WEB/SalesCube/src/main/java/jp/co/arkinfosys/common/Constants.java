@@ -236,7 +236,7 @@ public final class Constants {
 		 * 制限付き有効
 		 *
 		 * 画面：参照のみ<br>
-		 * ファイル参照：一部可
+		 * ファイル参照：全社員向けのみ可
 		 */
 		public static final String VALID_LIMITATION = "1";
 
@@ -1042,5 +1042,21 @@ public final class Constants {
 
 		public static final String VALID = "1";
 		public static final String INVALID = "0";
+	}
+
+	/**
+	 * APIの実行結果ステータスコード
+	 */
+	public static class API_STATUS_CODE{
+		public static final String SUCCESS = "0";
+		public static final String NO_RESULT = "1";
+		public static final String FAILED = "9";
+	}
+
+	/**
+	 * 税率が0%の場合の値
+	 */
+	public static class TAX_ZERO_VALUE{
+		public static final String ZERO = "0.000";
 	}
 }

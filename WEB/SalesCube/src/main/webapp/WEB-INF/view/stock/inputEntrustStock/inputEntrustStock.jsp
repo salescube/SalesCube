@@ -32,7 +32,7 @@
 			var maxLineNo = $("#tbodyLine").children().length-1;
 			lineCount = maxLineNo + 1;
 			var maxLineId;
-			
+
 			// 明細データの存在チェック
 			var isEmpty = true;
 			for (var i = 0; i < 5; i++) {
@@ -41,11 +41,11 @@
 					break;
 				}
 			}
-			
+
 			if(maxLineNo >= 0) {
 				maxLineId = $("#tbodyLine").children().eq(maxLineNo).attr("id");
 				maxIndex = maxLineId.replace("trLine", "");
-				
+
 				if (!isEmpty) {
 					// 明細が複数行存在する時は、委託入出庫番号と発注番号、委託入出庫区分をDisableにする
 					$("#entrustEadSlipId").attr("readonly", "true");
@@ -57,7 +57,7 @@
 					$("#poSlipId").css("background-color", "#CCCCCC");
 					$("#poSlipId").css("border-top", "2px solid #AEAEAE");
 				}
-				
+
 				// 明細行のクローンを生成
 				trCloneBase = $("#tbodyLine").children(":first").clone(true);
 				baseIndex = trCloneBase.attr("id").replace("trLine", "");
@@ -395,7 +395,7 @@
 	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
 	        			</button>
 					</div>
-					
+
 	       			<div id="order_section" class="section_body">
 						<table id="order_info" class="forms" summary="委託入出庫伝票情報">
 							<colgroup>
@@ -450,7 +450,7 @@
 	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
 	        			</button>
 					</div>
-					
+
 	       			<div id="order_section" class="section_body">
 						<table id="order_info" class="forms" summary="仕入先情報">
 							<colgroup>
@@ -511,21 +511,21 @@
 										<html:hidden name="entrustEadLineTrnDtoList" property="productAbstract" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].productAbstract" />
 										<html:hidden name="entrustEadLineTrnDtoList" property="poLineId" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].poLineId" />
 									</td>
-									
+
 									<!-- 商品コード -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
 										<span id="productAbstract${status.index}" style="display: block; width:95%; height:3em; white-space: normal; overflow: auto; padding: 1px;">
 											<c:out value="${entrustEadLineTrnDtoList.productCode}" />
 										</span>
 									</td>
-									
+
 									<!-- 商品名 -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
 										<span id="productAbstract${status.index}" style="display: block; width:95%; height:3em; white-space: normal; overflow: auto; padding: 1px;">
 											<c:out value="${entrustEadLineTrnDtoList.productAbstract}" />
 										</span>
 									</td>
-									
+
 									<!-- 数量 -->
 									<td style="text-align: ${columnInfoList[statusCol.index].textAlign}">
 										<div class="box_1of2" style="border-bottom: 0;">
@@ -542,7 +542,6 @@
 										<div class="box_2of2" style="height: 70px;">
 											<html:textarea name="entrustEadLineTrnDtoList" property="remarks" indexed="true" styleId="entrustEadLineTrnDtoList[${status.index}].remarks" style="width: 95%; height: 75%;" tabindex="${status.index*lineElementCount+1004}" />
 										</div>
-										<c:out value="${entrustEadLineTrnDtoList.remarks}" />
 									</td>
 								</tr>
 							</c:if>
@@ -553,7 +552,7 @@
 				</div>
 			</div>
 		</s:form>
-		
+
 		<div style="width: 1160px; text-align: center; margin-top: 10px;">
 			<c:if test="${!isExistSlipRead}">
 				<button type="button" id="btnF3btm" tabindex="1999" class="btn_medium" style="width:260px; height:51px;" onclick="onF3();" ${menuUpdate?"":"disabled"}>

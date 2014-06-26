@@ -326,13 +326,13 @@
 						<tr id="discountTrnList_${s.index}">
 							<td id="discountTrnList_${s.index}.no" style="text-align: center">${s.index+1}
 			                </td>
-							<td style="text-align: center;">
+							<td style="text-align: center; background-color: #fae4eb;">
 			                    <html:hidden styleId="discountTrnList_${s.index}.discountDataId" name="discountTrnList" property="discountDataId" indexed="true" />
 			                    <html:hidden styleId="discountTrnList_${s.index}.lineNo" name="discountTrnList" property="lineNo" indexed="true"/>
 								<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataFrom" name="discountTrnList" property="dataFrom" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+200}" indexed="true" styleClass="numeral_commas style_quantity" />
 								～
 								<html:text maxlength="13" styleId="discountTrnList_${s.index}.dataTo" name="discountTrnList" property="dataTo" style="width: 120px;ime-mode:disabled;" tabindex="${s.index*4+201}" indexed="true" styleClass="numeral_commas style_quantity" />
-							<td style="text-align: center">
+							<td style="text-align: center; background-color: #fae4eb;">
 								<html:text maxlength="7" styleId="discountTrnList_${s.index}.discountRate" name="discountTrnList" property="discountRate" style="width: 80px;ime-mode:disabled;text-align:right;" tabindex="${s.index*4+202}" indexed="true"/> ％
 			                </td>
 							<td style="text-align: center">

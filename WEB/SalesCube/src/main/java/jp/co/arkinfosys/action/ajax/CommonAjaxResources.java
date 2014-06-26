@@ -80,4 +80,38 @@ public class CommonAjaxResources extends CommonResources {
 			super.errorLog(e);
 		}
 	}
+
+	/**
+	 * Ajax処理用のエラーレスポンスオブジェクトを構築して返します.(パラメータ不足)
+	 */
+	protected void writeErrorToResponse(String errorMessage) {
+		this.httpResponse.setContentType("text/plain");
+		this.httpResponse.setCharacterEncoding("UTF-8");
+		this.httpResponse
+				.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		try {
+			this.httpResponse
+					.getWriter()
+					.write(errorMessage);
+		} catch (IOException e) {
+			super.errorLog(e);
+		}
+	}
+
+	/**
+	 * Ajax処理用のメッセージレスポンスオブジェクトを構築して返します
+	 */
+	protected void writeMessageToResponse(String message) {
+		this.httpResponse.setContentType("text/plain");
+		this.httpResponse.setCharacterEncoding("UTF-8");
+		this.httpResponse
+				.setStatus(HttpServletResponse.SC_OK);
+		try {
+			this.httpResponse
+					.getWriter()
+					.write(message);
+		} catch (IOException e) {
+			super.errorLog(e);
+		}
+	}
 }

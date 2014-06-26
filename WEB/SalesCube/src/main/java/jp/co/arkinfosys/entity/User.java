@@ -58,4 +58,5 @@ public class User implements Serializable {
     public String lockflg;
 
     public Timestamp lockDatetm;
+
 }

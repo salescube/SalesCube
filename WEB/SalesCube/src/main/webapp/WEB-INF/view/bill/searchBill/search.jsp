@@ -323,11 +323,11 @@ function changeBillCrt(){
 			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 		<div class="function_forms">
-		
+
 			<!-- エラー情報 -->
 			<div id="errors" style="color: red">
 				<html:errors />
@@ -408,14 +408,15 @@ function changeBillCrt(){
 								<th><div class="col_title_right"><bean:message key='labels.laseSalesDate'/></div></th> <!-- 最終売上日 -->
 								<td style="padding-right: 0;">
 									<div class="pos_r">
-										<html:text property="lastSalesDateFrom" styleId="lastSalesDateFrom"  styleClass="date_input" style="width: 175px; ime-mode:disabled;" tabindex="104" />									</div>
+										<html:text property="lastSalesDateFrom" styleId="lastSalesDateFrom"  styleClass="date_input" style="width: 175px; ime-mode:disabled;" tabindex="104" />
+									</div>
 								</td>
 								<td style="text-align: center; width:30px; padding-right: 0;">
 									<bean:message key='labels.betweenSign'/><!-- ～ -->
 								</td>
 								<td colspan="1" >
 									<div class="pos_r">
-										<html:text property="billCutoffDateTo" styleId="billCutoffDateTo" styleClass="date_input"  style="width: 175px; ime-mode:disabled;" tabindex="105" />
+										<html:text property="lastSalesDateTo" styleId="lastSalesDateTo" styleClass="date_input"  style="width: 175px; ime-mode:disabled;" tabindex="105" />
 									</div>
 								</td>
 							</tr>

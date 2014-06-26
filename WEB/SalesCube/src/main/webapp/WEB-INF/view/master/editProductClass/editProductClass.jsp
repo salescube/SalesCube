@@ -61,7 +61,10 @@
             $("#classCode2").empty();
             $("#classCode1").attr("disabled", true);
             $("#classCode2").attr("disabled", true);
+            $("#classCode1").addClass("c_disable");
+            $("#classCode2").addClass("c_disable");
 
+            
             // プルダウン大を取る
     		var data = {
                 "classCode1" : "",
@@ -84,6 +87,7 @@
             // プルダウン大は有効
             $("#classCode1").empty();
             $("#classCode1").removeAttr("disabled");
+            $("#classCode1").removeClass("c_disable");
 
             // プルダウン大を取る
     		syncRequest(
@@ -122,8 +126,10 @@
             // プルダウン大・中は有効
             $("#classCode1").empty();
             $("#classCode1").removeAttr("disabled");
+            $("#classCode1").removeClass("c_disable");
             $("#classCode2").empty();
             $("#classCode2").removeAttr("disabled");
+            $("#classCode2").removeClass("c_disable");
 
             // プルダウン大を取る
     		var data = {

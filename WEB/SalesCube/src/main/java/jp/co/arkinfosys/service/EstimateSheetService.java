@@ -396,17 +396,46 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 		setConditionItemString(conditions, param, Param.ESTIMATE_DATE_FROM,
 				LikeType.NOTHING);
 
+		// 見積日From全角半角変換
+		if (conditions.containsKey(Param.ESTIMATE_DATE_FROM)) {
+			param.put(Param.ESTIMATE_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.ESTIMATE_DATE_FROM)));
+
+		}
 		// 見積日To
 		setConditionItemString(conditions, param, Param.ESTIMATE_DATE_TO,
 				LikeType.NOTHING);
+
+		// 見積日To 全角半角変換
+		if (conditions.containsKey(Param.ESTIMATE_DATE_TO)) {
+			param.put(Param.ESTIMATE_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.ESTIMATE_DATE_TO)));
+
+		}
 
 		// 有効期限From
 		setConditionItemString(conditions, param, Param.VALID_DATE_FROM,
 				LikeType.NOTHING);
 
+
+		// 有効期限From 全角半角変換
+		if (conditions.containsKey(Param.VALID_DATE_FROM)) {
+			param.put(Param.VALID_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.VALID_DATE_FROM)));
+
+		}
+
 		// 有効期限To
 		setConditionItemString(conditions, param, Param.VALID_DATE_TO,
 				LikeType.NOTHING);
+
+
+		// 有効期限To 全角半角変換
+		if (conditions.containsKey(Param.VALID_DATE_TO)) {
+			param.put(Param.VALID_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.VALID_DATE_TO)));
+
+		}
 
 		// 入力担当者コード
 		setConditionItemString(conditions, param, Param.USER_ID,

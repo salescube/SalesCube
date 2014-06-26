@@ -23,6 +23,9 @@ UPDATE USER_MST_/*$domainId*/ SET
 		/*IF passwordValidDays != null */
 		EXPIRE_DATE=DATE_ADD(now(), INTERVAL /*passwordValidDays*/ DAY),
 		/*END*/
+		/*IF passwordValidDays == null */
+		EXPIRE_DATE=NULL,
+		/*END*/
 		/*IF failCount != null */
 		FAIL_COUNT=/*failCount*/,
 		/*END*/

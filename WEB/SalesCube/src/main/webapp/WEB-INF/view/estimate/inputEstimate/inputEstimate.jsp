@@ -214,6 +214,11 @@ function onF2(){
 		// カンマ除去
 		_before_submit($(".numeral_commas"));
 
+		$("#grossMargin").val(_rmv_cunit($("#grossMargin").val()));
+		$("#retailPriceTotal").val(_rmv_cunit($("#retailPriceTotal").val()));
+		$("#ctaxPriceTotal").val(_rmv_cunit($("#ctaxPriceTotal").val()));
+		$("#estimateTotal").val(_rmv_cunit($("#estimateTotal").val()));
+
 		showNowSearchingDiv();
 		$("form[name='" + MAIN_FORM_NAME + "']").attr("action", '${f:url("/estimate/inputEstimate/delete")}');
 		$("form[name='" + MAIN_FORM_NAME + "']").submit();
@@ -248,7 +253,7 @@ function onF3(){
 
 		// カンマ除去
 		_before_submit($(".numeral_commas"));
-		
+
 		$("#grossMargin").val(_rmv_cunit($("#grossMargin").val()));
 		$("#retailPriceTotal").val(_rmv_cunit($("#retailPriceTotal").val()));
 		$("#ctaxPriceTotal").val(_rmv_cunit($("#ctaxPriceTotal").val()));
@@ -909,7 +914,7 @@ function changeQuantity(index){
 	var objQuantity= $("#estimateLineTrnDtoList\\["+index+"\\]\\.quantity");
 	var l_quantity = oBDCS(objQuantity.val()).setSettingsFromObj(objQuantity);
     var bExceptianal = sc_isLooseExceptianalProductCode($("#estimateLineTrnDtoList\\["+index+"\\]\\.productCode").val() );
-    
+
 	if(l_quantity.isNum()){
 		// 受注限度数を超えている場合
 		if(IsCheckOverQuantity(index)){
@@ -1076,7 +1081,7 @@ function sum(hasChanged){
 
 	// [粗利益] 	= [売価金額]の合計―[仕入金額]の合計
 	var grossMargin = sumRetailPrice-sumCost;
-	$("#grossMargin").val(grossMargin);	
+	$("#grossMargin").val(grossMargin);
 	SetBigDecimalScale_Obj($("#grossMargin"));
 
 	// [金額合計]	= [売価金額]の合計
@@ -1130,13 +1135,17 @@ function sum(hasChanged){
 		// 内税
 		ctaxPriceTotal = 0;
 	}
-	
+
 	$("#ctaxPriceTotal").val(ctaxPriceTotal);
 	SetBigDecimalScale_Obj($("#ctaxPriceTotal"));
 
+	// 2014/6/19
+	// 端数処理を行った後の消費税を再設定する
+	ctaxPriceTotal = _Number(_rmv_cunit($("#ctaxPriceTotal").val()));
+
 	// [伝票合計]	= [金額合計]＋[消費税]
 	var estimateTotal = sumRetailPrice+ctaxPriceTotal;
-	$("#estimateTotal").val(estimateTotal);	
+	$("#estimateTotal").val(estimateTotal);
 	SetBigDecimalScale_Obj($("#estimateTotal"));
 
 	// [原価合計]（画面には表示しないがDBに登録する）

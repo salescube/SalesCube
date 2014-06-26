@@ -44,7 +44,8 @@ input[type="password"] {
     -moz-border-radius: 5px;
     display: inline-block;
 }
-input[readonly="readonly"] {
+
+input[readonly]{
     background-color: #CCCCCC;
     border-top: solid 2px #AEAEAE;
 }
@@ -65,7 +66,7 @@ textarea {
     overflow-y:scroll;
 }
 
-textarea[readonly="readonly"] {
+textarea[readonly] {
     background-color: #CCCCCC;
     border-top: solid 2px #AEAEAE;
     overflow-y:scroll;
@@ -993,9 +994,11 @@ table#voucher_info td{
     margin: 0;
     padding: 0;
 }
+
 .ui-widget-content a {
-    color: #FFFFFF;
+    color: #1D9CCC;
 }
+
 
 table#customerList {
     border: none;

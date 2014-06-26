@@ -17,6 +17,6 @@ WHERE
                      FROM
                      	TAX_RATE_MST_/*$domainId*/ T2
                      WHERE
-                     	DATE(/*startDate*/NULL) >= T2.START_DATE AND
+                     	CAST(/*startDate*/'2000/01/01' AS DATE) >= T2.START_DATE AND
 						T2.TAX_TYPE_CATEGORY = /*taxTypeCategory*/'default'
                      )

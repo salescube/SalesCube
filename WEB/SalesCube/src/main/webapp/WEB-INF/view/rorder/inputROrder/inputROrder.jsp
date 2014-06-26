@@ -62,15 +62,15 @@
 
     	//デフォルトアクションの取得
     	MainDefaultAction = $("form[name='" + MainFormName + "']").attr("action");
-    	
+
 		<c:if test="${f:h(newData)}">
 	    	for (var i = 0; i < maxLineCount; i++) {
 	            // 各行の税率
 	        	$("#productRow_" + (i+1) + "_ctaxRate_hidden").val($("#ctaxRate").val());
 	        }
 		</c:if>
-		
-    	
+
+
 
 		// 端数処理初期設定
 		applyNumeralStyles(true);
@@ -92,7 +92,7 @@
 			$("#deliveryCode").bind("keypress", move_focus_to_next_tabindex );
 		}
 		else {
-			$("#deliveryName").bind("keypress", move_focus_to_next_tabindex );
+			$("#deliveryName").bind("keypress", 'return',move_focus_to_next_tabindex );
 		}
 
 		// 通販サイトデータの場合のみ、初期表示時に数値チェックを行う。
@@ -1385,7 +1385,6 @@
     }
 
     function changeRate(){
-    	
         for (var i = 0; i < maxLineCount; i++) {
             // 各行の税率
         	$("#productRow_" + (i+1) + "_ctaxRate_hidden").val($("#ctaxRate").val());
@@ -1393,8 +1392,8 @@
         }
     }
 
-    
-    
+
+
     function calcSum(hasChanged) {
         var tbodyObj = $("#tbodyLine").get(0);
         var rowNo = 1;
@@ -1427,11 +1426,11 @@
         // 粗利益率
         // 2010.04.22 update kaki 粗利益率は％表示するため、×100する。
         var grossRatio = 0;
-        
+
         if (sumRetailPrice != 0) {
         	grossRatio= gross / sumRetailPrice * 100;
         }
-        
+
         $("#grossRatio").val(grossRatio);
         $("#grossRatioDisp").html(grossRatio);
         SetBigDecimalScale_Obj($("#grossRatioDisp"));
@@ -1444,10 +1443,10 @@
 
         // 消費税
         var ctaxPriceTotal = 0.0;
-        
+
         // 伝票合計
         var priceTotal = retailPriceTotal;
-        
+
         // 外税の時のみ消費税を計算する
         if ($("#taxShiftCategory").val() != <%=CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX%>) {
             // 税率は％表記なので100.0で割る
@@ -1463,17 +1462,17 @@
 
             	ctaxPriceTotal = $("#ctaxPriceTotal").val();
             	priceTotal = $("#priceTotal").val();
-            	
+
 				if (ctaxPriceTotal == "") {
 					ctaxPriceTotal = "0";
 				}
-				
+
 				if (priceTotal == "") {
 					priceTotal = "0";
 				}
             }
         }
-        
+
         $("#ctaxPriceTotalDisp").html(ctaxPriceTotal);
         $("#priceTotalDisp").html(priceTotal);
 
@@ -1631,10 +1630,11 @@
 
 
         // 引当可能数
+        //検証
     	elemWork = elemTd.children().children("#productRow_1_possibleDrawQuantity");
     	elemWork.attr("id", "productRow_" + lineNo + "_possibleDrawQuantity");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].possibleDrawQuantity");
-        elemWork.val("");
+        elemWork.text("");
 
     	elemWork = elemTd.children("#productRow_1_status");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].status");
@@ -1656,7 +1656,7 @@
     	elemWork = elemTd.children("#productRow_1_ctaxRate_hidden");
     	elemWork.attr("id", "productRow_" + lineNo + "_ctaxRate_hidden");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].ctaxRate");
-        elemWork.val("");
+        elemWork.val($("#ctaxRate").val()); // 選択されている消費税率を設定する
 
     	elemWork = elemTd.children("#productRow_1_ctaxPrice_hidden");
     	elemWork.attr("id", "productRow_" + lineNo + "_ctaxPrice_hidden");
@@ -1809,10 +1809,15 @@
     	$("#productRow_" + lineNo + "_quantity").val($("#productRow_" + source + "_quantity").val());
     	$("#productRow_" + lineNo + "_quantity_hidden").val($("#productRow_" + source + "_quantity_hidden").val());
 
-        // 受注残数・完納区分の設定
+        // 受注残数の設定
 //    	$("#productRow_" + lineNo + "_restQuantity").text($("#productRow_" + source + "_restQuantity").text()); --未納数は、数量と同じとする。
         $("#productRow_" + lineNo + "_restQuantity").text($("#productRow_" + source + "_quantity").val());
-    	$("#productRow_" + lineNo + "_statusName").text('${defaultStatusName}');
+
+        //完納区分の設定 データがある場合のみデフォルト値を設定
+        if ($("#productRow_" + source + "_statusName").text()) {
+    		$("#productRow_" + lineNo + "_statusName").text('${defaultStatusName}');
+    	}
+
         $("#productRow_" + lineNo + "_status").val(${defaultStatusCode});
     	$("#productRow_" + lineNo + "_possibleDrawQuantity").val($("#productRow_" + source + "_possibleDrawQuantity").val());
 
@@ -1973,7 +1978,7 @@
 		<button type="button" id="btnF12" disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-		
+
 	<s:form onsubmit="return false;">
 		<html:hidden property="taxFractCategory" styleId="taxFractCategory" />
 		<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
@@ -1990,7 +1995,7 @@
 					<bean:write name="msg" ignore="true"/><br>
 				</html:messages>
 			</div>
-			
+
 		    <div class="form_section_wrap">
 			    <div class="form_section">
 			    	<div class="section_title">
@@ -1999,9 +2004,9 @@
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 			        <html:hidden property="updDatetm"/>
-			        
+
 			        <div id="order_section" class="section_body">
 					<table id="order_info" class="forms" summary="受注伝票情報">
 						<tr>
@@ -2036,7 +2041,7 @@
 			                    <html:text property="userName" tabindex="106" readonly="true" styleClass="c_disable"/>
 			                    <html:hidden property="status" styleId="status" />
 			                </td>
-			
+
 						</tr>
 						<tr>
 							<th><div class="col_title_right">摘要</div></th>
@@ -2081,7 +2086,7 @@
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 					<div id="order_section" class="section_body">
 					<table id="customer_info" class="forms" summary="顧客情報">
 						<colgroup>
@@ -2163,19 +2168,19 @@
 			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
 			            </button>
 					</div><!-- /.section_title -->
-					
+
 					<div id="order_section" class="section_body">
 					<table id="delivery_info" class="forms" summary="納入先情報">
 						<tr>
 							<th><div class="col_title_right">顧客納入先</div></th>
-							<td>
+							<td colspan="5">
 								<%-- オンライン注文以外 --%>
 			                    <html:select styleId="deliveryCode" property="deliveryCode" tabindex="300" onchange="changeDelivery()"
-			                    	style="${isOnlineOrder?'display: none;':''}" disabled="${isOnlineOrder}">
+			                    	style="width:250px;${isOnlineOrder?'display: none;':''}" disabled="${isOnlineOrder}">
 			                        <option value=""></option>
 			                        <html:options collection="deliveryList" property="value" labelProperty="label"/>
 			                    </html:select>
-			
+
 			                    <html:text styleId="deliveryName" property="deliveryName" tabindex="300"
 			                    	style="width: 500px; ime-mode:active; ${!isOnlineOrder?'display: none;':''}" maxlength="60"/>
 			                    <html:hidden styleId="deliveryKana" property="deliveryKana"/>
@@ -2290,7 +2295,7 @@
 				                    <html:hidden property="deliveryPcPre" styleId="deliveryPcPre"/>
 								</c:if>
 			                </td>
-			
+
 						</tr>
 						<tr>
 							<th><div class="col_title_right">TEL<c:if test="${isOnlineOrder}">※</c:if></div></th>
@@ -2327,7 +2332,7 @@
 					</div><!-- /.section_body -->
 				</div><!-- /.form_section -->
 			</div><!-- /.form_section_wrap -->
-			
+
 		<div id="order_detail_info_wrap">
 		<table summary="受注商品明細リスト" class="forms detail_info" style="margin-top: 20px;">
 			<colgroup>
@@ -2365,19 +2370,19 @@
 					<th style="height: 20px;">&nbsp;引当可能数&nbsp;</th>
 				</tr>
             </thead>
-            
+
             <tbody id="tbodyLine">
 			<c:forEach var="lineList" varStatus="s" items="${lineList}">
 			<c:if test='${lineList.lineNo != null}'>
 				<tr id="productRow_${s.index+1}">
-	
+
 					<!-- No -->
 					<td style="text-align: center" id="td${s.index+1}_1">
 						<div class="box_1of1">
 							${s.index+1}
 						</div>
 					</td>
-					
+
 					<!-- 商品コード -->
 					<td style="background-color: #fae4eb;">
 						<div class="box_1of1" style="margin: 5px;">
@@ -2397,7 +2402,7 @@
 		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_customerPcode" property="customerPcode" indexed="true"/>
 		                <html:hidden name="lineList" styleId="productRow_${s.index+1}_deletable" property="deletable" indexed="true"/>
 	                </td>
-					
+
 	                <!-- 商品名・商品備考 -->
 					<td>
 		                <div class="box_1of2" id="productRow_${s.index+1}_name" style="position: static; white-space: normal;" >
@@ -2408,7 +2413,7 @@
 		                </div>
 		                <html:hidden name="lineList" property="productAbstract" styleId="productRow_${s.index+1}_name_hidden" indexed="true"/>
 	                </td>
-					
+
 	                <!-- 棚版・数量 -->
 					<td style="padding: 0">
 						<div class="box_1of3">
@@ -2427,7 +2432,7 @@
 							<button id="productRow_${s.index+1}_stockBtn" tabindex="${f:h(s.index*14+1005)}" class="btn_list_action" style="margin: 3px;">在庫</button>
 						</div>
 					</td>
-	
+
 					<!-- 未納数・完納区分・引当可能数 -->
 					<td style="text-align:center;">
 						<div class="box_1of3">
@@ -2448,7 +2453,7 @@
 		                <html:hidden name="lineList" property="ctaxPrice" styleId="productRow_${s.index+1}_ctaxPrice_hidden" indexed="true"/>
 		                <html:hidden name="lineList" property="stockCtlCategory" styleId="productRow_${s.index+1}_stockCtlCategory_hidden" indexed="true"/>
 	                </td>
-	
+
 	                <!-- 仕入単価・仕入れ金額 -->
 					<td style="background-color: #fae4eb;">
 						<c:if test="${lineList.status == defaultStatusCode}" >
@@ -2468,7 +2473,7 @@
 		                	</div>
 						</c:if>
 	                </td>
-	
+
 	                <!-- 売上単価・売価金額 -->
 					<td style="background-color: #fae4eb;">
 						<c:if test="${lineList.status == defaultStatusCode}" >
@@ -2488,7 +2493,7 @@
 		    	            </div>
 						</c:if>
 	                </td>
-	
+
 	                <!-- 備考・ピッキング備考 -->
 					<td>
 						<c:if test="${lineList.status != 9}" >
@@ -2512,7 +2517,7 @@
 	                    	</div>
 						</c:if>
 	                </td>
-	
+
 	                <!-- ボタン -->
 					<td>
 						<div class="box_1of2">
@@ -2548,7 +2553,7 @@
 						</div>
 					</td>
 				</tr>
-				
+
 				<script type="text/javascript">
 	                // イベントの貼り付け
 	                $("#productRow_${s.index+1}_code").bind("focus", {lineNo: ${s.index+1}}, function(e){ this.curVal=this.value; });
@@ -2574,7 +2579,7 @@
 	            </script>
 			</c:if>
          	</c:forEach>
-         	
+
          	<!-- 追加ボタン -->
 			<tr id="trAddLine">
 				<td style="height: 60px; text-align: center" colspan="9" class="rd_bottom_left rd_bottom_right">
@@ -2595,7 +2600,7 @@
 		</div>
 
 		<html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-	        
+
 		<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
         <div id="information" class="information" style="">
 			<table id="voucher_info" class="forms" summary="伝票情報" style="">
@@ -2614,7 +2619,7 @@
 					<td id="priceTotalDisp" style="text-align:center;" class="BDCyen yen_value" >&nbsp;${f:h(priceTotal)}</td>
 				</tr>
 			</table>
-			
+
 			<html:hidden property="gross" styleId="gross"/>
 			<html:hidden property="grossRatio" styleId="grossRatio"/>
 			<html:hidden property="retailPriceTotal" styleId="retailPriceTotal"/>
@@ -2624,7 +2629,7 @@
 			<html:hidden property="newData" />
 		</div>
 		</div>
-	
+
 		<div style="width: 1160px; text-align: center; margin-top: 10px;">
 			<c:if test="${!newData}">
 			    <c:if test="${menuUpdate}">

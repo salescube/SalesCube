@@ -142,45 +142,57 @@ public class EditCategoryAction extends
 		}
 
 		int noInsertCount = 0;
+		int doubleCount = 0;
+
 
 		// 画面上のレコードを登録する
 		for (CategoryDto dto : this.editCategoryForm.categoryTrnList) {
 			dto.categoryId = this.getKey();
 
-			//対象のIDが区分データテーブル上に非表示項目として存在しないかチェックする
-			if(categoryService.findCategoryTrnNoDspByIdAndCode(dto) == null){
-				//INSERT
-				categoryService.insertRecord(dto);
-			}
-			else
-			{
-				//非表示項目として存在するためINSERTはしない。
-				//カウントのみ
-				noInsertCount =+ 1;
-
-				/*
-				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-						"errors.already.exists.CategoryCode"));
-				ActionMessagesUtil.addErrors(this.httpRequest, this.messages);
-				return this.getInputURL();
-				*/
+			//対象のIDがDBに存在しないかチェックする
+			if(categoryService.findCategoryTrnByIdAndCode(Integer.valueOf(dto.categoryId),dto.categoryCode) == null){
+					//INSERT
+					categoryService.insertRecord(dto);
+			}else{
+				doubleCount += 1;
+				//DBに存在している場合、対象のID・コードがが区分データテーブル上に非表示項目かどうかかチェックする
+				if(categoryService.findCategoryTrnNoDspByIdAndCode(dto) != null){
+					//非表示項目として存在するためINSERTはしない。
+					//カウントのみ
+					noInsertCount += 1;
+				}
 			}
 
 		}
 
 		super.init(this.getKey());
 
-		if (noInsertCount != 0){
-			// メッセージ設定
-			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"infos.update" ));
-			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-					"errors.already.exists.CategoryCode" ));
-		}else{
+		 if(doubleCount != 0){
+				// メッセージ設定
+				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"infos.update" ));
+
+			 //重複している値が非表示項目の場合
+			if (noInsertCount != 0){
+				// メッセージ設定
+				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"errors.already.exists.CategoryCode" ));
+			}
+
+			//重複している値が大文字小文字の重複の場合
+			if (doubleCount > noInsertCount){
+				this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+						"errors.already.exists.doubleCategoryCode" ));
+			}
+
+		}
+		else{
 			// メッセージ設定
 			this.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"infos.update"));
 		}
+
+
 		ActionMessagesUtil.addMessages(this.httpRequest, this.messages);
 		return getInputURL();
 	}

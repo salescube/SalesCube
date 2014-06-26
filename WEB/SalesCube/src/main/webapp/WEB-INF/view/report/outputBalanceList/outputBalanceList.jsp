@@ -169,7 +169,7 @@
 				<div id="errors" style="color: red">
 					<html:errors/>
 				</div>
-				
+
 				<div class="form_section_wrap">
 				<div class="form_section">
 				<div class="section_title">
@@ -180,7 +180,7 @@
 					</button>
 				</div>
 				<div class="section_body">
-				
+
 
 				<div id="target_info">
 					<table id="output_condition" class="forms" summary="outputCondition">
@@ -230,10 +230,10 @@
 						<tr>
 							<th><div class="col_title_right"><bean:message key='labels.customerCodeRange'/></div></th> <!-- 顧客コード範囲 -->
 							<td>
-								<html:text property="customerCodeFrom" styleId="customerCodeFrom" style="width: 150px; ime-mode: disabled;" maxlength="13" tabindex="106" />
+								<html:text property="customerCodeFrom" styleId="customerCodeFrom" style="width: 150px; ime-mode: disabled;" maxlength="15" tabindex="106" />
 								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(1)" tabindex="107" />
 								<bean:message key='labels.betweenSign'/> <!-- ～ -->
-								<html:text property="customerCodeTo" styleId="customerCodeTo" style="width: 150px; ime-mode: disabled;" maxlength="13" tabindex="108" />
+								<html:text property="customerCodeTo" styleId="customerCodeTo" style="width: 150px; ime-mode: disabled;" maxlength="15" tabindex="108" />
 								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;" onclick="openCustomerSearchDialog(2)" tabindex="109" />
 							</td>
 						</tr>

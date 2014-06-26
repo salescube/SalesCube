@@ -1,235 +1,1128 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<link rel="stylesheet" href="css/salescube.css" type="text/css"></link>
+<HTML lang="ja">
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="Author" content="アーク情報システム">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="robots" content="index">
+<meta http-equiv="imagetoolbar" content="no">
+<title>SalesCube リリースノート</title>
+<style>
+	body {
+	    font-size: 14px;
+		margin: 0;
+		font-family:'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+	}
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   <title>SalesCube リリースノート</title>
-</head>
-<body>
-<h1>SalesCube リリースノート</h1>
-<hr>
-<br>
-<a name=SalesCube1.2.0></a>
+	#contentback {
+		width: 100%;
+		padding: 0;
+		margin: 0;
+		background: #eeeeee;
+	}
 
-<h2>SalesCube 1.2.0 (2013/11/28)</h2>
+	#content {
+		background: #ffffff;
+		width: 1000px;
+	    text-align: left;
+	    margin: 0 auto;
+	    padding: 0;
+	    overflow: hidden;
+	}
 
+	.note {
+		text-align: left; padding: 20px;
+	}
 
-<ul>
-<h4>【ライセンス変更】</h4>
-<ul>
-<li>GPLv3からAGPLv3に変更しました。
+	.link {
+		margin-bottom: 5px;
+	}
 
-</ul>
-</ul>
+	.topLink {
+		width: 100%;
+		text-align: right;
+	}
+	
+	.w1 {
+		width: 15px;
+	}
+	
+	.w2 {
+		width: 985px;
+	}
 
+	#Release h2.title_text {
+		background:url(images/title_long.png) no-repeat top left;
+		display: block;
+		height: 40px;
+		width: 1000px;
+		font-size: 25px;
+		color: #ffffff;
+		margin: 8px 0 0 0;
+		padding: 9px 0 0 20px;;
+		color: #444;
+		overflow-x:hidden;
+		overflow-y:auto;
+	}
 
-<ul>
-<h4>【新機能】</h4>
-<ul>
-<li>画面デザインを一新し、フラットデザインを採用しました。
+	#Release table.list {
+	    margin: 0 0 20px 0;
+	    width: 100%;
+	    border-collapse: collapse;
+	    border-spacing: 0;
+	    color: #000000;
+	    word-break:break-all;
+	    border: 1px solid #cccccc;
+	    background: #ffffff;
+	    font-size: 14px;
+	}
 
-</ul>
-</ul>
+	#Release table.list th {
+	    text-align: left;
+	    background: #e0ebff;
+	    border-right: 1px #cccccc solid;
+	    border-bottom: 1px solid #cccccc;
+	    padding: 5px;
+	}
 
-<ul>
-<h4>【環境変更】</h4>
-<ul>
+	#Release table.list td {
+	    padding: 5px;
+	}
+</style>
+</HEAD>
 
-<li>推奨ブラウザを Internet Explore から Google Chrome に変更しました。
-<li>JasperReportsのバージョンをjasperreports-5.2.0、jasperreports-fonts-5.0.4に上げました。
+<BODY>
+<div id="Release">
+	<div id="contentback">
+		<div id="content">
+			<!-- ヘッダ -->
+			<div>
+				<img src="images/releaseNote_title.PNG" id="logo"/>
+			</div>
 
-</ul>
-</ul>
+			<!-- リンク -->
+			<div class="note">
+				<div class="link">
+					・<a href="#release7">SalesCube 1.3.1 (2014/06/26)</a>
+					<img src="images/new_orange.gif"/>
+				</div>
+				<div class="link">
+					・<a href="#release6">SalesCube 1.3.0 (2014/03/31)</a>
+				</div>
+				<div class="link">
+					・<a href="#release5">SalesCube 1.2.0 (2013/11/29)</a>
+				</div>
+				<div class="link">
+					・<a href="#release4">SalesCube 1.1.2 (2012/08/10)</a>
+				</div>
+				<div class="link">
+					・<a href="#release3">SalesCube 1.1.1 (2012/03/31)</a>
+				</div>
+				<div class="link">
+					・<a href="#release2">SalesCube 1.1 (2011/09/12)</a>
+				</div>
+				<div class="link">
+					・<a href="#release1">SalesCube 1.0 (2011/03/01)</a>
+				</div>
+			</div>
+			
+			<!-- 内容 -->
+			<!-- SalesCube 1.3.1 -->
+			<a name="release7">
+				<h2 class="title_text">SalesCube 1.3.1 (2014/06/26)</h2>
+			</a>
+			<div class="note">
 
-<ul>
-<h4>【機能改善】</h4>
-<ul>
+				<!-- 機能改善 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">機能改善</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面・残高一覧表出力画面の顧客コードの桁数を最大15桁に変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							売上入力画面で、売上登録時に商品に紐づく棚番コードの存在チェックを追加しました。
+						</td>
 
-<li>「税端数処理」情報は顧客マスタと仕入先マスタにありましたが各マスタ入力画面に項目がなかったので、「税端数処理」プルダウンを顧客と仕入先のマスタ入力画面追加してユーザが選択できるようにしました。登録後は変更できない項目です。
-<br><br>
-<li>商品検索や顧客検索などの検索機能を持つダイアログ画面において、検索結果一覧の行のリンクをクリックすると呼び出し元画面に選択したデータが反映されるようにして操作性を上げました。
-<br><br>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							発注入力画面で、動的に変わる必須項目に対し、背景色も動的に変更されるようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							発注書PDFに消費税欄を追加しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							在庫照会画面の各明細一覧の伝票番号をリンクにし、伝票画面に遷移できるようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							仕入入力画面で、仕入日は未来日はエラーとなるよう変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							商品在庫情報ダイアログで、受注番号、発注番号の文字色を変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							ファイル参照画面で、ラベルの「一部可」を「全社員向けのみ可」に変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							ファイル参照ダイアログにソート機能を追加しました。
+						</td>
+					</tr>
+				</table>
+				
+				<!-- 不具合 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">不具合</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							ログイン画面で、アカウントのロックアウト回数判定の不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面の削除処理で、バリデーションチェックにより削除ができない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面で、税端数処理実行後の消費税を使用して伝票合計を算出するよう修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積検索画面、受注検索画面で、日付条件に全角を入力した場合に正しい検索結果が得られない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面、受注入力画面、売上入力画面の「消費税率」に空値が設定されないよう修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面、受注入力画面、売上入力画面の商品明細行の消費税率の変更が明細行に反映されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、登録後に明細の「前行複写」ボタンを押下すると1行目の完納区分の値がコピーされる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、登録後に明細の「行追加」ボタンを押下すると1行目の引当可能数の値がコピーされる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、顧客コードを入力すると納入先情報部の項目の入力不可背景色が変更される不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、顧客がオンライン受注対応顧客の場合「顧客納入先」テキストが入力できない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、商品明細行を追加した場合にデータに消費税率が適用されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							請求検索画面で、検索条件に最終売上日（終了）を設定した場合に最終売上日（終了）が検索条件に使われない不具合を修正しました。
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							入金入力画面で、顧客が売上伝票ごとの締めの場合に合計金額が不正となる不具合を修正しました。
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							オンライン受注取込画面で、取り込み後の一覧の「受注入力」ボタンと「削除」ボタンののスタイルを修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							支払入力画面で、明細の支払明細区分の文字の下側が見切れてしまう不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							仕入検索画面で、条件で完納区分を複数選択した場合に結果Excelデータが出力されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							仕入入力画面で、消費税率が未選択状態の発注伝票を伝票呼出するとシステムエラーになる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							委託入出庫入力画面で、明細の備考部分に不要なデータが表示されてしまう不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							委託入出庫検索画面で、出力される検索結果ファイルの一覧両端のヘッダーの背景色の不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							ファイル登録画面で、全社員に向けて公開したファイルがファイル参照で表示されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							顧客マスタ・仕入先マスタの初期値設定ダイアログで、内容が見切れないようデザインを修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							数量割引マスタ入力画面で、数量スライドの必須項目の背景色を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							お知らせ編集画面で、文字数オーバーエラーが発生すると「更新」ボタンが使用不可になる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							分類マスタ入力画面で、使用不可項目と使用可能項目の背景色の不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							レートマスタ検索画面で、適用開始日に日付以外を入力し検索するとシステムエラーになる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							商品マスタ入力画面で、「更新」ボタンを押下すると分類のプルダウンの選択項目が増える不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							倉庫マスタ入力画面で、関連する棚番で空行を追加し登録した時に、必須項目の背景色が消える不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							区分マスタ入力画面で、利用カラムの項目が「4：論理値」のデータを表示した場合にスタイルが崩れる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							区分マスタ入力画面で、区分コードに英字の大文字と小文字で重複したコードを登録するとシステムエラーになる不具合を修正しました。
+						</td>
+					</tr>
+				</table>
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- 内容 -->
+			<!-- SalesCube 1.3.0 -->
+			<a name="release6">
+				<h2 class="title_text">SalesCube 1.3.0 (2014/03/31)</h2>
+			</a>
+			<div class="note">
 
-<li>都度請求書と月締め請求書に「銀行コード」と「支店コード」の出力を追加しました。
-<br><br>
+				<!-- 新機能 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">新機能</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							消費税法改正についての対応
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							・各画面に消費税率を設定できる項目を追加し、各画面毎に設定された消費税率を使用して伝票の金額計算を行うようにしました。<br>
+							・追加された消費税率に表示される値は、税マスタに登録された値となります。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							パスワード管理機能の強化
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							セキュリティ設定画面をメニューに追加しました。この画面ではパスワードについて以下の設定ができます。<br>
+							・パスワード桁数を設定できるようになりました。この設定により設定した桁数未満のパスワードを登録しようとするとエラーとなります。<br>
+							・パスワード文字の組み合わせを設定できるようになりました。「英数」、「英数記号」、「指定なし」から選択ができます。<br>
+							・パスワードの有効日数を設定できるようになりました。<br>
+							・アカウントロックの設定ができるようになりました。パスワードを設定した回数以上間違えるとアカウントがロックされるようになります。<br>
+							・過去に使用したパスワードの再使用回数を設定できるようになりました。<br>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">登録したファイルの登録情報を編集できるようになりました。</td>
+					</tr>
+				</table>
+				
+				<!-- 環境変更 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">環境変更</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">Tomcat7、Java7に対応しました。</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>iReport5.0.0対応になりました。<br>
+							<span style="color:red">※以前のバージョンはご利用になれませんのでご注意下さい。</span></td>
+					</tr>
+				</table>
+				
+				<!-- 機能改善 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">機能改善</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面で、明細の売価のマイナス値不可チェックを行わないよう修正しました。
+							（値引きなどマイナスの値を考慮した対応となります）
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							商品検索ダイアログの検索結果の「長さ」列を削除し、「仕入先名」を表示するようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							棚番画面で、倉庫コード入力した場合は、倉庫コードの存在チェックを行うようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							必須入力項目が一目でわかるよう、必須入力項目のラベルの色を変えました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							数量割引検索ダイアログで、割引詳細をポップアップ表示するようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							各検索画面で、検索結果が1行の場合に自動的に入力画面に遷移しないようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							棚番検索画面で、検索結果に商品名を表示するようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							棚番検索画面で、重複登録可能な棚番は「○」で表示するようにしました。
+						</td>
+					</tr>
+				</table>
+				
+				<!-- 不具合 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">不具合</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面で、見積書番号に全角文字を登録できないようにしました。 
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面で、データ登録後に登録ボタンが更新ボタンに変わらない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面で、存在しない見積番号を入力後に見積番号入力欄がReadOnlyになるよう修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面・受注入力画面で、明細が行番号順でソートされない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、変更不可項目がグレー表示されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							売上入力画面で、請求完了データを開いた時に売上番号、受注番号がReadOnlyになるよう修正しました。
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							売上入力画面で、但書欄の初期値「商品代として」をなくしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							請求書発行画面で、検索結果の個別発行列を削除しました。<br>
+							これは売上伝票単位で請求書の発行を行い、かつ月締め請求対象となるような状況が存在しないためです。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							請求書の「口座名義」「カナ表記」がnullになる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							仕入入力画面・支払入力画面で、伝票呼出を繰り返すとエラーが発生する不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							仕入入力画面で、入力された仕入日に対応したレートで明細の金額を再計算するように修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							入金入力画面で、前行複写ボタンの使用可否制御の不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							配送業者入金データ取込・銀行入力データ取込画面で、トグルボタンの挙動を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							銀行入金データ取込画面において、取込ボタン押下時にシステムエラーが発生する不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							支払入力画面の伝票呼出ダイアログにおいて、支払画面で表示されるデータが検索できない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							委託入出庫入力画面で、存在しない委託入出庫番号で検索を行った後、
+							再度番号を入力しなおせない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							伝票画面下部にある合計欄の表示が「\9,999」「9,999円」と画面によって異なるため、「\9,999」形式に統一しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							商品マスタのExcel取込で、Excelの「数量割引コード」列に数量割引マスタに存在しないコードを
+							指定するとエラーになる不具合を<br>修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							区分マスタで、非表示設定の区分データが表示されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							レートマスタで、空レート行を複数追加して更新するとシステムエラーが発生する不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							レートマスタで、登録済みのレートデータ部を消した後、検索画面から開きなおすとレートタイプ名称が
+							表示されない不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							お知らせ画面で、お知らせ内容が入力可能文字数をオーバーするとシステムエラーが発生する不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							ファイル登録画面で、タイトルをクリックすると画面が白くなる不具合を修正しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							数量割引検索ダイアログで、検索結果件数が割引詳細データ件数との合計値となる不具合を修正しました。
+						</td>
+					</tr>
+				</table>
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- SalesCube 1.2.0 -->
+			<a name="release5">
+				<h2 class="title_text">SalesCube 1.2.0 (2013/11/29)</h2>
+			</a>
+			<div class="note">
 
-<li>売掛残高表出力で当月を指定できなかったので、当月を指定して当月末の売掛残高出力をできるようにしました。
-<br><br>
+				<!-- ライセンス変更 -->
+				<table class="list">
+					<tr>
+						<th>ライセンス変更</th>
+					</tr>
+					<tr>
+						<td>GPLv3からAGPLv3に変更しました</td>
+					</tr>
+				</table>
 
-<li>顧客マスタ登録で、顧客コードの先頭1文字が2か4の場合に「顧客名」に値を入れてフォーカスアウトすると「担当者」に同じ値が入る仕様をなくしました。
-<br><br>
+				<!-- 新機能 -->
+				<table class="list">
+					<tr>
+						<th>新機能</th>
+					</tr>
+					<tr>
+						<td>画面デザインを一新し、フラットデザインを採用しました。</td>
+					</tr>
+				</table>
+				
+				<!-- 環境変更 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">環境変更</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">推奨ブラウザを Internet Explorer から Google Chrome に変更しました。</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>JasperReportsのバージョンをjasperreports-5.2.0、jasperreports-fonts-5.0.4に上げました。</td>
+					</tr>
+				</table>
+				
+				<!-- 機能改善 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">機能改善</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							「税端数処理」情報は顧客マスタと仕入先マスタにありましたが各マスタ入力画面に項目がなかったので、
+							「税端数処理」プルダウンを顧客と仕入先のマスタ入力画面追加してユーザが選択できるようにしました。
+							登録後は変更できない項目です。 
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							商品検索や顧客検索などの検索機能を持つダイアログ画面において、検索結果一覧の行のリンクをクリックすると
+							呼び出し元画面に選択したデータが反映されるようにして操作性を上げました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							都度請求書と月締め請求書に「銀行コード」と「支店コード」の出力を追加しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							売掛残高表出力で当月を指定できなかったので、当月を指定して当月末の売掛残高出力をできるようにしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							顧客マスタ登録で、顧客コードの先頭1文字が2か4の場合に「顧客名」に値を入れてフォーカスアウトすると
+							「担当者」に同じ値が入る仕様をなくしました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td>
+							銀行マスタ画面に有効チェックボックスを追加。請求書には有効な銀行を出力するように変更しました。
+							有効な銀行が複数の場合は、銀行コードが最も小さい銀行を出力します。
+						</td>
+					</tr>
+				</table>
+				
+				<!-- 不具合 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">不具合</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							見積入力画面と受注入力画面において、登録済み伝票を表示時にその現在日の税率で税額を再計算していて、
+							登録時と表示時に税率が異なっていると登録情報と異なる税額が表示されていたので、再計算しないように修正 
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、登録済みの伝票を更新する際に入力値チェックエラーになると、プルダウンの中身がなくなる不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で数量割引対象となっている分納状態の明細行の数量を変更した場合、
+							変更後の数量が数量割引対象数の場合にのみ警告が表示されていたのを数量割引対象数以外の
+							場合も警告を表示するように修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で通販向け顧客コード（undefined）を選択すると納入先情報が編集可能になるが、
+							この時、納入先情報/郵便番号欄に手入力しフォーカスアウトすると住所検索でエラーが発生する不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							受注入力画面で、明細行の売上金額のフォーカスアウトで売上合計が計算されない不具合を修正 
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							売上入力画面の伝票呼び出しで、受注伝票の明細行の売上金額が引き継がれず単価×個数で再計算されるので、
+							受注伝票の明細行の売上金額を使用するように修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							請求書発行単位が「売上伝票単位」の顧客において、売上入力画面で顧客を選択して登録すると
+							請求データが作られない不具合を修正（更新や伝票呼出では作られる）
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							請求締処理画面で、検索前に「締解除」ボタンを押すと例外が発生する不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							締解除時に作られる請求書の銀行情報が全てnullになる不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							売掛伝票入力系画面全般で、登録更新・エラー処理時に税端数処理を自社マスタの値を使用していたので、
+							顧客マスタの税端数処理を使用するように修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							発注入力画面で、明細行の個数を変更して発注残0になった場合に、発注明細とそれに紐付く仕入明細の
+							完納区分が分納のままだったので完納なるように修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							発注入力画面で、更新時に明細の追加ボタンで追加行の棚番に値が設定されている不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							発注入力画面で、前行複写ボタンで棚番がコピーされない不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							発注入力画面で、登録時に数値チェックでエラーが発生する不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							在庫移動入力画面で、数量が空で登録するとエラーが発生する不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							ファイル登録画面で、初期化ボタンを押下すると公開設定の選択肢が増える不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							自社情報画面で、登録時にエラーがあった場合、編集前の情報が設定される不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							倉庫情報入力画面で、「登録日」「更新日」が表示されない不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							税区分編集画面で、税一覧の開始年月日の重複チェックで未入力の場合もエラーとなってしまう不具合を修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							入力系画面全般で、グレーアウトされている項目が入力可能だったので、入力不可に修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							error.jspの構文エラーを修正
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							デプロイ時のURLがSalesCubeではなく、SalesCubeRelになっていた不具合を修正(Github版)
+						</td>
+					</tr>
+				</table>
+			
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- SalesCube 1.1.2 -->
+			<a name="release4">
+				<h2 class="title_text">SalesCube 1.1.2 (2012/08/10)</h2>
+			</a>
+			<div class="note">
 
-<li>銀行マスタ画面に有効チェックボックスを追加。請求書には有効な銀行を出力するように変更しました。有効な銀行が複数の場合は、銀行コードが最も小さい銀行を出力します。
-<br><br>
+				<!-- 不具合 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">不具合</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">受注入力画面においてキー入力による郵便番号検索を実施した際の不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">発注検索、売上検索画面において取引区分を複数チェックした際にExcelが正常に出力されない不具合を修正</td>
+					</tr>
+				</table>
+			
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- SalesCube 1.1.1 -->
+			<a name="release3">
+				<h2 class="title_text">SalesCube 1.1.1 (2012/03/31)</h2>
+			</a>
+			<div class="note">
 
-</ul>
-</ul>
+				<!-- 新機能/改善 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">新機能/改善</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							IE9対応
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							IE9での互換表示設定を不要にしました。
+						</td>
+					</tr>
+				</table>
+			
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- SalesCube 1.1 -->
+			<a name="release2">
+				<h2 class="title_text">SalesCube 1.1 (2011/09/12)</h2>
+			</a>
+			<div class="note">
 
+				<!-- 新機能/改善 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">新機能/改善</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							パスワード暗号化方式追加
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							パスワード暗号化方式を「AES」または「MD5」の選択式に変更しました。<br>
+							appconfig.diconで設定を行ってください。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							ログイン手順簡略化　SSO対応
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							ログイン時、パラメータでID/PASSを受け取った際はパラメータを使用するように変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							倉庫マスタ追加
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							棚の管理を、倉庫‐棚の構成に変更しました。<br>
+							テーブル構造も変わっていますので、倉庫テーブルの作成が必要です。 棚番の削除方法を変更しました。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							自社ロゴ設定機能追加
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							自社情報画面に自社ロゴ設定機能を追加しました。200x30 PNG形式のファイルを指定してください。
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							タイトル変更
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							数量割引画面の数量スライド設定の表に表示されているタイトルを「掛率」から「割引率」に変更しました。
+						</td>
+					</tr>
+				</table>
 
+				<!-- 不具合 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">不具合</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">売上帳票発行画面においてチェック状態を保持していない不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">発注入力、仕入入力画面での商品ダイアログの初期値未設定の不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">セット商品検索画面で検索実行後に、検索結果が１件だとエラーが発生する不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">商品編集画面で新規登録時、未来日のレートが採用されてしまう不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">発注伝票登録時のレート計算の不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">マスタ管理全般で、検索後に検索条件を変更してソートすると、変更した検索条件を加味してしまう不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">分類マスタ・分類名削除時に変更画面ではなく登録画面へ遷移する不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">見積書の摘要が出力されない不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">「マスタ管理」-「区分」を表示すると、"F3"が"F34"と表示される不具合を修正</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">「マスタ管理」-「税」を表示すると、"F3"が"F34"と表示される不具合を修正</td>
+					</tr>
+				</table>
 
-<ul>
-<h4>【不具合】</h4>
-<ul>
-
-<li>見積入力画面と受注入力画面において、登録済み伝票を表示時にその現在日の税率で税額を再計算していて、登録時と表示時に税率が異なっていると登録情報と異なる税額が表示されていたので、再計算しないように修正
-<br><br>
-
-<li>受注入力画面で、登録済みの伝票を更新する際に入力値チェックエラーになると、プルダウンの中身がなくなる不具合を修正
-<br><br>
-
-<li>受注入力画面で数量割引対象となっている分納状態の明細行の数量を変更した場合、変更後の数量が数量割引対象数の場合にのみ警告が表示されていたのを数量割引対象数以外の場合も警告を表示するように修正
-<br><br>
-
-<li>受注入力画面で通販向け顧客コード（undefined）を選択すると納入先情報が編集可能になるが、この時、納入先情報/郵便番号欄に手入力しフォーカスアウトすると住所検索でエラーが発生する不具合を修正
-<br><br>
-
-<li>受注入力画面で、明細行の売上金額のフォーカスアウトで売上合計が計算されない不具合を修正
-<br><br>
-
-<li>売上入力画面の伝票呼び出しで、受注伝票の明細行の売上金額が引き継がれず単価×個数で再計算されるので、受注伝票の明細行の売上金額を使用するように修正
-<br><br>
-
-<li>請求書発行単位が「売上伝票単位」の顧客において、売上入力画面で顧客を選択して登録すると請求データが作られない不具合を修正（更新や伝票呼出では作られる）
-<br><br>
-
-<li>請求締処理画面で、検索前に「締解除」ボタンを押すと例外が発生する不具合を修正
-<br><br>
-
-<li>締解除時に作られる請求書の銀行情報が全てnullになる不具合を修正
-<br><br>
-
-<li>売掛伝票入力系画面全般で、登録更新・エラー処理時に税端数処理を自社マスタの値を使用していたので、顧客マスタの税端数処理を使用するように修正
-<br><br>
-
-<li>発注入力画面で、明細行の個数を変更して発注残0になった場合に、発注明細とそれに紐付く仕入明細の完納区分が分納のままだったので完納なるように修正
-<br><br>
-
-<li>発注入力画面で、更新時に明細の追加ボタンで追加行の棚番に値が設定されている不具合を修正
-<br><br>
-
-<li>発注入力画面で、前行複写ボタンで棚番がコピーされない不具合を修正
-<br><br>
-
-<li>発注入力画面で、登録時に数値チェックでエラーが発生する不具合を修正
-<br><br>
-
-<li>在庫移動入力画面で、数量が空で登録するとエラーが発生する不具合を修正
-<br><br>
-
-<li>ファイル登録画面で、初期化ボタンを押下すると公開設定の選択肢が増える不具合を修正
-<br><br>
-
-<li>自社情報画面で、登録時にエラーがあった場合、編集前の情報が設定される不具合を修正
-<br><br>
-
-<li>倉庫情報入力画面で、「登録日」「更新日」が表示されない不具合を修正
-<br><br>
-
-<li>税区分編集画面で、税一覧の開始年月日の重複チェックで未入力の場合もエラーとなってしまう不具合を修正
-<br><br>
-
-<li>入力系画面全般で、グレーアウトされている項目が入力可能だったので、入力不可に修正
-<br><br>
-
-<li>error.jspの構文エラーを修正
-<br><br>
-
-<li>デプロイ時のURLがSalesCubeではなく、SalesCubeRelになっていた不具合を修正(Github版)
-<br><br>
-
-</ul>
-</ul>
-
-
-<a name=SalesCube1.1.2></a>
-
-<h2>SalesCube 1.1.2 (2012/08/10)</h2>
-
-<ul>
-<h4>【不具合】</h4>
-<ul>
-<li>受注入力画面においてキー入力による郵便番号検索を実施した際の不具合を修正
-<br><br>
-<li>発注検索、売上検索画面において取引区分を複数チェックした際にExcelが正常に出力されない不具合を修正
-</ul>
-</ul>
-
-<a name=SalesCube1.1.1></a>
-
-<h2>SalesCube 1.1.1 (2012/03/31)</h2>
-<ul>
-<h4>【新機能/改善】</h4>
-<ul>
-<li>IE9対応<br>
-IE9での互換表示設定を不要にしました。<br>
-
- </ul>
-</ul>
-
-
-<a name=SalesCube1.1></a>
-
-<h2>SalesCube 1.1 (2011/09/12)</h2>
-<ul>
-<h4>【新機能/改善】</h4>
-<ul>
-<li>パスワード暗号化方式追加<br>
-パスワード暗号化方式を「AES」または「MD5」の選択式に変更しました。<br>
-appconfig.diconで設定を行ってください。<br>
-<br><br>
-<li>ログイン手順簡略化　SSO対応<br>
-ログイン時、パラメータでID/PASSを受け取った際はパラメータを使用するように変更しました。
-<br><br>
-<li>倉庫マスタ追加<br>
-棚の管理を、倉庫‐棚の構成に変更しました。<br>
-テーブル構造も変わっていますので、倉庫テーブルの作成が必要です。
-棚番の削除方法を変更しました。
-<br><br>
-<li>自社ロゴ設定機能追加<br>
-自社情報画面に自社ロゴ設定機能を追加しました。200x30 PNG形式のファイルを指定してください。
-<br><br>
-<li>タイトル変更<br>
-数量割引画面の数量スライド設定の表に表示されているタイトルを「掛率」から「割引率」に変更しました。
-
- </ul>
-<h4>【不具合】</h4>
-<ul>
-<li>売上帳票発行画面においてチェック状態を保持していない不具合を修正
-<br><br>
-<li>発注入力、仕入入力画面での商品ダイアログの初期値未設定の不具合を修正
-<br><br>
-<li>セット商品検索画面で検索実行後に、検索結果が１件だとエラーが発生する不具合を修正
-<br><br>
-<li>商品編集画面で新規登録時、未来日のレートが採用されてしまう不具合を修正
-<br><br>
-<li>発注伝票登録時のレート計算の不具合を修正
-<br><br>
-<li>マスタ管理全般で、検索後に検索条件を変更してソートすると、変更した検索条件を加味してしまう不具合を修正
-<br><br>
-<li>分類マスタ・分類名削除時に変更画面ではなく登録画面へ遷移する不具合を修正
-<br><br>
-<li>見積書の摘要が出力されない不具合を修正
-<br><br>
-<li>「マスタ管理」-「区分」を表示すると、"F3"が"F34"と表示される不具合を修正
-<br><br>
-<li>「マスタ管理」-「税」を表示すると、"F3"が"F34"と表示される不具合を修正
- </ul>
-<h4>【その他】</h4>
-<ul>
-<li>EclipseのJSP構文判定対応<br>
-EclipseのJSP構文バリデータが、間違った判定をしている問題に限定的に対応。<br>
-現状、エラー表示が残っていますが、構文上問題はなくJavaVMでは正常に動作します。
- </ul>
- </ul>
-
-<h2>SalesCube 1.0 (2011/03/01)</h2>
-<ul>
-<h4>【新機能/改善】</h4>
-<ul>
-<li>初期リリース<br>
-</ul>
-
-</body>
-</html>
-
-
+				<!-- その他 -->
+				<table class="list">
+					<tr>
+						<th colspan="2">その他</th>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">◆</td>
+						<td class="w2">
+							EclipseのJSP構文判定対応
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" class="w1">&nbsp;</td>
+						<td class="w2">
+							EclipseのJSP構文バリデータが、間違った判定をしている問題に限定的に対応。<br>
+							現状、エラー表示が残っていますが、構文上問題はなくJavaVMでは正常に動作します。
+						</td>
+					</tr>
+				</table>
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+			
+			<!-- SalesCube 1.0 -->
+			<a name="release1">
+				<h2 class="title_text">SalesCube 1.0 (2011/03/01)</h2>
+			</a>
+			<div class="note">
+				<table class="list">
+					<tr>
+						<th>新機能/改善</th>
+					</tr>
+					<tr>
+						<td>初期リリース</td>
+					</tr>
+				</table>
+				<div class="topLink">
+					<a href="#top">▲Topへ</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</BODY>
+</HTML>

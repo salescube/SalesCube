@@ -62,6 +62,10 @@ public class UserDto implements Serializable, MasterEditDto {
 
 	public String updUser;
 
+	public String tolenIv;
+
+	public String tokeEexpireDate;
+
 	public String lastRequestFunc;
 
 	public List<RoleDto> roleDtoList;
@@ -107,6 +111,7 @@ public class UserDto implements Serializable, MasterEditDto {
 
 		return expire.before(today);
 	}
+
 
 	/**
 	 * メニューIDを指定して、ユーザーが利用可能なメニューのリストに含まれているかどうかを返します.

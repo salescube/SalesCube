@@ -3,9 +3,7 @@
  */
 package jp.co.arkinfosys.action.master;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -13,13 +11,13 @@ import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.common.Constants.MENU_ID;
 import jp.co.arkinfosys.common.MessageResourcesUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.master.ProductDto;
 import jp.co.arkinfosys.entity.AuditInfo;
 import jp.co.arkinfosys.entity.Discount;
 import jp.co.arkinfosys.entity.Product;
-import jp.co.arkinfosys.entity.ProductClass;
 import jp.co.arkinfosys.entity.Rack;
 import jp.co.arkinfosys.entity.join.ProductJoin;
 import jp.co.arkinfosys.entity.join.SupplierJoin;
@@ -346,25 +344,24 @@ public class EditProductAction extends
 
 			// 分類（中）
 			if (StringUtil.hasLength(this.editProductForm.product2)) {
+				// 画面のプルダウン項目がproduct2Listに既に設定されているのでここでクリア
+				this.editProductForm.product2List.clear();
+
 				this.editProductForm.product2List
 						.addAll(this.productClassService
 								.findAllProductClass2LabelValueBeanList(this.editProductForm.product1));
 
 				// 分類（小）
 				if (StringUtil.hasLength(this.editProductForm.product3)) {
-					Map<String, Object> conditions = new HashMap<String, Object>();
-					conditions.put(ProductClassService.Param.CLASS_CODE_1,
-							this.editProductForm.product1);
-					conditions.put(ProductClassService.Param.CLASS_CODE_2,
-							this.editProductForm.product2);
+					
+					
+					// 画面のプルダウン項目がproduct3Listに既に設定されているのでここでクリア
+					this.editProductForm.product3List.clear();
 
-					List<ProductClass> productClassList = this.productClassService
-							.findProductClassByCondition(conditions);
-					for (ProductClass productClass : productClassList) {
-						this.editProductForm.product3List
-								.add(new LabelValueBean(productClass.className,
-										productClass.classCode3));
-					}
+					this.editProductForm.product3List
+					.addAll(this.productClassService
+							.findAllProductClass3LabelValueBeanList(this.editProductForm.product1,this.editProductForm.product2));
+				
 				}
 			}
 		}

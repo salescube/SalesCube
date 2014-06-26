@@ -366,11 +366,17 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 		}
 
 		// ソートカラム名を設定する
-		if (StringUtil.hasLength(sortColumn)) {
+		if(sortColumn == null){
 			param.put(FileInfoService.Param.SORT_COLUMN, StringUtil
-					.convertColumnName(sortColumn));
-		}
+					.convertColumnName(AbstractService.Param.CRE_DATETM));
+		}else{
+			if (StringUtil.hasLength(sortColumn)) {
+				param.put(FileInfoService.Param.SORT_COLUMN, StringUtil
+						.convertColumnName(sortColumn));
+			}
 
+		}
+		
 		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(FileInfoService.Param.SORT_ORDER, Constants.SQL.ASC);

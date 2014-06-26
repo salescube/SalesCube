@@ -126,6 +126,19 @@
 					continue;
 				}
 
+				// 完納区分(deliveryProcessCategory)はActionFormの配列オブジェクトに渡せるように変換する
+				if(key == "deliveryProcessCategory"){
+					var catArray = paramDataTmp[key];
+					for(var i=0;i<catArray.length;i++){
+						var h = $(document.createElement("input"));
+						h.attr("type", "hidden");
+						h.attr("name",key + "[" + i +"]");
+						h.val(catArray[i]);
+						form.append(h);
+					}
+					continue;
+				}
+
 				var hidden = $(document.createElement("input"));
 				hidden.attr("type", "hidden");
 				hidden.attr("name", key);
@@ -321,7 +334,7 @@
 			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 			<!-- 検索条件 -->
@@ -452,7 +465,7 @@
 						</div>
 						<html:hidden property="sortColumn" styleId="sortColumn" />
 						<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
-						
+
 					</div><!-- /.form_section -->
 		    	</div><!-- /.form_section_wrap -->
 			</div>

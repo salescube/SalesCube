@@ -106,7 +106,7 @@ public class InputEstimateForm extends
 	/**
 	 * 顧客コード（得意先コード）
 	 */
-	@Maxlength(maxlength = 13)
+	@Maxlength(maxlength = 15)
 	public String customerCode;
 
 	/**
@@ -140,7 +140,7 @@ public class InputEstimateForm extends
 	 */
 	@Maxlength(maxlength = 1000)
 	public String memo;
-	
+
 	/**
 	 * 消費税率
 	 */
@@ -162,28 +162,28 @@ public class InputEstimateForm extends
 	 * 粗利益率
 	 */
 	public String grossMarginRate;
-	
+
 	/**
 	 * 合計金額
 	 */
 	@LongRange(min = -999999999, max = 999999999)
 	@DoubleType
 	public String retailPriceTotal;
-	
+
 	/**
 	 * 消費税
 	 */
 	@LongRange(min = -999999999, max = 999999999)
 	@DoubleType
 	public String ctaxPriceTotal;
-	
+
 	/**
 	 * 伝票合計
 	 */
 	@LongRange(min = -999999999, max = 999999999)
 	@DoubleType
 	public String estimateTotal;
-	
+
 	/**
 	 * 原価合計（仕入金額合計）
 	 */
@@ -211,7 +211,7 @@ public class InputEstimateForm extends
 		// 初期値を設定する
 		initialize();
 	}
-	
+
 	/**
 	 * 入力担当者、消費税率を設定します.
 	 */
@@ -220,11 +220,11 @@ public class InputEstimateForm extends
 		// 入力担当者
 		userId = this.userDto.userId;
 		userName = this.userDto.nameKnj;
-		
+
 		// 消費税率
 		this.ctaxRate = super.taxRate;
 	}
-	
+
 	/**
 	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
 	 */
@@ -233,7 +233,7 @@ public class InputEstimateForm extends
 		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
 			super.taxRate = this.ctaxRate;
 		}
-		
+
 		if (this.ctaxRate == "" || this.ctaxRate == null) {
 			this.ctaxRate = super.taxRate;
 		}

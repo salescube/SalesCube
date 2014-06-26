@@ -517,8 +517,12 @@
 		catrgoryListInit("#baPcPreCatrgory");
 		catrgoryListInit("#salesCmCategoryName");
 		catrgoryListInit("#cutoffGroupCategory");
+		
 		$("#lastBillingPrice").html( "" );
+		$("#lastBillingPriceBack").attr("value","");
+
 		$("#nowSalesPrice").html( "" );
+		$("#nowSalesPrice").attr("value","");
 		
 		// 端数処理初期設定
 		applyNumeralStyles();
@@ -571,8 +575,12 @@
 		catrgoryListCtrl("#cutoffGroupCategory",value.cutoffGroup + value.paybackCycleCategory);
 
 		$("#lastBillingPrice").html( value.lastBillingPrice );
+		$("#lastBillingPriceBack").attr("value",value.lastBillingPrice);
+		
 		$("#nowPaybackPriceInput").html( value.nowPaybackPrice );
+
 		$("#nowSalesPrice").html( value.nowSalesPrice );
+		$("#nowSalesPriceBack").attr("value",value.nowSalesPrice);
 
 		// 端数処理初期設定
 		applyNumeralStyles();
@@ -645,15 +653,19 @@
 	// 税端数処理
 	function applyNumeralStyles(){
 		
-		var bp = $("#lastBillingPrice").val();
-		var sp = $("#nowSalesPrice").val();
+		var bp = $("#lastBillingPrice").text();
+		var sp = $("#nowSalesPrice").text();
 
 		if (bp == "") {
 			$("#lastBillingPrice").html( "0" );
+		}else{
+			$("#lastBillingPrice").html( _Number($("#lastBillingPrice").text()) );
 		}
 		
 		if (sp == "") {
 			$("#nowSalesPrice").html( "0" );
+		}else{
+			$("#nowSalesPrice").html( _Number($("#nowSalesPrice").text()) );
 		}
 		
 		SetBigDecimalScale_Obj($("#lastBillingPrice"));
@@ -1128,7 +1140,9 @@ function copyDummy(){
 							<td id="billingBalancePrice" style="text-align: center" class="BDCyen yen_value">
 								&nbsp;<c:out value="${f:h(billingBalancePrice)}" />&nbsp;
 							</td>
+							<html:hidden styleId="lastBillingPriceBack" property="lastBillingPrice"/>
 							<html:hidden styleId="nowPaybackPriceBack" property="nowPaybackPrice"/>
+							<html:hidden styleId="nowSalesPriceBack" property="nowSalesPrice"/>
 						</tr>
 					</table>
 				</div>

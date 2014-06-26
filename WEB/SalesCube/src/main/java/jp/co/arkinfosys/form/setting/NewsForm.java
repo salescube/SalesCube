@@ -19,6 +19,11 @@ public class NewsForm {
     public String description;
 
 	/**
+	 * 更新権限
+	 */
+	public boolean isUpdate = true;
+
+	/**
      * 更新日時
      */
     public String updDatetm;

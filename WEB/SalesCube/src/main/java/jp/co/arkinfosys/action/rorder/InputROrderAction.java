@@ -168,7 +168,7 @@ public class InputROrderAction extends
 	 */
 	@Resource
 	protected ProductStockService productStockService;
-	
+
 	/**
 	 *  消費税率プルダウン
 	 */
@@ -578,10 +578,11 @@ public class InputROrderAction extends
 
 		// 完納区分　リスト作成
 		createCategoryList(Categories.RO_LINE_STATUS, statusCategoryList, false);
-		
+
 		// 消費税率プルダウンリスト
-		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
-		
+		this.ctaxRateList =  ListUtil.getRateTaxNoBlankList(super.taxRateService);
+
+
 	}
 
 	/**

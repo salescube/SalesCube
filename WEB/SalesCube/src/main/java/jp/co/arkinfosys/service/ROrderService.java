@@ -326,20 +326,61 @@ public class ROrderService extends AbstractService<PaymentSlipTrn> {
 		// 受注日From
 		setConditionItemString(conditions, param, Param.RO_DATE_FROM, LikeType.NOTHING);
 
+		// 受注日From 全角半角変換
+		if (conditions.containsKey(Param.RO_DATE_FROM)) {
+			param.put(Param.RO_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.RO_DATE_FROM)));
+
+		};
+
 		// 受注日To
 		setConditionItemString(conditions, param, Param.RO_DATE_TO, LikeType.NOTHING);
+
+		// 受注日To 全角半角変換
+		if (conditions.containsKey(Param.RO_DATE_TO)) {
+			param.put(Param.RO_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.RO_DATE_TO)));
+
+		};
 
 		// 出荷日From
 		setConditionItemString(conditions, param, Param.SHIP_DATE_FROM, LikeType.NOTHING);
 
+		// 出荷日From 全角半角変換
+		if (conditions.containsKey(Param.SHIP_DATE_FROM)) {
+			param.put(Param.SHIP_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SHIP_DATE_FROM)));
+
+		};
 		// 出荷日To
 		setConditionItemString(conditions, param, Param.SHIP_DATE_TO, LikeType.NOTHING);
+
+		// 出荷日To 全角半角変換
+		if (conditions.containsKey(Param.SHIP_DATE_TO)) {
+			param.put(Param.SHIP_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SHIP_DATE_TO)));
+
+		};
 
 		// 納期指定日From
 		setConditionItemString(conditions, param, Param.DELIVERY_DATE_FROM, LikeType.NOTHING);
 
+		// 納期指定日From 全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_FROM)) {
+			param.put(Param.DELIVERY_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_FROM)));
+
+		};
+
 		// 納期指定日To
 		setConditionItemString(conditions, param, Param.DELIVERY_DATE_TO, LikeType.NOTHING);
+
+		// 納期指定日To 全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
+			param.put(Param.DELIVERY_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_TO)));
+
+		};
 
 		// 顧客コード
 		setConditionItemString(conditions, param, Param.CUSTOMER_CODE, LikeType.PREFIX);

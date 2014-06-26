@@ -145,6 +145,8 @@ CategoryParams.height = 300;
  * @param endFunc
  * @return
  */
+
+
 function _openDialog(dialogId, endFunc, dialogParams, data) {
 
 	if ($("#" + dialogId).size() > 0) {
@@ -290,6 +292,7 @@ function _search(dialogParams, dialogId, data, successFunc, errFunc ) {
 
 	return false;
 }
+
 
  /**
   * ダイアログ内の入力データをまとめてパラメータオブジェクトを作成する
@@ -1218,6 +1221,59 @@ function openReferFilesDialog(dialogId, params) {
 }
 
 /**
+ * ファイル参照ダイアログを開く
+ *
+ * @param dialogId ダイアログID(画面内で一意であること)
+ * @param dialogParams (任意指定）
+ * @return
+ */
+var dlgSortColumn;
+var dlgSortOrderAsc;
+
+function searchReferFiles(dialogId, sortColumn) {
+	var openParams = ReferFilesParams;
+
+	// 前回のソートカラムとソート順を取得
+	var beforeSortColumn =dlgSortColumn;
+	var beforeSortOrderAsc = dlgSortOrderAsc;
+
+	// 今回のソートカラムを設定
+	dlgSortColumn = sortColumn;
+
+	// 前回と同じカラムをクリックした場合はソート順を入れ替える
+	if(beforeSortColumn == sortColumn) {
+		if(beforeSortOrderAsc == "true") {
+			dlgSortOrderAsc = "false";
+		} else {
+			dlgSortOrderAsc = "true";
+		}
+	}
+	// 前回と異なる場合は昇順に設定
+	else {
+		dlgSortOrderAsc = "true";
+	}
+
+
+	// 今回のソートカラムにソートラベルを追加
+	if(dlgSortOrderAsc == "true") {
+		$("#sortStatus_"+sortColumn).html("<bean:message key='labels.asc'/>");
+	} else {
+		$("#sortStatus_"+sortColumn).html("<bean:message key='labels.desc'/>");
+	}
+	
+	var data = new Object();
+	data["sortColumn"] = dlgSortColumn;
+	data["sortOrderAsc"] = dlgSortOrderAsc;
+	$("#" + dialogId).dialog("close");
+  _openDialog(dialogId, null, openParams,data);
+  
+
+  
+
+
+}
+
+/**
  * 検索結果設定ダイアログを開く
  *
  * @param dialogId ダイアログID(画面内で一意であること)
@@ -1333,6 +1389,19 @@ function openCopySlipDialog(menuId, dialogId, endFunc, params) {
  */
 function openMasterDefaultSettingDialog(dialogId, tableName, params) {
  	var openParams = null;
+
+ 	// 初期値設定画面のサイズ設定
+ 	// 顧客マスタの初期値設定画面
+ 	if (tableName == 'CUSTOMER_MST') {
+ 		MasterDefaultSettingParams.width = 500;
+ 		MasterDefaultSettingParams.height = 550;
+ 		
+ 	// 仕入先マスタの初期値設定画面
+ 	} else if (tableName == 'SUPPLIER_MST') {
+ 		MasterDefaultSettingParams.width = 500;
+ 		MasterDefaultSettingParams.height = 400;
+ 	}
+ 	
  	if (params) {
  		openParams = params;
  	} else {

@@ -39,7 +39,7 @@
 		id="menuDtoList[${status.index}].validFlag3"
 		name="menuDtoList[${status.index}].validFlag" value="1"
 		tabindex="${status.index + 200}" <c:if test="${bean.validFlag=='1'}">checked</c:if> >
-		<label for="menuDtoList[${status.index}].validFlag3">一部可</label>
+		<label for="menuDtoList[${status.index}].validFlag3">全社員向けのみ可</label>
 	</c:if>
 
 	<input type="hidden" name="menuDtoList[${status.index}].menuId" value="${bean.menuId}">

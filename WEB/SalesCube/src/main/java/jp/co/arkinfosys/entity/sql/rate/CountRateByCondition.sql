@@ -23,7 +23,7 @@ SELECT COUNT(*)
             	EA.RATE_ID
             	,EA.RATE
             FROM
-              RATE_TRN_/*$domainId*/ EA, 
+              RATE_TRN_/*$domainId*/ EA,
 	            (SELECT
                     RATE_ID
                     ,MAX(START_DATE) START_DATE
@@ -47,9 +47,9 @@ SELECT COUNT(*)
     	AND REMARKS LIKE /*remarks*/'%S%'
     	/*END*/
     	/*IF startDate1 != null*/
-    	AND START_DATE >= /*startDate1*/'0'
+    	AND START_DATE >= CAST(/*startDate1*/'2000/01/01' AS DATE)
     	/*END*/
     	/*IF startDate2 != null*/
-    	AND START_DATE <= /*startDate2*/'0'
+    	AND START_DATE <= CAST(/*startDate2*/'2000/01/01' AS DATE)
     	/*END*/
     /*END*/

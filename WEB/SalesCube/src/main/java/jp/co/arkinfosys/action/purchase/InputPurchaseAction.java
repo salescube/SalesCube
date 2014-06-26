@@ -122,7 +122,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 	 * 消費税率プルダウン
 	 */
 	public List<LabelValueBean> ctaxRateList;
-	
+
 	/**
 	 *
 	 * 伝票データを取得します.
@@ -474,9 +474,13 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 			} else {
 				inputPurchaseForm.isEntrustPorder = false;
 			}
-			
+
 			// 消費税率
-			inputPurchaseForm.ctaxRate = poSlipTrnSingle.ctaxRate.toString();
+			if(poSlipTrnSingle.ctaxRate == null){
+				inputPurchaseForm.ctaxRate = "";
+			}else{
+				inputPurchaseForm.ctaxRate = poSlipTrnSingle.ctaxRate.toString();
+			}
 
 			// 仕入先情報
 			inputPurchaseForm.supplierCode = poSlipTrnSingle.supplierCode;
@@ -635,6 +639,8 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				.getMessage("labels.dolUnitPrice");
 		String labelDolPrice = MessageResourcesUtil
 				.getMessage("labels.dolPrice");
+		String labelSupplierDate = MessageResourcesUtil
+				.getMessage("labels.supplierDate");// 仕入日
 
 		boolean inputLine = false;
 
@@ -648,6 +654,15 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 						"errors.dataNotExist", labelSupplierCode,
 						inputPurchaseForm.supplierCode));
 			}
+		}
+
+		// 仕入日の未来日チェック
+		Boolean resultEadDateFutureCheck = ValidateUtil.dateIsFuture(inputPurchaseForm.supplierDate);
+		if( resultEadDateFutureCheck != null && resultEadDateFutureCheck == true ) {
+
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"errors.dateFuture", labelSupplierDate,
+					inputPurchaseForm.supplierDate));
 		}
 
 		int plus = 0;
@@ -959,7 +974,7 @@ public class InputPurchaseAction extends AbstractSlipEditAction<PurchaseSlipDto,
 				deliveryProcessCategoryList.remove(removeLabelValueBean);
 			}
 		}
-		
+
 		// 消費税率プルダウンリスト
 		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
 	}

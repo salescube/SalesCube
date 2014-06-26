@@ -270,4 +270,59 @@ public final class StringUtil {
 		  return srcString;
 		}
 
+	/**
+	 * 半角文字をを全角に変換します。.<BR>
+	 * @param s　切り出し元文字列
+	 * @return　半角数字
+	 */
+	  public static String hankakuNumberToZenkakuNumber(String s) {
+			if (s == null) {
+				return null;
+			}
+		    StringBuffer sb = new StringBuffer(s);
+		    for (int i = 0; i < s.length(); i++) {
+		      char c = s.charAt(i);
+		      if (c >= '0' && c <= '9') {
+		        sb.setCharAt(i, (char) (c - '0' + '０'));
+		      }
+		    }
+		    return sb.toString();
+		  }
+
+
+		  /**
+		   * 全角数字を半角に変換します。
+		   * @param s 変換元文字列
+		   * @return 変換後文字列
+		   */
+	 public static String zenkakuNumToHankaku(String s) {
+			if (s == null) {
+				return null;
+			}
+		    StringBuffer sb = new StringBuffer(s);
+		    for (int i = 0; i < sb.length(); i++) {
+		      char c = sb.charAt(i);
+		      if (c >= '０' && c <= '９') {
+		        sb.setCharAt(i, (char)(c - '０' + '0'));
+		      }
+		    }
+		    return sb.toString();
+	}
+
+	  /**
+	   * 現在日付を文字列で取得します。
+	   *
+	   * @return 日付文字列
+	   */
+    public static String getDateString(){
+
+         Calendar cal = Calendar.getInstance();
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+         String strDate = sdf.format(cal.getTime());
+
+         return strDate;
+
+     }
+
+
 }

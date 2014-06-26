@@ -41,8 +41,6 @@ public class NewsAction extends CommonResources {
 	@Resource
 	private NewsService newsService;
 
-	public boolean isUpdate;
-
 	/**
 	 * 初期表示を行います.<br>
 	 * 処理終了後、{@link Mapping#INPUT}で定義されたURIに遷移します.
@@ -108,7 +106,7 @@ public class NewsAction extends CommonResources {
 	 * @throws Exception
 	 */
 	private void init() throws Exception {
-		isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_NEWS );
+		this.newsForm.isUpdate = this.userDto.isMenuUpdate( Constants.MENU_ID.SETTING_NEWS );
 
 		// お知らせマスタの情報を取得する
 		News news = this.newsService.getNews();

@@ -23,6 +23,7 @@ import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
 import jp.co.arkinfosys.dto.sales.SalesLineDto;
 import jp.co.arkinfosys.dto.sales.SalesSlipDto;
 import jp.co.arkinfosys.entity.Customer;
+import jp.co.arkinfosys.entity.Rack;
 import jp.co.arkinfosys.entity.SalesLineTrn;
 import jp.co.arkinfosys.entity.SalesSlipTrn;
 import jp.co.arkinfosys.entity.join.CategoryJoin;
@@ -39,6 +40,7 @@ import jp.co.arkinfosys.service.CustomerService;
 import jp.co.arkinfosys.service.DeliveryService;
 import jp.co.arkinfosys.service.DepositSlipService;
 import jp.co.arkinfosys.service.ProductService;
+import jp.co.arkinfosys.service.RackService;
 import jp.co.arkinfosys.service.RoLineService;
 import jp.co.arkinfosys.service.RoSlipSalesService;
 import jp.co.arkinfosys.service.SalesLineService;
@@ -109,6 +111,10 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 	@Resource
 	protected DepositSlipService depositSlipService;
 
+    @Resource
+    protected RackService rackService;
+
+
 	// 画面表示に使用するオブジェクト
 	// 配送業者リストの内容
 	public List<LabelValueBean> dcCategoryList = new ArrayList<LabelValueBean>();
@@ -133,7 +139,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 	// 完納区分リストの内容
 	public List<LabelValueBean> delivertProcessCategoryList = new ArrayList<LabelValueBean>();
-	
+
 	// 消費税率プルダウン
 	public List<LabelValueBean> ctaxRateList = new ArrayList<LabelValueBean>();
 
@@ -300,6 +306,13 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				addMessage( "errors.line.dataNotExist", lineDto.lineNo, strLabel, lineDto.productCode );
 			}else{
 				nCount++;
+			}
+
+			// 商品コードに紐づいている棚情報が実在するか確認する
+			Rack rack = rackService.findById(lineDto.rackCodeSrc);
+			if( rack == null ){
+				String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
+				addMessage( "errors.line.rackNotExist", lineDto.lineNo, strLabel, lineDto.productCode );
 			}
 
 			// 数量
@@ -742,9 +755,9 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 
 		// 空欄で作成
 		createDeliveryList();
-		
+
 		// 消費税率プルダウンリスト
-		this.ctaxRateList =  ListUtil.getRateTaxList(super.taxRateService);
+		this.ctaxRateList =  ListUtil.getRateTaxNoBlankList(super.taxRateService);
 	}
 
 	/**
@@ -908,7 +921,7 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				this.inputSalesForm.menuUpdate = false;
 			}
 		}
-		
+
 		inputSalesForm.setSalesDateTaxRate();
 	}
 

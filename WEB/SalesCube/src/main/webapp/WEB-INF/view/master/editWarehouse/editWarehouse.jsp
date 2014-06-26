@@ -478,7 +478,7 @@
 							<c:forEach var="editRackList" items="${editRackList}" varStatus="s">
 								<tr id="editRackList_${s.index}">
 									<td id="editRackList_${s.index}.no" style="text-align: center">${s.index+1}</td>
-									<td>
+									<td style="background-color: #fae4eb;">
 										<html:hidden styleId="editRackList_${s.index}.exist" name="editRackList" property="exist" indexed="true" />
 										<html:hidden styleId="editRackList_${s.index}.updDatetm" name="editRackList" property="updDatetm" indexed="true" />
 										<c:if test="${editRackList.exist}">
@@ -489,7 +489,7 @@
 											<html:image src="${f:url('/images//customize/btn_search.png')}" styleId="editRackList_${s.index}.rackCodeImg" style="vertical-align: middle; cursor: pointer; width: auto;" tabindex="${s.index*4+301}" indexed="true" />
 										</c:if>
 									</td>
-									<td style="text-align: center">
+									<td style="text-align: center;background-color: #fae4eb;">
 										<html:text maxlength="60" styleId="editRackList_${s.index}.rackName" name="editRackList" property="rackName" style="width: 98%;ime-mode:disabled; margin: 3px;" tabindex="${s.index*4+302}" indexed="true" />
 									</td>
 									<td style="text-align: center">

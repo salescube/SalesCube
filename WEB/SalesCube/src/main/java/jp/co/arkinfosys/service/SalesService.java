@@ -921,9 +921,11 @@ public class SalesService extends
 				salesDiscountPriceLine = i;
 			}
 		}
+
+		// v1.3.1 消費税は伝票で選択された値を使用するよう修正
 		// 消費税の取得
-		TaxRate taxRate = taxRateService.findTaxRateById(
-				CategoryTrns.TAX_TYPE_CTAX, dto.salesDate);
+		//TaxRate taxRate = taxRateService.findTaxRateById(
+		//		CategoryTrns.TAX_TYPE_CTAX, dto.salesDate);
 
 		// 代引き手数料と送料と顧客ランク割引を含まない商品税抜き合計計算
 		Double priceTotalNoCodFeeNoPostage = sumNotCodeFeeAndProstageAndSalesDiscount(
@@ -955,7 +957,7 @@ public class SalesService extends
 			} else {
 				// 送料追加
 				addPostagePrice(customer, priceTotalNoCodFeeNoPostage,
-						postagePriceLineDto, postagePriceLine, dto, taxRate);
+						postagePriceLineDto, postagePriceLine, dto);
 			}
 			// 代引き手数料と顧客ランク値引き（お取引実績による値引き）を含まない商品税抜き合計計算
 			Double priceTotalNoCodFeeNoTax = sumNotCodeFeeAndSalesDiscount(dto,
@@ -964,18 +966,18 @@ public class SalesService extends
 			// 顧客ランク割引額を計算する
 			addSalesDiscountPrice(priceTotalNoCodFeeNoTax,
 					salesDiscountPriceLineDto, salesDiscountPriceLine, dto,
-					taxRate, customerRank);
+					customerRank);
 		} else {
 			// 送料追加
 			addPostagePrice(customer, priceTotalNoCodFeeNoPostage,
-					postagePriceLineDto, postagePriceLine, dto, taxRate);
+					postagePriceLineDto, postagePriceLine, dto);
 		}
 
 		// 代引き手数料を含まない商品税込合計計算
 		Double priceTotalNoCodFee = sumNotCodeFee(dto, true);
 
 		// 代引き手数料追加
-		addCodFee(customer, priceTotalNoCodFee, codFeePriceLineDto, codFeePriceLine, dto, taxRate);
+		addCodFee(customer, priceTotalNoCodFee, codFeePriceLineDto, codFeePriceLine, dto);
 	}
 
 	/**
@@ -1004,13 +1006,12 @@ public class SalesService extends
 	 * @param salesDiscountPriceLineDto お取引実績による値引き明細行（{@link SalesLineDto}）
 	 * @param lineNo　既存顧客ランク割引明細行の行数
 	 * @param dto 売上伝票（{@link SalesSlipDto}）
-	 * @param taxRate　消費税
 	 * @param customerRank　顧客ランク情報（{@link CustomerRank}）
 	 * @throws ServiceException
 	 */
 	protected void addSalesDiscountPrice(Double normalTotalPrice,
 			SalesLineDto salesDiscountPriceLineDto, int lineNo,
-			SalesSlipDto dto, TaxRate taxRate, CustomerRank customerRank)
+			SalesSlipDto dto, CustomerRank customerRank)
 			throws ServiceException {
 		if (normalTotalPrice == null
 				|| new BigDecimal(normalTotalPrice).compareTo(BigDecimal.ZERO) <= 0) {
@@ -1091,7 +1092,10 @@ public class SalesService extends
 		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
 		// 税率
-		lineDto.ctaxRate = taxRate.taxRate.toString();
+		// 税率は日付ではなく画面の消費税率選択で決定される
+		//lineDto.ctaxRate = taxRate.taxRate.toString();
+		lineDto.ctaxRate = dto.ctaxRate;
+
 		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
 		// 粗利益
@@ -1120,11 +1124,10 @@ public class SalesService extends
 	 * @param codFeePriceLineDto 代引き手数料の明細行（{@link SalesLineDto}）
 	 * @param lineNo　代引き手数料が存在する行番号　－１はなし
 	 * @param dto 売上伝票（{@link SalesSlipDto}）
-	 * @param taxRate　消費税
 	 * @throws ServiceException
 	 */
 	protected void addCodFee(CustomerJoin customer, Double normalTotalPrice,
-			SalesLineDto codFeePriceLineDto, int lineNo, SalesSlipDto dto, TaxRate taxRate)
+			SalesLineDto codFeePriceLineDto, int lineNo, SalesSlipDto dto)
 			throws ServiceException {
 		if (normalTotalPrice == null) {
 			// 計算対象が無い場合は、追加もしない
@@ -1176,7 +1179,10 @@ public class SalesService extends
 		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
 		// 税率
-		lineDto.ctaxRate = taxRate.taxRate.toString();
+		// 税率は日付ではなく画面の消費税率選択で決定される
+		//lineDto.ctaxRate = taxRate.taxRate.toString();
+		lineDto.ctaxRate = dto.ctaxRate;
+
 		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
 		// 粗利益
@@ -1205,12 +1211,11 @@ public class SalesService extends
 	 * @param postageLineDto 送料の明細行（{@link SalesLineDto}）
 	 * @param lineNo　送料が存在する行番号　－１はなし
 	 * @param dto 売上伝票（{@link SalesSlipDto}）
-	 * @param taxRate　消費税
 	 * @throws ServiceException
 	 */
 	protected void addPostagePrice(CustomerJoin customer,
 			Double normalTotalPrice, SalesLineDto postageLineDto, int lineNo,
-			SalesSlipDto dto, TaxRate taxRate) throws ServiceException {
+			SalesSlipDto dto) throws ServiceException {
 		if (normalTotalPrice == null) {
 			// 計算対象が無い場合は、追加もしない
 			return;
@@ -1267,7 +1272,10 @@ public class SalesService extends
 		// 課税区分
 		lineDto.taxCategory = product.taxCategory;
 		// 税率
-		lineDto.ctaxRate = taxRate.taxRate.toString();
+		// 税率は日付ではなく画面の消費税率選択で決定される
+		//lineDto.ctaxRate = taxRate.taxRate.toString();
+		lineDto.ctaxRate = dto.ctaxRate;
+
 		// 消費税
 		calcDetailLineTax(dto, lineDto, product);
 

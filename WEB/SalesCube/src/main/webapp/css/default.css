@@ -152,6 +152,7 @@ input.c_ime_off{
 
 /* 選択フォーム無効時(ROで表現)の色 */
 select.c_disable {
+	border-top: solid 2px #AEAEAE;
 	background-color: #cccccc;
 }
 

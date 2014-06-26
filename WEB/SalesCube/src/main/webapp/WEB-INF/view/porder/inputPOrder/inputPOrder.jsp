@@ -59,9 +59,20 @@ function changeMustStatus(){
 	if(!l_rateId.isNum()){
 		$("span.dolMust").css("display","none");
 		$("span.yenMust").css("display","");
+
+		$("div.unitPriceDiv").css("background-color", "#fae4eb");
+		$("div.priceDiv").css("background-color", "#fae4eb");
+		$("div.dolUnitPriceDiv").css("background-color", "#ffffff");
+		$("div.dolPriceDiv").css("background-color", "#ffffff");
+
 	}else{
 		$("span.dolMust").css("display","");
 		$("span.yenMust").css("display","none");
+
+		$("div.unitPriceDiv").css("background-color", "#ffffff");
+		$("div.priceDiv").css("background-color", "#ffffff");
+		$("div.dolUnitPriceDiv").css("background-color", "#fae4eb");
+		$("div.dolPriceDiv").css("background-color", "#fae4eb");
 	}
 }
 
@@ -528,9 +539,9 @@ function GetSupplierRate(){
 function GetSupplierTaxRate(){
 	if( ( $("#supplierCode").attr("value") == "" )
 			|| ($("#supplierIsExist").attr("value") == CODE_NOEXIST)
-	//		|| ( $("#poDate").attr("value") == "" ) 
+	//		|| ( $("#poDate").attr("value") == "" )
 	){
-	//	
+	//
 		$("#supplierTaxRate").attr("value","");
 	}else{
 		//var data = new Object();
@@ -689,7 +700,7 @@ function sumPricesOnLoad(){
 	var l_priceTotal = oBDCS($("#priceTotal").val()).setSettingsFromObj($("#priceTotal"));
 	//本体金額が有効なら
 	if( l_priceTotal.isNum() ){
-		
+
 		//DBにある伝票合計情報は再計算はしない
 		$("#DISPctaxTotal").valueBDC($("#ctaxTotal").val());
 		$("#DISPpriceTotal").valueBDC($("#priceTotal").val());
@@ -1046,15 +1057,15 @@ function calcTaxAndTotalPrice(){
 	$("#ctaxTotal").val("0");
 	$("#DISPpriceTotal").text("0");
 	$("#priceTotal").val("0");
-	
+
 	var l_purePriceTotal = oBDCS($("#DISPpurePriceTotal").text()).setSettingsFromObj($("#DISPpurePriceTotal"));
-	
+
 	//本体金額が有効であること
 	if( l_purePriceTotal.isNum() ){
 		var purePriceTotal = l_purePriceTotal.BDValue();
 		var Tax = "";
 		var l_ctaxRate = oBDCS($("#ctaxRate").val());
-		
+
 		//レートIDが無効で、税率が有効であること、税転嫁が指定範囲内であること
 		if( ($("#rateId").val() == "") && (l_ctaxRate.isNum()) &&
 			( ($("#taxShiftCategory").val() == taxShiftCategorySlipTotal) ||
@@ -1071,7 +1082,7 @@ function calcTaxAndTotalPrice(){
 		$("#DISPpriceTotal").valueBDC(TotalPrice);
 		$("#priceTotal").valueBDC(TotalPrice);
 	}
-	
+
 	// 消費税, 伝票合計(円)
 	SetBigDecimalScale_Obj($("#DISPctaxTotal"));
 	SetBigDecimalScale_Obj($("#DISPpriceTotal"));
@@ -1101,7 +1112,7 @@ function calcfePriceTotal(){
 		}
 		$("#DISPfePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : "0"));
 		$("#fePriceTotal").valueBDC((validValueCount>0 ? dolPriceTotal.toString() : "0"));
-		
+
 		SetBigDecimalScale_Obj($("#DISPfePriceTotal"));
 	}
 }
@@ -1947,20 +1958,22 @@ function showProductInfos(id){
 						<html:text styleId="productRestQuantity_${s.index}" name="poLineList" property="productRestQuantity" indexed="true" style="width: 85%; text-align:right; background-color: #FFFFFF; border-style: none;" readonly="true" styleClass="numeral_commas BDCqua" />
 					</div>
 				</td>
+				<!-- 円単価、外貨単価 -->
 				<td>
-                    <div class="box_1of2" style="background-color: #fae4eb;">
+                    <div class="box_1of2 unitPriceDiv">
 						<html:text styleId="unitPrice_${s.index}" name="poLineList" property="unitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1009}"/>
 					</div>
-                    <div class="box_2of2">
+                    <div class="box_2of2 dolUnitPriceDiv">
 						<html:hidden styleId="ctaxPrice_${s.index}" styleClass="BDC BDCtax" name="poLineList" property="ctaxPrice" indexed="true" />
 						<html:text styleId="dolUnitPrice_${s.index}" name="poLineList" property="dolUnitPrice" indexed="true" maxlength="${f:h(ML_S_UNITPRICE)}" styleClass="numeral_commas dollar_value BDCdol" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1010}"/>
 					</div>
 				</td>
+				<!-- 金額（円）、外貨金額 -->
 				<td>
-                    <div class="box_1of2" style="background-color: #fae4eb;"">
+                    <div class="box_1of2 priceDiv">
 						<html:text styleId="price_${s.index}" name="poLineList" property="price" indexed="true" maxlength="${f:h(ML_S_PRICE)}" styleClass="numeral_commas yen_value BDCyen" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1011}"/>
 					</div>
-                    <div class="box_2of2">
+                    <div class="box_2of2 dolPriceDiv">
 						<html:text styleId="dolPrice_${s.index}" name="poLineList" property="dolPrice" indexed="true" styleClass="numeral_commas dollar_value BDCdol" maxlength="${f:h(ML_S_PRICE)}" style="width: 100px;" tabindex="${f:h(s.index)*f:h(lineElementCount)+1012}"/>
 					</div>
 				</td>
@@ -1980,7 +1993,7 @@ function showProductInfos(id){
 <c:if test="${lockMode}">
 					<button id="delButton_${s.index}" style="width:80px;" disabled="disabled" class="btn_list_action" ><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
 </c:if>
-				</div>
+
 	            <div class="box_2of2">
 <c:if test="${!lockMode}">
 		<c:if test="${s.count == 1}">

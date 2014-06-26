@@ -9,7 +9,7 @@
 	</div>
 </div>
 <span id="searchResultList">
-	<table id="search_result" summary="検索結果" class="forms detail_info" style="table-layout: auto; margin-top: 20px;">
+	<table id="search_result" summary="検索結果" class="forms detail_info" style="table-layout: auto; margin-top: 20px;width:1160px">
 		<colgroup>
 			<col span="1" style="min-width: 10%">
 			<col span="1" style="min-width: 15%">
@@ -117,7 +117,7 @@
 							</span>
 						</c:if>
 						<c:if test='${rowData.roSlipId!=null}'>
-							<span style="color: white">
+							<span style="color: blue">
 								<bean:message key='labels.onlineorder.status.input' /><%// 済 %>
 							</span>
 						</c:if>
@@ -126,7 +126,7 @@
 						<c:if test='${rowData.roSlipId==null}'>
 							<c:if test="${isInputValid}">
 								<bean:define id="concatUrl" value="${'/rorder/inputROrder/online/'}?roSlipId=${rowData.onlineOrderId}" />
-								<button type="button" onclick="javascript:location.doHref('${f:url(concatUrl)}');" tabindex="${statusRow.index*2+1000}"><bean:message key='labels.onlineorder.inputOrder' /><%// 受注入力 %></button>
+								<button type="button" class="btn_list_action" onclick="javascript:location.doHref('${f:url(concatUrl)}');" tabindex="${statusRow.index*2+1000}"><bean:message key='labels.onlineorder.inputOrder' /><%// 受注入力 %></button>
 							</c:if>
 						</c:if>
 						<c:if test='${rowData.roSlipId!=null}'>
@@ -152,9 +152,8 @@
 						&nbsp;${f:h(rowData.loadDate)}
 					</td>
 					<td style="text-align: center">
-							<input type="button" value="<bean:message key="words.action.delLine"/>"
-								onclick="deleteLine('${rowData.onlineOrderId}')"
-								tabindex="${statusRow.index*2+1001}" />
+							<button type="button" class="btn_list_action" onclick="deleteLine('${rowData.onlineOrderId}')"
+									tabindex="${statusRow.index*2+1001}"><bean:message key="words.action.delLine"/><%// 削除 %></button>
 					</td>
 				</tr>
 </c:if>

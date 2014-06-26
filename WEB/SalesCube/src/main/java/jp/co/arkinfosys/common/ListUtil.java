@@ -176,7 +176,7 @@ public final class ListUtil {
 
 		return list;
 	}
-	
+
 	/**
 	 * 消費税率の選択値リストを返します。
 	 * @param 税率情報サービスクラス
@@ -185,7 +185,7 @@ public final class ListUtil {
 	public static List<LabelValueBean> getRateTaxList(TaxRateService t) {
 		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
 		list = addEmptyLabelValue(list);
-		
+
 		try {
 			// "1" は消費税（固定）
 			List<TaxRate> taxRateList = t.findTaxRateByTaxTypeCagory("1");
@@ -200,9 +200,40 @@ public final class ListUtil {
 				list.add(new LabelValueBean(dto.taxRate, dto.taxRate));
 			}
 		} catch (ServiceException e) {
-			
+
 		}
-		
+
 		return list;
+	}
+
+	/**
+	 * 消費税率の選択値リストを返します。
+	 * 空値なしで税率が
+	 * @param 税率情報サービスクラス
+	 * @return 消費税率の選択値リスト(空値なし)
+	 */
+	public static List<LabelValueBean> getRateTaxNoBlankList(TaxRateService t){
+		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
+		// リストの先頭に0%を固定で設定する
+		list.add(new LabelValueBean(Constants.TAX_ZERO_VALUE.ZERO,Constants.TAX_ZERO_VALUE.ZERO));
+
+		try {
+			// "1" は消費税（固定）
+			List<TaxRate> taxRateList = t.findTaxRateByTaxTypeCagory("1");
+
+			// 取得した消費税値をリストに格納
+			for (TaxRate taxRate : taxRateList) {
+				TaxRateDto dto = Beans.createAndCopy(TaxRateDto.class, taxRate)
+									.timestampConverter(Constants.FORMAT.TIMESTAMP)
+									.timestampConverter(Constants.FORMAT.DATE, "startDate")
+									.dateConverter(Constants.FORMAT.DATE)
+									.execute();
+				list.add(new LabelValueBean(dto.taxRate, dto.taxRate));
+			}
+		} catch (ServiceException e) {
+
+		}
+		return list;
+
 	}
 }

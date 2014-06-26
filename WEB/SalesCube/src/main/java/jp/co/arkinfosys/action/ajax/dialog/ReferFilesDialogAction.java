@@ -17,12 +17,12 @@ import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.NumberUtil;
 import jp.co.arkinfosys.dto.setting.FileInfoDto;
 import jp.co.arkinfosys.entity.join.FileInfoJoin;
-import jp.co.arkinfosys.service.AbstractService;
 import jp.co.arkinfosys.service.FileInfoService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.seasar.framework.beans.util.Beans;
 import org.seasar.struts.annotation.Required;
+
 
 /**
  * ファイル参照ダイアログの表示処理アクションクラスです.
@@ -49,6 +49,14 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 	 */
 	public int fileInfoCount = 0;
 
+
+	/** ソート項目 */
+	public String sortColumn;
+
+	/** ソート順 */
+	public boolean sortOrderAsc;
+
+
 	/**
 	 * ファイル情報DTOのリストです.
 	 */
@@ -61,13 +69,30 @@ public class ReferFilesDialogAction extends AbstractDialogAction {
 	 */
 	@Override
 	protected void createList() throws ServiceException {
+
+		String openLevel = "";
+
+		// すべて可
+		if (super.userDto.fileOpenLevel.equals("2")) {
+			openLevel = "2";
+
+		// 全社員向けのみ可
+		} else if (super.userDto.fileOpenLevel.equals("1")) {
+			openLevel = "1";
+
+		// 不可
+		} else {
+			openLevel = "3";
+		}
+
+
 		// 登録されているファイルを全て取得する
 		HashMap<String, Object> conditions = new HashMap<String, Object>();
-		conditions.put(FileInfoService.Param.OPEN_LEVEL,
-				super.userDto.fileOpenLevel);
+		//conditions.put(FileInfoService.Param.OPEN_LEVEL, super.userDto.fileOpenLevel);
+		conditions.put(FileInfoService.Param.OPEN_LEVEL, openLevel);
 
 		List<FileInfoJoin> fileInfoList = this.fileInfoService.findByCondition(
-				conditions, AbstractService.Param.CRE_DATETM, false);
+				conditions, sortColumn, sortOrderAsc);
 
 		// ファイル件数
 		this.fileInfoCount = fileInfoList.size();

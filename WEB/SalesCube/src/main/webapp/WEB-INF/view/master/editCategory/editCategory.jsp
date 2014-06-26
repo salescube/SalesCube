@@ -486,11 +486,11 @@
 	</c:if>
 	<c:if test="${category.categoryDataType == 4}">
 	    <c:if test='${category.categoryUpd == 0}'>
-	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" disabled="true" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
+	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" disabled="true" value="<%=Constants.FLAG.ON%>" indexed="true"/>
 	                    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool_hidden" property="categoryBool" indexed="true"/>
 	    </c:if>
 	    <c:if test='${category.categoryUpd == 1}'>
-	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" value="<%=Constants.FLAG.ON%>" indexed="true"/>${f:h(category.categoryTitle)}
+	                    <html:checkbox name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryBool" property="categoryBool" value="<%=Constants.FLAG.ON%>" indexed="true"/>
 	    </c:if>
 	    <html:hidden name="categoryTrnList" styleId="categoryTrnList_${s.index}.categoryStr" property="categoryStr" indexed="true"/>
 	</c:if>

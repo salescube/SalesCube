@@ -2,6 +2,7 @@
 	<span id="${dialogId}_errors" style="color: red">
 	</span>
 
+
 	<div id="${dialogId}Div"  style="padding: 20px 20px 0 20px;">
 		<div style=" color: #FFFFFF;">ファイル件数: ${fileInfoCount}件</div>
 		<div style="border: none; width: 610px; height: 200px; overflow: hidden;">
@@ -15,10 +16,38 @@
 			</colgroup>
 			<tr>
 				<th>No</th>
-				<th>タイトル</th>
-				<th>サイズ</th>
-				<th>登録日時</th>
-				<th>登録者</th>
+				<th onclick="searchReferFiles('${dialogId}', 'title')">タイトル
+					<span id="sortStatus_title" style="color: white">
+						<c:if test="${sortColumn == 'title'}">
+							<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
+							<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
+						</c:if>
+					</span>
+				</th>
+				<th onclick="searchReferFiles('${dialogId}', 'fileSize')">サイズ
+					<span id="sortStatus_fileSize" style="color: white">
+						<c:if test="${sortColumn == 'fileSize'}">
+							<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
+							<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
+						</c:if>
+					</span>
+				</th>
+				<th onclick="searchReferFiles('${dialogId}', 'creDatetm')">登録日時
+					<span id="sortStatus_creDatetm" style="color: white">
+						<c:if test="${sortColumn == 'creDatetm'}">
+							<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
+							<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
+						</c:if>
+					</span>
+				</th>
+				<th onclick="searchReferFiles('${dialogId}', 'creUser')">登録者
+					<span id="sortStatus_creUser" style="color: white">
+						<c:if test="${sortColumn == 'creUser'}">
+							<c:if test="${sortOrderAsc}"><bean:message key='labels.asc'/></c:if>
+							<c:if test="${!sortOrderAsc}"><bean:message key='labels.desc'/></c:if>
+						</c:if>
+					</span>
+				</th>
 			</tr>
 			<c:forEach var="bean" items="${fileInfoDtoList}" varStatus="status">
 			<tr>
