@@ -131,11 +131,9 @@ function openStockInfo() {
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span><bean:message key='labels.searchCondition'/></span>
-	            <button class="btn_toggle">
-	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-	            </button>
+	            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-					
+
 				<div id="search_info" class="section_body">
 					<table id="order_info" class="forms" summary="商品情報">
 						<colgroup>
@@ -163,16 +161,14 @@ function openStockInfo() {
 			<button type="button" onclick="onF2();" tabindex="104" class="btn_medium"><bean:message key='words.action.search'/></button> <!-- 検索 -->
 		</div>
 		<span id="ListContainer">
-		
+
 		    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>商品情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 				<table id="discount_info" class="forms detail_info" summary="商品情報" >
 					<colgroup>
@@ -201,17 +197,15 @@ function openStockInfo() {
 				</div>
 	    	</div><!-- /.form_section -->
 	    	</div><!-- /.form_section_wrap -->
-				
-				
+
+
 		    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>割引情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 				<table id="discount_info" class="forms detail_info" summary="割引パターン情報" >
 					<colgroup>
@@ -240,17 +234,15 @@ function openStockInfo() {
 				</div>
 	    	</div><!-- /.form_section -->
 	    	</div><!-- /.form_section_wrap -->
-	    	
+
 
 		    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>数量スライド設定</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 				<table id="discountTrnList" class="forms detail_info" summary="数量スライド設定" style="width: 600px;">
 					<colgroup>

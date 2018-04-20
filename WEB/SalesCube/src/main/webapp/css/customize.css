@@ -360,8 +360,19 @@ div.form_section .section_title button.btn_toggle {
     right: 20px;
     margin: 0;
     padding: 0;
+    background-image: url(/SalesCube/images/customize/btn_toggle.png);
 }
-
+div.form_section .section_title button.btn_toggle.inactive {
+    position: absolute;
+    width: 28px;
+    height: 29px;
+    line-height: 29px;
+    top: 15px;
+    right: 20px;
+    margin: 0;
+    padding: 0;
+    background-image: url(/SalesCube/images/customize/btn_toggle_on.png);
+}
 div.form_section .section_body {
     margin: 0;
     padding: 20px;

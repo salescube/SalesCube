@@ -120,7 +120,7 @@
 				if($("#searchResultCount").val() != "0") {
 					// EXCELボタンの状態変更
 					$("#btnF4").attr("disabled","");
-					
+
 					// 検索条件を保持
 					paramDataTmp = paramData;
 				} else {
@@ -160,7 +160,7 @@
 				paramData["rackCategory"] = $(id).val();
 			}
 		}
-		
+
 		// 倉庫コード
 		var id = "#" + prev + "warehouseCode";
 		if($(id).val()) {
@@ -176,7 +176,7 @@
 		if($(id).val()) {
 			paramData["warehouseState"] = $(id).val();
 		}
-		
+
 		else {
 			var rackCategory = $(id).get(0);
 			if(rackCategory.selectedIndex > 0) {
@@ -348,7 +348,7 @@
 		<button disabled="disabled">F12<br>&nbsp;</button>
     </div>
 	<br><br><br>
-	
+
     <div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
@@ -359,9 +359,7 @@
 		    <div class="form_section">
 		    	<div class="section_title">
         			<span>棚番情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
 
 				<div id="search_info" class="section_body">

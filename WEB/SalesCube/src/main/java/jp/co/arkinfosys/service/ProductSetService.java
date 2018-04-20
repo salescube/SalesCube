@@ -323,6 +323,10 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 		BeanMap map = Beans.createAndCopy(BeanMap.class, dto).includes(
 				Param.SET_PRODUCT_CODE, Param.PRODUCT_CODE, Param.QUANTITY)
 				.execute();
+		// 数量の全角半角変換
+		if (map.containsKey(Param.QUANTITY)) {
+			map.put(Param.QUANTITY, StringUtil.zenkakuNumToHankaku((String)map.get(Param.QUANTITY)));
+		}
 		param.putAll(map);
 
 		// 1行インサートする
@@ -379,6 +383,10 @@ public class ProductSetService extends AbstractMasterEditService<ProductSetDto, 
 			BeanMap map = Beans.createAndCopy(BeanMap.class, dto).includes(
 					Param.SET_PRODUCT_CODE, Param.PRODUCT_CODE,
 					Param.QUANTITY).execute();
+			// 数量の全角半角変換
+			if (map.containsKey(Param.QUANTITY)) {
+				map.put(Param.QUANTITY, StringUtil.zenkakuNumToHankaku((String)map.get(Param.QUANTITY)));
+			}
 			param.putAll(map);
 
 			// 1行更新する

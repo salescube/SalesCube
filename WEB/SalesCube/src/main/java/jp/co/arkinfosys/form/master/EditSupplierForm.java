@@ -4,8 +4,11 @@
 package jp.co.arkinfosys.form.master;
 
 
+import jp.co.arkinfosys.common.Constants;
+
 import org.apache.struts.action.ActionMessages;
 import org.seasar.struts.annotation.Arg;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Msg;
 import org.seasar.struts.annotation.Required;
@@ -21,6 +24,7 @@ public class EditSupplierForm extends AbstractEditForm {
 
 	/** 仕入先コード */
 	@Required
+	@Mask(mask = Constants.CODE_MASK.HANKAKU_MASK)
 	public String supplierCode;
 
 	/** 仕入先名 */
@@ -101,9 +105,6 @@ public class EditSupplierForm extends AbstractEditForm {
 	@Required
 	public String transferTypeCategory;
 
-	/** 税端数処理 */
-	@Required
-	public String taxFractCategory;
 
 	/** 単価端数処理 */
 	@Required
@@ -115,6 +116,10 @@ public class EditSupplierForm extends AbstractEditForm {
 	/** 手数料負担 */
 	@Required
 	public String serviceChargeCategory;
+
+	/** 税端数処理 */
+	@Required
+	public String taxFractCategory;
 
 	/** F.O.B */
 	public String fobName;

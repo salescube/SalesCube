@@ -418,16 +418,14 @@ function immediatelyPOCategoryChange() {
 			<bean:write name="msg" ignore="true"/><br>
 		</html:messages>
 	</div>
-	
+
 	<div class="form_section_wrap">
 	<div class="form_section">
 		<div class="section_title">
 			<bean:message key='labels.searchCondition'/><!-- 検索条件 -->
-			<button class="btn_toggle">
-			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			</button>
+			<button class="btn_toggle" />
 		</div><!-- /.section_title -->
-			
+
 		<div id="search_info" class="section_body">
 			<table class="forms" style="width: 800px">
 				<colgroup>
@@ -480,23 +478,21 @@ function immediatelyPOCategoryChange() {
 		</div>
 	</div><!-- /.form_section -->
    	</div><!-- /.form_section_wrap -->
-   	
-   	
+
+
 	<div>
 	<div style="width: 1160px; text-align :right">
 		<button onclick="onSearch()" class="btn_medium"><bean:message key='words.action.search'/></button>
 	</div>
-	
+
 
 	<div class="form_section_wrap">
 	<div class="form_section">
 		<div class="section_title">
 			<bean:message key='labels.poSlipInfos'/><!-- 発注伝票情報 -->
-			<button class="btn_toggle">
-			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			</button>
+			<button class="btn_toggle" />
 		</div><!-- /.section_title -->
-			
+
 		<div id="search_info" class="section_body">
 			<table class="forms" style="width: 500px">
 				<colgroup>

@@ -14,7 +14,7 @@ SELECT
         ,U.UPD_USER
         ,U.FAIL_COUNT
         ,U.LOCK_FLG
-        ,U.LOCK_DATETM
+        ,DATE_FORMAT(U.LOCK_DATETM,'%Y/%m/%d %k:%i') LOCK_DATETM
         ,D.NAME
     FROM
         USER_MST_/*$domainId*/ U

@@ -3,17 +3,20 @@
  */
 package jp.co.arkinfosys.service.deposit;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.dto.deposit.DepositSlipDto;
 import jp.co.arkinfosys.entity.DepositSlip;
 import jp.co.arkinfosys.service.AbstractService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.seasar.framework.beans.util.BeanMap;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * 入金検索サービスクラスです.
@@ -48,6 +51,7 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 		public static final String OFFSET_ROW = "offsetRow";
 		public static final String DEPOSIT_CATEGORY_MST = "depositCategoryMst";
 		public static final String DEPOSIT_METHOD_CATEGORY = "depositMethodCategory";
+		public static final String SALES_CM_CATEGORY = "salesCmCategory";
 	}
 
 	/**
@@ -194,13 +198,21 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
-		// 入金From
+		// 入金日From
 		if (conditions.containsKey(Param.DEPOSIT_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.DEPOSIT_DATE_FROM))) {
 				param.put(Param.DEPOSIT_DATE_FROM, (String) conditions
 						.get(Param.DEPOSIT_DATE_FROM));
 			}
+		}
+
+
+		// 入金日From全角半角変換
+		if (conditions.containsKey(Param.DEPOSIT_DATE_FROM)) {
+			param.put(Param.DEPOSIT_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DEPOSIT_DATE_FROM)));
+
 		}
 
 		// 入金日To
@@ -212,6 +224,13 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
+		// 入金日To全角半角変換
+		if (conditions.containsKey(Param.DEPOSIT_DATE_TO)) {
+			param.put(Param.DEPOSIT_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DEPOSIT_DATE_TO)));
+
+		}
+
 		// 入力日From
 		if (conditions.containsKey(Param.INPUT_PDATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
@@ -221,6 +240,13 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 			}
 		}
 
+		// 入力日From全角半角変換
+		if (conditions.containsKey(Param.INPUT_PDATE_FROM)) {
+			param.put(Param.INPUT_PDATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.INPUT_PDATE_FROM)));
+
+		}
+
 		// 入力日To
 		if (conditions.containsKey(Param.INPUT_PDATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
@@ -228,6 +254,13 @@ public class SearchDepositService extends AbstractService<DepositSlip> {
 				param.put(Param.INPUT_PDATE_TO, (String) conditions
 						.get(Param.INPUT_PDATE_TO));
 			}
+		}
+
+		// 入力日To全角半角変換
+		if (conditions.containsKey(Param.INPUT_PDATE_TO)) {
+			param.put(Param.INPUT_PDATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.INPUT_PDATE_TO)));
+
 		}
 
 		// 回収金額From

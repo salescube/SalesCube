@@ -3,6 +3,7 @@
  */
 package jp.co.arkinfosys.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -353,6 +354,32 @@ public class EstimateSheetService extends AbstractSlipService<EstimateSheetTrn, 
 			throw new ServiceException(e);
 		}
 	}
+
+	/**
+	 * 検索条件を指定して、結果リストを取得します.<br>
+	 * 見積伝票呼出専用のメソッドです.
+	 *
+	 *
+	 * @param conditions 検索条件
+	 * @return 顧客コードが空でない見積伝票のリスト
+	 * @throws ServiceException
+	 */
+	public List<BeanMap> findEstimateSheetFromCopySlipByCondition(
+			Map<String, Object> conditions) throws ServiceException {
+		try {
+			Map<String, Object> param = super.createSqlParam();
+			this.setEmptyCondition(param);
+			setConditionParam(conditions, param);
+
+			return this.selectBySqlFile(BeanMap.class,
+					"estimate/FindEstimateSheetFromCopySlipByCondition.sql", param)
+					.getResultList();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+
+	}
+
 
 	/**
 	 * 検索条件パラメータを設定します.

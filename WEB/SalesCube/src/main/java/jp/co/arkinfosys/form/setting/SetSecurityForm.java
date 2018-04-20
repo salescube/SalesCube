@@ -16,30 +16,30 @@ public class SetSecurityForm {
      */
     @IntRange(min=1, max=999)
     public String passwordValidDays;
-    
+
     /**
-     * パスワードリトライ回数 
+     * ログインリトライ回数制限
      */
     @IntRange(min=1, max=999)
     public String totalFailCount;
 
     /**
-     * 使用可能過去パスワード 
+     * 同一パスワード再利用までに必要な変更回数
      */
     @IntRange(min=1, max=999)
     public String passwordHistCount;
-    
+
     /**
      * パスワード桁数
      */
     @IntRange(min=1, max=999)
     public String passwordLength;
-    
+
     /**
-     * パスワード文字種
+     * パスワード必須文字種
      */
     public String passwordCharType;
-    
+
 
 	/**
      * 更新日時

@@ -3,17 +3,20 @@
  */
 package jp.co.arkinfosys.service.sales;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.dto.sales.SalesSlipDto;
 import jp.co.arkinfosys.entity.SalesSlipTrn;
 import jp.co.arkinfosys.service.AbstractService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.seasar.framework.beans.util.BeanMap;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  *
@@ -193,6 +196,7 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 		}
 	}
 
+
 	/**
 	 * 検索条件を指定して明細行単位の検索結果を取得します.
 	 * @param conditions 検索条件
@@ -306,11 +310,26 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
+		// 売上日From全角半角変換
+		if (conditions.containsKey(Param.SALES_DATE_FROM)) {
+			param.put(Param.SALES_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SALES_DATE_FROM)));
+
+		}
+
+
 		// 売上日To
 		if (conditions.containsKey(Param.SALES_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_TO))) {
 				param.put(Param.SALES_DATE_TO,(String)conditions.get(Param.SALES_DATE_TO));
 			}
+		}
+
+		// 売上日To全角半角変換
+		if (conditions.containsKey(Param.SALES_DATE_TO)) {
+			param.put(Param.SALES_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SALES_DATE_TO)));
+
 		}
 
 		// 納期指定日From
@@ -320,11 +339,26 @@ public class SearchSalesService extends AbstractService<SalesSlipTrn> {
 			}
 		}
 
+		// 納期指定日From全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_FROM)) {
+			param.put(Param.DELIVERY_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_FROM)));
+
+		}
+
+
 		// 納期指定日To
 		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.DELIVERY_DATE_TO))) {
 				param.put(Param.DELIVERY_DATE_TO,(String)conditions.get(Param.DELIVERY_DATE_TO));
 			}
+		}
+
+		// 納期指定日To全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
+			param.put(Param.DELIVERY_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_TO)));
+
 		}
 
 		// 配送業者

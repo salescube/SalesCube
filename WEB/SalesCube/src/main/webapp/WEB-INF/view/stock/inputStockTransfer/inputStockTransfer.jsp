@@ -16,7 +16,7 @@
 
 		// ページ読込時の動作
 		$(document).ready(function(){
-		
+
 			// 明細行のIndex管理
 			var maxLineNo = $("#tbodyLine").children().length-2;
 			var maxLineId = $("#tbodyLine").children().eq(maxLineNo).attr("id");
@@ -735,17 +735,15 @@
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 				</div>
-				
+
 				<div class="form_section_wrap">
     			<div class="form_section">
         		<div class="section_title">
 					<span><bean:message key='labels.stockTransferSlipInfos'/></span><br>
-	        		<button class="btn_toggle">
-	            		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	        		</button>
+	        		<button class="btn_toggle" />
        			 </div>
        			<div id="order_section" class="section_body">
-				
+
 				<table id="order_info" class="forms" summary="在庫移動伝票情報">
 					<tr>
 						<th><div class="col_title_right"><bean:message key='labels.eadSlipId.transfer'/></div></th><%// 在庫移動番号 %>
@@ -765,12 +763,12 @@
 				</div>
 				</div>
 				</div>
-				
+
 				<html:hidden property="userId"/>
 				<html:hidden property="stockPdate" />
 				<html:hidden property="moveDepositSlipId" />
 				<html:hidden property="updDatetm" />
-				
+
   				<div id="order_detail_info_wrap">
 				<table id="order_detail_info" summary="移動在庫リスト" class="forms" style="margin-top: 20px;">
 					<thead>
@@ -798,7 +796,7 @@
 						<c:forEach var="eadLineTrnDtoList" items="${eadLineTrnDtoList}" varStatus="status">
 							<c:if test='${eadLineTrnDtoList.lineNo != null}'>
 								<tr id="trLine${status.index}">
-								
+
 									<!-- No -->
 									<td id="tdNo${status.index}" style="text-align: center;">
 										<div class="box_1of1">
@@ -812,7 +810,7 @@
 										<html:hidden name="eadLineTrnDtoList" property="rackName" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackName" />
 										<html:hidden name="eadLineTrnDtoList" property="rackNameDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackNameDest" />
 									</td>
-									
+
 									<!-- 商品コード・商品名 -->
 									<td>
 										<div class="box_1of2" style="background-color: #fae4eb;">
@@ -825,7 +823,7 @@
 											</span>
 										</div>
 									</td>
-									
+
 									<!-- 数量・移動可能数・現在庫数 -->
 									<td>
 										<div class="box_1of3" style="background-color: #fae4eb;">
@@ -838,7 +836,7 @@
 											<html:text name="eadLineTrnDtoList" property="stockCount" indexed="true" styleId="eadLineTrnDtoList[${status.index}].stockCount" styleClass="c_disable numeral_commas" style="width: 80px; height: 24px; ime-mode: disabled; margin: 3px;" tabindex="${status.index*lineElementCount+1004}" readonly="true" /><br>
 										</div>
 									</td>
-									
+
 									<!-- 移動元棚番・移動先棚番 -->
 									<td style="background-color: #fae4eb;">
 										<div class="box_1of2">
@@ -850,7 +848,7 @@
 											<html:image styleId="rackCodeDestImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer; margin: 0;" tabindex="${status.index*lineElementCount+1008}"/>
 										</div>
 									</td>
-									
+
 									<!-- 移動元在庫数・移動先在庫数 -->
 									<td>
 										<div class="box_1of2">
@@ -860,14 +858,14 @@
 											<html:text name="eadLineTrnDtoList" property="quantityDest" indexed="true" styleId="eadLineTrnDtoList[${status.index}].quantityDest" styleClass="numeral_commas" style="text-align: center;width: 80px; text-align: right;" readonly="true" />
 										</div>
 									</td>
-									
+
 									<!-- 備考 -->
 									<td>
 										<div class="box_1of1">
 											<html:textarea name="eadLineTrnDtoList" property="remarks" indexed="true" styleId="eadLineTrnDtoList[${status.index}].remarks" style="width: 96%; height: 5em; margin: 3px;" tabindex="${status.index*lineElementCount+1009}" />
 										</div>
 									</td>
-									
+
 									<!-- ボタン -->
 									<td style="text-align:right;">
 										<div class="box_1of2">
@@ -892,17 +890,17 @@
 
 						<tr id="trAddLine">
 							<td style="height: 60px; text-align: center" colspan="7" class="rd_bottom_left rd_bottom_right">
-								<button type="button" style="width:80px;" onclick="addRow();" tabindex="1999" 
+								<button type="button" style="width:80px;" onclick="addRow();" tabindex="1999"
 									<c:if test="${!newData}">
 										disabled
 									</c:if>
 								><%// 行追加 %>
 									<img alt="<bean:message key='words.action.addLine'/>" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
 								</button>
-								
+
 							</td>
 						</tr>
-						
+
 					</tbody>
 				</table>
 			</div>

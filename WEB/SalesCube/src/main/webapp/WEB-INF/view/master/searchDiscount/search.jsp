@@ -239,11 +239,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>割引情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 					<table id="user_info" class="forms" summary="割引パターン情報" style="width: 600px">
 						<tr>
@@ -268,7 +266,7 @@
 		        </div>
 	    	</div><!-- /.form_section -->
 	    </div><!-- /.form_section_wrap -->
-	    
+
 		<div style="text-align: right; width: 1160px">
 			<button tabindex="104" onclick="initForm()" class="btn_medium">初期化</button>
 			<button tabindex="105" onclick="searchDiscount()" class="btn_medium">検索</button>

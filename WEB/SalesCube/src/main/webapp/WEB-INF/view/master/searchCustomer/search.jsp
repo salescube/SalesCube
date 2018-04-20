@@ -320,26 +320,24 @@
 		<button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
-		
+
 	    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>顧客情報</span><br>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-			
+
 				<div id="search_info" class="section_body">
 					<table id="user_info" class="forms" summary="顧客情報">
-					
-						<!-- 
+
+						<!--
 						<colgroup>
 							<col span="1" style="width: 13%">
 							<col span="1" style="width: 20%">
@@ -396,9 +394,9 @@
 							</td>
 						</tr>
 					</table>
-			
+
 					<table class="forms" style="width: 910px" summary="自社情報3">
-						<!-- 
+						<!--
 						<colgroup>
 							<col span="1" style="width: 10%">
 							<col span="1" style="width: 40%">

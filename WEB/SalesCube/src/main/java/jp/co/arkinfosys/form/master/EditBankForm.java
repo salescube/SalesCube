@@ -6,6 +6,7 @@ package jp.co.arkinfosys.form.master;
 import jp.co.arkinfosys.common.Constants;
 
 import org.apache.struts.action.ActionMessages;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Required;
 
@@ -22,6 +23,7 @@ public class EditBankForm extends AbstractEditForm {
 	/** 銀行コード */
 	@Required
 	@Maxlength(maxlength=4)
+	@Mask(mask = Constants.CODE_MASK.HANKAKU_MASK)
 	public String bankCode;
 
 	/** 銀行名 */

@@ -130,7 +130,7 @@ function onF4() {
 								</td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right">部門名※</div></th>
+								<th><div class="col_title_right_req">部門名<bean:message key='labels.must'/></div></th>
 								<td><html:text styleId="name" property="name" style="width: 300px" tabindex="102"/></td>
 							</tr>
 						</table>

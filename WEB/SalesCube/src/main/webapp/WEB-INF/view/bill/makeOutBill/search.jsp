@@ -451,7 +451,7 @@
 				<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 			<div class="function_forms">
@@ -468,11 +468,9 @@
 					<div class="form_section">
 						<div class="section_title">
 							<span><bean:message key='labels.searchCondition'/></span><br>
-							<button class="btn_toggle">
-							    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-							</button>
+							<button class="btn_toggle" />
 						</div><!-- /.section_title -->
-										
+
 						<div id="search_info" class="section_body">
 						<table id="order_info" class="forms" summary="請求検索情報" style="width: auto;">
 							<tr>

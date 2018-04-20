@@ -486,6 +486,32 @@ public final class Constants {
 		public static final String LABEL_USER = "社員情報変更履歴";
 	}
 
+	public static class REFERENCE_MST_ACTION_TYPE {
+		// VALUE:指定なし
+		public static final String VALUE_NONE =  "";
+
+		// VALUE:INSERT
+		public static final String VALUE_INSERT =  "INSERT";
+
+		// VALUE:UPDATE
+		public static final String VALUE_UPDATE =  "UPDATE";
+
+		// VALUE_DELETE
+		public static final String VALUE_DELETE =  "DELETE";
+
+		// LABEL:指定なし
+		public static final String LABEL_NONE =  "全て";
+
+		// LABEL:INSERT
+		public static final String LABEL_INSERT =  "INSERT";
+
+		// LABEL:UPDATE
+		public static final String LABEL_UPDATE =  "UPDATE";
+
+		// LABEL_DELETE
+		public static final String LABEL_DELETE =  "DELETE";
+
+	}
 
 	/**
 	 * マスタリスト出力対象プルダウン選択値 （LABELとVALUEをペアで登録）
@@ -1045,18 +1071,10 @@ public final class Constants {
 	}
 
 	/**
-	 * APIの実行結果ステータスコード
-	 */
-	public static class API_STATUS_CODE{
-		public static final String SUCCESS = "0";
-		public static final String NO_RESULT = "1";
-		public static final String FAILED = "9";
-	}
-
-	/**
 	 * 税率が0%の場合の値
 	 */
 	public static class TAX_ZERO_VALUE{
 		public static final String ZERO = "0.000";
+		public static final String ZEROLABEL = "消費税なし";
 	}
 }

@@ -71,7 +71,7 @@
 		$("#warehouseCode").val("");
 		$("#warehouseName").val("");
 	}
-	
+
 	-->
 	</script>
 </head>
@@ -139,14 +139,12 @@
 
 	    <div class="form_section_wrap">
 		    <div class="form_section">
-		    
+
 		    	<div class="section_title">
 					<span>棚番情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-					
+
 				<div id="order_section" class="section_body">
 			        <table id="user_info" class="forms" summary="倉庫情報1">
 			            <colgroup>
@@ -172,7 +170,7 @@
 			                </td>
 			            </tr>
 			        </table>
-			        
+
 					<table id="user_info" class="forms" summary="棚番情報1">
 						<colgroup>
 			                <col span="1" style="width: 10%">
@@ -198,7 +196,7 @@
 							<td><html:checkbox styleId="multiFlag" property="multiFlag" value="1" tabindex="203"></html:checkbox></td>
 						</tr>
 					</table>
-			
+
 					<table class="forms" summary="商品情報2" style="display: none;">
 						<colgroup>
 							<col span="1" style="width: 10%">

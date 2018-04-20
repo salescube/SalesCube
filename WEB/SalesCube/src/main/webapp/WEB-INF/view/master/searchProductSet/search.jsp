@@ -249,7 +249,7 @@
 				<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 			</div>
 			<br><br><br>
-			
+
 			<%-- 入力メイン --%>
 			<div class="function_forms">
 				<%-- エラー表示部分 --%>
@@ -266,13 +266,11 @@
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span>セット商品情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="search_info" class="section_body">
-						
+
 						<%-- 検索条件1 --%>
 						<table class="forms" summary="セット商品">
 							<tr>
@@ -295,14 +293,12 @@
 				        </div>
 			    	</div><!-- /.form_section -->
 			    </div><!-- /.form_section_wrap -->
-			    
+
 			    <div class="form_section_wrap">
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span>セット内容</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="search_info" class="section_body">
@@ -314,10 +310,10 @@
 								<td><html:text styleId="productCode" property="productCode"
 										style="width: 170px; ime-mode: disabled;" tabindex="200"
 										onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); }"/>
-		
+
 								<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
 									onclick="productSearch($('#productCode'));" tabindex="201"/>
-		
+
 								</td>
 							</tr>
 							<tr>
@@ -325,10 +321,10 @@
 								<td>
 									<html:text styleId="productName" property="productName"
 										style="width: 400px" tabindex="202" />
-		
+
 									<html:image src="${f:url('/images//customize/btn_search.png')}" style="vertical-align: middle; cursor: pointer;"
 										onclick="productSearch($('#productName'));" tabindex="203"/>
-		
+
 								</td>
 							</tr>
 						</table>

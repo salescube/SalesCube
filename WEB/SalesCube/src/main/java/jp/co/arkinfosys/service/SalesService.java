@@ -1221,10 +1221,28 @@ public class SalesService extends
 			return;
 		}
 
-		// 送料
-		String postagePrice = PostageUtil.getPostagePrice(customer,
-				normalTotalPrice);
-		if (postagePrice == null) {
+		String postagePrice = null;
+
+		// 自社マスタの送料区分が有料の場合、送料対象かどうか判別する
+		if(super.mineDto.iniPostageType.equals(CategoryTrns.POSTAGE_PAY)){
+
+			//送料対象金額 小数点以下を削除した後にStringに変換
+			StringBuilder sb1 = new StringBuilder(super.mineDto.targetPostageCharges);
+			int n1 = sb1.indexOf(".");
+			String targetPostageCharges = new String(sb1.delete(n1, n1+4));
+
+			// 送料対象金額未満は登録しない
+			if( normalTotalPrice >= Integer.parseInt(targetPostageCharges)){
+
+				return;
+			}else{
+
+				//送料 小数点以下を削除した後にStringに変換
+				StringBuilder sb2 = new StringBuilder(super.mineDto.postage);
+				int  n2 = sb2.indexOf(".");
+				postagePrice = new String(sb2.delete(n2, n2+4));
+			}
+		}else{
 			return;
 		}
 

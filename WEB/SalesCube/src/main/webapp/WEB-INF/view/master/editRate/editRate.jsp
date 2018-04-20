@@ -48,9 +48,9 @@
     	if(confirm("<bean:message key='confirm.insert'/>")){
         	$("#editRateForm").attr("action", "${f:url("/master/editRate/insert")}");
         </c:if>
-        
+
         $("#rateTrnListSize").val($("#rateTrnListSizeLabel").html());
-        
+
         <c:if test="${editMode}">
     	if(confirm("<bean:message key='confirm.update'/>")){
         	$("#editRateForm").attr("action", "${f:url("/master/editRate/update")}");
@@ -276,7 +276,7 @@
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
     	<div style="padding-left: 20px"><html:errors/></div>
     	<div style="padding-left: 20px;color: blue;">
@@ -289,11 +289,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>レートタイプ情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-					
+
 				<div id="order_section" class="section_body">
 					<table id="rate_info" class="forms" summary="レートタイプ情報">
 						<tr>
@@ -308,7 +306,7 @@
 			                    <html:text maxlength="1" styleId="sign" property="sign" style="width:50px;" tabindex="101"/>
 			                </td>
 						</tr>
-			
+
 						<tr>
 							<th><div class="col_title_right">レートタイプ備考</div></th>
 							<td colspan="5">
@@ -319,8 +317,8 @@
 				</div><!-- /.section_body -->
 			</div><!-- /.form_section -->
 		</div><!-- /.form_section_wrap -->
-		
-		
+
+
 	    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
@@ -330,15 +328,13 @@
 					<c:if test="${!isUpdate || !editMode}">
 						<span style="margin: 10px 0px 5px 0px;">レートデータ</span><br>
 					</c:if>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-					
+
 				<div id="order_section" class="section_body">
 					<table id="add_row" class="forms detail_info" summary="行追加" style="margin-top: 0px; width: 910px;">
 						<colgroup>
-			
+
 							<col span="1" style="width:120px">
 							<col span="1" style="width:120px">
 							<col span="1" style="">
@@ -405,7 +401,7 @@
 				    				<td style="text-align:center;"><input type="text" maxlength="120" id="remarks" style="width: 600px; margin: 3px;" tabindex="-1"></td>
 				    				<td style="text-align: center;"><button id="deleteBtn" style="width:80px; margin: 3px;" tabindex="-1" class="btn_list_action">削除</button></td>
 				    			</tr>
-				
+
 								<c:forEach var="rateTrnList" varStatus="s" items="${rateTrnList}">
 					    			<tr class="rate_list_data" id="rateTrnList_${s.index}">
 					    				<td style="text-align:center;">
@@ -440,17 +436,17 @@
 			<c:if test="${editMode}">
 				<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
 			</c:if>
-			
+
 			<c:if test="${!editMode}">
             	<span>（新規レートタイプ）</span>
 			</c:if>
-			
+
 			<html:hidden property="creDatetm"/>
 			<html:hidden property="creDatetmShow"/>
 			<html:hidden property="updDatetm"/>
 			<html:hidden property="updDatetmShow"/>
 			<button tabindex="350" onclick="initForm();" class="btn_medium">初期化</button>
-			
+
 			<c:if test="${!isUpdate}">
 				<button tabindex="351" disabled="disabled" class="btn_medium">更新</button>
 			</c:if>

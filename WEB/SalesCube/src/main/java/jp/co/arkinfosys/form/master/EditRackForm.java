@@ -3,18 +3,20 @@
  */
 package jp.co.arkinfosys.form.master;
 
+import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.Constants.CODE_SIZE;
 
 import org.apache.struts.action.ActionMessages;
 import org.seasar.struts.annotation.Arg;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.util.MessageResourcesUtil;
 
 /**
  * 棚番マスタ管理（登録・編集）のアクションフォームクラスです.
- * 
+ *
  * @author Ark Information Systems
- * 
+ *
  */
 public class EditRackForm extends AbstractEditForm {
 
@@ -29,6 +31,7 @@ public class EditRackForm extends AbstractEditForm {
 
 	/** 棚番コード */
 	@Required(arg0 = @Arg(key = "labels.master.rackCode", resource = true))
+	@Mask(mask = Constants.CODE_MASK.HANKAKU_MASK)
 	public String rackCode;
 
 	/** 棚番名 */
@@ -58,7 +61,7 @@ public class EditRackForm extends AbstractEditForm {
 
 	/** E-MAIL */
 	public String rackEmail;
-	
+
 	/** 棚番の存在 倉庫空の棚番作成で利用 */
 	public boolean exist;
 
@@ -86,7 +89,7 @@ public class EditRackForm extends AbstractEditForm {
 
 	/**
 	 * 登録・編集時のバリデートを行います.
-	 * 
+	 *
 	 * @return 表示するメッセージ
 	 */
 	public ActionMessages validate() {

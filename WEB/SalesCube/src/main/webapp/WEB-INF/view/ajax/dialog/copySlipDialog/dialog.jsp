@@ -13,7 +13,7 @@
 								<option value="ESTIMATE">見積伝票</option>
 							</c:if>
 							<c:if test="${menuId == '0300'}">
-								<option value="RORDER">受注伝票</option>
+								<option value="ESTIMATE">見積伝票</option>
 							</c:if>
 							<c:if test="${menuId == '0400'}">
 								<option value="RORDER">受注伝票</option>
@@ -43,7 +43,7 @@
 					<c:if test="${menuId == '1007'}">
 						<th>委託入出庫区分</th>
 						<td>
-							<html:select property="copySlipEntrustEadCategory" styleId="copySlipEntrustEadCategory" onchange="changeEntrustEadCategoryOnCopyDialog();" >
+							<html:select property="copySlipEntrustEadCategory" styleId="copySlipEntrustEadCategory" onchange="changeEntrustEadCategoryOnCopyDialog();" style="width:85px;">
 								<html:options collection="entrustCategoryList" property="value" labelProperty="label"/>
 							</html:select>
 						</td>
@@ -58,7 +58,7 @@
 				file="/WEB-INF/view/ajax/dialog/copySlipDialog/slip/estimate.jsp"%>
 		</c:if>
 		<c:if test="${menuId == '0300'}">
-			<%@ include file="/WEB-INF/view/ajax/dialog/copySlipDialog/slip/rorder.jsp"%>
+			<%@ include file="/WEB-INF/view/ajax/dialog/copySlipDialog/slip/estimate.jsp"%>
 		</c:if>
 		<c:if test="${menuId == '0400'}">
 			<%@ include file="/WEB-INF/view/ajax/dialog/copySlipDialog/slip/sales.jsp"%>

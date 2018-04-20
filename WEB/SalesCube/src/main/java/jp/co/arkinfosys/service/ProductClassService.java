@@ -39,7 +39,7 @@ public class ProductClassService extends
 
 		public static final String CLASS_CODE_3 = "classCode3";
 
-		public static final String CLASS_CODE_ANY = "classCodeAny";
+		public static final String CLASS_CODE = "classCode";
 
 		public static final String CLASS_NAME = "className";
 
@@ -111,8 +111,8 @@ public class ProductClassService extends
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
-	}	
-	
+	}
+
 	/**
 	 * 検索条件を指定して、商品分類情報を返します.
 	 * @param conditions 検索条件マップ
@@ -178,10 +178,10 @@ public class ProductClassService extends
 		}
 
 		// 商品分類コード（いずれか）
-		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE_ANY)) {
-			param.put(ProductClassService.Param.CLASS_CODE_ANY, super
+		if (conditions.containsKey(ProductClassService.Param.CLASS_CODE)) {
+			param.put(ProductClassService.Param.CLASS_CODE, super
 					.createPrefixSearchCondition((String) conditions
-							.get(ProductClassService.Param.CLASS_CODE_ANY)));
+							.get(ProductClassService.Param.CLASS_CODE)));
 		}
 
 		// 商品名
@@ -213,7 +213,7 @@ public class ProductClassService extends
 		param.put(ProductClassService.Param.CLASS_CODE_1, null);
 		param.put(ProductClassService.Param.CLASS_CODE_2, null);
 		param.put(ProductClassService.Param.CLASS_CODE_3, null);
-		param.put(ProductClassService.Param.CLASS_CODE_ANY, null);
+		param.put(ProductClassService.Param.CLASS_CODE, null);
 		param.put(ProductClassService.Param.CLASS_NAME, null);
 		return param;
 	}
@@ -273,11 +273,11 @@ public class ProductClassService extends
 			labelValueList.add(new LabelValueBean(productClass.className,
 					productClass.classCode3));
 		}
-		
+
 		return labelValueList;
 	}
-	
-	
+
+
 	/**
 	 * 次の商品コードを採番して返します.
 	 * @param conditions 検索条件のマップ
@@ -338,7 +338,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param conditions 検索条件のマップ
 	 * @param sortColumn ソートカラム名
 	 * @param sortOrderAsc 昇順にソートするか否か
@@ -374,7 +374,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id ID
 	 * @return マスタ情報
 	 * @throws ServiceException
@@ -387,7 +387,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param conditions 検索条件のマップ
 	 * @param sortColumn ソートカラム名
 	 * @param sortOrderAsc 昇順にソートするか否か
@@ -404,7 +404,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dto {@link ProductClassDto}
 	 * @throws Exception
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#deleteRecord(java.lang.Object)
@@ -441,7 +441,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dto {@link ProductClassDto}
 	 * @throws Exception
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#insertRecord(java.lang.Object)
@@ -476,7 +476,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dto {@link ProductClassDto}
 	 * @throws Exception
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#updateRecord(java.lang.Object)
@@ -520,7 +520,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return {CLASS_CODE_1, CLASS_CODE_2, CLASS_CODE_3}
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#getKeyColumnNames()
 	 */
@@ -530,7 +530,7 @@ public class ProductClassService extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return {@link ProductClass#TABLE_NAME}
 	 * @see jp.co.arkinfosys.service.AbstractMasterEditService#getTableName()
 	 */

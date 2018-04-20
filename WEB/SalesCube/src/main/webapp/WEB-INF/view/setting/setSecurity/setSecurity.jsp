@@ -91,7 +91,7 @@
 							<tr>
 								<th><div class="col_title_right">パスワード桁数</div></th>
 								<td><html:text style="width: 50px;" tabindex="1" property="passwordLength" />&nbsp;桁</td>
-								<th><div class="col_title_right">パスワード文字種</div></th>
+								<th><div class="col_title_right">パスワード必須文字種</div></th>
 								<td>
 									<html:radio tabindex="2" property="passwordCharType" value="1" />指定なし
 									<html:radio tabindex="2" property="passwordCharType" value="2" />英数
@@ -102,10 +102,10 @@
 							<tr>
 								<th><div class="col_title_right">パスワード有効日数</div></th>
 								<td><html:text style="width: 50px;" tabindex="3" property="passwordValidDays" />&nbsp;日</td>
-								<th><div class="col_title_right">&nbsp;パスワードリトライ回数&nbsp;</div></th>
-								<td><html:text style="width: 50px;" tabindex="4" property="totalFailCount" />&nbsp;回</td>
-								<th><div class="col_title_right">&nbsp;使用可能過去パスワード&nbsp;</div></th>
-								<td><html:text style="width: 50px;" tabindex="5" property="passwordHistCount" />&nbsp;個</td>
+								<th><div class="col_title_right">&nbsp;ログインリトライ回数制限&nbsp;</div></th>
+								<td><html:text style="width: 50px;" tabindex="4" property="totalFailCount" />&nbsp;回まで</td>
+								<th><div class="col_title_right">&nbsp;同一パスワード再利用までに必要な変更回数&nbsp;</div></th>
+								<td><html:text style="width: 50px;" tabindex="5" property="passwordHistCount" />&nbsp;回</td>
 							</tr>
 						</table>
 

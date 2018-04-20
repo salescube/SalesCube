@@ -4,6 +4,7 @@
 package jp.co.arkinfosys.dto.rorder;
 
 import jp.co.arkinfosys.dto.AbstractLineDto;
+import jp.co.arkinfosys.dto.estimate.InputEstimateLineDto;
 
 /**
  * 受注伝票明細行情報を管理するDTOクラスです.
@@ -110,4 +111,50 @@ public class ROrderLineDto extends AbstractLineDto {
 	public boolean isBlank() {
 		return (productCode == null || productCode.length() == 0);
 	}
+
+	/**
+	 * 見積伝票をもとに初期化処理を行います
+	 * @param elDto 見積伝票明細行情報
+	 */
+	public void initialize( InputEstimateLineDto elDto ) {
+		// ID
+		roLineId = "";
+		roSlipId = "";
+
+		// 見積伝票明細から設定する項目
+		productCode = elDto.productCode;		// 商品コード
+		customerPcode = elDto.customerPcode;	// 得意先商品コード
+		productAbstract = elDto.productAbstract;// 商品名
+		quantity = elDto.quantity;				// 数量
+		quantityDB = elDto.quantity;			// 数量(hidden)
+		restQuantity = elDto.quantity;			// 未納数
+		restQuantityDB = elDto.quantity;		// 未納数(hidden)
+		unitCost = elDto.unitCost;				// 仕入単価
+		cost = elDto.cost;						// 仕入金額
+		unitRetailPrice = elDto.unitRetailPrice;// 売上単価
+		retailPrice = elDto.retailPrice;		// 売上金額
+		remarks = elDto.remarks;				// 備考
+		deletable = true;
+		estimateLineId = elDto.estimateLineId;	// 見積伝票明細行
+
+		// 見積伝票明細からは設定できない項目
+		eadRemarks = "";
+		productRemarks = "";
+		supplierPcode = "";
+		taxCategory = "";
+		ctaxRate = "";
+		ctaxPrice = "";
+		roItemId = "";
+		lastShipDate = "";
+		stockCtlCategory = "";
+		possibleDrawQuantity = "";	// 引当可能数は最新の情報を設定するのでコピーしない
+		roMaxNum = "";				// 受注限度数は最新の情報を設定するのでコピーしない
+
+		// 売上入力画面使用項目
+		unitCategory = "";	// 単位コード
+		unitName = "";		// 単位名
+		packQuantity = "";	// 入数
+		unitPrice = "";		// 単価
+	}
+
 }

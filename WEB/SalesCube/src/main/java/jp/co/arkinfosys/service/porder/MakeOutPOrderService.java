@@ -138,12 +138,27 @@ public class MakeOutPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
+		// 発注日（開始）全角半角変換
+		if (conditions.containsKey(Param.PO_DATE_FROM)) {
+			param.put(Param.PO_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PO_DATE_FROM)));
+
+		}
+
+
 		// 発注日（終了）
 		if (conditions.containsKey(Param.PO_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_DATE_TO))) {
 				param.put(Param.PO_DATE_TO, (String) conditions
 						.get(Param.PO_DATE_TO));
 			}
+		}
+
+		//発注日（終了）全角半角変換
+		if (conditions.containsKey(Param.PO_DATE_TO)) {
+			param.put(Param.PO_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PO_DATE_TO)));
+
 		}
 
 		// 仕入先コード

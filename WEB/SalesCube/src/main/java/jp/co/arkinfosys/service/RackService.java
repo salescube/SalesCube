@@ -74,6 +74,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 		private static final String OFFSET = "offsetRow";
 
 		private static final String PRODUCT_CODE = "productCode";
+
 	}
 
 	private static final String COLUMN_WAREHOUSE_CODE = "WAREHOUSE_CODE";
@@ -95,6 +96,8 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 	private static final String COLUMN_ADDRESS_2 = "ADDRESS_2";
 
 	private static final String COLUMN_RACK_PC_NAME = "RACK_PC_NAME";
+
+
 
 	/**
 	 * 棚番コードから棚番情報を取得します.
@@ -163,6 +166,7 @@ public class RackService extends AbstractMasterEditService<RackDto, RackJoin> im
 			throw new ServiceException(e);
 		}
 	}
+
 
 	/**
 	 * 検索条件を指定して結果件数を取得します.

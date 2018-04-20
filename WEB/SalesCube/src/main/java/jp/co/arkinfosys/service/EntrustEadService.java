@@ -551,6 +551,14 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 			}
 		}
 
+		// 委託入出庫日（開始）全角半角変換
+		if (conditions.containsKey(Param.ENTRUST_EAD_DATE_FROM)) {
+			param.put(Param.ENTRUST_EAD_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.ENTRUST_EAD_DATE_FROM)));
+
+		}
+
+
 		// 委託入出庫日（終了）
 		if (conditions.containsKey(Param.ENTRUST_EAD_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
@@ -558,6 +566,13 @@ public class EntrustEadService extends AbstractService<EntrustEadSlipTrn> {
 				param.put(Param.ENTRUST_EAD_DATE_TO, (String) conditions
 						.get(Param.ENTRUST_EAD_DATE_TO));
 			}
+		}
+
+		// 委託入出庫日（終了）（開始）全角半角変換
+		if (conditions.containsKey(Param.ENTRUST_EAD_DATE_TO)) {
+			param.put(Param.ENTRUST_EAD_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.ENTRUST_EAD_DATE_TO)));
+
 		}
 
 		// 備考

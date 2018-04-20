@@ -293,14 +293,14 @@ public class CopySlipDialogAction extends AbstractDialogAction {
 					copySlipDialogForm.estimateCondition).excludesWhitespace()
 					.lrTrim().execute();
 
-			conditions.put(ROrderService.Param.SORT_ORDER_ASC, false);
-			conditions.put(ROrderService.Param.SORT_COLUMN,
+			conditions.put(EstimateSheetService.Param.SORT_ORDER_ASC, false);
+			conditions.put(EstimateSheetService.Param.SORT_COLUMN,
 					EstimateSheetService.COLUMN_ESTIMATE_DATE);
 			conditions = new HashMap<String, Object>(conditions);
 
-			// 検索する
+			// 検索する(顧客が紐づかない見積伝票は対象外)
 			List<BeanMap> rawList = estimateSheetService
-					.findEstimateSheetByCondition(conditions);
+					.findEstimateSheetFromCopySlipByCondition(conditions);
 			return super.entytyToDto(rawList);
 		}
 	}

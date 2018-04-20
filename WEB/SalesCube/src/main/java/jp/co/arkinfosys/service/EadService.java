@@ -735,6 +735,13 @@ public class EadService extends AbstractService<EadSlipTrn> {
 			}
 		}
 
+		// 入出庫日（開始）全角半角変換
+		if (conditions.containsKey(Param.EAD_DATE_FROM)) {
+			param.put(Param.EAD_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.EAD_DATE_FROM)));
+
+		}
+
 		// 入出庫日（終了）
 		if (conditions.containsKey(Param.EAD_DATE_TO)) {
 			if (StringUtil
@@ -742,6 +749,13 @@ public class EadService extends AbstractService<EadSlipTrn> {
 				param.put(Param.EAD_DATE_TO, (String) conditions
 						.get(Param.EAD_DATE_TO));
 			}
+		}
+
+		// 入出庫日（終了）全角半角変換
+		if (conditions.containsKey(Param.EAD_DATE_TO)) {
+			param.put(Param.EAD_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.EAD_DATE_TO)));
+
 		}
 
 		// 理由

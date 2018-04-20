@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Constants;
-import jp.co.arkinfosys.common.EncryptApiUtil;
 import jp.co.arkinfosys.common.EncryptUtil;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.RoleDto;
@@ -20,7 +18,6 @@ import jp.co.arkinfosys.dto.UserDto;
 import jp.co.arkinfosys.dto.setting.MenuDto;
 import jp.co.arkinfosys.entity.GrantRole;
 import jp.co.arkinfosys.entity.Mine;
-import jp.co.arkinfosys.entity.User;
 import jp.co.arkinfosys.entity.join.UserJoin;
 import jp.co.arkinfosys.service.exception.ServiceException;
 import jp.co.arkinfosys.service.exception.UnabledLockException;
@@ -44,7 +41,7 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 
 	//自社マスタ
 	@Resource
-	private MineService mineService;
+	protected MineService mineService;
 
 	/**
 	 * パラメータ定義クラスです.
@@ -846,35 +843,34 @@ public class UserService extends AbstractMasterEditService<UserDto, UserJoin> im
 	}
 
 	/**
-	 * パスワード文字種によって、パスワードの文字内容をチェックする
+	 * パスワード必須文字種によって、パスワードの文字内容をチェックする
 	 *
 	 * @param passwordCharType 文字種
 	 * @param password パスワード
 	 * @throws ServiceException
 	 */
+	  public boolean checkPasswordCharType(String passwordCharType, String newPassword) {
 
-    public boolean checkPasswordCharType(String passwordCharType, String newPassword) {
+	    	boolean ret = false ;
 
-    	boolean ret = false ;
+	    	//無制限
+	    	if (passwordCharType.equals("1")){
+	    		return true;
+	    	}
+	    	//英数字のみ
+	    	if (passwordCharType.equals("2")){
+	    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)^([\\!-~]+)$" );
+	    		//ret = newPassword.matches("^[a-zA-Z0-9]+$");
+	    	}
+	    	//英数記号のみ
+	    	if (passwordCharType.equals("3")){
+	    		ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)(?!^[^(\\!-\\/|:-@|\\[-`|{-~]*$)^([\\!-~]+)$" );
+	    		//ret = newPassword.matches("^[a-zA-Z0-9 -/:-@\\[-\\`\\{-\\~]+$");
+	    	}
 
-    	//無制限
-    	if (passwordCharType.equals("1")){
-    		return true;
-    	}
-    	//英数字のみ
-    	if (passwordCharType.equals("2")){
-    		//ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)^([\\!-~]+)$" );
-    		ret = newPassword.matches("^[a-zA-Z0-9]+$");
-    	}
-    	//英数記号のみ
-    	if (passwordCharType.equals("3")){
-    		//ret = newPassword.matches("(?!^[^0-9]*$)(?!^[^A-Za-z]*$)(?!^[^(\\!-\\/|:-@|\\[-`|{-~]*$)^([\\!-~]+)$" );
-    		ret = newPassword.matches("^[a-zA-Z0-9 -/:-@\\[-\\`\\{-\\~]+$");
-    	}
+	        return ret;
+	    }
 
-        return ret;
-
-    }
 
 
 }

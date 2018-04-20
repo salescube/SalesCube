@@ -64,6 +64,12 @@ public class UserDto implements Serializable, MasterEditDto {
 
 	public String tolenIv;
 
+	public String token;
+
+	public String tokenKey;
+
+	public String detoken;
+
 	public String tokeEexpireDate;
 
 	public String lastRequestFunc;
@@ -186,4 +192,33 @@ public class UserDto implements Serializable, MasterEditDto {
 	public String[] getKeys() {
 		return new String[] { this.userId };
 	}
+
+	/**
+	 * トークンが有効期限切れであるかどうかを返します.
+	 *
+	 * @return true:有効期限切れ false:有効期限中
+	 */
+	public boolean isTokenExpired() throws ParseException {
+
+		if (this.tokeEexpireDate == null) {
+			// NULLの場合は期限管理しない
+			return false;
+		}
+		DateFormat df = new SimpleDateFormat(Constants.FORMAT.DATE);
+		df.setLenient(true);
+		Date dt = df.parse(tokeEexpireDate);
+
+		Calendar expire = Calendar.getInstance();
+		expire.setTime(dt);
+
+		// 本日0時との比較を行う
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 0);
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+		today.set(Calendar.MILLISECOND, 0);
+
+		return expire.before(today);
+	}
+
 }

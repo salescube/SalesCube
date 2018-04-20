@@ -187,6 +187,7 @@ public class ReferenceHistoryAjaxAction extends CommonAjaxResources {
 
 		// 共通部
 		map.put(ReferenceHistoryService.Param.OUTPUT_TARGET, referenceHistoryForm.outputTarget);
+		map.put(ReferenceHistoryService.Param.ACTION_TYPE, referenceHistoryForm.actionType);
 		map.put(ReferenceHistoryService.Param.REC_DATE_FROM, referenceHistoryForm.recDateFrom);
 		map.put(ReferenceHistoryService.Param.REC_DATE_TO, referenceHistoryForm.recDateTo);
 

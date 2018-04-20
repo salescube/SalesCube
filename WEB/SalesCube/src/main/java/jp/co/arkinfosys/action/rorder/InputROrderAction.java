@@ -23,6 +23,8 @@ import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
 import jp.co.arkinfosys.dto.StockInfoDto;
+import jp.co.arkinfosys.dto.estimate.InputEstimateDto;
+import jp.co.arkinfosys.dto.estimate.InputEstimateLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
 import jp.co.arkinfosys.entity.Customer;
@@ -41,6 +43,8 @@ import jp.co.arkinfosys.service.AbstractSlipService;
 import jp.co.arkinfosys.service.CategoryService;
 import jp.co.arkinfosys.service.CustomerService;
 import jp.co.arkinfosys.service.DeliveryService;
+import jp.co.arkinfosys.service.EstimateLineService;
+import jp.co.arkinfosys.service.EstimateSheetService;
 import jp.co.arkinfosys.service.OnlineOrderRelService;
 import jp.co.arkinfosys.service.OnlineOrderService;
 import jp.co.arkinfosys.service.ProductService;
@@ -103,6 +107,9 @@ public class InputROrderAction extends
 	/** 顧客納入先リスト */
 	public List<LabelValueBean> deliveryList = new ArrayList<LabelValueBean>();
 
+	/** 顧客納入先リスト(詳細) **/
+	private List<DeliveryAndPre> deliveryPreList = new ArrayList<DeliveryAndPre>();
+
 	/** 税転嫁リスト */
 	public List<LabelValueBean> taxShiftCategoryList = new ArrayList<LabelValueBean>();
 
@@ -114,6 +121,19 @@ public class InputROrderAction extends
 
 	// 配送時間帯リストの内容
 	public List<LabelValueBean> dcTimeZoneCategoryList = new ArrayList<LabelValueBean>();
+
+	/**
+	 * 見積情報
+	 */
+	@Resource
+	protected EstimateSheetService estimateSheetService;
+
+	/**
+	 * 見積情報明細
+	 */
+	@Resource
+	protected EstimateLineService estimateLineService;
+
 
 	/**
 	 * 区分情報
@@ -618,6 +638,8 @@ public class InputROrderAction extends
 					Categories.SALES_CM_CATEGORY, code);
 			this.salesCmCategoryList.add(new LabelValueBean(name, code));
 
+			// 顧客納入先プルダウンの値
+			deliveryList.clear();
 			if (StringUtil.hasLength(record.customerCode)) {
 				List<DeliveryAndPre> list = this.deliveryService
 						.searchDeliveryByCompleteCustomerCodeSortedByCreDate(record.customerCode);
@@ -1133,5 +1155,161 @@ public class InputROrderAction extends
 	@Override
 	public String getSlipKeyLabel() {
 		return "labels.report.hist.roSlip.roSlipId";
+	}
+
+	/**
+	 * 指定された見積伝票番号から受注に関する情報を取得し、画面に表示します.
+	 *
+	 * @return 遷移先URI
+	 * @throws Exception
+	 */
+	@Execute( urlPattern = "copyFromEstimate/{copySlipId}", validator = false)
+	public String copyFromEstimate() throws Exception {
+		return copy();
+	}
+
+	/**
+	 * 伝票を複写します.<br>
+	 * <p>
+	 * 見積番号を元に受注伝票情報を取得し、<br>
+	 * 受注入力画面に設定します.
+	 * </p>
+	 *
+	 * @return 受注入力画面のパス
+	 * @throws Exception
+	 * @see jp.co.arkinfosys.action.AbstractSlipEditAction#copy()
+	 */
+	@Override
+	public String copy() throws Exception {
+		prepareForm();
+
+		try {
+			// formの初期化
+			inputROrderForm.initialize();
+
+			// 見積伝票複写
+			if( "".equals(inputROrderForm.copySlipId)){
+				String strLabel = MessageResourcesUtil.getMessage("labels.estimateSheetId");
+				addMessage("errors.notExist",strLabel);
+				return Mapping.INPUT;
+			}
+			// 見積伝票番号から受注伝票を生成する
+			if(!createROrderSlipByEstimate(inputROrderForm.copySlipId)) {
+				inputROrderForm.reset();
+			}
+
+			// リスト作成
+			this.createList();
+
+			// 初期値を設定する
+			inputROrderForm.initCopy();
+
+			// ユーザの権限を設定
+			inputROrderForm.menuUpdate = userDto
+					.isMenuUpdate(Constants.MENU_ID.INPUT_RORDER);
+
+			// 顧客納品先リストの作成
+			if(StringUtil.hasLength( inputROrderForm.customerCode)){
+				// 初期表示時に作成された納入先リストをクリアし、顧客の納入先を再取得する
+				this.deliveryList.clear();
+				createDeliveryList();
+				if(deliveryList != null && deliveryList.size() > 0){
+					// 顧客の納入先情報を設定する(先頭の項目を初期値とする)
+					inputROrderForm.initializeDeliveryInfo(deliveryPreList.get(0), preTypeCategoryList);
+				}
+			}
+
+		} catch (ServiceException e) {
+			super.errorLog(e);
+			throw e;
+		}
+
+
+		return Mapping.INPUT;
+	}
+
+	/**
+	 * 顧客納入先リストを作成します.<br>
+	 * 顧客コードが設定されていない時には、空行だけの納入先リストを作成します.<BR>
+	 * 顧客コードが設定されている場合には、顧客マスタの納入先リストを作成します.
+	 * @throws ServiceException
+	 */
+	protected void createDeliveryList() throws ServiceException{
+		if( !StringUtil.hasLength( inputROrderForm.customerCode ) ){
+			LabelValueBean bean = new LabelValueBean();
+			bean.setValue("");
+			bean.setLabel("");
+			deliveryList.add(bean);
+			return;
+		}
+
+		try {
+			deliveryPreList =
+				deliveryService.searchDeliveryListByCompleteCustomerCode(
+						inputROrderForm.customerCode );
+
+			LabelValueBean bean;
+			for (DeliveryAndPre dap : deliveryPreList) {
+				bean = new LabelValueBean();
+				bean.setValue(dap.deliveryCode);
+				bean.setLabel(dap.deliveryName);
+				deliveryList.add(bean);
+			}
+		} catch (ServiceException e) {
+			super.errorLog(e);
+			throw e;
+		}
+	}
+
+
+	/**
+	 * 見積伝票を検索し受注伝票のアクションフォームに設定します.<BR>
+	 *
+	 * 1. 見積伝票を検索します。見つからなかった場合には、エラーメッセージを登録し処理を終了します.<BR>
+	 * 2. 見積伝票の明細行を取得します.<BR>
+	 * 3. 受注伝票に設定されている顧客を検索し、見つからなかった場合には、エラーメッセージを登録します.<BR>
+	 * 4. 受注伝票の内容をアクションフォームに設定します.<BR>
+	 * 5. 受注伝票に存在しない情報を検索し、アクションフォームに設定します.<BR>
+	 *
+	 * @param roSlipId 検索対象見積伝票番号
+	 * @return 正常に設定できたか否か
+	 * @throws ServiceException
+	 */
+	protected boolean createROrderSlipByEstimate( String estimateSlipId ) throws ServiceException {
+
+		// 見積伝票を読み込む
+		InputEstimateDto estimateDto = estimateSheetService.loadBySlipId(estimateSlipId);
+		if (estimateDto == null){
+			// 見積番号が存在しない場合、エラーメッセージを表示
+			addMessage("errors.copy.notexist");
+			ActionMessagesUtil.addErrors(super.httpRequest, super.messages);
+			return false;
+		}
+		List<InputEstimateLineDto> lineList = estimateLineService.loadBySlip(estimateDto);
+		estimateDto.setLineDtoList(lineList);
+
+		// 顧客情報を取得
+		Customer customer = null;
+		if( StringUtil.hasLength(estimateDto.customerCode) ){
+			customer = customerService.findCustomerByCode(estimateDto.customerCode);
+			if(customer == null){
+				// 顧客コードがXXのデータは存在しません
+				String strLabel = MessageResourcesUtil.getMessage("labels.customerCode");
+				addMessage( "errors.dataNotExist", strLabel, inputROrderForm.customerCode );
+			}
+		}
+
+		// 受注伝票用ActionFormに展開する
+		inputROrderForm.initialize( estimateDto, customer );
+
+		// 関連情報を取得
+		ROrderSlipDto dto = (ROrderSlipDto) inputROrderForm.copyToDto();
+		dto.copyFrom(inputROrderForm.lineList);
+		List<ROrderLineDto> roLineList = dto.getLineDtoList();
+		for (ROrderLineDto lineDto : roLineList) {
+			roLineService.setProductStockInfoFromCopy(lineDto);	// ここで、不足する商品情報と在庫情報を設定する
+		}
+
+		return true;
 	}
 }

@@ -86,6 +86,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 		try {
 			Map<String, Object> params = super.createSqlParam();
 			params.put(FileInfoService.Param.FILE_ID, Integer.parseInt(fileId));
+			params.put(FileInfoService.Param.OPEN_LEVEL, super.userDto.fileOpenLevel);
 
 			return this.selectBySqlFile(FileInfoJoin.class,
 					"fileinfo/FindFileInfoById.sql", params).getSingleResult();
@@ -376,7 +377,7 @@ public class FileInfoService extends AbstractMasterEditService<FileInfoDto, File
 			}
 
 		}
-		
+
 		// ソートオーダーを設定する
 		if (sortOrderAsc) {
 			param.put(FileInfoService.Param.SORT_ORDER, Constants.SQL.ASC);

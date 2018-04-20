@@ -123,7 +123,7 @@
 			paramData,
 			function(data) {
 				var jData = $(data);
-				
+
 				// 検索結果テーブルを更新する
 				$("#ListContainer").empty();
 				$("#ListContainer").append(data);
@@ -132,7 +132,7 @@
 				if($("#searchResultCount").val() != "0") {
 					// EXCELボタンの状態変更
 					$("#btnF4").attr("disabled","");
-					
+
 					// 検索条件を保持
 					paramDataTmp = paramData;
 				} else {
@@ -291,7 +291,7 @@
 		<button disabled="disabled">F12<br>&nbsp;</button>
     </div>
 	<br><br><br>
-	
+
     <div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
@@ -302,9 +302,7 @@
 		    <div class="form_section">
 		    	<div class="section_title">
         			<span>倉庫情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
 
 				<div id="search_info" class="section_body">

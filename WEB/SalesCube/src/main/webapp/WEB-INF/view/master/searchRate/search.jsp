@@ -222,7 +222,7 @@
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
 		<div style="padding-left: 20px">
 			<html:errors/>
@@ -233,11 +233,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
         			<span>レートタイプ検索条件</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-		
+
 				<div id="search_info" class="section_body">
 					<table id="rate_code_search_condition" class="forms" summary="レートタイプ検索条件">
 						<tr>
@@ -248,7 +246,7 @@
 							<th><div class="col_title_right">レートタイプ備考</div></th>
 							<td>
 								<html:text styleId="remarks" property="remarks" style="width: 235px;" tabindex="101" maxlength="120"/>
-			
+
 							</td>
 						</tr>
 					</table>

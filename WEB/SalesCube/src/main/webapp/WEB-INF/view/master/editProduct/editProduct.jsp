@@ -573,9 +573,7 @@
 				    <div class="form_section">
 				        <div class="section_title">
 							<span>商品情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<html:hidden styleId="isUpdate" property="isUpdate"/>
@@ -601,7 +599,7 @@
 											styleClass="${editMode || !isUpdate ? 'c_disable' : '' }"
 											readonly="${editMode || !isUpdate}"
 											onfocus="this.curVal=this.value;" onblur="if(this.curVal!=this.value){ this.value=this.value.toUpperCase(); checkNMJStockCtlCategory(); }" />
-										
+
 										<c:if test="${!editMode}">
 										<html:image src="${f:url('/images//customize/btn_search.png')}"
 											style="vertical-align: middle; cursor: pointer;"
@@ -641,7 +639,7 @@
 											style="width: 150px;ime-mode: disabled;" tabindex="203" maxlength="20"/></td>
 								</tr>
 								<tr>
-									<th><div class="col_title_right">仕入単価（円）</div></th>
+									<th><div class="col_title_right_req">仕入単価（円）<bean:message key='labels.must'/></div></th>
 									<td><html:text styleClass="numeral_commas yen_value BDCyen" styleId="supplierPriceYen" property="supplierPriceYen"
 											style="width: 150px;" tabindex="204" onchange="applyPriceAlignment();" maxlength="9"/></td>
 									<th><div class="col_title_right">仕入単価（外貨）</div></th>
@@ -745,9 +743,7 @@
 				    <div class="form_section">
 				        <div class="section_title">
 							<span>分類</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">
@@ -819,9 +815,7 @@
 				    <div class="form_section">
 				        <div class="section_title">
 							<span>特性分類</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">
@@ -889,9 +883,7 @@
 				    <div class="form_section">
 				        <div class="section_title">
 							<span>備考欄</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">

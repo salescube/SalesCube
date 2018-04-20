@@ -146,7 +146,7 @@
 			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form enctype="multipart/form-data" onsubmit="return false;">
 			<div class="function_forms">
 
@@ -163,11 +163,9 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span>受注データ</span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
-					
+
 					<div id="search_info" class="section_body">
 						<table summary="注文データ" class="forms">
 							<colgroup>
@@ -186,7 +184,7 @@
 					</div>
 		    	</div><!-- /.form_section -->
 		    	</div><!-- /.form_section_wrap -->
-		    	
+
 				<div style="width: 1160px; text-align: right">
 					<button type="button" id="initBtn" onclick="onF1();" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/><%// 初期化 %></button>
 					<button type="button" id="importBtn" onclick="onF3();" tabindex="151" class="btn_medium"><bean:message key='words.action.uptake'/><%// 取込 %></button>

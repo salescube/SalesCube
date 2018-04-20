@@ -123,10 +123,8 @@ function onF12() {
 			<div class="form_section_wrap">
 				<div class="form_section">
 					<div class="section_title">
-					<span>社員情報</span>
-					<button class="btn_toggle">
-           				<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-      				</button>
+						<span>社員情報</span>
+						<button class="btn_toggle" />
 					</div><!-- /.section_title -->
 					<div class="section_body">
 					<div>
@@ -210,10 +208,8 @@ function onF12() {
 			<div class="form_section_wrap">
 				<div class="form_section">
 					<div class="section_title">
-					<span>権限</span>
-					<button class="btn_toggle">
-           				<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-      				</button>
+						<span>権限</span>
+						<button class="btn_toggle" />
 					</div><!-- /.section_title -->
 					<div class="section_body">
 					<div>

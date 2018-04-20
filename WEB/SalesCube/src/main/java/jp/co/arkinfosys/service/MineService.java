@@ -52,6 +52,11 @@ public class MineService extends AbstractService<Mine> {
 		public static final String COMPANY_WEB_SITE = "companyWebSite";
 		public static final String CUTOFF_GROUP = "cutoffGroup";
 		public static final String CLOSE_MONTH = "closeMonth";
+
+		public static final String INI_POSTAGE_TYPE = "iniPostageType";
+		public static final String TARGET_POSTAGE_CHARGES = "targetPostageCharges";
+		public static final String POSTAGE = "postage";
+
 		public static final String PASSWORD_VALID_DAYS = "passwordValidDays";
 		public static final String TOTAL_FAIL_COUNT = "totalFailCount";
 		public static final String PASSWORD_HIST_COUNT = "passwordHistCount";
@@ -152,12 +157,18 @@ public class MineService extends AbstractService<Mine> {
 	 *            締日
 	 * @param CloseMonth
 	 *            決算月
+	 * @param iniPostageType
+	 *             送料区分
+	 * @param targetPostageCharges
+	 *             送料対象金額
+	 * @param postage
+	 *             送料
 	 * @throws ServiceException
 	 */
 	public void updateMine(String Name, String Abbr, String Kana,
 			String CeoName, String CeoTitle,FormFile LogoImgPath, boolean LogoInit, String ZipCode, String Addr1,
 			String Addr2, String Tel, String Fax, String EMail, String WebSite,
-			String CutffGroup, String CloseMonth) throws ServiceException {
+			String CutffGroup, String CloseMonth, String iniPostageType, String targetPostageCharges, String postage) throws ServiceException {
 		try {
 
 			/** アップロードファイルパス */
@@ -225,6 +236,10 @@ public class MineService extends AbstractService<Mine> {
 			param.put(MineService.Param.COMPANY_WEB_SITE, WebSite);
 			param.put(MineService.Param.CUTOFF_GROUP, CutffGroup);
 			param.put(MineService.Param.CLOSE_MONTH, CloseMonth);
+			param.put(MineService.Param.INI_POSTAGE_TYPE, iniPostageType);
+			param.put(MineService.Param.TARGET_POSTAGE_CHARGES, targetPostageCharges);
+			param.put(MineService.Param.POSTAGE, postage);
+
 
 			this.updateBySqlFile("mine/UpdateMine.sql", param).execute();
 
@@ -243,7 +258,7 @@ public class MineService extends AbstractService<Mine> {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public void updateMineSecurity(MineDto dto) throws ServiceException {
 		try {
 

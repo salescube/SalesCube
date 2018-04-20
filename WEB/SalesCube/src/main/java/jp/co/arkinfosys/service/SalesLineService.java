@@ -536,6 +536,7 @@ public class SalesLineService extends
 
 		return salesLineList;
 	}
+
 	/**
 	 * 売上伝票明細行を保存します.
 	 * @param slipDto 売上伝票（{@link SalesSlipDto}）
@@ -750,12 +751,31 @@ public class SalesLineService extends
 	}
 
 	/**
-	 * 在庫情報を設定します.
+	 * 売上伝票明細行の在庫情報を設定します.
 	 *
 	 * @param lineDto　売上伝票明細行（{@link SalesLineDto}）
 	 * @throws ServiceException
 	 */
 	protected void setStockInfo(SalesLineDto lineDto) throws ServiceException {
+
+		// 各商品ごとに引当可能数を計算する
+		StockInfoDto stockInfo = productStockService
+				.calcStockQuantityByProductCode(lineDto.productCode);
+		if (stockInfo != null) {
+			lineDto.possibleDrawQuantity = String
+					.valueOf(stockInfo.possibleDrawQuantity);
+		} else {
+			lineDto.possibleDrawQuantity = "0";
+		}
+	}
+
+	/**
+	 * 受注伝票明細行の在庫情報を設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	protected void setStockInfo(ROrderLineDto lineDto) throws ServiceException {
 
 		// 各商品ごとに引当可能数を計算する
 		StockInfoDto stockInfo = productStockService

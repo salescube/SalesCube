@@ -419,4 +419,6 @@ public class CustomerRankService extends AbstractMasterEditService<CustomerRankD
 	protected String getTableName() {
 		return CustomerRank.TABLE_NAME;
 	}
-}
+
+
+	}

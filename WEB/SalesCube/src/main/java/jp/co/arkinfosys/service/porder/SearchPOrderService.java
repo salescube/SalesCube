@@ -14,6 +14,8 @@ import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.DetailDispItemDto;
+import jp.co.arkinfosys.dto.porder.InputPOrderLineDto;
+import jp.co.arkinfosys.dto.porder.InputPOrderSlipDto;
 import jp.co.arkinfosys.dto.porder.POrderSlipLineJoinDto;
 import jp.co.arkinfosys.entity.PoSlipTrn;
 import jp.co.arkinfosys.entity.join.POrderSlipLineJoin;
@@ -289,7 +291,7 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 		// 発注伝票状態 仕入完了：Constants.STATUS_PORDER_SLIP.PURCHASED
 		param.put(ParamLocal.STATUS_PORDER_SLIP_PURCHASED,
 				Constants.STATUS_PORDER_SLIP.PURCHASED);
-		
+
 		// 仕入伝票状態 未払い：Constants.STATUS_SUPPLIER_SLIP.UNPAID
 		param.put(ParamLocal.STATUS_SUPPLIER_SLIP_UNPAID,
 				Constants.STATUS_SUPPLIER_SLIP.UNPAID);
@@ -330,12 +332,26 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
+		// 発注日（開始）全角半角変換
+		if (conditions.containsKey(Param.PO_DATE_FROM)) {
+			param.put(Param.PO_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PO_DATE_FROM)));
+
+		}
+
 		// 発注日（終了）
 		if (conditions.containsKey(Param.PO_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions.get(Param.PO_DATE_TO))) {
 				param.put(Param.PO_DATE_TO, (String) conditions
 						.get(Param.PO_DATE_TO));
 			}
+		}
+
+		// 発注日（終了）全角半角変換
+		if (conditions.containsKey(Param.PO_DATE_TO)) {
+			param.put(Param.PO_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PO_DATE_TO)));
+
 		}
 
 		// 納期（開始）
@@ -347,6 +363,13 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 			}
 		}
 
+		// 納期（開始）全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_FROM)) {
+			param.put(Param.DELIVERY_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_FROM)));
+
+		}
+
 		// 納期（終了）
 		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
@@ -354,6 +377,13 @@ public class SearchPOrderService extends AbstractService<PoSlipTrn> {
 				param.put(Param.DELIVERY_DATE_TO, (String) conditions
 						.get(Param.DELIVERY_DATE_TO));
 			}
+		}
+
+		// 納期（終了）全角半角変換
+		if (conditions.containsKey(Param.DELIVERY_DATE_TO)) {
+			param.put(Param.DELIVERY_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.DELIVERY_DATE_TO)));
+
 		}
 
 		// 摘要

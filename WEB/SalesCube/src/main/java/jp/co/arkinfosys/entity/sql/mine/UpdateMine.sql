@@ -14,6 +14,9 @@ UPDATE MINE_MST_/*$domainId*/ SET
         ,COMPANY_WEB_SITE=/*companyWebSite*/
         ,CUTOFF_GROUP=/*cutoffGroup*/
         ,CLOSE_MONTH=/*closeMonth*/NULL
+        ,INI_POSTAGE_TYPE=/*iniPostageType*/NULL
+        ,TARGET_POSTAGE_CHARGES=/*targetPostageCharges*/NULL
+        ,POSTAGE=/*postage*/NULL
         ,UPD_FUNC=/*updFunc*/NULL
         ,UPD_DATETM=now()
         ,UPD_USER=/*updUser*/NULL

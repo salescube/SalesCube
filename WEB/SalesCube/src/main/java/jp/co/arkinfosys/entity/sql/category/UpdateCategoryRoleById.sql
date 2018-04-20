@@ -1,0 +1,11 @@
+UPDATE
+	CATEGORY_MST_/*$domainId*/
+SET
+	CATEGORY_ADD=/*categoryAdd*/'0'
+	,CATEGORY_UPD=/*categoryUpd*/'0'
+	,CATEGORY_DEL=/*categoryDel*/'0'
+	,UPD_FUNC=/*updFunc*/
+	,UPD_DATETM=now()
+	,UPD_USER=/*updUser*/
+WHERE
+	CATEGORY_ID=/*categoryId*/

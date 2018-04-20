@@ -3,6 +3,7 @@
  */
 package jp.co.arkinfosys.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,12 @@ import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.SlipStatusCategoryTrns;
 import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
 import jp.co.arkinfosys.entity.PaymentSlipTrn;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.seasar.framework.beans.util.BeanMap;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * 受注伝票サービスクラスです.

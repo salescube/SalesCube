@@ -104,9 +104,6 @@
 
 					<li style="margin-bottom: 10px;">デモサイトの推奨ブラウザは、Google Chromeです。</li>
 
-					<li>デモサイトの一部機能は、デモサイトを信頼済みサイトに登録して頂く事で正常に動作致します。<br>
-						→<a href="${f:url('/setTrustSite.html')}">信頼済みサイトの設定方法</a>
-					</li>
 				</ul>
 			</fieldset>
 </div>

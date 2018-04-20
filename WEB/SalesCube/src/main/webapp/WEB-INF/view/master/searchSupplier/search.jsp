@@ -88,7 +88,7 @@
 		}
 		// ソート列を設定する
 		$("#sortColumn").attr("value", itemId);
-		
+
 		// 1回以上検索しており、前回の結果が1件以上ある場合のみ再検索
 		if(paramDataTmp != null && $("#searchResultCount").val() != "0") {
 			// 前回の検索条件からソート条件のみを変更
@@ -257,17 +257,15 @@
         <button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<div class="function_forms">
 	    <div class="form_section_wrap">
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>仕入先情報</span><br>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 					<table id="supplier_info" class="forms" summary="仕入先情報">
 						<tr>

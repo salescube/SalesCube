@@ -61,7 +61,7 @@
 		</div>
 		<br><br><br>
 
-		<s:form action="update">
+		<s:form action="update" onsubmit="return false;">
 
 			<div class="function_forms">
 
@@ -75,16 +75,14 @@
 				</div>
 
 				<html:hidden property="updDatetm"/>
-				
+
 				<div class="form_section_wrap">
 					<div class="form_section">
 						<div class="section_title">
 							<span>計算設定</span>
-							<button class="btn_toggle">
-				           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-				      		</button>
+							<button class="btn_toggle" />
 			      		</div><!-- /.section_title -->
-				
+
 						<div class="section_body">
 							<table id="scompany_info1" class="forms" style="width: 700px" summary="在庫管理情報">
 								<colgroup>
@@ -98,7 +96,7 @@
 										<html:options collection="stockHoldTermCalcCategoryList" property="value" labelProperty="label"/>&nbsp;
 										</html:select>
 									間</td>
-			
+
 								</tr>
 								<tr>
 									<th><div class="col_title_right_req"><bean:message key="labels.deficiencyRate"/><bean:message key='labels.must'/></div></th>
@@ -118,11 +116,9 @@
 					<div class="form_section">
 						<div class="section_title">
 							<span>制限設定</span>
-							<button class="btn_toggle">
-				           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-				      		</button>
+							<button class="btn_toggle" />
 			      		</div><!-- /.section_title -->
-						
+
 						<div class="section_body">
 							<table id="scompany_info1" class="forms" style="width: 700px" summary="在庫管理情報">
 								<colgroup>

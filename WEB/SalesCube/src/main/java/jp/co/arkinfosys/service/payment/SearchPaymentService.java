@@ -299,11 +299,25 @@ public class SearchPaymentService extends AbstractService<PaymentSlipTrn> {
 			}
 		}
 
+		// 支払日From 全角半角変換
+		if (conditions.containsKey(Param.PAYMENT_DATE_FROM)) {
+			param.put(Param.PAYMENT_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PAYMENT_DATE_FROM)));
+
+		}
+
 		// 支払日To
 		if (conditions.containsKey(Param.PAYMENT_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.PAYMENT_DATE_TO))) {
 				param.put(Param.PAYMENT_DATE_TO,(String)conditions.get(Param.PAYMENT_DATE_TO));
 			}
+		}
+
+		// 支払日To 全角半角変換
+		if (conditions.containsKey(Param.PAYMENT_DATE_TO)) {
+			param.put(Param.PAYMENT_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.PAYMENT_DATE_TO)));
+
 		}
 
 		// 仕入先コード

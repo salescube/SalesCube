@@ -320,7 +320,7 @@
 			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 			<!-- 検索条件 -->
 			<div class="function_forms">
@@ -332,11 +332,9 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span><bean:message key='labels.searchCondition'/></span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
-					
+
 					<div id="search_info"  class="section_body">
 						<table id="search_target1" class="forms" summary="searchTarget1">
 							<tr>
@@ -354,7 +352,7 @@
 								<td><html:text property="receptNo" styleId="receptNo" style="width: 100px; ime-mode: disabled;" tabindex="103" /></td>
 							</tr>
 						</table>
-						
+
 						<table id="search_target2" class="forms" summary="searchTarget2" style="width: auto;">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.salesDate'/></div></th> <!-- 売上日 -->
@@ -387,7 +385,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<table id="search_target3" class="forms" summary="searchTarget3">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.dcCategory'/></div></th> <!-- 配送業者 -->
@@ -406,7 +404,7 @@
 								<td colspan="3"><html:text property="pickingRemarks" styleId="pickingRemarks" style="width: 300px;" tabindex="110" /></td>
 							</tr>
 						</table>
-	
+
 						<table id="customer_info" class="forms" summary="customerInfo">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.customerCode'/></div></th> <!-- 顧客コード -->
@@ -434,7 +432,7 @@
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="product_info" class="forms" summary="productInfo">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.productCode'/></div></th><!-- 商品コード -->
@@ -474,7 +472,7 @@
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="supplier_info" class="forms" summary="supplierInfo">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.supplierCode'/></div></th> <!-- 仕入先コード -->

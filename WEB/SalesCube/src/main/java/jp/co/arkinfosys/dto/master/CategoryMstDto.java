@@ -32,6 +32,18 @@ public class CategoryMstDto implements MasterEditDto {
 	/** 利用カラムタイトル */
 	public String categoryTitle;
 
+	/** 更新時間 */
+	public String updDatetm;
+
+	/** 追加フラグ */
+	public String categoryAdd;
+
+	/** 更新フラグ */
+	public String categoryUpd;
+
+	/** 削除フラグ */
+	public String categoryDel;
+
 	/**
 	 * 区分ＩＤを取得します.
 	 * @return　 区分ＩＤ

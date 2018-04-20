@@ -302,11 +302,9 @@
 					<div class="section_title">
 						<span><bean:message key='labels.searchCondition'/></span>
 						<br>
-						<button class="btn_toggle">
-						<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-						</button>
+						<button class="btn_toggle" />
 					</div>
-				
+
 					<div class="section_body">
 						<table id="search_info1" class="forms" summary="search_info1" style="width: auto;">
 							<tr>
@@ -323,7 +321,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<table id="search_info2" class="forms" summary="search_info2">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.srcSlipId'/></div></th><%// 登録元伝票番号 %>
@@ -344,7 +342,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<table id="search_info2" class="forms" summary="search_info3" style="width: auto;">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.eadDate'/></div></th><%// 入出庫日 %>
@@ -363,7 +361,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<table id="search_info2" class="forms" summary="search_info4">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.reason'/></div></th><%// 理由 %>
@@ -372,7 +370,7 @@
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="search_info3" class="forms" summary="search_info5">
 							<colgroup>
 								<col span="1" style="width: 10%">

@@ -282,10 +282,10 @@ function setProductInfo(type, map) {
 		<button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
 	</div>
 	<br><br><br>
-		
+
 	<s:form onsubmit="return false;">
 	<div class="function_forms">
-	
+
 		<div id="errors" style="color: red">
 			<html:errors/>
 		</div>
@@ -301,11 +301,9 @@ function setProductInfo(type, map) {
 		<div class="form_section">
 			<div class="section_title">
 				<span><bean:message key='labels.searchCondition'/></span><br><!-- 検索条件 -->
-				<button class="btn_toggle">
-				    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				</button>
+				<button class="btn_toggle" />
 			</div><!-- /.section_title -->
-				
+
 			<div id="search_info" class="section_body">
 				<table id="search_info1" class="forms" summary="search_info1">
 					<tr>
@@ -439,7 +437,7 @@ function setProductInfo(type, map) {
 
 			<html:hidden property="sortColumn" styleId="sortColumn" />
 			<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
-			
+
 			</div><!-- /.form_section -->
 	    	</div><!-- /.form_section_wrap -->
 	    </div>

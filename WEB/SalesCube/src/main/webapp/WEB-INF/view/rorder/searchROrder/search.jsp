@@ -354,12 +354,10 @@ function sort(sortColumn) {
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span><bean:message key='labels.searchCondition'/></span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
-			
-					
+
+
 					<div id="search_info" class="section_body">
 						<table id="search_info1" class="forms" summary="検索条件1">
 							<tr>
@@ -375,7 +373,7 @@ function sort(sortColumn) {
 								<td><html:text property="receptNo" styleId="receptNo" style="ime-mode:disabled;" tabindex="102"/></td>
 							</tr>
 						</table>
-	
+
 						<table id="search_info2" class="forms" summary="検索条件2" style="width: auto;">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.roDate'/></div></th> <!-- 受注日 -->
@@ -424,14 +422,14 @@ function sort(sortColumn) {
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="search_info3" class="forms" summary="検索条件3">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.restOnly'/></div></th>
 								<td><html:checkbox property="restOnly" styleId="restOnly" value="1" tabindex="109" /></td>
 								<th><div class="col_title_right"><bean:message key='labels.razyOnly'/></div></th>
 								<td colspan="3"><html:checkbox property="razyOnly" styleId="razyOnly" value="1" tabindex="110" /></td>
-							</tr>						
+							</tr>
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.customerCode'/></div></th> <!-- 顧客コード -->
 								<td>
@@ -458,7 +456,7 @@ function sort(sortColumn) {
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="search_info4" class="forms" summary="検索条件4">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.productCode'/></div></th><!-- 商品コード -->
@@ -498,7 +496,7 @@ function sort(sortColumn) {
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="search_info5" class="forms" summary="検索条件5">
 							<tr>
 								<th><div class="col_title_right"><bean:message key='labels.supplierCode'/></div></th> <!-- 仕入先コード -->

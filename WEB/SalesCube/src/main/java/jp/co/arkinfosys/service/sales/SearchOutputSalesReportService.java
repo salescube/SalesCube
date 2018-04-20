@@ -172,11 +172,25 @@ public class SearchOutputSalesReportService extends AbstractService<SalesSlipTrn
 			}
 		}
 
+		// 売上日From全角半角変換
+		if (conditions.containsKey(Param.SALES_DATE_FROM)) {
+			param.put(Param.SALES_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SALES_DATE_FROM)));
+
+		}
+
 		// 売上日To
 		if (conditions.containsKey(Param.SALES_DATE_TO)) {
 			if (StringUtil.hasLength((String)conditions.get(Param.SALES_DATE_TO))) {
 				param.put(Param.SALES_DATE_TO,(String)conditions.get(Param.SALES_DATE_TO));
 			}
+		}
+
+		// 売上日To全角半角変換
+		if (conditions.containsKey(Param.SALES_DATE_TO)) {
+			param.put(Param.SALES_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.SALES_DATE_TO)));
+
 		}
 
 		// 発注番号From

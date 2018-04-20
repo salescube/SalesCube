@@ -136,6 +136,42 @@ public final class ListUtil {
 	}
 
 	/**
+	 * マスタリスト出力対象の選択値リストを返します.
+	 * @return マスタリスト出力対象の選択値リスト
+	 */
+	public static List<LabelValueBean> getReferenceMstActionTypeList() {
+		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
+
+		String[] labels = {
+				// LABEL:指定なし
+				Constants.REFERENCE_MST_ACTION_TYPE.LABEL_NONE,
+				// LABEL:INSERT
+				Constants.REFERENCE_MST_ACTION_TYPE.LABEL_INSERT,
+				// LABEL:UPDATE
+				Constants.REFERENCE_MST_ACTION_TYPE.LABEL_UPDATE,
+				// LABEL:DELETE
+				Constants.REFERENCE_MST_ACTION_TYPE.LABEL_DELETE
+			};
+
+			String[] values = {
+				// VALUE:NONE
+				Constants.REFERENCE_MST_ACTION_TYPE.VALUE_NONE,
+				// VALUE:INSERT
+				Constants.REFERENCE_MST_ACTION_TYPE.VALUE_INSERT,
+				// VALUE:UPDATE
+				Constants.REFERENCE_MST_ACTION_TYPE.VALUE_UPDATE,
+				// VALUE:DELETE
+				Constants.REFERENCE_MST_ACTION_TYPE.VALUE_DELETE
+			};
+
+			for (int i=0;i<labels.length;i++) {
+				list.add(new LabelValueBean(labels[i],values[i]));
+			}
+
+		return list;
+	}
+
+	/**
 	 * 引数のリストの先頭に空の選択値を追加して返します.
 	 * @param list　リスト
 	 * @return 引数のリストの先頭に空の選択値を追加した選択値リスト
@@ -215,7 +251,7 @@ public final class ListUtil {
 	public static List<LabelValueBean> getRateTaxNoBlankList(TaxRateService t){
 		List<LabelValueBean> list = new ArrayList<LabelValueBean>();
 		// リストの先頭に0%を固定で設定する
-		list.add(new LabelValueBean(Constants.TAX_ZERO_VALUE.ZERO,Constants.TAX_ZERO_VALUE.ZERO));
+		list.add(new LabelValueBean(Constants.TAX_ZERO_VALUE.ZEROLABEL,Constants.TAX_ZERO_VALUE.ZERO));
 
 		try {
 			// "1" は消費税（固定）

@@ -960,9 +960,7 @@
 	    <div class="form_section">
 	    	<div class="section_title">
 				<span>顧客情報</span>
-	            <button class="btn_toggle">
-	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-	            </button>
+	            <button class="btn_toggle" />
 			</div><!-- /.section_title -->
 
 			<div id="order_section" class="section_body">
@@ -973,7 +971,7 @@
 	                    <html:text styleId="customerCode" property="customerCode" tabindex="100" readonly="${editMode || !isUpdate}"
 	                    	styleClass="${editMode || !isUpdate ? 'c_disable' : '' }" style="width: 180px;ime-mode:disabled;"
 	                    	onfocus="this.curVal=this.value;"  />
-	                    	
+
 	                    <c:if test="${!editMode}">
 	    				<html:image src="${f:url('/images//customize/btn_search.png')}"
 	    					style="vertical-align: middle; cursor: pointer;" tabindex="101" onclick="openCustomerSearchDialog();" />
@@ -1167,9 +1165,7 @@
 				<span>納入先情報</span>
 				<button style="position:relative; left: 800px; width: 150px;" onclick="copyCustomerToDelivery()" tabindex="600" class="btn_medium">顧客の情報をコピー</button>
 				</span>
-	            <button class="btn_toggle">
-	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-	            </button>
+	            <button class="btn_toggle" />
 			</div><!-- /.section_title -->
 
 			<div id="order_section" class="section_body">
@@ -1345,9 +1341,7 @@
 	    	<div class="section_title">
 				<span>請求先情報</span>
 				<button style="position:relative; left: 800px; width: 150px;" onclick="copyCustomerToBilling()" tabindex="700" class="btn_medium">顧客の情報をコピー</button>
-	            <button class="btn_toggle">
-	                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-	            </button>
+	            <button class="btn_toggle" />
 			</div><!-- /.section_title -->
 
 			<div id="order_section" class="section_body">

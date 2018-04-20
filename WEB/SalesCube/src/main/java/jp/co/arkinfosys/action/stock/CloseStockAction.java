@@ -66,7 +66,7 @@ public class CloseStockAction extends CommonResources {
 	public String close() throws Exception {
 		try {
 			// 締実行
-			Integer resultCount = closeStockService.close(closeStockForm.cutoffDate);
+			Integer resultCount = closeStockService.close( StringUtil.zenkakuNumToHankaku(closeStockForm.cutoffDate));
 
 			if(resultCount == 0) {
 				// 締実行完了メッセージ表示（処理対象なし）

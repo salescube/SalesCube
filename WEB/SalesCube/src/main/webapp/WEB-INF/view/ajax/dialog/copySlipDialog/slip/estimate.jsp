@@ -1,7 +1,7 @@
 <div id="${dialogId}_ESTIMATE_copy" style="display: none;">
 	<form style="margin: 0px;">
 		<span>見積伝票検索</span>
-		
+
 		<table class="forms" style="width: 600px; margin-top: 10px;" summary="見積伝票検索条件">
 			<colgroup>
 				<col span="1" style="width: 15%">
@@ -55,14 +55,12 @@
 		<div style="border: none; width: 600px; height: 230px; overflow: hidden;">
 			<table class="dialog_resultList" id="${dialogId}_ESTIMATE_List" summary="伝票検索結果" style="width: 96%;">
 				<colgroup>
-					<col span="1" style="width: 5%">
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 15%">
-					<col span="1" style="width: 15%">
-					<col span="1" style="width: 50%">
+					<col span="1" style="width: 25%">
+					<col span="1" style="width: 45%">
 				</colgroup>
 				<tr>
-					<th>&nbsp;</th>
 					<th>見積番号</th>
 					<th>見積日</th>
 					<th>提出先名</th>

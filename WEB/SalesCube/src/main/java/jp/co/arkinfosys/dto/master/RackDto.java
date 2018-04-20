@@ -15,9 +15,9 @@ import java.util.List;
 public class RackDto implements Serializable, MasterEditDto {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public String warehouseCode;
-	
+
 	public String warehouseName;
 
 	public String rackCode;
@@ -44,24 +44,14 @@ public class RackDto implements Serializable, MasterEditDto {
 
 	public String rackEmail;
 
-	public String creFunc;
-
-	public String creDatetm;
-
-	public String creUser;
-
-	public String updFunc;
-
 	public String updDatetm;
 
-	public String updUser;
-	
 	public List<String> duplicateList;
 
 	public List<String> productCodeList;
-	
+
 	public List<String> productNameList;
-	
+
 	public boolean exist;
 
 	/**

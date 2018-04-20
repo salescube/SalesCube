@@ -325,7 +325,7 @@
 			<button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 		<html:hidden property="sortColumn" styleId="sortColumn" />
@@ -340,11 +340,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span><bean:message key='labels.outputCondition'/></span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="search_info" class="section_body">
 					<table id="search_info1" class="forms" style="width: 400px" summary="出力条件">
 						<tr>

@@ -281,7 +281,7 @@
 			<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-	
+
 		<div class="function_forms">
 
 			<%-- エラー表示部分 --%>
@@ -302,11 +302,9 @@
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span>セット商品情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
-				
+
 						<div id="order_section" class="section_body">
 							<table class="forms" summary="セット商品情報">
 								<tr>
@@ -326,11 +324,9 @@
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span>セット内容</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
-				
+
 						<div id="order_section" class="section_body">
 							<table class="forms detail_info" summary="セット商品内訳" style="width: 910px;">
 								<colgroup>
@@ -349,25 +345,25 @@
 									<th class="rd_top_right" style="height: 30px;">&nbsp;</th>
 								</tr>
 								</thead>
-			
+
 								<tbody id="childProductList">
-			
+
 								<bean:define id="lineNo" value="1"/>
-			
+
 								<c:forEach var="product" items="${childProductList}" varStatus="status" >
 								<%-- 行の順序が自在に入れ替わるためindexed属性は使わない --%>
-			
+
 								<tr id="childNo_${status.index}" <c:if test="${product.deleted}">style="display: none;"</c:if> >
 									<td style="text-align: center">
 										<span class="classRowIndex">${product.deleted ? "" : lineNo }</span>
-			
+
 										<%-- セット商品コード・セット商品名 --%>
 										<html:hidden name="product" property="setProductCode" />
 										<html:hidden name="product" property="setProductName"/>
-			
+
 										<%-- 更新日時 --%>
 										<html:hidden name="product" property="updDatetm"/>
-			
+
 										<%-- オリジナルの商品コード --%>
 										<html:hidden name="product" property="originalProductCode"/>
 									</td>
@@ -393,12 +389,12 @@
 												<c:if test="${!isUpdate || childProductCount == 1}">disabled="disabled"</c:if>>削除</button>
 									</td>
 								</tr>
-			
+
 								<bean:define id="lineNo" value="${product.deleted ? lineNo : lineNo + 1}"/>
-			
+
 								</c:forEach>
 								</tbody>
-			
+
 								<tfoot>
 								<tr>
 									<c:if test="${isUpdate}">
@@ -412,19 +408,19 @@
 									</td>
 									</c:if>
 								</tr>
-			
+
 								<%-- 行追加用の行テンプレート --%>
 								<tr id="TEMPLATE" style="display: none;">
 									<td style="text-align: center">
 										<span class="classRowIndex"></span>
-			
+
 										<%-- セット商品コード・セット商品名 --%>
 										<html:hidden property="setProductCode"/>
 										<html:hidden property="setProductName"/>
-			
+
 										<%-- 更新日時 --%>
 										<input type="hidden" name="updDatetm" value="">
-			
+
 										<%-- オリジナルの商品コード --%>
 										<input type="hidden" name="originalProductCode" value="">
 									</td>
@@ -452,7 +448,7 @@
 						</div><!-- /.section_body -->
 					</div><!-- /.form_section -->
 				</div><!-- /.form_section_wrap -->
-		
+
 				<div style="text-align: right; width: 1160px;">
 					<span>登録日：${creDatetmShow} 更新日:${updDatetmShow}</span>
 

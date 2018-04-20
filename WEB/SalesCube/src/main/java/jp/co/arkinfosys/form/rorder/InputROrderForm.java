@@ -18,15 +18,20 @@ import jp.co.arkinfosys.common.SlipStatusCategories;
 import jp.co.arkinfosys.common.SlipStatusCategoryTrns;
 import jp.co.arkinfosys.common.StringUtil;
 import jp.co.arkinfosys.dto.AbstractSlipDto;
+import jp.co.arkinfosys.dto.estimate.InputEstimateDto;
+import jp.co.arkinfosys.dto.estimate.InputEstimateLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
+import jp.co.arkinfosys.entity.Customer;
 import jp.co.arkinfosys.entity.OnlineOrderWork;
+import jp.co.arkinfosys.entity.join.DeliveryAndPre;
 import jp.co.arkinfosys.form.AbstractSlipEditForm;
 import jp.co.arkinfosys.service.CategoryService;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.util.LabelValueBean;
 import org.seasar.framework.beans.util.Beans;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
@@ -154,7 +159,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 	/** URL */
 	public String deliveryUrl;
-	
+
 	/**
 	 * 消費税率
 	 */
@@ -207,7 +212,21 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 	public String dcTimezoneCategory; // L 配送時間帯コード
 	public String dcTimezone; // S 配送時間帯文字列
 
+	public String copySlipId;		// 複写対象　伝票番号
+
 	public CategoryService categoryService;
+
+
+	// 区分トランザクションデータ
+	// 課税
+	public String TAX_CATEGORY_IMPOSITION = CategoryTrns.TAX_CATEGORY_IMPOSITION;
+	// 課税（旧）
+	public String TAX_CATEGORY_IMPOSITION_OLD = CategoryTrns.TAX_CATEGORY_IMPOSITION_OLD;
+	// 課税（内税）
+	public String TAX_CATEGORY_INCLUDED = CategoryTrns.TAX_CATEGORY_INCLUDED;
+	// 税転嫁　内税
+	public String TAX_SHIFT_CATEGORY_INCLUDE_CTAX = CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX;
+
 
 	/**
 	 * 初期値を設定します.
@@ -392,6 +411,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		dcTimezoneCategory = ""; // 配送時間帯コード
 		dcTimezone = ""; // 配送時間帯文字列
 
+		copySlipId = ""; // 複写対象伝票番号
 	}
 
 	/**
@@ -425,7 +445,6 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 
 		// 出荷日　→仕入日付
 		this.shipDate = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
-		;
 
 		// 受付番号　→order_id
 		this.receptNo = work.onlineOrderId;
@@ -827,7 +846,7 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
 			super.taxRate = this.ctaxRate;
 		}
-		
+
 		if (this.ctaxRate == "" || this.ctaxRate == null) {
 			this.ctaxRate = super.taxRate;
 		}
@@ -887,6 +906,13 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 		// キー項目の初期化
 		this.roSlipId = "";
 
+		// 受注日
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FORMAT.DATE);
+		this.roDate = sdf.format(new Date());
+
+		// 出荷日
+		this.shipDate = sdf.format(new Date());
+
 		for (int i = 0; i < this.lineList.size(); i++) {
 			ROrderLineDto lineDto = this.lineList.get(i);
 			lineDto.roLineId = "";
@@ -896,4 +922,94 @@ public class InputROrderForm extends AbstractSlipEditForm<ROrderLineDto> {
 			lineDto.statusName = this.defaultStatusName;
 		}
 	}
+
+
+	/**
+	 * 見積伝票から受注伝票を初期化します.
+	 * @param estimateDto　見積伝票情報
+	 * @param customer　顧客マスタ情報
+	 */
+	public void initialize( InputEstimateDto estimateDto, Customer customer ) {
+		// 初期値を設定
+		reset();
+
+		// 共通情報を設定
+		userId = this.userDto.userId;		// 担当者コード
+		userName = this.userDto.nameKnj;	// 担当者名
+
+		// 見積伝票の値を設定
+		ctaxPriceTotal = estimateDto.ctaxPriceTotal;// 伝票合計消費税
+		ctaxRate = estimateDto.ctaxRate;			// 消費税率
+		priceTotal = estimateDto.estimateTotal;		// 伝票合計金額
+		gross = estimateDto.grossMargin;			//伝票合計粗利益
+
+
+		// 顧客の情報を設定
+		// ※税処理に関する情報が見積伝票情報から取得できないものがあるため、顧客マスタ情報から設定する
+		taxShiftCategory = customer.taxShiftCategory;		// 税転嫁
+		taxFractCategory = customer.taxFractCategory;		// 税端数処理
+		priceFractCategory = customer.priceFractCategory;	// 単価端数処理
+		salesCmCategory = customer.salesCmCategory;			// 取引区分
+		cutoffGroupCategory = customer.cutoffGroup
+						+ customer.paybackCycleCategory;	// 支払条件
+		customerCode = customer.customerCode;				// 得意先コード
+		customerName = customer.customerName;				// 得意先名
+		customerRemarks = customer.remarks;					// 備考
+		customerCommentData = customer.commentData;			// コメント
+
+
+		// 明細行
+		lineList.clear();
+		for( InputEstimateLineDto estimateLineDto : estimateDto.getLineDtoList() ){
+			ROrderLineDto roLineDto = new ROrderLineDto();
+
+			// 見積伝票明細から情報をコピーする
+			roLineDto.initialize(estimateLineDto);
+
+			// 見積伝票明細から取得できない値を設定する
+			roLineDto.roLineId = "";
+			roLineDto.roSlipId = "";
+			roLineDto.status = this.defaultStatusCode;
+			roLineDto.statusName = this.defaultStatusName;
+			roLineDto.lineNo = String.valueOf( lineList.size() + 1 );
+
+			// リストに追加
+			lineList.add(roLineDto);
+		}
+	}
+
+
+	/**
+	 * 納入先情報の初期化を行います.
+	 * @param delivery　納入先情報
+	 */
+	public void initializeDeliveryInfo(DeliveryAndPre dap, List<LabelValueBean> preTypeCategoryList) {
+		deliveryCode = dap.deliveryCode;
+		deliveryName = dap.deliveryName;
+		deliveryKana = dap.deliveryKana;
+		deliveryOfficeName = dap.deliveryOfficeName;
+		deliveryOfficeKana = dap.deliveryOfficeKana;
+		deliveryDeptName = dap.deliveryDeptName;
+		deliveryZipCode = dap.deliveryZipCode;
+		deliveryAddress1 = dap.deliveryAddress1;
+		deliveryAddress2 = dap.deliveryAddress2;
+		deliveryPcName = dap.deliveryPcName;
+		deliveryPcKana = dap.deliveryPcKana;
+		deliveryPcPreCategory = dap.deliveryPcPreCategory;
+		deliveryPcPre = "";
+		for(LabelValueBean lv : preTypeCategoryList){
+			// 敬称カテゴリから敬称名を取得する
+			if(lv.getValue().equals(deliveryPcPreCategory)){
+				deliveryPcPre = lv.getLabel();
+				break;
+			}
+		}
+		deliveryTel = dap.deliveryTel;
+		deliveryEmail = dap.deliveryEmail;
+		deliveryFax = dap.deliveryFax;
+		deliveryUrl = dap.deliveryUrl;
+	}
+
+
+
 }

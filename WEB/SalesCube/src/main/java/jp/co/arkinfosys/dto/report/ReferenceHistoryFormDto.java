@@ -24,6 +24,11 @@ public class ReferenceHistoryFormDto implements Serializable  {
     public String outputTarget;
 
     /**
+     * アクションタイプ
+     */
+    public String actionType;
+
+    /**
      * 入力/記録日From
      */
     public String recDateFrom;

@@ -53,6 +53,9 @@ FROM
 	INNER JOIN PO_LINE_TRN_HIST_/*$domainId*/ LINE ON SLIP.PO_SLIP_ID = LINE.PO_SLIP_ID
 /*BEGIN*/
 WHERE
+	/*IF actionType != null */
+	AND SLIP.ACTION_TYPE = /*actionType*/'S'
+	/*END*/
 	/*IF recDateFrom != null */
 	AND CAST(SLIP.REC_DATETM AS DATE) >= CAST(/*recDateFrom*/'2010/01/01' AS DATE)
 	/*END*/

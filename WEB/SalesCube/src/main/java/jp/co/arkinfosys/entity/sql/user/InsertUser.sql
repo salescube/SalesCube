@@ -38,7 +38,7 @@ INSERT
 			,'0'
             ,/*lockflg*/''
 			/*IF lockflg == 1 */
-            	,now()
+            	,DATE_FORMAT(now(),'%Y/%m/%d %k:%i')
             /*END*/
 			/*IF lockflg != 1 */
             	,NULL

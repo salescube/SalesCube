@@ -394,10 +394,10 @@
 					<button type="button" disabled="disabled">F12<br>&nbsp;</button>
 			</div>
 			<br><br><br>
-			
+
 			<%-- 入力メイン --%>
 			<div class="function_forms">
-			
+
 				<%-- エラー表示部分 --%>
 				<div style="color:red; padding-left: 20px">
 					<span id="ajax_errors">
@@ -415,11 +415,9 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span>商品情報</span><br>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
-	
+
 					<%-- 検索条件1 --%>
 					<div id="search_info" class="section_body">
 						<table id="product_searach_info_1" class="forms" summary="検索情報１">
@@ -477,7 +475,7 @@
 								<td colspan="5"><html:text styleId="remarks" property="remarks" style="width: 500px;" tabindex="113"/></td>
 							</tr>
 						</table>
-	
+
 						<table class="forms" summary="検索条件2">
 							<colgroup>
 								<col span="1" style="width: 10%">
@@ -518,7 +516,7 @@
 					<button type="button" tabindex="250" onclick="initForm();" class="btn_medium">初期化</button>
 					<button type="button" tabindex="251" onclick="searchProduct();" class="btn_medium">検索</button>
 				</div>
-	
+
 				<div id="ListContainer">
 					<div style="width: 1010px; height: 25px;">
 							<div style="position:absolute; left: 0px;">検索結果件数： 0件</div>

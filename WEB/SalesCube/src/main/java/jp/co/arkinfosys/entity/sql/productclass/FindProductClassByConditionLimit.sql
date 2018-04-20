@@ -43,8 +43,8 @@ SELECT
     	/*IF classCode3 != null */
     	AND A.CLASS_CODE_3 = /*classCode3*/'S'
     	/*END*/
-    	/*IF classCodeAny != null */
-    	AND ( A.CLASS_CODE_1 LIKE /*classCodeAny*/'S%' OR A.CLASS_CODE_2 LIKE /*classCodeAny*/'S%' OR A.CLASS_CODE_3 LIKE /*classCodeAny*/'S%' )
+    	/*IF classCode != null */
+    	AND ( A.CLASS_CODE_1 LIKE /*classCode*/'S%' OR A.CLASS_CODE_2 LIKE /*classCode*/'S%' OR A.CLASS_CODE_3 LIKE /*classCode*/'S%' )
     	/*END*/
     	/*IF className != null */
     	AND A.CLASS_NAME LIKE /*className*/'%S%'

@@ -1891,9 +1891,7 @@ function changeRate(){
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span >売上伝票情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">
@@ -1985,9 +1983,7 @@ function changeRate(){
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span >顧客情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">
@@ -2101,9 +2097,7 @@ function changeRate(){
 				    <div class="form_section">
 				    	<div class="section_title">
 							<span >納入先情報</span>
-				            <button class="btn_toggle">
-				                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-				            </button>
+				            <button class="btn_toggle" />
 						</div><!-- /.section_title -->
 
 						<div id="order_section" class="section_body">

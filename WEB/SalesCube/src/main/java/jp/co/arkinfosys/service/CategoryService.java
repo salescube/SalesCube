@@ -17,6 +17,7 @@ import jp.co.arkinfosys.entity.Category;
 import jp.co.arkinfosys.entity.CategoryTrn;
 import jp.co.arkinfosys.entity.join.CategoryJoin;
 import jp.co.arkinfosys.service.exception.ServiceException;
+import jp.co.arkinfosys.service.exception.UnabledLockException;
 
 import org.apache.struts.util.LabelValueBean;
 import org.seasar.framework.beans.util.BeanMap;
@@ -38,9 +39,17 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 		public static final String CATEGORY_ID = "categoryId";
 		public static final String CATEGORY_CODE = "categoryCode";
 		public static final String GROUP_NAME = "groupName";
+		public static final String CATEGORY_ADD = "categoryAdd";
+		public static final String CATEGORY_UPD = "categoryUpd";
+		public static final String CATEGORY_DEL = "categoryDel";
 
 		public static final String SORT_ORDER_COLUMN = "sortOrderColumn";
 	}
+
+	// 権限の有無
+	private static final String VALUE_TRUE = "1";
+	private static final String VALUE_FALSE = "0";
+
 
 	private static final String COLUMN_CATEGORY_ID = "CATEGORY_ID";
 	private static final String COLUMN_GROUP_NAME = "GROUP_NAME";
@@ -230,6 +239,72 @@ public class CategoryService extends AbstractMasterEditService<CategoryDto,Categ
 
 		return this.selectBySqlFile(CategoryTrn.class,
 				"category/FindCategoryTrnNoDspByIdAndCode.sql", param).getSingleResult();
+	}
+
+	/**
+	 * 全ての区分マスタ情報を返します.<br>
+	 * CategoryTrnとCategoryMstDtoのプロパティ名が対応していないため、
+	 * BeanMapとSQLでプロパティ名を対応させます.
+	 * @return 区分マスタ情報{@link CategoryMstDto}のリスト
+	 * @throws ServiceException
+	 */
+	public List<CategoryMstDto> findAllCategoryMst() throws ServiceException {
+		List<CategoryMstDto> resultList = new ArrayList<CategoryMstDto>();
+		Map<String, Object> param = super.createSqlParam();
+
+		List<BeanMap> list
+				= this.selectBySqlFile(BeanMap.class, "category/FindAllCategory.sql", param).getResultList();
+
+		if(list == null | list.size() <= 0){
+			return resultList;
+		}
+
+		for(BeanMap bean : list){
+			CategoryMstDto dto
+				= Beans.createAndCopy(CategoryMstDto.class, bean)
+					.dateConverter(Constants.FORMAT.TIMESTAMP, "updDatetm")
+					.execute();
+			resultList.add(dto);
+		}
+		return resultList;
+	}
+
+	/**
+	 * 全ての区分マスタ情報を更新します.<br>
+	 * @return 区分マスタ情報{@link CategoryMstDto}のリスト
+	 * @throws ServiceException
+	 */
+	public void updateCategoryMst(List<CategoryMstDto> categoryMstDtoList) throws ServiceException,	UnabledLockException{
+		if (categoryMstDtoList == null ||categoryMstDtoList == null) {
+			return;
+		}
+		try {
+			for(CategoryMstDto category : categoryMstDtoList){
+				// 排他制御
+				Map<String, Object> lockParam = super.createSqlParam();
+				lockParam.put(Param.CATEGORY_ID, category.categoryId);
+				super.lockRecordBySqlFile("category/LockCategoryByCategoryId.sql", lockParam,
+						category.updDatetm);
+
+				// 更新処理
+				Map<String, Object> param = super.createSqlParam();
+				param.put(Param.CATEGORY_ID, category.categoryId);
+				param.put(Param.CATEGORY_ADD, category.isInsert == true ? VALUE_TRUE : VALUE_FALSE);
+				param.put(Param.CATEGORY_UPD, category.isUpdate == true ? VALUE_TRUE : VALUE_FALSE);
+				param.put(Param.CATEGORY_DEL, category.isDelete == true ? VALUE_TRUE : VALUE_FALSE);
+				this.updateBySqlFile("category/UpdateCategoryRoleById.sql", param).execute();
+			}
+		} catch (UnabledLockException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
+		}
+
+
+
+
 	}
 
 	/**

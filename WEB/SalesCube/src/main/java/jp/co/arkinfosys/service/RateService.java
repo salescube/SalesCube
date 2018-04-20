@@ -283,10 +283,24 @@ public class RateService extends AbstractMasterEditService<RateDto, RateJoin> im
 		}
 
 
+		// 検索期間（開始）全角半角変換
+		if (conditions.containsKey(Param.START_DATE_1)) {
+			param.put(Param.START_DATE_1, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.START_DATE_1)));
+
+		}
+
 		// 検索期間（終了）
 		if (conditions.containsKey(Param.START_DATE_2)) {
 			param.put(Param.START_DATE_2, StringUtil.zenkakuNumToHankaku((String) conditions
 					.get(Param.START_DATE_2)));
+		}
+
+		// 検索期間（終了）全角半角変換
+		if (conditions.containsKey(Param.START_DATE_2)) {
+			param.put(Param.START_DATE_2, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.START_DATE_2)));
+
 		}
 
 		// ソートカラムを設定する

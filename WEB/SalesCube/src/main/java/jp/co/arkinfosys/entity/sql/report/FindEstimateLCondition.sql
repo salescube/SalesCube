@@ -28,6 +28,9 @@ FROM
 	INNER JOIN ESTIMATE_LINE_TRN_HIST_/*$domainId*/ LINE ON SLIP.ESTIMATE_SHEET_ID = LINE.ESTIMATE_SHEET_ID
 /*BEGIN*/
 WHERE
+	/*IF actionType != null */
+	AND SLIP.ACTION_TYPE = /*actionType*/'S'
+	/*END*/
 	/*IF recDateFrom != null */
 	AND CAST(LINE.REC_DATETM AS DATE) >= CAST(/*recDateFrom*/'2010/01/01' AS DATE)
 	/*END*/

@@ -313,11 +313,8 @@
 				<div class="form_section">
 					<div class="section_title">
 						<span>検索条件</span>
-						<button class="btn_toggle">
-	           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	      		</button>
-	      		<br>
-				</div><!-- /.section_title -->
+						<button class="btn_toggle" />
+					</div><!-- /.section_title -->
 				<div class="section_body">
 
 					<table id="user_info" class="forms" summary="検索条件" style="width: 600px">

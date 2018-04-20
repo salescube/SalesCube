@@ -17,7 +17,7 @@ obj.utils = {
             this.cache = new Image();
             this.cache.src = this.hSrc;
             this.isStay = false;
-            
+
             this.stay = function(){
                 this.isStay = true;
                 $(this).attr({src: this.hSrc});
@@ -42,13 +42,14 @@ obj.utils = {
             }
             this.cache = new Image();
             this.cache.src = this.hSrc;
-            
+
             $(this).attr('src', this.hSrc);
         });
     }
     ,sectionToggle: function(){
         $('.btn_toggle').click(function(){
             $(this).parent('div').parent('div').find('.section_body').slideToggle('fast');
+            $(this).toggleClass("inactive");
         });
     }
 }

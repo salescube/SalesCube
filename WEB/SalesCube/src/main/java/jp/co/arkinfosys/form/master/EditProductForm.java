@@ -55,10 +55,11 @@ public class EditProductForm extends AbstractEditForm {
 
 	@Maxlength(maxlength = 10)
 	public String warehouseName; // 倉庫名
-	
+
 	@Maxlength(maxlength = 10)
 	public String rackCode; // 標準棚番コード
 
+	@Required
 	@DoubleRange(min="-999999999", max="999999999")
 	public String supplierPriceYen; // 仕入単価（円）
 

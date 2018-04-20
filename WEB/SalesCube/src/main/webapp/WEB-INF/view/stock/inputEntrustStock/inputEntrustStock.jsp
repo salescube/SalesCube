@@ -391,9 +391,7 @@
    				<div class="form_section">
 	       			<div class="section_title">
 						<span><bean:message key='labels.entrustStockSlipInfos'/></span><br>
-	        			<button class="btn_toggle">
-	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	        			</button>
+	        			<button class="btn_toggle" />
 					</div>
 
 	       			<div id="order_section" class="section_body">
@@ -446,9 +444,7 @@
    				<div class="form_section">
 	       			<div class="section_title">
 						<span>仕入先情報</span><br>
-	        			<button class="btn_toggle">
-	            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	        			</button>
+	        			<button class="btn_toggle" />
 					</div>
 
 	       			<div id="order_section" class="section_body">

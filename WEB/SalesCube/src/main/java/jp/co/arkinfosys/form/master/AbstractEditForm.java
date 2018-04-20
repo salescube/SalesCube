@@ -438,6 +438,26 @@ public abstract class AbstractEditForm {
 		return true;
 	}
 
+
+	/**
+	 * 指定された文字列が、半角英数字(記号含む)か否かを返します。
+	 *
+	 * @param value 処理対象となる文字列
+	 * @return true:半角英数字である(もしくは対象文字がない), false:半角英数字でない
+	 */
+	protected boolean isHalfWidthAlphanumeric(int index, String value, int size,
+				String label, ActionMessages errors) {
+
+	    int len = value.length();
+	    byte[] bytes = value.getBytes();
+	    if ( len != bytes.length ){
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
+					"errors.line.ascii", index, label));
+	        return false;
+	    }
+	    return true;
+	}
+
 	/**
 	 * 日付文字列かどうか判定します.
 	 * @param value　値

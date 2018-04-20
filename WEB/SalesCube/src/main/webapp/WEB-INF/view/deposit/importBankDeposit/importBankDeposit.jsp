@@ -190,18 +190,16 @@ function execSearch(paramData){
 				<bean:write name="msg" ignore="true"/><br>
 			</html:messages>
 		</div>
-		
+
 		<div class="function_forms">
-		
+
 			<div class="form_section_wrap">
 			<div class="form_section">
 				<div class="section_title">
 					<span>取込ファイル</span>
-					<button class="btn_toggle">
-					    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div><!-- /.section_title -->
-		
+
 				<div id="search_info" class="section_body">
 				<table id="search_info1" class="forms" style="width: 600px" summary="取込ファイル">
 					<tr>
@@ -212,14 +210,14 @@ function execSearch(paramData){
 				</div>
 			</div><!-- /.form_section -->
 	    	</div><!-- /.form_section_wrap -->
-				
+
 			<div style="width: 1160px; text-align :right;">
 				<button type="button" id="initBtn" onclick="onF1();" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/></button> <!-- 初期化 -->
 				<button type="button" id="importBtn" onclick="onF2();" tabindex="151" class="btn_medium"><bean:message key='words.action.uptake'/></button> <!-- 取込 -->
 				<input type="submit" name="upload" tabindex="-1" value="取込" style="display:none;">
 			</div>
 		</div>
-		
+
 		<html:hidden property="sortColumn" styleId="sortColumn" />
 		<html:hidden property="sortOrderAsc" styleId="sortOrderAsc" />
 		<html:hidden property="newDepositSlipIdStr" styleId="newDepositSlipIdStr" />

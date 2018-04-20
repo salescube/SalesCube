@@ -73,6 +73,17 @@ function move_focus_to_next_tabindex(evt){
 	var elements = $(":input:visible[tabindex>0]" +
 			"[type!='hidden'][type!='file'][type!='reset'][type!='submit'][type!='button'][type!='image']" +
 			"[readonly!='true'][disabled!='true'][class!='c_disable']");
+
+	// tabindex > 0 のもののみ残す それ以外は削除
+	for(var i = elements.length - 1; 0 <= i; i--) {
+		var tabindex = elements[i].getAttribute("tabindex");
+		if(tabindex > 0) {
+			continue;
+		}
+		// i を削除
+		elements.splice(i, 1);
+	}
+
 	elements.sort(
 		function(a, b) {
 			return parseInt(a.getAttribute("tabindex")) - parseInt(b.getAttribute("tabindex"));

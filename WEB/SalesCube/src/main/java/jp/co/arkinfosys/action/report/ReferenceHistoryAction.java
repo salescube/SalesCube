@@ -39,6 +39,11 @@ public class ReferenceHistoryAction extends CommonResources {
     public List<LabelValueBean> outputTargetList;
 
     /**
+     * アクションタイプリスト
+     */
+    public List<LabelValueBean> actionTypeList;
+
+    /**
      * 入出庫伝票区分リスト
      */
     public List<LabelValueBean> eadSlipCategoryList;
@@ -72,6 +77,7 @@ public class ReferenceHistoryAction extends CommonResources {
      */
     protected void initList() throws ServiceException {
     	outputTargetList = ListUtil.getReferenceHistoryTargetList();
+    	actionTypeList = ListUtil.getReferenceMstActionTypeList();
     	eadSlipCategoryList = categoryService.findCategoryLabelValueBeanListById(Categories.EAD_SLIP_CATEGORY);
     }
 }

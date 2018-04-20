@@ -43,6 +43,9 @@ FROM
         	ON R.CUST_REL_CATEGORY = CATT.CATEGORY_CODE AND CATT.CATEGORY_ID='67'
 /*BEGIN*/
 WHERE
+	/*IF actionType != null */
+	AND SLIP.ACTION_TYPE = /*actionType*/'S'
+	/*END*/
 	/*IF recDateFrom != null */
 	AND CAST(SLIP.REC_DATETM AS DATE) >= CAST(/*recDateFrom*/'2010/01/01' AS DATE)
 	/*END*/

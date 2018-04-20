@@ -33,11 +33,16 @@ public final class ConfigUtil {
 		 * 商品マスタCSV出力・取込カラムリスト
 		 */
 		public static final String PRODUCT_CSV_COLUMNS = "ProductCSVColumns";
-		
+
 		/**
 		 * パスワード暗号化方式
 		 */
 		public static final String PASSWORD_ENCRYPT_STYLE = "PasswordEncryptStyle";
+
+		/**
+		 * デモ環境フラグ
+		 */
+		public static final String DEMO_FLAG = "demoFlag";
 	}
 
 	/**

@@ -222,6 +222,12 @@
 
 	function onF2() {
     	if(confirm("<bean:message key='confirm.delete'/>")){
+			// validateエラー時の為に、hiddenに値をコピーしておく
+			for (var i = 1; i <= maxLineCount; i++) {
+				$("#productRow_" + i + "_statusName_hidden").val($("#productRow_" + i + "_statusName").text());
+				$("#productRow_" + i + "_possibleDrawQuantity_hidden").val($("#productRow_" + i + "_possibleDrawQuantity").text());
+			}
+
     		ActionSubmit(MainFormName,MainDefaultAction,"delete");
     	}
 	}
@@ -234,14 +240,29 @@
     	if(confirm("<bean:message key='confirm.update'/>")){
 </c:if>
 
+			// validateエラー時の為に、hiddenに値をコピーしておく
+			for (var i = 1; i <= maxLineCount; i++) {
+				$("#productRow_" + i + "_statusName_hidden").val($("#productRow_" + i + "_statusName").text());
+				$("#productRow_" + i + "_possibleDrawQuantity_hidden").val($("#productRow_" + i + "_possibleDrawQuantity").text());
+			}
+
     		_before_submit($(".numeral_commas"));
     		ActionSubmit(MainFormName,MainDefaultAction,"upsert");
     	}
 	}
 
+    // menuId			: 受注伝票入力(0300)
+    // dialogId 		: copySlipFrom0300(システムで一意の値)
+    // copySlipCallback : 伝票複写のコールバック関数
+    function onF6(){
+		if(confirm("<bean:message key='confirm.copyslip'/>")){
+			openCopySlipDialog('0300', 'copySlipFrom0300', copySlipCallback);
+		}
+    }
+
     // 伝票複写で指定された伝票を読み込む
     function copySlipCallback(dialogId, slipName, slipId){
-    	$("form[name='" + MainFormName + "']").attr("action", '${f:url("/rorder/inputROrder/copySlip/'+slipId+'")}');
+    	$("form[name='" + MainFormName + "']").attr("action", '${f:url("/rorder/inputROrder/copyFromEstimate/'+slipId+'")}');
     	$("form[name='" + MainFormName + "']").submit();
 	}
 
@@ -1310,10 +1331,14 @@
             $("#productRow_" + i + "_status").attr("name", "lineList[" + (i-2) + "].status");
             $("#productRow_" + i + "_statusName").attr("id", "productRow_" + (i-1) + "_statusName");
             $("#productRow_" + i + "_status").attr("id", "productRow_" + (i-1) + "_status");
+            $("#productRow_" + i + "_statusName_hidden").attr("name", "lineList[" + (i-2) + "].statusName");
+            $("#productRow_" + i + "_statusName_hidden").attr("id", "productRow_" + (i-1) + "_statusName_hidden");
 
             // 引当可能数
-            $("#productRow_" + i + "_possibleDrawQuantity").attr("name", "lineList[" + (i-2) + "].possibleDrawQuantity");
+//            $("#productRow_" + i + "_possibleDrawQuantity").attr("name", "lineList[" + (i-2) + "].possibleDrawQuantity");
             $("#productRow_" + i + "_possibleDrawQuantity").attr("id", "productRow_" + (i-1) + "_possibleDrawQuantity");
+            $("#productRow_" + i + "_possibleDrawQuantity_hidden").attr("name", "lineList[" + (i-2) + "].possibleDrawQuantity");
+            $("#productRow_" + i + "_possibleDrawQuantity_hidden").attr("id", "productRow_" + (i-1) + "_possibleDrawQuantity_hidden");
 
             // 仕入単価
             $("#productRow_" + i + "_unitCost").attr("name", "lineList[" + (i-2) + "].unitCost");
@@ -1400,6 +1425,7 @@
         var count = 0;
         var sumCost = 0;
         var sumRetailPrice = 0;
+        var sumTaxAppliedPrice = 0;
         var costIndex = 6;
         var retailPriceIndex = 7;
         var index = 0;
@@ -1409,12 +1435,28 @@
             var retailPrice = _Number($("#productRow_" + (i+1) + "_retailPrice").val());
             sumRetailPrice += retailPrice;
             if(hasChanged){
-                // 税率は％表記なので100.0で割る
-    			var myTax = retailPrice  * $("#ctaxRate").val() / 100.0;
-    			var l_nCtaxPriceTotal = oBDCS( myTax.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString();
-                $("#productRow_" + (i+1) + "_ctaxPrice_hidden").val( l_nCtaxPriceTotal );
+            	var taxCategory = $("#productRow_" + (i+1) + "_taxCategory_hidden").val();
+
+            	//alert(i + "番目のtaxCategory:" + taxCategory );
+
+				// 商品の課税区分が課税対象の場合は税額を計算する
+            	if(( taxCategory == "${TAX_CATEGORY_IMPOSITION}" )
+           				||( taxCategory == "${TAX_CATEGORY_IMPOSITION_OLD}" )){
+	            	// 税率は％表記なので100.0で割る
+	    			var myTax = retailPrice  * $("#ctaxRate").val() / 100.0;
+	    			var l_nCtaxPriceTotal = oBDCS( myTax.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString();
+	                $("#productRow_" + (i+1) + "_ctaxPrice_hidden").val( l_nCtaxPriceTotal );
+
+	                // 課税対象額に加算
+	                sumTaxAppliedPrice += retailPrice;
+           		}else{
+           			// 課税対象外
+           			$("#productRow_" + (i+1) + "_ctaxPrice_hidden").val( "0" );
+           		}
             }
         }
+
+        //alert("sumTaxAppliedPrice:" + sumTaxAppliedPrice);
 
         // 表示する
         // 粗利益
@@ -1451,7 +1493,8 @@
         if ($("#taxShiftCategory").val() != <%=CategoryTrns.TAX_SHIFT_CATEGORY_INCLUDE_CTAX%>) {
             // 税率は％表記なので100.0で割る
            if(hasChanged){
-                ctaxPriceTotal = retailPriceTotal * $("#ctaxRate").val() / 100.0;
+                //ctaxPriceTotal = retailPriceTotal * $("#ctaxRate").val() / 100.0;
+                ctaxPriceTotal = sumTaxAppliedPrice * $("#ctaxRate").val() / 100.0;
                 ctaxPriceTotal = _Number(oBDCS( ctaxPriceTotal.toString() ).setScale($("#taxFractCategory").val(),priceAlignment).setComma(false).toBDCString());
                 $("#ctaxPriceTotal").val(ctaxPriceTotal);
 
@@ -1627,14 +1670,20 @@
     	elemWork = elemTd.children().children("#productRow_1_statusName");
     	elemWork.attr("id", "productRow_" + lineNo + "_statusName");
         elemWork.text("");
+    	elemWork = elemTd.children().children("#productRow_1_statusName_hidden");
+    	elemWork.attr("id", "productRow_" + lineNo + "_statusName_hidden");
+    	elemWork.attr("name", "lineList[" + (lineNo-1) + "].statusName");
 
 
         // 引当可能数
         //検証
     	elemWork = elemTd.children().children("#productRow_1_possibleDrawQuantity");
     	elemWork.attr("id", "productRow_" + lineNo + "_possibleDrawQuantity");
-    	elemWork.attr("name", "lineList[" + (lineNo-1) + "].possibleDrawQuantity");
+//    	elemWork.attr("name", "lineList[" + (lineNo-1) + "].possibleDrawQuantity");
         elemWork.text("");
+    	elemWork = elemTd.children().children("#productRow_1_possibleDrawQuantity_hidden");
+    	elemWork.attr("id", "productRow_" + lineNo + "_possibleDrawQuantity_hidden");
+    	elemWork.attr("name", "lineList[" + (lineNo-1) + "].possibleDrawQuantity");
 
     	elemWork = elemTd.children("#productRow_1_status");
     	elemWork.attr("name", "lineList[" + (lineNo-1) + "].status");
@@ -1807,7 +1856,7 @@
     	// 棚番・数量列の設定
     	$("#productRow_" + lineNo + "_rack").val($("#productRow_" + source + "_rack").val());
     	$("#productRow_" + lineNo + "_quantity").val($("#productRow_" + source + "_quantity").val());
-    	$("#productRow_" + lineNo + "_quantity_hidden").val($("#productRow_" + source + "_quantity_hidden").val());
+  //  	$("#productRow_" + lineNo + "_quantity_hidden").val($("#productRow_" + source + "_quantity_hidden").val()); --前行複写の場合はコピーしない
 
         // 受注残数の設定
 //    	$("#productRow_" + lineNo + "_restQuantity").text($("#productRow_" + source + "_restQuantity").text()); --未納数は、数量と同じとする。
@@ -1969,7 +2018,12 @@
 	</c:if>
 		<button type="button" id="btnF4" disabled="disabled">F4<br>&nbsp;</button>
 		<button type="button" id="btnF5" disabled="disabled">F5<br>&nbsp;</button>
-		<button type="button" id="btnF6" disabled="disabled">F6<br>&nbsp;</button>
+		<c:if test="${menuUpdate}" >
+		<button type="button" tabindex="2005" id="btnF6" onclick="onF6();">F6<br>伝票呼出</button>
+		</c:if>
+		<c:if test="${!menuUpdate}" >
+		<button type="button" tabindex="2005" id="btnF6" onclick="onF6();" disabled>F6<br>伝票呼出</button>
+		</c:if>
 		<button type="button" id="btnF7" disabled="disabled">F7<br>&nbsp;</button>
 		<button type="button" id="btnF8" disabled="disabled">F8<br>&nbsp;</button>
 		<button type="button" id="btnF9" disabled="disabled">F9<br>&nbsp;</button>
@@ -2000,9 +2054,7 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span>受注伝票情報</span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
 
 			        <html:hidden property="updDatetm"/>
@@ -2082,9 +2134,7 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span>顧客情報</span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
 
 					<div id="order_section" class="section_body">
@@ -2164,9 +2214,7 @@
 			    <div class="form_section">
 			    	<div class="section_title">
 						<span>納入先情報</span>
-			            <button class="btn_toggle">
-			                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			            </button>
+			            <button class="btn_toggle" />
 					</div><!-- /.section_title -->
 
 					<div id="order_section" class="section_body">
@@ -2440,11 +2488,13 @@
 		                </div>
 		                <div class="box_2of3">
 		                	<span id="productRow_${s.index+1}_statusName" >${f:h(lineList.statusName)}</span>
+		                	<html:hidden name="lineList" property="statusName" styleId="productRow_${s.index+1}_statusName_hidden" indexed="true"/>
 		                </div>
 		                <html:hidden name="lineList" property="status" styleId="productRow_${s.index+1}_status" indexed="true"/>
 		                <div class="box_3of3">
 		                	<span id="productRow_${s.index+1}_possibleDrawQuantity" >${f:h(lineList.possibleDrawQuantity)}</span>
 		                	<!--<html:text name="lineList" styleId="productRow_${s.index+1}_possibleDrawQuantity" property="possibleDrawQuantity" indexed="true" readonly="true" styleClass="numeral_commas" style="border: 0px;text-align: center;width: 80px; margin: 3px; height: 24px;" />-->
+		                	<html:hidden name="lineList" property="possibleDrawQuantity" styleId="productRow_${s.index+1}_possibleDrawQuantity_hidden" indexed="true"/>
 						</div>
 		                <html:hidden name="lineList" property="restQuantity" styleId="productRow_${s.index+1}_restQuantity_hidden" indexed="true"/>
 		                <html:hidden name="lineList" property="restQuantityDB" styleId="productRow_${s.index+1}_restQuantity_db_hidden" indexed="true"/>

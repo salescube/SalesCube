@@ -71,8 +71,12 @@ public class EditCategoryForm extends AbstractEditForm {
 				// 区分コード
 				if (checkRequired(index, dto.categoryCode, labelCategoryCode, errors)) {
 
-					// 区分コード　可変
-					checkMaxLength(index, dto.categoryCode, categoryCodeSize, labelCategoryCode, errors);
+					//半角英数字
+					if(isHalfWidthAlphanumeric(index, dto.categoryCode, categoryCodeSize, labelCategoryCode, errors)){
+					
+						// 区分コード　可変
+						checkMaxLength(index, dto.categoryCode, categoryCodeSize, labelCategoryCode, errors);
+					}
 				}
 
 				// 区分コード名称

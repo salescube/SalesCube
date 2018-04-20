@@ -511,19 +511,19 @@
 		for(var i in DeliveryInfosIDList){
 			$("#"+ DeliveryInfosIDList[i]).attr("value","");
 		}
-		
+
 		$("#nowPaybackPriceInput").html("");
 		$("#nowPaybackPriceBack").attr("value","");
 		catrgoryListInit("#baPcPreCatrgory");
 		catrgoryListInit("#salesCmCategoryName");
 		catrgoryListInit("#cutoffGroupCategory");
-		
+
 		$("#lastBillingPrice").html( "" );
 		$("#lastBillingPriceBack").attr("value","");
 
 		$("#nowSalesPrice").html( "" );
 		$("#nowSalesPrice").attr("value","");
-		
+
 		// 端数処理初期設定
 		applyNumeralStyles();
 
@@ -576,7 +576,7 @@
 
 		$("#lastBillingPrice").html( value.lastBillingPrice );
 		$("#lastBillingPriceBack").attr("value",value.lastBillingPrice);
-		
+
 		$("#nowPaybackPriceInput").html( value.nowPaybackPrice );
 
 		$("#nowSalesPrice").html( value.nowSalesPrice );
@@ -631,11 +631,11 @@
 			id = trId.replace("trLine", "");
 			calcPrice += _Number($("#depLineList\\["+id+"\\]\\.price").get(0).value);
 		}
-		
+
 		// 今回回収額
 		$("#nowPaybackPriceInput").html( calcPrice );
 		SetBigDecimalScale_Obj($("#nowPaybackPriceInput"));
-		
+
 		// 請求残
 		var lastBillingPriceNum = _Number($("#lastBillingPrice").text());
 		var nowPaybackPriceInputNum = _Number($("#nowPaybackPriceInput").text());
@@ -652,7 +652,7 @@
 
 	// 税端数処理
 	function applyNumeralStyles(){
-		
+
 		var bp = $("#lastBillingPrice").text();
 		var sp = $("#nowSalesPrice").text();
 
@@ -661,16 +661,16 @@
 		}else{
 			$("#lastBillingPrice").html( _Number($("#lastBillingPrice").text()) );
 		}
-		
+
 		if (sp == "") {
 			$("#nowSalesPrice").html( "0" );
 		}else{
 			$("#nowSalesPrice").html( _Number($("#nowSalesPrice").text()) );
 		}
-		
+
 		SetBigDecimalScale_Obj($("#lastBillingPrice"));
 		SetBigDecimalScale_Obj($("#nowSalesPrice"));
-		
+
 		// 明細行のIndex管理
 		var maxIndex = $("#tbodyLine").get(0).children.length-1;
 
@@ -687,7 +687,7 @@
 		applyNumeralStylesToObj($("#priceFractCategory").val(),priceAlignment,$("#nowSalesPrice"));
 		// 請求残 billingBalancePrice
 		applyNumeralStylesToObj($("#priceFractCategory").val(),priceAlignment,$("#billingBalancePrice"));
-		
+
 		ChangePrice();
 
 		// カンマをつける
@@ -775,7 +775,7 @@ function copyDummy(){
 		<br><br><br>
 
 		<s:form style="margin:0px; padding:0px;" onsubmit="return false;">
-		
+
 			<!--  表示・入力領域 -->
 			<div class="function_forms">
 				<!-- エラー情報 -->
@@ -788,19 +788,17 @@ function copyDummy(){
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 					</div>
-				
+
 				<div class="form_section_wrap">
 				<div class="form_section">
 				<div class="section_title">
 					<span >入金伝票情報</span>
-					<button class="btn_toggle">
-					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div>
 
 				<div class="section_body">
-				
-				
+
+
 				<table id="receipt_info" class="forms" summary="入金伝票情報">
 					<colgroup>
 						<col span="1" style="width: 15%">
@@ -835,7 +833,7 @@ function copyDummy(){
 						</td>
 					</tr>
 					<tr>
-					
+
 <!-- TODO 入金区分表示用JSPをインクルードする -->
 						<th><div class="col_title_right_req">入金区分<bean:message key='labels.must'/></div></th>
 						<td>
@@ -854,14 +852,12 @@ function copyDummy(){
 				</div>
 				</div>
 				</div>
-				
+
 				<div class="form_section_wrap">
 				<div class="form_section">
 				<div class="section_title">
 					<span >請求先情報</span>
-					<button class="btn_toggle">
-					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div>
 
 				<div class="section_body">
@@ -1022,7 +1018,7 @@ function copyDummy(){
 						<c:forEach var="depLineList" items="${depLineList}" varStatus="s" >
 							<c:if test='${depLineList.lineNo != null}'>
 							<tr id="trLine${s.index}">
-							
+
 								<!-- No -->
 								<td id="tdNo${s.index}" style="text-align: center; width: 50px;">
 									<div class="box_1of1">
@@ -1038,14 +1034,14 @@ function copyDummy(){
 									<html:hidden name="depLineList" property="instNo" indexed="true" styleId="depLineList[${s.index}].instNo" />
 									<html:hidden name="depLineList" property="salesLineId" indexed="true" styleId="depLineList[${s.index}].salesLineId" />
 								</td>
-								
+
 								<!-- 金額 -->
 								<td style="width: 160px; background-color: #fae4eb;">
 									<div class="box_1of1" style="margin: 5px;">
 										<html:text tabindex="${401+s.index*5}" maxlength="9" name="depLineList" property="price" style="width: 100%; ime-mode:disabled;" styleClass="numeral_commas" indexed="true" styleId="depLineList[${s.index}].price" onchange="ChangePrice()" />
 									</div>
 								</td>
-								
+
 								<!-- 銀行 -->
 								<td style="width: 300px;">
 									<div class="box_1of1" style="margin: 5px;">
@@ -1054,7 +1050,7 @@ function copyDummy(){
 										</html:select>
 									</div>
 								</td>
-								
+
 								<!-- 備考・手形番号/手形期日など -->
 								<td style="width: 520px;">
 									<div class="box_1of1" style="margin: 5px;">
@@ -1062,7 +1058,7 @@ function copyDummy(){
 									</div>
 								</td>
 								<td>
-								
+
 								<div class="box_1of2">
 									<c:if test="${!menuUpdate}">
 										<button id="deleteBtn${s.index}" class="btn_list_action" style="width: 80px" tabindex="${404+s.index*5}" disabled="disabled">削除</button><!-- (行)削除 -->
@@ -1093,7 +1089,7 @@ function copyDummy(){
 							</tr>
 							</c:if>
 						</c:forEach>
-						
+
 						<tr id="addLineTr" style="text-align: center;height: 60px;">
 							<td class="rd_bottom_left rd_bottom_right"  colspan="10">
 							<c:if test="${closed || !menuUpdate}">
@@ -1109,15 +1105,15 @@ function copyDummy(){
 							</c:if>
 							</td>
 						</tr>
-						
-					
+
+
 					</tbody>
 				</table>
 				</div>
-				
+
 				<!-- 削除された行のCSVデータ -->
 		        <html:hidden styleId="deleteLineIds" property="deleteLineIds"/>
-		        
+
 				<div id="poSlipPriseInfos" class="information" style="margin-top: 10px;">
 		        <div id="information" class="information" style="">
 					<table id="voucher_info" class="forms" summary="伝票情報" style="">
@@ -1147,7 +1143,7 @@ function copyDummy(){
 					</table>
 				</div>
 				</div>
- 
+
 				<div style="width: 1160px; text-align: center; margin-top: 10px;">
 					<c:if test="${newData}" >
 					<c:if test="${menuUpdate && !closed}">

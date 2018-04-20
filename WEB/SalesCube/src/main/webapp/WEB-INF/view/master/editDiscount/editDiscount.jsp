@@ -250,11 +250,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span>割引情報</span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="order_section" class="section_body">
 					<table id="discount_info" class="forms" summary="割引パターン情報" style="width: 600px">
 						<tr>
@@ -287,11 +285,9 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span><bean:message key="labels.discountTrn"/></span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-				
+
 				<div id="order_section" class="section_body">
 					<table id="discountTrnList" class="forms detail_info" summary="<bean:message key="labels.discountTrn"/>" style="width: 600px;">
 						<colgroup>
@@ -357,7 +353,7 @@
 				</div><!-- /.section_body -->
 			</div><!-- /.form_section -->
 		</div><!-- /.form_section_wrap -->
-		
+
 		<div style="text-align: right; width: 1160px">
 			<span>登録日：${creDatetmShow}　更新日:${updDatetmShow}　</span>
 <html:hidden property="creDatetm"/>

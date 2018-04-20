@@ -7,6 +7,23 @@
 	<script type="text/javascript">
 	<!--
 
+	$(function() {
+		applyPriceAlignment();
+	});
+
+	function init() {
+	    	//桁適用
+    	_after_load($(".numeral_commas"));
+    	applyPriceAlignment();
+    }
+
+	function applyPriceAlignment() {
+		if($("#priceFractCategory").val()) {
+			// 円単価
+			$(".BDCyen").setBDCStyle( $("#priceFractCategory").val() ,0 ).attBDC();
+		}
+	}
+
 	//郵便番号ダイアログ
 	function zipSearch(jqObject) {
 		openSearchZipDialog( 'zipCode1',
@@ -56,6 +73,7 @@
 	//更新
 	function onF3(){
 		if(confirm('<bean:message key="confirm.update" />')){
+			_before_submit($(".numeral_commas"));
 			document.setting_companyActionForm.action = '${f:url("update")}';
 			document.setting_companyActionForm.submit();
 		}
@@ -69,7 +87,7 @@
 //-->
 </script>
 </head>
-<body>
+<body onload="init()">
 	<%-- ページヘッダ領域 --%>
 	<%@ include file="/WEB-INF/view/common/titlebar.jsp" %>
 
@@ -119,10 +137,10 @@
 				<div class="form_section_wrap">
 					<div class="form_section">
 						<div class="section_title">
-							<span>自社情報</span>
+							<span>会社情報</span>
 						</div><!-- /.section_title -->
 						<div class="section_body">
-						<table class="forms" style="width: 800px" summary="自社情報1">
+						<table class="forms" style="width: 800px" summary="会社情報">
 							<colgroup>
 								<col span="1" style="width: 15%">
 								<col span="1" style="width: 35%">
@@ -182,7 +200,7 @@
 								<td><html:text style="width: 200px; ime-mode: disabled;" tabindex="205" property="companyFax" /></td>
 							</tr>
 							<tr>
-								<th><div class="col_title_right_req">E-MAI<bean:message key='labels.must'/></div></th>
+								<th><div class="col_title_right_req">E-MAIL<bean:message key='labels.must'/></div></th>
 								<td colspan="3"><html:text style="width: 500px; ime-mode: disabled;" tabindex="206" property="companyEmail" /></td>
 							</tr>
 							<tr>
@@ -259,6 +277,43 @@
 					</div><!-- /.section_body -->
 	    		</div><!-- /.form_section -->
 	   		</div><!-- /.form_section_wrap -->
+
+	    <div class="form_section_wrap">
+		    <div class="form_section">
+		    	<div class="section_title">
+					<span>送料設定情報</span>
+		            <button class="btn_toggle" />
+				</div><!-- /.section_title -->
+
+				<div id="order_section" class="section_body">
+					<table id="rate_info" class="forms" summary="送料設定情報">
+						<tr>
+							<th colspan="2"><div class="col_title_right_req">送料区分<bean:message key='labels.must'/></div></th>
+							<td>
+			    				<html:select styleId="postageType" property="iniPostageType"  style="width: 300px;" tabindex="310">
+			    					<html:options collection="postageTypeList" property="value" labelProperty="label"/>
+			    				</html:select>
+			                </td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">送料対象金額</div></th>
+							<td colspan="5">
+								<html:text maxlength="120" styleId="targetPostageCharges" property="targetPostageCharges" styleClass="numeral_commas yen_value BDCyen"
+							onchange="applyPriceAlignment();" style="width: 200px;" tabindex="311"/>
+							</td>
+						</tr>
+						<tr>
+							<th><div class="col_title_right">送料</div></th>
+							<td colspan="5">
+								<html:text maxlength="120" styleId="postage" property="postage" styleClass="numeral_commas yen_value BDCyen"
+							onchange="applyPriceAlignment();" style="width: 200px;" tabindex="312"/>
+							</td>
+						</tr>
+					</table>
+					<html:hidden property="priceFractCategory" styleId="priceFractCategory" />
+				</div><!-- /.section_body -->
+			</div><!-- /.form_section -->
+		</div><!-- /.form_section_wrap -->
 
 				<div style="text-align: right; width: 1160px">
 					<button class="btn_medium"  tabindex="350" onclick="onF1()" style="" >リセット</button>

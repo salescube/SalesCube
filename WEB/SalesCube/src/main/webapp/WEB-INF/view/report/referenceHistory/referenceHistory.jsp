@@ -149,8 +149,10 @@
 		// 出力パラメータの作成
 		function createParamData() {
 			var target = $("#outputTarget").val();
+			var actionType = $("#actionType").val();
 			var data = new Object();
 			data["outputTarget"] = target;
+			data["actionType"] = actionType;
 			data["recDateFrom"] = $("#recDateFrom").val();
 			data["recDateTo"] = $("#recDateTo").val();
 
@@ -302,7 +304,7 @@
 			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 			<!-- 出力条件 -->
@@ -316,11 +318,9 @@
 					<div class="section_title">
 						<span>履歴参照</span>
 						<br>
-						<button class="btn_toggle">
-						<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-						</button>
+						<button class="btn_toggle" />
 					</div>
-				
+
 					<div class="section_body">
 						<table id="output_condition" class="forms" summary="outputCondition" style="width: auto;">
 							<tr>
@@ -328,6 +328,15 @@
 								<td>
 									<html:select property="outputTarget" styleId="outputTarget" onchange="onChangeTarget()" tabindex="100">
 										<html:options collection="outputTargetList" property="value" labelProperty="label"/>
+									</html:select>
+								</td>
+								<td colspan="4">&nbsp;</td>
+							</tr>
+							<tr>
+								<th><div class="col_title_right"><bean:message key='labels.selectActionType'/></div></th> <!-- アクションタイプ選択 -->
+								<td>
+									<html:select property="actionType" styleId="actionType"  tabindex="100">
+										<html:options collection="actionTypeList" property="value" labelProperty="label"/>
 									</html:select>
 								</td>
 								<th><div class="col_title_right_req">&nbsp;<bean:message key='labels.recDateRange'/><bean:message key='labels.must'/>&nbsp;</div></th> <!-- 入力／変更日範囲 -->
@@ -346,7 +355,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 見積入力 -->
 						<table id="detail_condition_1" class="forms" summary="detailCondition1" style="width: auto;">
 							<tr>
@@ -366,7 +375,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 受注入力 -->
 						<table id="detail_condition_2" class="forms" summary="detailCondition2" style="width: auto;">
 							<tr>
@@ -416,7 +425,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 売上入力 -->
 						<table id="detail_condition_3" class="forms" summary="detailCondition3" style="width: auto;">
 							<tr>
@@ -450,7 +459,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 入金入力 -->
 						<table id="detail_condition_4" class="forms" summary="detailCondition4" style="width: auto;">
 							<tr>
@@ -468,7 +477,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 発注入力 -->
 						<table id="detail_condition_5" class="forms" summary="detailCondition5" style="width: auto;">
 							<tr>
@@ -502,7 +511,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 仕入入力 -->
 						<table id="detail_condition_6" class="forms" summary="detailCondition6" style="width: auto;">
 							<tr>
@@ -552,7 +561,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 支払入力 -->
 						<table id="detail_condition_7" class="forms" summary="detailCondition7" style="width: auto;">
 							<tr>
@@ -602,7 +611,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 入出庫入力 -->
 						<table id="detail_condition_8" class="forms" summary="detailCondition8" style="width: auto;">
 							<tr>
@@ -630,7 +639,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 顧客マスタ -->
 						<table id="detail_condition_9" class="forms" summary="detailCondition9" style="width: auto;">
 							<tr>
@@ -664,7 +673,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 商品マスタ -->
 						<table id="detail_condition_10" class="forms" summary="detailCondition10" style="width: auto;">
 							<tr>
@@ -700,7 +709,7 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<!-- 仕入先マスタ -->
 						<table id="detail_condition_11" class="forms" summary="detailCondition11" style="width: auto;">
 							<tr>

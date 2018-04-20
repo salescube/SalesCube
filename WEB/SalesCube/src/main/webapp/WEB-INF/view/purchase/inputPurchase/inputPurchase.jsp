@@ -285,7 +285,7 @@
 
 			return retVal;
 		}
-		
+
 		// 商品コード変更
 		function changeProductCode(event) {
 //			searchProductCode(event.data.index);
@@ -339,7 +339,7 @@
 				}
 			 );
 		}
-		
+
 		// 商品検索ダイアログ
 		function ProductCodeSearch(id){
 
@@ -374,7 +374,7 @@
 			var index = event.data.index;
 			// 棚検索ダイアログを開く
 			openSearchRackDialog(index, setRackInfo );
-			
+
 			$("#"+ index +"_warehouseName").val($("#lineDtoList\\["+index+"\\]\\.warehouseName").val());
 			$("#"+ index +"_rackCode").val($("#lineDtoList\\["+index+"\\]\\.rackCode").val());
 			$("#"+ index +"_rackCode").focus();
@@ -405,10 +405,10 @@
 		function GetSupplierRate(){
 
 			// 仕入先コードか仕入日に入力がない場合はレートをクリアする
-			if ( ($("#supplierCode").val() == "") || 
+			if ( ($("#supplierCode").val() == "") ||
 					($("#supplierDate").val() == "") ) {
 				$("#rate").val("");
-			
+
 			// 仕入先コードと仕入日に入力がある場合
 			} else {
 				var data = new Object();
@@ -458,22 +458,22 @@
 				//});
 			}
 		}
-		
+
 		//仕入日変更
 		function ChangeSupplierDate(){
-			
+
 			//レートを取得
 			GetSupplierRate();
-			
+
 			//税率取得
 			// 仕入日の変更で税率を変更しないようにする。発注時に設定した税率を維持。
 			//GetSupplierTaxRate();
-			
+
 			// レート設定されていない場合は、レートによる明細の金額計算を行わない
 			if ($("#rate").val() == "") {
 				return;
 			}
-			
+
 			// 取得したレートで明細行の金額を再計算する
 			fullCalc();
 		}
@@ -481,43 +481,43 @@
 		//全計算
 		 function fullCalc(){
 			 var sumPrice = 0;
-			
+
 			// レートを取得
 			var rate = oBDCS($("#rate").val()).BDValue();
-			
+
 			// 明細行の再計算
 			for (var row = 0; row < $("#tbodyLine").get(0).children.length ; row++) {
-				
+
 				// 明細の商品コードに入力がない場合
 				if ($("#lineDtoList\\["+row+"\\]\\.productCode").val() == "") {
 					continue;
 				}
-				
+
 				// 外貨単価を取得
 				var dolUnitPrice = oBDCS($("#lineDtoList\\["+row+"\\]\\.dolUnitPrice").val()).BDValue();
 
 				// 数量を取得
 				var quantity = oBDCS($("#lineDtoList\\["+row+"\\]\\.quantity").val()).BDValue();
-				
+
 				// 円単価を設定（円単価 = レート×外貨単価）
 				var unitPrice = rate * dolUnitPrice;
 				$("#lineDtoList\\["+row+"\\]\\.unitPrice").valueBDC(unitPrice.toString());
-				
+
 				// 金額(円)を設定（金額(円) = 円単価×数量）
 				var price = unitPrice * quantity;
 				$("#lineDtoList\\["+row+"\\]\\.price").valueBDC(price.toString());
 				sumPrice = sumPrice + price;
 			}
-			
+
 			// 伝票合計(円)設定
 			$("#nonTaxPriceTotal").valueBDC(sumPrice.toString());
-			
+
 			// 本体金額合計(円)設定
 			$("#priceTotal").valueBDC(sumPrice.toString());
-			
+
 			return;
 		}
-		
+
 		// 数量の変更で完納区分をセット
 		function setDeliveryProcessCategory(quantityElement){
 			if(!_isNum(quantityElement.value)) {
@@ -622,10 +622,10 @@
 			newRestQuantity = newRestQuantity.setScale(quantityAlignment,quantityCategory);
 			//$("#" + id + " ~ input[name='unPaidQuantity']").val(newRestQuantity.toString());
 
-			
+
 			trObj.find("[name='unPaidQuantity']").val(newRestQuantity.toString());
 
-			
+
 			// カンマをつける
 			_set_commas(trObj.find("[name='unPaidQuantity']"));
 		}
@@ -741,20 +741,18 @@
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 				</div>
-				
-				
+
+
 				<div class="form_section_wrap">
 				<div class="form_section">
 				<div class="section_title">
 					<span >仕入伝票情報</span><br>
 					<br>
-					<button class="btn_toggle">
-					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div>
 
 				<div class="section_body">
-				
+
 
 				<table id="supplier_info" class="forms" summary="仕入伝票情報">
 					<tr>
@@ -803,14 +801,12 @@
 				<div class="section_title">
 					<span>仕入先情報</span><br>
 					<br>
-					<button class="btn_toggle">
-					<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div>
 				<div class="section_body">
-				
-				
-				
+
+
+
 				<table id="order_info" class="forms" summary="仕入先情報">
 					<colgroup>
 						<col span="1" style="width: 10%">
@@ -844,8 +840,8 @@
 				<html:hidden property="initCalc" styleId="initCalc"/>
 				<html:hidden property="isEntrustPorder" styleId="isEntrustPorder"/>
 				<html:hidden property="deleteLineIds"  styleId="deleteLineIds"/>
-				
-				
+
+
 				<div id="order_detail_info_wrap">
 				<table id="order_detail_info" summary="仕入明細リスト" class="forms" style="margin-top: 20px;">
 					<colgroup>
@@ -888,14 +884,14 @@
 						<c:forEach var="lineDtoList" items="${lineDtoList}" varStatus="status">
 						  <c:if test='${lineDtoList.lineNo != null}'>
 							<tr id="trLine${status.index}">
-							
+
 								<!-- No -->
 								<td id="tdNo${status.index}" style="text-align: right;">
 									<div class="box_1of1">
 										<c:out value="${lineDtoList.lineNo}" />
 									</div>
 								</td>
-								
+
 								<td style="display: none;">
 									<html:hidden name="lineDtoList" property="lineNo" indexed="true" styleId="lineDtoList[${status.index}].lineNo" />
 									<html:hidden name="lineDtoList" property="status" indexed="true" styleId="lineDtoList[${status.index}].status" />
@@ -913,7 +909,7 @@
 									<html:hidden name="lineDtoList" property="supplierDetailCategory" indexed="true" styleId="lineDtoList[${status.index}].supplierDetailCategory" value="01"/>
 									<br>
 								</td>
-								
+
 								<!-- 完納区分/納期 -->
 								<td>
 									<div>
@@ -925,17 +921,17 @@
 										<html:text name="lineDtoList" property="deliveryDate" indexed="true" styleId="lineDtoList[${status.index}].deliveryDate" styleClass="c_disable" readonly="true" style="width: 85px;" tabindex="<%=String.valueOf(lineTab++) %>" />
 									</div>
 								</td>
-								
+
 								<!-- 商品コード※/相手品番/商品名・摘要 -->
 								<td colspan="2">
 									<div class="box_1of3" style="height: 50px;">
 										<div style="float: left; background-color: #fae4eb;">
 											&nbsp;
-											<html:text name="lineDtoList" property="productCode" indexed="true" styleId="lineDtoList[${status.index}].productCode" 
+											<html:text name="lineDtoList" property="productCode" indexed="true" styleId="lineDtoList[${status.index}].productCode"
 												styleClass="${ copySlip ? 'c_disable' : ''} goods_code c_referable" style="width: 140px; height: 30px; ime-mode:disabled; margin:10px 0;"  tabindex="<%=String.valueOf(lineTab++) %>" readonly="${copySlip}"/>
-												
+
 											<c:if test="${!copySlip}">
-												<html:image src="${f:url('/images/customize/btn_search.png')}" styleId="productCodeImg${status.index}" 
+												<html:image src="${f:url('/images/customize/btn_search.png')}" styleId="productCodeImg${status.index}"
 													style="width: 25px; height: 25px; vertical-align: middle; cursor: pointer;"  tabindex="<%=String.valueOf(lineTab++) %>" />
 											</c:if>
 											&nbsp;
@@ -947,24 +943,24 @@
 									<div class="box_2of3" id="productAbstract${status.index}" style="position:static; white-space: normal; height: 50px; vertical-align: middle; text-align: center;" >
 										<c:out value="${lineDtoList.productAbstract}" />
 									</div>
-									
+
 									<div class="box_3of3" style="height: 50px; vertical-align: middle; text-align: center;">
-									<html:textarea name="lineDtoList" indexed="true" styleId="lineDtoList[${status.index}].productRemarks" property="productRemarks"  
+									<html:textarea name="lineDtoList" indexed="true" styleId="lineDtoList[${status.index}].productRemarks" property="productRemarks"
 										style="width: 95%; height: 40px; margin: 5px;"  tabindex="<%=String.valueOf(lineTab++) %>" readonly="true" styleClass="c_disable"/>
 									</div>
 								</td>
-								
+
 								<!-- 数量※/円単価※/外貨単価 -->
 								<td colspan="2" >
 									<div class="box_1of3" style="height: 50px;">
 										<div style="float:left; background-color: #fae4eb;">
 											&nbsp;
 											<c:if test="${isEntrustPorder}">
-												<html:text name="lineDtoList" property="quantity" indexed="true" styleId="lineDtoList[${status.index}].quantity" styleClass="AutoCalcQuantity c_disable numeral_commas" 
+												<html:text name="lineDtoList" property="quantity" indexed="true" styleId="lineDtoList[${status.index}].quantity" styleClass="AutoCalcQuantity c_disable numeral_commas"
 													style="width: 75px; height: 30px; margin: 10px 0; vertical-align: middle;" tabindex="<%=String.valueOf(lineTab++) %>"  maxlength="6" readonly="true"  />
 											</c:if>
 											<c:if test="${!isEntrustPorder}">
-												<html:text name="lineDtoList" property="quantity" indexed="true" styleId="lineDtoList[${status.index}].quantity" styleClass="AutoCalcQuantity numeral_commas" 
+												<html:text name="lineDtoList" property="quantity" indexed="true" styleId="lineDtoList[${status.index}].quantity" styleClass="AutoCalcQuantity numeral_commas"
 													style="width: 75px; height: 30px; margin: 10px 0; vertical-align: middle;" tabindex="<%=String.valueOf(lineTab++) %>"  maxlength="6"  />
 											</c:if>
 											<button type="button" id="stockBtn${status.index}" tabindex="<%=String.valueOf(lineTab++) %>" class="btn_list_action" style="width:30px; height: 25px; margin:0; vertical-align: middle;">在庫</button>
@@ -983,7 +979,7 @@
 										<html:text name="lineDtoList" property="dolPrice" indexed="true" styleId="lineDtoList[${status.index}].dolPrice" styleClass="AutoCalcDolPrice numeral_commas dollar_value" style="width:43%; margin:10px 10px 0; height:30px;" tabindex="<%=String.valueOf(lineTab++) %>"  maxlength="9" />
 									</div>
 								</td>
-								
+
 								<!-- 備考/倉庫名/棚番※ -->
 								<td>
 									<div class="box_1of3" style="height: 50px; vertical-align: middle; text-align: center;">
@@ -998,7 +994,7 @@
 										<html:image src="${f:url('/images/customize/btn_search.png')}" styleId="rackCodeImg${status.index}" style="margin: 0; padding: 0; width: 26px; height: 26px; vertical-align: middle; cursor: pointer;" tabindex="<%=String.valueOf(lineTab++) %>" />
 									</div>
 								</td>
-								
+
 								<!-- 削除ボタン -->
 								<td>
 <c:if test="${menuUpdate}">
@@ -1017,7 +1013,7 @@
 
 			<div id="poSlipPriseInfos" class="information" style="margin-top:10px;">
         	<div id="information" class="information" style="">
-			
+
 				<table id="voucher_info" class="forms" summary="伝票情報" style="">
 					<colgroup>
 						<col span="4" style="width: 25%">
@@ -1045,7 +1041,7 @@
 				</table>
 				</div>
 				</div>
-				
+
 			</div>
 				<div style="text-align: center; width: 1170px">
 					<c:if test="${f:h(newData)}">
@@ -1060,7 +1056,7 @@
 					</c:if>
 				</div>
 			</div>
-			
+
 
 			<%-- 単価小数桁数と数量小数桁数 --%>
 			<input type="hidden" id="unitPriceDecAlignment" value="${mineDto.unitPriceDecAlignment}">

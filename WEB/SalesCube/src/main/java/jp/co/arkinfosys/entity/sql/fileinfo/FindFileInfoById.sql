@@ -15,3 +15,4 @@ SELECT
         FILE_INFO_/*$domainId*/
     WHERE
     	FILE_ID = /*fileId*/''
+    	AND OPEN_LEVEL <= /*openLevel*/'0'

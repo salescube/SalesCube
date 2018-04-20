@@ -308,13 +308,20 @@ public class InputSalesAction extends AbstractSlipEditAction<SalesSlipDto, Sales
 				nCount++;
 			}
 
-			// 商品コードに紐づいている棚情報が実在するか確認する
-			Rack rack = rackService.findById(lineDto.rackCodeSrc);
-			if( rack == null ){
-				String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
-				addMessage( "errors.line.rackNotExist", lineDto.lineNo, strLabel, lineDto.productCode );
-			}
+			//棚番チェックは特殊商品コードは対象外とする
+			if( CheckUtil.isRackCheck(pj) ){
+				//棚番コードが設定されている場合のみ
+				if(StringUtil.hasLength(lineDto.rackCodeSrc)){
 
+				// 商品コードに紐づいている棚情報が実在するか確認する
+					Rack rack = rackService.findById(lineDto.rackCodeSrc);
+
+					if( rack == null ){
+						String strLabel = MessageResourcesUtil.getMessage("labels.productCode");
+						addMessage( "errors.line.rackNotExist", lineDto.lineNo, strLabel, lineDto.productCode );
+					}
+				}
+			}
 			// 数量
 			if( checkInt(lineDto.quantity, lineDto.lineNo,
 							"labels.quantity") ){

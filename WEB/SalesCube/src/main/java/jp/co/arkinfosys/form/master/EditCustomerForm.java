@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.LabelValueBean;
 import org.seasar.struts.annotation.FloatType;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.util.MessageResourcesUtil;
@@ -29,6 +30,7 @@ public class EditCustomerForm extends AbstractEditForm {
 	/** 顧客コード */
 	@Required
 	@Maxlength(maxlength = Constants.CODE_SIZE.CUSTOMER)
+	@Mask(mask = Constants.CODE_MASK.CUSTOMER_MASK)
 	public String customerCode;
 
 	/** 顧客名 */

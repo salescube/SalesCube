@@ -45,6 +45,9 @@ FROM
 	SUPPLIER_MST_HIST_/*$domainId*/ SLIP
 /*BEGIN*/
 WHERE
+	/*IF actionType != null */
+	AND SLIP.ACTION_TYPE = /*actionType*/'S'
+	/*END*/
 	/*IF recDateFrom != null */
 	AND CAST(SLIP.REC_DATETM AS DATE) >= CAST(/*recDateFrom*/'2010/01/01' AS DATE)
 	/*END*/

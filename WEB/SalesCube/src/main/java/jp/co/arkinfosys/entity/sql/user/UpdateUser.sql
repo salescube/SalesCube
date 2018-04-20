@@ -33,7 +33,7 @@ UPDATE USER_MST_/*$domainId*/ SET
 		/*IF lockflg != null */
 		LOCK_FLG=/*lockflg*/,
 			/*IF lockflg == 1 */
-            LOCK_DATETM=now(),
+            LOCK_DATETM=DATE_FORMAT(now(),'%Y/%m/%d %k:%i'),
         	/*END*/
             /*IF lockflg != 1 */
             	LOCK_DATETM=NULL,

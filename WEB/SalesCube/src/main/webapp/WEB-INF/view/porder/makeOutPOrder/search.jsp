@@ -388,7 +388,7 @@ function setDisplayCheckState() {
 		<button                             disabled="disabled" tabindex="2011">F12<br><bean:message key='words.action.none'/></button>
 	</div>
 	<br><br><br>
-	
+
 	<s:form onsubmit="return false;">
 
 	<div class="function_forms">
@@ -407,11 +407,9 @@ function setDisplayCheckState() {
 	<div class="form_section">
 		<div class="section_title">
 			<span><bean:message key='labels.makePOSlipSearchCondition'/></span><br><!-- 検索条件 -->
-			<button class="btn_toggle">
-			    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-			</button>
+			<button class="btn_toggle" />
 		</div><!-- /.section_title -->
-		
+
 		<div id="search_info" class="section_body">
 			<table id="search_info1" class="forms" style="width: auto;" summary="search_info1">
 				<tr>

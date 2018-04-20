@@ -171,14 +171,14 @@
 	<div class="function_buttons">
 		<button tabindex="2000" onclick="initForm();">F1<br>初期化</button>
 		<button tabindex="2001" onclick="searchDept()">F2<br>検索</button>
-		
+
 		<c:if test="${!isUpdate}">
 			<button disabled="disabled">F3<br>追加</button>
 		</c:if>
 		<c:if test="${isUpdate}">
 			<button tabindex="2002" onclick="addDept();">F3<br>追加</button>
 		</c:if>
-		
+
 		<button disabled="disabled">F4<br>&nbsp;</button>
 		<button disabled="disabled">F5<br>&nbsp;</button>
 		<button disabled="disabled">F6<br>&nbsp;</button>
@@ -190,7 +190,7 @@
 		<button disabled="disabled">F12<br>&nbsp;</button>
 	</div>
 	<br><br><br>
-	
+
 	<s:form onsubmit="return false;">
 	<div class="function_forms">
 
@@ -198,16 +198,14 @@
 			<html:errors/>
 			<span id="ajax_errors"></span>
 		</div>
-		
+
 		<div class="form_section_wrap">
 			<div class="form_section">
 				<div class="section_title">
 					<span>部門情報</span>
-					<button class="btn_toggle">
-		           		<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-		      		</button>
+					<button class="btn_toggle" />
 				</div><!-- /.section_title -->
-			
+
 				<div class="section_body">
 					<table id="dept_info" class="forms" summary="部門情報" style="width: 500px">
 						<tr>

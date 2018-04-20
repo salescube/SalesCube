@@ -8,11 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.Constants.CODE_SIZE;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.seasar.struts.annotation.Arg;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.util.MessageResourcesUtil;
 
@@ -20,46 +22,47 @@ public class EditWarehouseForm extends AbstractEditForm {
 
 	/** 倉庫コード */
 	@Required(arg0=@Arg(key = "labels.master.warehouseCode", resource = true))
+	@Mask(mask = Constants.CODE_MASK.HANKAKU_MASK)
 	public String warehouseCode;
 
 	/** 倉庫名 */
 	@Required(arg0=@Arg(key = "labels.master.warehouseName", resource = true))
 	public String warehouseName;
-	
+
 	/** 倉庫郵便番号 */
 	public String warehouseZipCode;
-	
+
 	/** 倉庫住所１ */
 	public String warehouseAddress1;
-	
+
 	/** 倉庫住所２ */
 	public String warehouseAddress2;
-	
+
 	/** 倉庫電話番号 */
 	public String warehouseTel;
-	
+
 	/** 倉庫FAX */
     public String warehouseFax;
-	
+
 	/** 管理者名 */
 	public String managerName;
-	
+
 	/** 管理者カナ */
 	public String managerKana;
-	
+
 	/** 管理者電話番号 */
 	public String managerTel;
-	
+
 	/** 管理者FAX */
 	public String managerFax;
-	
+
 	/** 管理者E-MAIL */
 	public String managerEmail;
-	
+
 	/** 倉庫状態 */
     @Required(arg0=@Arg(key = "labels.master.warehouseState", resource = true))
 	public String warehouseState;
-    
+
     /** 変更前の棚番情報 */
     public List<DeleteRackForm> rackCodesHist = new ArrayList<DeleteRackForm>();
 
@@ -68,7 +71,7 @@ public class EditWarehouseForm extends AbstractEditForm {
 
 	/** 表示時点の行数 */
 	public int defaultRowCount;
-	
+
 	@Override
 	public void initialize() {
 	}
@@ -108,7 +111,7 @@ public class EditWarehouseForm extends AbstractEditForm {
 				.getMessage("labels.master.rackCode");
 		String labelRackName = MessageResourcesUtil
 				.getMessage("labels.master.rackName");
-		
+
 		ActionMessages errors = new ActionMessages();
 
 		// 必須チェックは@Requiredで済んでいる
@@ -143,7 +146,7 @@ public class EditWarehouseForm extends AbstractEditForm {
 
 		/** 倉庫から削除しないrackCodeリスト */
 		Set<String> rackCodes = new HashSet<String>();
-		
+
 		//必須・型チェック
 		int index = 0;
 		for (EditRackForm editRackForm : editRackList) {
@@ -154,13 +157,13 @@ public class EditWarehouseForm extends AbstractEditForm {
 			// 棚番名
 			checkRequired(index, editRackForm.rackName, labelRackName, errors);
 			checkMaxLength(index, editRackForm.rackName, 60, labelRackName, errors);
-			
+
 			if(editRackForm.multiFlag == null) {
 				editRackForm.multiFlag = "0";
 			}
-			
+
 			editRackForm.warehouseCode=warehouseCode;
-			
+
 			// 棚番名追加
 			rackCodes.add(editRackForm.rackCode);
 		}
@@ -191,6 +194,5 @@ public class EditWarehouseForm extends AbstractEditForm {
 		}
 		return errors;
 	}
-	
+
 }
-	

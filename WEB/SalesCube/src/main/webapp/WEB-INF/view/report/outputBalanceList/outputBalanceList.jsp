@@ -175,9 +175,7 @@
 				<div class="section_title">
 					<span><bean:message key='labels.searchCondition'/></span>
 					<br>
-					<button class="btn_toggle">
-						<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-					</button>
+					<button class="btn_toggle" />
 				</div>
 				<div class="section_body">
 

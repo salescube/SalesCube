@@ -102,14 +102,12 @@
 				<div id="ajax_errors" style="padding-left: 20px">
 					<html:errors />
 				</div>
-				
+
 			    <div class="form_section_wrap">
 			    <div class="form_section">
 			        <div class="section_title">
 						<span>在庫一覧表</span>
-				        <button class="btn_toggle">
-				            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-				        </button>
+				        <button class="btn_toggle" />
 			        </div>
 
 					<div class="section_body">

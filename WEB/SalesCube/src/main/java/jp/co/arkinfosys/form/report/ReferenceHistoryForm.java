@@ -22,6 +22,11 @@ public class ReferenceHistoryForm {
     public String outputTarget;
 
     /**
+     * アクションタイプ
+     */
+    public String actionType;
+
+    /**
      * 入力/記録日From
      */
     @DateType(datePatternStrict = "yyyy/MM/dd")
@@ -301,6 +306,7 @@ public class ReferenceHistoryForm {
 	 */
 	public void reset() {
 		outputTarget = null;
+		actionType = null;
 		recDateFrom = null;
 		recDateTo = null;
 		estimateDateFrom1 = null;

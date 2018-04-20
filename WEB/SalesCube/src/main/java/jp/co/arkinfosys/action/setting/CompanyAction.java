@@ -4,19 +4,26 @@
 package jp.co.arkinfosys.action.setting;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import jp.co.arkinfosys.action.CommonResources;
+import jp.co.arkinfosys.action.master.EditCustomerRankAction;
+import jp.co.arkinfosys.common.Categories;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.entity.Mine;
 import jp.co.arkinfosys.form.setting.CompanyForm;
+import jp.co.arkinfosys.service.CategoryService;
 import jp.co.arkinfosys.service.MineService;
+import jp.co.arkinfosys.service.exception.ServiceException;
 
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.util.LabelValueBean;
 import org.seasar.framework.beans.util.Beans;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
@@ -46,6 +53,12 @@ public class CompanyAction extends CommonResources {
 	@Resource
 	private MineService mineService;
 
+	@Resource
+	public CategoryService categoryService;
+
+	/** 送料区分プルダウンリスト */
+	public List<LabelValueBean> postageTypeList = new ArrayList<LabelValueBean>();
+
 	/**
 	 * 初期表示を行います.
 	 * 処理終了後、{@link Mapping#INPUT}で定義されたURIに遷移します.
@@ -62,6 +75,18 @@ public class CompanyAction extends CommonResources {
 		return CompanyAction.Mapping.INPUT;
 	}
 
+	/**
+	 * リセット処理を行います.<br>
+	 * 処理終了後、{@link Mapping#INPUT}で定義されたURIに遷移します.
+	 * @return 画面遷移先のURI文字列
+	 * @throws Exception
+	 */
+	@Execute(validator = false)
+	public String reset() throws Exception {
+		init();
+
+		return CompanyAction.Mapping.INPUT;
+	}
 
 	/**
 	 * リクエストのサイズが設定された最大サイズを超えていないか確認します.
@@ -107,7 +132,7 @@ public class CompanyAction extends CommonResources {
 	 * @return 画面遷移先のURI文字列
 	 * @throws Exception
 	 */
-	@Execute(validate = "validate", validator = true, input = CompanyAction.Mapping.INPUT)
+	@Execute(validate = "validate", validator = true, input = "initEdit")
 	public String update() throws Exception {
 		// サイズエラーチェック
 		uploadErrorCheck();
@@ -132,7 +157,7 @@ public class CompanyAction extends CommonResources {
 		this.mineService.updateMine(companyForm.companyName, companyForm.companyAbbr, companyForm.companyKana,
 				companyForm.companyCeoName, companyForm.companyCeoTitle, companyForm.logoImgPath, companyForm.logoInit, companyForm.companyZipCode , companyForm.companyAddress1,
 				companyForm.companyAddress2, companyForm.companyTel, companyForm.companyFax, companyForm.companyEmail,
-				companyForm.companyWebSite, companyForm.cutoffGroup, companyForm.closeMonth);
+				companyForm.companyWebSite, companyForm.cutoffGroup, companyForm.closeMonth, companyForm.iniPostageType, companyForm.targetPostageCharges, companyForm.postage);
 
 		super.messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 				"infos.company.changed"));
@@ -142,19 +167,6 @@ public class CompanyAction extends CommonResources {
 
 		return CompanyAction.Mapping.INPUT;
 
-	}
-
-	/**
-	 * リセット処理を行います.<br>
-	 * 処理終了後、{@link Mapping#INPUT}で定義されたURIに遷移します.
-	 * @return 画面遷移先のURI文字列
-	 * @throws Exception
-	 */
-	@Execute(validator = false)
-	public String reset() throws Exception {
-		init();
-
-		return CompanyAction.Mapping.INPUT;
 	}
 
 	/**
@@ -169,6 +181,9 @@ public class CompanyAction extends CommonResources {
 
 		// 自社情報をセッション管理DTOに格納する
 		Beans.copy(mine, super.mineDto).execute();
+
+		//送料区分プルダウン要素を作成します
+		initList();
 
 		if (mine != null) {
 			companyForm.companyName = mine.companyName;
@@ -187,14 +202,52 @@ public class CompanyAction extends CommonResources {
 			companyForm.companyWebSite = mine.companyWebSite;
 			companyForm.cutoffGroup = mine.cutoffGroup;
 			companyForm.closeMonth = mine.closeMonth;
+			companyForm.iniPostageType = mine.iniPostageType;
+			companyForm.targetPostageCharges = mine.targetPostageCharges;
+			companyForm.postage = mine.postage;
+
 			companyForm.updDatetm = "";
 
+			companyForm.priceFractCategory = mineDto.priceFractCategory;
 
 			if( mine.updDatetm != null)	{
 				companyForm.updDatetm = String.valueOf(mine.updDatetm);
 			}
 		}
 
+	}
+
+	/**
+	 *
+	 * @return {@link Mapping#INPUT}で定義されたURI文字列
+	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#getInputURL()
+	 */
+
+	protected String getInputURL() {
+		return Mapping.INPUT;
+	}
+
+	/**
+	 * 送料区分プルダウン要素を作成します.
+	 * @throws ServiceException
+	 * @see jp.co.arkinfosys.action.master.AbstractEditAction#initList()
+	 */
+	protected void initList() throws ServiceException {
+
+		this.postageTypeList = this.categoryService
+				.findCategoryLabelValueBeanListById(Categories.POSTAGE_CATEGORY);
+	}
+
+	/**
+	 * バリデートでエラーになった際の初期化処理を行います.<br>
+	 * 処理実行後、{@link EditCustomerRankAction#getInputURL()}で取得したURIに遷移します.
+	 * @return 画面遷移先のURI文字列
+	 * @throws ServiceException
+	 */
+	@Execute(validator = false)
+	public String initEdit() throws ServiceException {
+		initList();
+		return getInputURL();
 	}
 
 }

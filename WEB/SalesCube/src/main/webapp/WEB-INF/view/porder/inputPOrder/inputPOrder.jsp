@@ -1651,9 +1651,7 @@ function showProductInfos(id){
     <div class="form_section">
         <div class="section_title">
 			<span><bean:message key='labels.poSlipInfos'/></span><br>
-	        <button class="btn_toggle">
-	            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	        </button>
+	        <button class="btn_toggle" />
         </div>
         <div id="order_section" class="section_body">
 		<table class="forms" summary="poSlipInfos">
@@ -1732,9 +1730,7 @@ function showProductInfos(id){
     <div class="form_section">
         <div class="section_title">
 			<span><bean:message key='labels.supplierInfos'/></span><br>
-	        <button class="btn_toggle">
-	            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-	        </button>
+	        <button class="btn_toggle" />
         </div>
         <div id="order_section" class="section_body">
 		<table class="forms" summary="supplierInfos">
@@ -1855,9 +1851,7 @@ function showProductInfos(id){
     <div class="form_section">
     <div class="section_title">
 		<span><bean:message key='labels.paymentStatus'/></span><br>
-        <button class="btn_toggle">
-            <img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-        </button>
+        <button class="btn_toggle" />
     </div>
     <div id="order_section" class="section_body">
 		<table class="forms" style="width: 910px" summary="paymentStatus">
@@ -1993,7 +1987,7 @@ function showProductInfos(id){
 <c:if test="${lockMode}">
 					<button id="delButton_${s.index}" style="width:80px;" disabled="disabled" class="btn_list_action" ><bean:message key='words.action.delLine'/></button><br><!-- (行)削除 -->
 </c:if>
-
+				</div>
 	            <div class="box_2of2">
 <c:if test="${!lockMode}">
 		<c:if test="${s.count == 1}">

@@ -3,17 +3,26 @@
  */
 package jp.co.arkinfosys.service.purchase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jp.co.arkinfosys.common.Categories;
+import jp.co.arkinfosys.common.CategoryTrns;
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.StringUtil;
+import jp.co.arkinfosys.dto.purchase.PurchaseLineDto;
+import jp.co.arkinfosys.dto.purchase.PurchaseSlipDto;
 import jp.co.arkinfosys.entity.SupplierSlipTrn;
+import jp.co.arkinfosys.s2extend.NumberConverter;
 import jp.co.arkinfosys.service.AbstractService;
+import jp.co.arkinfosys.service.SupplierSlipService;
+import jp.co.arkinfosys.service.BillJoinService.Param;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
+import org.seasar.framework.beans.Converter;
 import org.seasar.framework.beans.util.BeanMap;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * 仕入検索サービスクラスです.
@@ -327,8 +336,8 @@ public class SearchPurchaseService extends AbstractService<SupplierSlipTrn> {
 		if (conditions.containsKey(Param.SUPPLIER_DATE_FROM)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_DATE_FROM))) {
-				param.put(Param.SUPPLIER_DATE_FROM, (String) conditions
-						.get(Param.SUPPLIER_DATE_FROM));
+				param.put(Param.SUPPLIER_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+						.get(Param.SUPPLIER_DATE_FROM)));
 			}
 		}
 
@@ -336,8 +345,8 @@ public class SearchPurchaseService extends AbstractService<SupplierSlipTrn> {
 		if (conditions.containsKey(Param.SUPPLIER_DATE_TO)) {
 			if (StringUtil.hasLength((String) conditions
 					.get(Param.SUPPLIER_DATE_TO))) {
-				param.put(Param.SUPPLIER_DATE_TO, (String) conditions
-						.get(Param.SUPPLIER_DATE_TO));
+				param.put(Param.SUPPLIER_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+						.get(Param.SUPPLIER_DATE_TO)));
 			}
 		}
 

@@ -624,7 +624,7 @@
 			<button type="button" id="btnF10" tabindex="2009" disabled>F10<br>&nbsp;</button>
 			<button type="button" id="btnF11" tabindex="2010" disabled>F11<br>&nbsp;</button>
 			<button type="button" id="btnF12" tabindex="2011" disabled>F12<br>&nbsp;</button>
-			
+
 		</div><br><br><br>
 
 		<s:form onsubmit="return false;">
@@ -642,18 +642,16 @@
 						<bean:write name="msg" ignore="true"/><br>
 					</html:messages>
 				</div>
-				
-				
+
+
 			    <div class="form_section_wrap">
    				<div class="form_section">
        			<div class="section_title">
 					<span><bean:message key='labels.stockSlipInfos'/></span><br>
-        			<button class="btn_toggle">
-            			<img alt="表示／非表示" src="${f:url('/images/customize/btn_toggle.png')}" width="28" height="29" class="tbtn">
-        			</button>
+        			<button class="btn_toggle" />
       				 </div>
        			<div id="order_section" class="section_body">
-							
+
 				<table id="order_info" class="forms" summary="入出庫伝票情報">
 					<colgroup>
 						<col span="1" style="width: 10%">
@@ -695,11 +693,11 @@
 				<html:hidden property="userId"/>
 				<html:hidden property="stockPdate" />
 				<html:hidden property="updDatetm" />
-				
+
 				</div>
 				</div>
 				</div>
-				
+
    <div id="order_detail_info_wrap">
 				<table id="order_detail_info" summary="入出庫明細リスト" class="forms" style="margin-top: 20px;">
 					<thead>
@@ -725,21 +723,21 @@
 						<c:forEach var="eadLineTrnDtoList" items="${eadLineTrnDtoList}" varStatus="status">
 							<c:if test='${eadLineTrnDtoList.lineNo != null}'>
 								<tr id="trLine${status.index}">
-									
+
 									<!-- No -->
 									<td id="tdNo${status.index}" style="text-align: center;">
 									<div class="box_1of1">
 										<c:out value="${eadLineTrnDtoList.lineNo}" />
 									</div>
 									</td>
-									
+
 									<td style="display: none;">
 										<html:hidden name="eadLineTrnDtoList" property="lineNo" indexed="true" styleId="eadLineTrnDtoList[${status.index}].lineNo" />
 										<html:hidden name="eadLineTrnDtoList" property="eadLineId" indexed="true" styleId="eadLineTrnDtoList[${status.index}].eadLineId" />
 										<html:hidden name="eadLineTrnDtoList" property="productAbstract" indexed="true" styleId="eadLineTrnDtoList[${status.index}].productAbstract" />
 										<html:hidden name="eadLineTrnDtoList" property="rackName" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackName" />
 									</td>
-									
+
 									<!-- 商品コード -->
 									<td style="background-color: #fae4eb;">
 									<div class="box_1of1">
@@ -747,7 +745,7 @@
 										<html:image styleId="productCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer;" tabindex="<%=String.valueOf(lineTab++) %>"/>
 									</div>
 									</td>
-									
+
 									<!-- 商品名 -->
 									<td>
 										<div class="box_1of1">
@@ -756,7 +754,7 @@
 										</span>
 										</div>
 									</td>
-									
+
 									<!-- 数量・現在庫数・変更後在庫数 -->
 									<td>
 									<div class="box_1of3" style="background-color: #fae4eb;">
@@ -769,7 +767,7 @@
 										<html:text name="eadLineTrnDtoList" property="updateQuantity" indexed="true" styleId="eadLineTrnDtoList[${status.index}].updateQuantity" styleClass="numeral_commas" style="border: 0px; width: 55px; margin: 3px; height: 24px;" readonly="true" />
 									</div>
 									</td>
-									
+
 									<!-- 商品備考・備考 -->
 									<td>
 									<div class="box_1of2">
@@ -780,14 +778,14 @@
 									</div>
 									</td>
 									<td style="background-color: #fae4eb;">
-									
+
 									<!-- 棚番 -->
 									<div class="box_1of1">
 										<html:text name="eadLineTrnDtoList" property="rackCode" indexed="true" styleId="eadLineTrnDtoList[${status.index}].rackCode" styleClass="c_referable" style="width: 85px; ime-mode: disabled;" tabindex="<%=String.valueOf(lineTab++) %>" maxlength="${code_size_rack}" />
 										<html:image styleId="rackCodeImg${status.index}" src='${f:url("/images/customize/btn_search.png")}' style="width: auto; vertical-align: middle; cursor: pointer;" tabindex="<%=String.valueOf(lineTab++) %>"/>
 									</div>
 									</td>
-									
+
 									<!-- ボタン -->
 									<td style="text-align:right;">
 										<div class="box_1of2">
@@ -812,14 +810,14 @@
 						<!-- 追加 -->
 						<tr id="trAddLine">
 							<td style="height: 60px; text-align: center" colspan="7" class="rd_bottom_left rd_bottom_right">
-								<button type="button" style="width:80px;" onclick="addRow();" tabindex="1999" 
+								<button type="button" style="width:80px;" onclick="addRow();" tabindex="1999"
 									<c:if test="${!newData}">
 										disabled
 									</c:if>
 								><%// 行追加 %>
 									<img alt="<bean:message key='words.action.addLine'/>" border="none" src="${f:url('/images/customize/btn_line_add.png')}"  width="31" height="33">
 								</button>
-								
+
 							</td>
 						</tr>
 					</tbody>

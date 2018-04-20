@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.dto.master.DiscountTrnDto;
 
 import org.apache.struts.action.ActionMessage;
@@ -14,6 +15,7 @@ import org.apache.struts.action.ActionMessages;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.struts.annotation.Arg;
+import org.seasar.struts.annotation.Mask;
 import org.seasar.struts.annotation.Required;
 import org.seasar.struts.util.MessageResourcesUtil;
 
@@ -28,6 +30,7 @@ public class EditDiscountForm extends AbstractEditForm {
 	// 基本情報
 	/** 割引コード */
 	@Required
+	@Mask(mask = Constants.CODE_MASK.HANKAKU_MASK)
 	public String discountId;
 
 	/** 割引有効フラグ */

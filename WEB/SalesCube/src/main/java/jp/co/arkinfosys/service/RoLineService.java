@@ -11,11 +11,15 @@ import javax.annotation.Resource;
 
 import jp.co.arkinfosys.common.Constants;
 import jp.co.arkinfosys.common.SlipStatusCategories;
+import jp.co.arkinfosys.dto.StockInfoDto;
 import jp.co.arkinfosys.dto.rorder.ROrderLineDto;
 import jp.co.arkinfosys.dto.rorder.ROrderSlipDto;
+import jp.co.arkinfosys.entity.Product;
 import jp.co.arkinfosys.entity.RoLineTrn;
+import jp.co.arkinfosys.entity.join.ProductJoin;
 import jp.co.arkinfosys.service.exception.ServiceException;
 
+import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.beans.util.Beans;
 
 /**
@@ -27,6 +31,12 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 
 	@Resource
 	private SeqMakerService seqMakerService;
+
+	@Resource
+	private ProductStockService productStockService;
+
+	@Resource
+	private ProductService productService;
 
 	/**
 	 *
@@ -283,6 +293,144 @@ public class RoLineService extends AbstractLineService<RoLineTrn,ROrderLineDto,R
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	/**
+	 * 商品情報を設定します.<BR>
+	 * 受注限度数 在庫管理区分 商品が削除されている場合には、0を設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	protected void setProductInfo(ROrderLineDto lineDto) throws ServiceException {
+
+		Product product;
+		try {
+			product = productService.findById(lineDto.productCode);
+			if ((product != null) && (product.roMaxNum != null)) {
+				lineDto.roMaxNum = product.roMaxNum.toString();
+			} else {
+				lineDto.roMaxNum = "0";
+			}
+			if (product != null) {
+				lineDto.stockCtlCategory = product.stockCtlCategory;
+			} else {
+				lineDto.stockCtlCategory = "";
+			}
+		} catch (ServiceException e) {
+			lineDto.roMaxNum = "0";
+			lineDto.stockCtlCategory = "";
+		}
+	}
+
+	/**
+	 * 受注伝票明細行の在庫情報を設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	protected void setStockInfo(ROrderLineDto lineDto) throws ServiceException {
+
+		// 各商品ごとに引当可能数を計算する
+		StockInfoDto stockInfo = productStockService
+				.calcStockQuantityByProductCode(lineDto.productCode);
+		if (stockInfo != null) {
+			lineDto.possibleDrawQuantity = String
+					.valueOf(stockInfo.possibleDrawQuantity);
+		} else {
+			lineDto.possibleDrawQuantity = "0";
+		}
+	}
+
+
+	/**
+	 * 見積伝票複写時に必要な商品情報を設定します.<BR>
+	 * 商品が削除されている場合には、0または空値を設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	protected void setProductInfoFromCopy(ROrderLineDto lineDto) throws ServiceException {
+
+		ProductJoin product;
+		try {
+			product = productService.findById(lineDto.productCode);
+			if ((product != null) && (product.roMaxNum != null)) {
+				lineDto.roMaxNum = product.roMaxNum.toString();
+			} else {
+				lineDto.roMaxNum = "0";
+			}
+			if (product != null) {
+				lineDto.stockCtlCategory = product.stockCtlCategory;
+				lineDto.eadRemarks = product.eadRemarks;
+				lineDto.productRemarks = product.remarks;
+				lineDto.supplierPcode = product.supplierPcode;
+				lineDto.taxCategory = product.taxCategory;
+			} else {
+				lineDto.stockCtlCategory = "";
+				lineDto.eadRemarks = "";
+				lineDto.productRemarks = "";
+				lineDto.supplierPcode = "";
+				lineDto.taxCategory = "";
+			}
+		} catch (ServiceException e) {
+			lineDto.roMaxNum = "0";
+			lineDto.stockCtlCategory = "";
+			lineDto.eadRemarks = "";
+			lineDto.productRemarks = "";
+			lineDto.supplierPcode = "";
+			lineDto.taxCategory = "";
+		}
+	}
+
+	/**
+	 * 見積伝票複写時に必要な在庫情報を設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	protected void setStockInfoFromCpopy(ROrderLineDto lineDto) throws ServiceException {
+
+		// 各商品ごとに引当可能数を計算する
+		StockInfoDto stockInfo = productStockService
+				.calcStockQuantityByProductCode(lineDto.productCode);
+		if (stockInfo != null) {
+			//lineDto.possibleDrawQuantity = String.valueOf(stockInfo.possibleDrawQuantity);
+			lineDto.rackCodeSrc = stockInfo.rackCode;
+		} else {
+			//lineDto.possibleDrawQuantity = "0";
+			lineDto.rackCodeSrc = "";
+		}
+	}
+
+
+	/**
+	 * 設定された伝票に関連する情報を全て読み込んでDTOに設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	public void setStockInfoForm(ROrderLineDto lineDto) throws ServiceException {
+
+		// 商品マスタを参照して在庫数等を設定
+		setProductInfo(lineDto);
+
+		// 引当可能数設定
+		setStockInfo(lineDto);
+	}
+
+	/**
+	 * 伝票複写時に、関連する情報を全て取得して受注伝票明細DTOに設定します.
+	 *
+	 * @param lineDto　受注伝票明細行（{@link ROrderLineDto}）
+	 * @throws ServiceException
+	 */
+	public void setProductStockInfoFromCopy(ROrderLineDto lineDto) throws ServiceException {
+		// 商品情報を設定
+		setProductInfoFromCopy(lineDto);
+
+		// 在庫情報を設定
+		setStockInfoFromCpopy(lineDto);
 	}
 
 	/**

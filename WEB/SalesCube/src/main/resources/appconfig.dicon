@@ -28,5 +28,10 @@
             <arg>"PasswordEncryptStyle"</arg>
             <arg>"AES"</arg>
         </initMethod>
+		<!-- デモ環境フラグ -->
+		<initMethod name="put">
+			<arg>"demoFlag"</arg>
+			<arg>"true"</arg>
+		</initMethod>
 	</component>
 </components>

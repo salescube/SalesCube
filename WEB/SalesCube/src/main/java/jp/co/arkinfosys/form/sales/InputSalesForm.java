@@ -241,7 +241,7 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 
 	// 仮納品書出力フラグ（顧客情報と納入先情報が一致時はfalse)
 	public Boolean reportEFlag;
-	
+
 	// 消費税率
 	public String ctaxRate;
 
@@ -516,7 +516,12 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 
 		// 現在の税率を取得し、画面に設定する
 		if(StringUtil.hasLength(salesDate)){
-			date = salesDate;
+			if(StringUtil.isYmString(salesDate)){
+				date = salesDate;
+			}else{
+				// 売上日に日付以外の値が設定された場合
+				date = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
+			}
 		}else{
 			date = StringUtil.getCurrentDateString(Constants.FORMAT.DATE);
 		}
@@ -551,11 +556,11 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		// 入力担当者の設定
 		this.userId = userDto.userId;
 		this.userName = userDto.nameKnj;
-		
+
 		// 消費税率
 		this.ctaxRate = super.taxRate;
 	}
-	
+
 	/**
 	 * 税マスタから取得した現在有効な税率と、伝票作成当時の税率が異なる場合は、伝票作成時の税率を使用する
 	 */
@@ -564,7 +569,7 @@ public class InputSalesForm extends AbstractSlipEditForm<SalesLineDto> {
 		if (this.ctaxRate != null && super.taxRate != this.ctaxRate) {
 			super.taxRate = this.ctaxRate;
 		}
-		
+
 		if (this.ctaxRate == "" || this.ctaxRate == null) {
 			this.ctaxRate = super.taxRate;
 		}

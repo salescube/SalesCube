@@ -38,7 +38,7 @@ public class PurchaseSlipDto extends AbstractSlipDto<PurchaseLineDto> {
 	public String ctaxRate;
 	public String priceTotal;
 	public String fePriceTotal;
-	public String costTotal;
+	//public String costTotal; 仕入画面ではcostTotalは使用されない
 	public String poSlipId;
 	public String paymentSlipId;
 	public String supplierPaymentDate;

@@ -291,7 +291,7 @@
 			<button disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 			<!-- 検索条件 -->
@@ -299,16 +299,14 @@
 				<div id="errors" style="color: red">
 					<html:errors/>
 				</div>
-				
+
 				<div class="form_section_wrap">
 				<div class="form_section">
 					<div class="section_title">
 						<bean:message key='labels.searchCondition'/><br>
-						<button class="btn_toggle">
-						    <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-						</button>
+						<button class="btn_toggle" />
 					</div><!-- /.section_title -->
-				
+
 					<div id="search_info" class="section_body">
 						<table id="search_target" class="forms" summary="searchTarget">
 							<tr>
@@ -368,7 +366,7 @@
 								<td colspan="5"><html:text property="depositAbstract" styleId="depositAbstract" style="width: 300px;" tabindex="111" /></td>
 							</tr>
 						</table>
-	
+
 						<table id="customer_info" class="forms" summary="customerInfo">
 							<colgroup>
 								<col span="1" style="width: 13%">
@@ -395,7 +393,7 @@
 								</td>
 							</tr>
 						</table>
-	
+
 						<table id="deposit_info" class="forms" summary="dedpositInfo">
 							<colgroup>
 								<col span="1" style="width: 13%">

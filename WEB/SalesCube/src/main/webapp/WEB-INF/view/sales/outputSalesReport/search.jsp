@@ -738,7 +738,7 @@
 			<button type="button" id="btnF12" tabindex="2011" disabled="disabled">F12<br>&nbsp;</button>
 		</div>
 		<br><br><br>
-		
+
 		<s:form onsubmit="return false;">
 
 		<html:hidden property="sortColumn" styleId="sortColumn" />
@@ -753,17 +753,15 @@
 		    <div class="form_section">
 		    	<div class="section_title">
 					<span><bean:message key='labels.outputCondition'/></span>
-		            <button class="btn_toggle">
-		                <img alt="表示／非表示" src='${f:url("/images/customize/btn_toggle.png")}' width="28" height="29" class="tbtn">
-		            </button>
+		            <button class="btn_toggle" />
 				</div><!-- /.section_title -->
-					
+
 				<div id="search_info" class="section_body">
 					<table id="search_info1" class="forms" style="width: 750px; width: auto;" summary="出力条件">
 						<tr>
 
 							<th width="100px"><div class="col_title_right"><bean:message key='labels.salesDate'/></div></th><!-- 売上日 -->
-							<!-- 
+							<!--
 							<td><html:text styleId="salesDateFrom" property="salesDateFrom" styleClass="date_input" tabindex="100" />
 							 ～
 							<html:text styleId="salesDateTo" property="salesDateTo" styleClass="date_input" tabindex="101"/></td>
@@ -837,7 +835,7 @@
 				</div>
 	    	</div><!-- /.form_section -->
 	    	</div><!-- /.form_section_wrap -->
-	    	
+
 			<div style="width: 1160px; text-align :right;">
 				<button type="button" onclick="onF1()" tabindex="150" class="btn_medium"><bean:message key='words.action.initialize'/></button><!-- 初期化 -->
 				<button type="button" onclick="onF2()" tabindex="151" class="btn_medium"><bean:message key='words.action.search'/></button><!-- 検索 -->
@@ -856,7 +854,7 @@
 				<button type="button" tabindex="1003" onclick="setCheckBox(false)" class="btn_medium"><bean:message key='words.action.cancel'/></button>
 			</div>
 		</div>
-		
+
 		<!-- 検索結果表示エリア -->
 		<span id="listContainer">
 			<%@ include file="/WEB-INF/view/ajax/sales/searchOutputSalesReportAjax/result.jsp" %>

@@ -5,9 +5,20 @@ package jp.co.arkinfosys.service;
 
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.seasar.framework.beans.util.Beans;
+
+import jp.co.arkinfosys.common.Constants;
+import jp.co.arkinfosys.dto.estimate.InputEstimateDto;
+import jp.co.arkinfosys.dto.master.CustomerDto;
+import jp.co.arkinfosys.dto.setting.NewsDto;
 import jp.co.arkinfosys.entity.News;
+import jp.co.arkinfosys.entity.join.CustomerJoin;
+import jp.co.arkinfosys.service.exception.ServiceException;
 
 /**
  * お知らせサービスクラスです.
@@ -65,4 +76,5 @@ public class NewsService extends AbstractService<News> {
 		param.put(NewsService.Param.DESCRIPTION, description);
 		return this.updateBySqlFile("news/UpdateNews.sql", param).execute();
 	}
+
 }

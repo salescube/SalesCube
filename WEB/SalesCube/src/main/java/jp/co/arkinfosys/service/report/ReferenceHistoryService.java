@@ -25,6 +25,7 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 	 */
 	public static class Param {
 		public static final String OUTPUT_TARGET = "outputTarget";
+		public static final String ACTION_TYPE = "actionType";
 		public static final String REC_DATE_FROM = "recDateFrom";
 		public static final String REC_DATE_TO = "recDateTo";
 		public static final String ESTIMATE_DATE_FROM = "estimateDateFrom";
@@ -51,6 +52,7 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 	 */
 	private static final String[] paramArray = {
 		Param.OUTPUT_TARGET,
+		Param.ACTION_TYPE,
 		Param.REC_DATE_FROM,
 		Param.REC_DATE_TO,
 		Param.ESTIMATE_DATE_FROM,
@@ -233,9 +235,17 @@ public class ReferenceHistoryService extends AbstractService<BeanMap> {
 			if (conditions.containsKey(key)) {
 				if (StringUtil.hasLength((String)conditions.get(key))) {
 					param.put(key,(String)conditions.get(key));
+
+					if(0<i && i<5 ){
+						// 入力／変更日範囲 ・見積日範囲 の日付全角→半角
+							param.put(key, StringUtil.zenkakuNumToHankaku((String) conditions
+									.get(key)));
+					}
 				}
 			}
 		}
+
+
 
 		// 入出庫伝票の初期化（これだけ型が異なるので別扱い）
 		if (conditions.containsKey(Param.EAD_SLIP_CATEGORY)) {

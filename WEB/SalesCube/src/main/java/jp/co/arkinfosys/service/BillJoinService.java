@@ -217,25 +217,61 @@ public class BillJoinService extends AbstractService<BillJoin> {
 		setConditionItemString(conditions, param, Param.LAST_PRINT_DATE_FROM,
 				LikeType.NOTHING);
 
+		// 請求書発行日From全角半角変換
+		if (conditions.containsKey(Param.LAST_PRINT_DATE_FROM)) {
+			param.put(Param.LAST_PRINT_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.LAST_PRINT_DATE_FROM)));
+		}
+
 		// 請求書発行日To
 		setConditionItemString(conditions, param, Param.LAST_PRINT_DATE_TO,
 				LikeType.NOTHING);
+
+		//  請求書発行日To全角半角変換
+		if (conditions.containsKey(Param.LAST_PRINT_DATE_TO)) {
+			param.put(Param.LAST_PRINT_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.LAST_PRINT_DATE_TO)));
+		}
 
 		// 請求締日From
 		setConditionItemString(conditions, param, Param.BILL_CUTOFF_DATE_FROM,
 				LikeType.NOTHING);
 
+		//  請求締日From全角半角変換
+		if (conditions.containsKey(Param.BILL_CUTOFF_DATE_FROM)) {
+			param.put(Param.BILL_CUTOFF_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.BILL_CUTOFF_DATE_FROM)));
+		}
+
 		// 請求締日To
 		setConditionItemString(conditions, param, Param.BILL_CUTOFF_DATE_TO,
 				LikeType.NOTHING);
 
+		//  請求締日To全角半角変換
+		if (conditions.containsKey(Param.BILL_CUTOFF_DATE_TO)) {
+			param.put(Param.BILL_CUTOFF_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.BILL_CUTOFF_DATE_TO)));
+
+		}
 		// 最終売上日From
 		setConditionItemString(conditions, param, Param.LAST_SALES_DATE_FROM,
 				LikeType.NOTHING);
 
+		// 最終売上日From全角半角変換
+		if (conditions.containsKey(Param.LAST_SALES_DATE_FROM)) {
+			param.put(Param.LAST_SALES_DATE_FROM, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.LAST_SALES_DATE_FROM)));
+		}
+
 		// 最終売上日To
 		setConditionItemString(conditions, param, Param.LAST_SALES_DATE_TO,
 				LikeType.NOTHING);
+
+		// 最終売上日To全角半角変換
+		if (conditions.containsKey(Param.LAST_SALES_DATE_TO)) {
+			param.put(Param.LAST_SALES_DATE_TO, StringUtil.zenkakuNumToHankaku((String) conditions
+					.get(Param.LAST_SALES_DATE_TO)));
+		}
 
 		// 請求書分類
 		setConditionItemString(conditions, param, Param.BILL_CRT_CATEGORY,
